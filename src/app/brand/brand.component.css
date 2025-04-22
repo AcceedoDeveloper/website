@@ -1,0 +1,53 @@
+body, html {
+  height: 100%;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  overflow: hidden;
+  position: relative;
+}
+
+h1 {
+  font-family: Arial, sans-serif;
+  font-size: 2rem;
+  color: #333;
+}
+
+.slider {
+  display: flex;
+  animation: slidein 30s linear infinite;
+}
+
+.logos {
+  display: flex;
+  gap: 20px; 
+  margin-bottom: 20px;
+}
+
+.logos img {
+  height: 100px; 
+  width: auto;   
+  animation: fade-in 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) forwards;
+
+}
+
+@keyframes slidein {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,54 @@
+.c-item {
+  height: 520px;
+  position: relative; 
+}
+
+.c-img {
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+
+.main {
+  background-color: #fff;
+}
+
+.carousels {
+  margin: 30px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.cards {
+  position: absolute;
+  bottom: 30px; 
+  right: 0px; 
+  background-color: rgb(158, 41, 15); 
+  padding: 15px; 
+  border-radius: 10px;
+  text-align: center; 
+  width: 500px;
+  
+}
+
+
+.move{
+  opacity: 0;
+}
+
+
+@media (max-width: 768px) {
+  .cards {
+    bottom: 20px;
+    right: 50%; 
+    transform: translateX(50%); 
+    width: 90%; 
+    margin: 0 auto; 
+  }
+  .main {
+    padding-top: 40px; 
+  }
+}
+
+
+

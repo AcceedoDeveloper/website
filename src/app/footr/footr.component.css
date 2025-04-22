@@ -1,0 +1,254 @@
+/* General Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.nav {
+  height: 80px;
+  width: 100%;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 1000;
+  border-bottom: 0.3px solid #4d4949;
+}
+
+.nav-title{
+  font-family: 'Bokor', cursive;
+  font-size: 2rem;
+}
+
+.nav > .nav-header {
+  display: inline;
+}
+
+.nav > .nav-header > .nav-title {
+  display: inline-block;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 10px 10px 10px 10px;
+  font-size: 22px;
+  color: #000000;
+  font-weight: 550;
+  margin-top: 20px;
+  margin-left: 70px;
+}
+
+.nav > .nav-links {
+  font-size: 18px;
+  display: inline;
+  float: right;
+  margin-bottom: 60px;
+}
+
+.nav-links{
+  margin-left: 30px;
+}
+
+.nav > .nav-links > ul li a {
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(50, 59, 68);
+  line-height: 40px;
+  font-size: 15px;
+  display: block;
+  padding: 0 8px;
+  text-decoration: none;
+  margin-top: 15px;
+  margin-left: 30px;
+}
+
+.nav > .nav-links > ul li a:hover {
+  color: rgb(126, 144, 145);
+}
+
+.nav > .nav-links > ul {
+  list-style: none;
+  position: relative;
+  padding: 0;
+  margin-top: 5px;
+  gap: 15px;
+}
+
+.nav > .nav-links > ul li {
+  display: inline-block;
+  position: relative;
+}
+
+.nav > .nav-links > ul li:hover .dropdown {
+  display: block;
+}
+
+.nav > .nav-links > ul li .dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 100%;
+}
+
+.nav .nav-links ul a.icon {
+  margin-left: 80px;
+  margin-right: 10px;
+}
+
+.nav .nav-links ul a i {
+  padding: 7px;
+  margin-left: 5px;
+  background-color: #fff;
+  border-radius: 50px;
+}
+
+.nav > .nav-btn {
+  display: none;
+}
+
+.nav > #nav-check {
+  display: none;
+}
+
+.nav > .nav-links > ul li:hover .dropdown {
+  display: block; 
+}
+
+/* Responsive Design */
+@media (max-width: 1100px) {
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+  }
+
+  .botttom{
+    margin-bottom: 45px;
+  }
+
+  .nav > .nav-header > .nav-title {
+    margin-top: 5px;
+    margin-right: 5px;
+  }
+
+  .nav > .nav-btn {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+  }
+
+  .nav > .nav-btn > label {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+
+  .nav > .nav-btn > label > span {
+    position: absolute;
+    width: 25px;
+    height: 2px;
+    background-color: #000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: 0.3s ease;
+  }
+
+  .nav > .nav-btn > label > span:nth-child(1) {
+    transform: translate(-50%, calc(-50% - 6px));
+  }
+
+  .nav > .nav-btn > label > span:nth-child(2) {
+    transform: translate(-50%, -50%);
+  }
+
+  .nav > .nav-btn > label > span:nth-child(3) {
+    transform: translate(-50%, calc(-50% + 6px));
+  }
+
+  #nav-check:checked ~ .nav-btn > label > span:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  #nav-check:checked ~ .nav-btn > label > span:nth-child(2) {
+    opacity: 0;
+  }
+
+  #nav-check:checked ~ .nav-btn > label > span:nth-child(3) {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .nav > .nav-links {
+    position: absolute;
+    z-index: 9999;
+    height: auto;
+    top: 50px;
+    display: block;
+    width: 100%;
+    background-color: #ffffff;
+    left: 0px;
+    max-height: 320px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  .nav > #nav-check:not(:checked) ~ .nav-links {
+    max-height: 0;
+  }
+
+  .nav > #nav-check:checked ~ .nav-links {
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .nav > .nav-links > ul li a {
+    display: block;
+    width: 100%;
+    color: #000000;
+    margin-right: 5px;
+  }
+
+  .nav > .nav-links > ul li {
+    padding: 0;
+    background-color: #ffffff;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .nav > .nav-links > ul li a {
+    text-align: left;
+    padding-left: 20px;
+    margin-left: 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav .nav-links ul a.icon {
+    margin-left: 33%;
+  }
+
+  .nav > #nav-check:not(:checked) ~ .nav-links {
+    height: 0px;
+  }
+
+  .nav > #nav-check:checked ~ .nav-links {
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+  }
+
+  .nav > .nav-links > ul li .dropdown {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .nav > .nav-links > ul li .dropdown li a {
+    padding-left: 40px;
+  }
+}
