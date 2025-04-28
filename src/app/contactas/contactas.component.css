@@ -115,8 +115,9 @@
 }
 @media (max-width: 820px) {
   .container{
-    margin: 40px 0;
-    height: 100%;
+    margin: 75px 0;
+    margin-left: 19px;
+    
   }
   .container .content{
     flex-direction: column-reverse;

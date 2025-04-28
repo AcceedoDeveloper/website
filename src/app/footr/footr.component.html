@@ -1,5 +1,5 @@
 <div class="nav">
-  <input type="checkbox" id="nav-check"/>
+  <input type="checkbox" id="nav-check" (change)="onNavCheckChange($event)" />
   <div class="nav-header">
     <div class="nav-title">Acceedo</div>
   </div>
@@ -13,13 +13,16 @@
   <div class="nav-links">
     <ul>
       <li><a href="#" class="lik">Our Company</a></li>
-      <li class="dropdown">
-        <a href="#">Product</a>
-        <ul class="dropdown-menu">
-          <li><a href="#">Product 1</a></li>
-          <li><a href="#">Product 2</a></li>
-          <li><a href="#">Product 3</a></li>
-          <li><a href="#">Product 4</a></li>
+      <li class="dropdown" [class.active]="isDropdownOpen" data-testid="dropdown">
+        <a href="#" class="dropdown-toggle" (click)="toggleDropdown($event)" data-testid="dropdown-toggle">
+          Product
+         
+        </a>
+        <ul class="dropdown-menu" data-testid="dropdown-menu">
+          <li><a routerLink="/power-metrics">Power Metrics</a></li>
+          <li><a routerLink="/heat-treatment">Heat Treatment</a></li>
+          <li><a routerLink="/melting-software" >Melting Software</a></li>
+          <li><a routerLink="/smart-attendance">Attendance System</a></li>
         </ul>
       </li>
       <li><a href="#">Our Services</a></li>
