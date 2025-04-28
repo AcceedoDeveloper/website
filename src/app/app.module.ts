@@ -15,11 +15,16 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HomeComponent } from './home/home.component';
 import { FootrComponent } from './footr/footr.component';
-import { ProductComponent } from './product/product.component';
+
 import { BrandComponent } from './brand/brand.component';
-import { AnimationComponent } from './animation/animation.component';
+
 import { CarouselComponent } from './carousel/carousel.component';
 import { CardsComponent } from './cards/cards.component';
+import { SmartAttendanceComponent } from './smart-attendance/smart-attendance.component';
+import { MeltingSoftwareComponent } from './melting-software/melting-software.component';
+import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.component';
+import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
+import { ContactasComponent } from './contactas/contactas.component';
 
 
 
@@ -32,11 +37,16 @@ import { CardsComponent } from './cards/cards.component';
     FooterComponent,
     HomeComponent,
     FootrComponent,
-    ProductComponent,
+
     BrandComponent,
-    AnimationComponent,
-    CarouselComponent,
+   
     CardsComponent,
+    SmartAttendanceComponent,
+    MeltingSoftwareComponent,
+    HeatTreatmentComponent,
+    PowerMetricsComponent,
+    CarouselComponent,
+    ContactasComponent
     
   
   

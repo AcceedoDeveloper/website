@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AnimationComponent } from './animation.component';
+import { HeatTreatmentComponent } from './heat-treatment.component';
 
-describe('AnimationComponent', () => {
-  let component: AnimationComponent;
-  let fixture: ComponentFixture<AnimationComponent>;
+describe('HeatTreatmentComponent', () => {
+  let component: HeatTreatmentComponent;
+  let fixture: ComponentFixture<HeatTreatmentComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AnimationComponent]
+      declarations: [HeatTreatmentComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AnimationComponent);
+    fixture = TestBed.createComponent(HeatTreatmentComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

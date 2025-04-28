@@ -104,13 +104,7 @@
     }
   }
   
-  @media (max-width: 575px) {
-    .owl-carousel .owl-item img {
-      height: 200px;
-      border-radius: 12px;
-    }
-  }
-  
+
   .card {
     border-radius: 18px;
     height: 600px;
@@ -133,11 +127,7 @@
     line-height: 1.6;
   }
   
-  @media (max-width: 576px) {
-    .card-img-top img {
-      height: 200px;
-    }
-  }
+
 
   h3 {
     font-family: Arial, sans-serif;
