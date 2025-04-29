@@ -10,7 +10,7 @@ export class CarouselComponent {
   customOptions: any = {
     stagePadding: 50,
     loop: true,
-    margin: 15,
+    margin: 20,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: true,

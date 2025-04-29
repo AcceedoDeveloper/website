@@ -1,9 +1,12 @@
+
+
 owl-carousel-o {
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible !important; 
   position: relative;
+  margin: 0 auto;
 }
 
 .overlay{
@@ -29,7 +32,6 @@ owl-carousel-o img {
     height: 470px; 
     border-radius: 18px;
   }
-
 }
 
 @media (max-width: 991px) {
@@ -70,7 +72,6 @@ owl-carousel-o img {
   background: linear-gradient(45deg,rgba(255, 54, 15, 1), rgba(255, 96, 27, 1) );
   padding: 15px 20px; 
   border-radius: 20px;
-
   width: 35%;
   height: auto;
   z-index: 1; 
@@ -90,7 +91,6 @@ owl-carousel-o img {
 .content-overlay h4 {
   font-family: 'Raleway', sans-serif;
   font-size: 2rem; 
- 
   margin-bottom: 5px;
   padding-top: 20px;
   padding-bottom: 12px;
