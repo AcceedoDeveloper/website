@@ -26,6 +26,7 @@ import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.componen
 import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
 import { ContactasComponent } from './contactas/contactas.component';
 import { CareerComponent } from './career/career.component';
+import { ServicesComponent } from './services/services.component';
 
 
 
@@ -48,7 +49,8 @@ import { CareerComponent } from './career/career.component';
     PowerMetricsComponent,
     CarouselComponent,
     ContactasComponent,
-    CareerComponent
+    CareerComponent,
+    ServicesComponent
     
   
   

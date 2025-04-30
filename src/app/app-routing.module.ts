@@ -8,6 +8,7 @@ import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.componen
 import { MeltingSoftwareComponent } from './melting-software/melting-software.component';
 import { ContactasComponent } from './contactas/contactas.component';
 import { CareerComponent } from './career/career.component';
+import { ServicesComponent } from './services/services.component';
 
 const routes: Routes = [
   { path: '' , redirectTo: 'acceedo', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'melting-software', component: MeltingSoftwareComponent },
   { path: 'contactas', component: ContactasComponent },
   { path: 'career', component: CareerComponent },
+  { path: 'services', component: ServicesComponent },
 
 
 ];

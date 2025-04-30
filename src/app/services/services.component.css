@@ -1,0 +1,73 @@
+/* Global Styles */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  /* Header */
+  header {
+    text-align: center;
+    background-color: #fff;
+    padding: 2rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  header h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.5rem;
+    margin: 0;
+    color: #0d6efd;
+  }
+  
+  /* Services Container */
+  .services-container {
+    display: grid;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    padding: 0 1rem;
+  }
+  
+  /* Individual Service Card */
+  .service {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .service:hover {
+    transform: translateY(-5px);
+  }
+  
+  .service img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .service-content {
+    padding: 1.5rem;
+  }
+  
+  .service h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .service h2 i {
+    margin-right: 0.5rem;
+    color: #0d6efd;
+  }
+  
+  .service p {
+    line-height: 1.6;
+    margin: 0;
+  }
+  
