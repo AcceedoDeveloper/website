@@ -19,14 +19,30 @@
       <li class="dropdown" [class.active]="isDropdownOpen" data-testid="dropdown">
         <a href="#" class="dropdown-toggle" (click)="toggleDropdown($event)" data-testid="dropdown-toggle">
           Product
-         
         </a>
-        <ul class="dropdown-menu" data-testid="dropdown-menu">
-          <li><a routerLink="/power-metrics">Power Metrics</a></li>
-          <li><a routerLink="/heat-treatment">Heat Treatment</a></li>
-          <li><a routerLink="/melting-software" >Melting Software</a></li>
-          <li><a routerLink="/smart-attendance">Attendance System</a></li>
-        </ul>
+       <div class="dropdown-menu" data-testid="dropdown-menu">
+        <div class="border-color "></div>
+       <div class="brand-portfolio">
+  <div class="header">
+ 
+    <div class="big-number">200+</div>
+    <h2>brands worldwide</h2>
+    <p class="description">
+      We've established a portfolio of drinks that are best positioned to grow in an ever-changing marketplace.
+    </p>
+    <p class="sub-description">
+      From trademark Coca-Cola to Sports, Juice & Dairy Drinks, Alcohol Ready-to-Drink Beverages and more,
+      discover some of our most popular brands in North America and from around the world.
+    </p>
+  </div>
+
+
+
+  <div class="discover-button">
+    <button>DISCOVER OUR BRANDS</button>
+  </div>
+</div>
+       </div>
       </li>
       <li><a href="#">Our Services</a></li>
       <li><a href="#">Careers</a></li>

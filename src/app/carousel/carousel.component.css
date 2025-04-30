@@ -18,6 +18,20 @@ owl-carousel-o {
   overflow: visible !important; 
 }
 
+.content-overlay h6{
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.5rem; 
+  margin-bottom: 5px;
+  padding-top: 20px;
+  padding-bottom: 12px;
+  font-weight: bold;
+  color: #fff9f9;
+}
+
+.content-overlay h6 p{
+  font-size: small;
+}
+
 owl-carousel-o img {
   border-radius: 22px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -72,7 +86,7 @@ owl-carousel-o img {
   background: linear-gradient(45deg,rgba(255, 54, 15, 1), rgba(255, 96, 27, 1) );
   padding: 15px 20px; 
   border-radius: 20px;
-  width: 35%;
+  width: 45%;
   height: auto;
   z-index: 1; 
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
@@ -182,7 +196,7 @@ owl-carousel-o img {
   background-color: #ffffff; 
   color: rgb(61, 61, 61); 
   padding: 10px 20px; 
-  font-size: 16px; 
+  font-size: 14px; 
   font-weight: bold; 
   border: none; 
   border-radius: 45px; 
@@ -206,18 +220,4 @@ owl-carousel-o img {
   margin-top: 15px;
 }
 
-.owl-dot {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin: 0 5px;
-  background-color: #ccc;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.owl-dot.active {
-  background-color: #5073fb; 
-}
 
