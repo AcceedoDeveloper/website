@@ -7,6 +7,7 @@ import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
 import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.component';
 import { MeltingSoftwareComponent } from './melting-software/melting-software.component';
 import { ContactasComponent } from './contactas/contactas.component';
+import { CareerComponent } from './career/career.component';
 
 const routes: Routes = [
   { path: '' , redirectTo: 'acceedo', pathMatch: 'full' },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'heat-treatment', component: HeatTreatmentComponent },
   { path: 'melting-software', component: MeltingSoftwareComponent },
   { path: 'contactas', component: ContactasComponent },
+  { path: 'career', component: CareerComponent },
 
 
 ];

@@ -21,7 +21,7 @@ export class FootrComponent {
     this.isNavOpen = target.checked;
     console.log('Hamburger menu toggled, nav open:', this.isNavOpen);
     if (!this.isNavOpen) {
-      this.isDropdownOpen = false; // Close dropdown when hamburger menu closes
+      this.isDropdownOpen = false; 
       console.log('Dropdown closed due to hamburger menu closing');
     }
   }

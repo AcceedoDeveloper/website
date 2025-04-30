@@ -16,15 +16,14 @@
   <div class="nav-links">
     <ul>
       <li><a href="#" class="lik">Our Company</a></li>
-      <li class="dropdown" [class.active]="isDropdownOpen" data-testid="dropdown">
-        <a href="#" class="dropdown-toggle" (click)="toggleDropdown($event)" data-testid="dropdown-toggle">
-          Product
+      <li class="dropdown" data-testid="dropdown">
+        <a href="#" class="dropdown-toggle"  data-testid="dropdown-toggle">
+        Product
         </a>
        <div class="dropdown-menu" data-testid="dropdown-menu">
-        <div class="border-color "></div>
+        <div class="border-color"></div>
        <div class="brand-portfolio">
-  <div class="header">
- 
+      <div class="header">                 
     <div class="big-number">200+</div>
     <h2>brands worldwide</h2>
     <p class="description">
@@ -35,9 +34,6 @@
       discover some of our most popular brands in North America and from around the world.
     </p>
   </div>
-
-
-
   <div class="discover-button">
     <button>DISCOVER OUR BRANDS</button>
   </div>
@@ -45,7 +41,7 @@
        </div>
       </li>
       <li><a href="#">Our Services</a></li>
-      <li><a href="#">Careers</a></li>
+      <li><a routerLink="/career" >Careers</a></li>
       <li><a href="#">Lastest News Blogs</a></li>
       <li><a routerLink="/contactas">Contact</a></li>
     </ul>

@@ -8,9 +8,9 @@ import { Component } from '@angular/core';
 
 export class CarouselComponent {
   customOptions: any = {
-    stagePadding: 100,
+    stagePadding: 50,
     loop: true,
-    margin: 25,
+    margin: 20,
     mouseDrag: true,
     touchDrag: true,
     pullDrag: true,
@@ -23,22 +23,23 @@ export class CarouselComponent {
     
     navSpeed: 700,
     navText: ['', ''],
-    center: true,
     responsive: {
       0: {
-        items: 1.1 
+        items: 1.01
       },
       576: {
-        items: 1.1
+        items: 1.01
       },
       768: {
-        items: 1.1
+        items: 1.01
       },
       992: {
-        items: 1.1
+        items: 1.01
       },
       1200: {
-        items: 1.1
+        items: 1.01,
+        stagePadding: 82,
+        margin: 20
       }
     },
     nav: true

@@ -25,6 +25,7 @@ import { MeltingSoftwareComponent } from './melting-software/melting-software.co
 import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.component';
 import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
 import { ContactasComponent } from './contactas/contactas.component';
+import { CareerComponent } from './career/career.component';
 
 
 
@@ -46,7 +47,8 @@ import { ContactasComponent } from './contactas/contactas.component';
     HeatTreatmentComponent,
     PowerMetricsComponent,
     CarouselComponent,
-    ContactasComponent
+    ContactasComponent,
+    CareerComponent
     
   
   

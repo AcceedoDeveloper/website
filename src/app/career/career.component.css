@@ -1,0 +1,146 @@
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .job-listings {
+    padding-top: 60px; /* Adjust based on header height */
+    margin-top: -60px; /* Compensate for padding */
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  .hero {
+    background: linear-gradient(135deg, #2d6cdf, #5f9eff);
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .btn {
+    background: white;
+    color: #2d6cdf;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  
+  .btn:hover {
+    background: #e6e6e6;
+  }
+  
+  .why-join {
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .why-join h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  
+  .features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 20px;
+  }
+  
+  .feature {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    flex: 1 1 300px;
+    max-width: 300px;
+  }
+  
+  .job-listings {
+    background: #fff;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  
+  .job-listings h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+  
+  .job-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: auto;
+  }
+  
+  .job-card {
+    background: #f0f4ff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+    display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  }
+  
+  .job-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .job-card h3 {
+    color: #2d6cdf;
+    margin-bottom: 10px;
+  }
+  
+  .apply-btn {
+    margin-top: 15px;
+    display: inline-block;
+    background: #2d6cdf;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  .apply-btn:hover {
+    background: #1c50b3;
+  }
+  
+  .footer {
+    background: #2d6cdf;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+
+
