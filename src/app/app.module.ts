@@ -28,6 +28,7 @@ import { ContactasComponent } from './contactas/contactas.component';
 import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
 import { AboutasComponent } from './aboutas/aboutas.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 
 
@@ -52,7 +53,8 @@ import { AboutasComponent } from './aboutas/aboutas.component';
     ContactasComponent,
     CareerComponent,
     ServicesComponent,
-    AboutasComponent
+    AboutasComponent,
+    PrivacyPolicyComponent
     
   
   

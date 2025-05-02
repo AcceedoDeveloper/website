@@ -68,6 +68,7 @@ body {
   padding: 10px 15px;
   text-decoration: none;
   margin: 0;
+  padding-top: 15px;
  
   transition: color 0.3s ease;
 }

@@ -10,6 +10,7 @@ import { ContactasComponent } from './contactas/contactas.component';
 import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
 import { AboutasComponent } from './aboutas/aboutas.component';
+import {PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 const routes: Routes = [
   { path: '' , redirectTo: 'acceedo', pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'career', component: CareerComponent },
   { path: 'services', component: ServicesComponent },
   { path: 'aboutas', component: AboutasComponent },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent },
 
 
 ];
