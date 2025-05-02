@@ -27,6 +27,7 @@ import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
 import { ContactasComponent } from './contactas/contactas.component';
 import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
+import { AboutasComponent } from './aboutas/aboutas.component';
 
 
 
@@ -50,7 +51,8 @@ import { ServicesComponent } from './services/services.component';
     CarouselComponent,
     ContactasComponent,
     CareerComponent,
-    ServicesComponent
+    ServicesComponent,
+    AboutasComponent
     
   
   

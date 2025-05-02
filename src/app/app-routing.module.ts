@@ -9,6 +9,7 @@ import { MeltingSoftwareComponent } from './melting-software/melting-software.co
 import { ContactasComponent } from './contactas/contactas.component';
 import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
+import { AboutasComponent } from './aboutas/aboutas.component';
 
 const routes: Routes = [
   { path: '' , redirectTo: 'acceedo', pathMatch: 'full' },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'contactas', component: ContactasComponent },
   { path: 'career', component: CareerComponent },
   { path: 'services', component: ServicesComponent },
+  { path: 'aboutas', component: AboutasComponent },
 
 
 ];
