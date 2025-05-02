@@ -10,6 +10,18 @@
     height: 100px; 
     text-align: center;
   }
+
+  .nextcard{
+    position: relative;
+    top: 296px;
+    left: -33px;
+  }
+
+  .perviouscard{
+    margin-left: 99%;
+    position: relative;
+    bottom: 328px;
+  }
   
   .Products h4 {
     margin: 0; 
@@ -18,8 +30,8 @@
   
   .main{
     margin-top: 40px;
-    margin-left: 105px;
-    margin-right: 105px;
+    margin-left: 50px;
+    margin-right: 50px;
   }
 
   owl-carousel-o img {

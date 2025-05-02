@@ -2,7 +2,13 @@
   <h4>Our Products</h4>
 </div>
 <div class="main">
+  <div class = "nextcard">
+    <button class="btn ">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+  </div>
   <div class="conatainer">
+   
   <owl-carousel-o [options]="customOptions">
     <ng-template carouselSlide>
       <div class="card shadow-sm">
@@ -77,7 +83,13 @@
       </div>
     </ng-template>
   </owl-carousel-o>
+  
 </div>
+  <div class = "perviouscard">
+    <button class="btn">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
 </div>
 
 
