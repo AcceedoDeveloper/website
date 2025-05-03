@@ -1,0 +1,68 @@
+<app-footr></app-footr>
+
+<div class="heat-treatment-monitor">
+  <header>
+    <div class="container hero">
+      <h1>Heat Treatment Monitor</h1>
+      <p>Advanced real-time monitoring system for precise heat treatment processes, ensuring optimal material properties and operational efficiency.</p>
+    </div>
+  </header>
+  
+
+  <div class="section-container bo">
+    <div class="content-box">
+      <img src="/142a35f6-e020-480d-9244-5c1be397a7f1.png" alt="Partnering Image" />
+      <div class="text">
+        <h2>Partnering</h2>
+        <p>
+          Project Last Mile works with a national Ministry of Health in enhancing
+          the work they have already done in improving the health system capacity.
+          Heat Treatment Monitor tracks energy consumption for every cycle, providing detailed data on power usage. This helps identify energy-saving opportunities and ensures efficient operation. Monitoring energy per cycle also aids in cost analysis and sustainability efforts.
+        </p>
+      </div>
+    </div>
+
+    <div class="content-box reverse">
+      <div class="text">
+        <h2>Planning</h2>
+        <p>
+          Project Last Mile conducts in-depth scoping with stakeholders in each
+          country to understand local context and design programs to meet the
+          unique needs of country partners.
+        </p>
+      </div>
+      <img src="/1a257692-eb28-425b-8054-0271b72fa8e8.png" alt="Planning Image" />
+    </div>
+  </div>
+
+  
+  <section id="features" class="product-showcase" style="background-color: #f5f7fa;">
+    <div class="container">
+      <h2 class="section-title">Key Features</h2>
+      <div class="features">
+        <div class="feature-card animate-on-scroll" *ngFor="let feature of features">
+          <div class="feature-icon">{{feature.icon}}</div>
+          <h3>{{feature.title}}</h3>
+          <p>{{feature.description}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="benefits">
+    <div class="container">
+      <h2 class="section-title">Business Benefits</h2>
+      <div class="benefits-grid">
+        <div class="benefit-item animate-on-scroll" *ngFor="let benefit of benefits">
+          <h3>{{benefit.title}}</h3>
+          <p>{{benefit.description}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+  
+</div>
+
+<app-footer></app-footer>

@@ -29,6 +29,7 @@ import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
 import { AboutasComponent } from './aboutas/aboutas.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { Product1Component } from './product1/product1.component';
 
 
 
@@ -54,7 +55,8 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
     CareerComponent,
     ServicesComponent,
     AboutasComponent,
-    PrivacyPolicyComponent
+    PrivacyPolicyComponent,
+    Product1Component
     
   
   
