@@ -1,109 +1,67 @@
 <app-footr></app-footr>
-<div class="container-fluid">
-    <div class="row content-section align-items-center">
-      <div class="col-md-6">
-        <h2>Melting Software </h2>
-        <p class="content-text">
+
+<div class="heat-treatment-monitor">
+  <header>
+    <div class="container hero">
+      <h1>Melting Softwar</h1>
+      <p>Our advanced melting software automates and optimizes the entire metal production process—from raw material management to alloy composition—ensuring high-quality output with minimal human intervention.</p>
+    </div>
+  </header>
+  
+
+  <div class="section-container bo">
+    <div class="content-box">
+      <img src="/melt 3 (2).png" alt="Partnering Image" />
+      <div class="text">
+        <h2 class="gradient-text">Partnering</h2>
+        <p>
           Our melting software optimizes the production process by managing raw materials, alloy additions, and temperature monitoring without human contact. It automates planning, furnace selection, and charge-mix composition, providing real-time data access on mobile or computer. Key features include spectrum analysis, automatic reports, stock updates, and furnace maintenance tracking for efficient and high-quality production.
-          <br><br>
           Our system software enables the professional to manage the raw material quantity, addition of alloys, spectrum result and monitor the temperature during the melting process without the need for human contact in the physical process. User can view live data anywhere on their mobile or computer.
+        
         </p>
       </div>
-      <div class="col-md-6">
-        <img src="/fa4edf23-9f91-4cbb-a35a-1c5d8ae707f5.png" alt="Heat Treatment Monitor" class="content-image">
-      </div>
     </div>
-  
-    <div class="row mt-5">
-        <div class="col-12">
-          <div class="two-column-container">
-            <div class="card">
-              <h2>Advantages of melting software</h2>
-              <p>
-                Spectrum result taken from machine and compared to the calculated values.
-                Maintain alloys and rawmaterial stocks up to date.
 
-              </p>
-              <p>
-                Reports are generated automatically based on the plans completed.
-                Melting furnace logs and its capacity recorded.
-The priority and charge-mix addition of each product can be changed at anywhere.
-              </p>
-              <p>
-                The cost and quantity of alloys and raw materials are compared with previous loads.
-                Automatically extract the alloy addition quantity from spectrum result.
-              </p>
-            </div>
-            <div class="card">
-              <h2>key features of melting software</h2>
-              <p>
-                Planning production for customer with alloy composition and planned date. User can also change the product priority based on the customer requirements. Once the product is planned, it awaits furnace selection and chargemix composition.
-              </p>
-              <p>
-                Available furnaces are listed for selection and the raw materials for the product are selected by the operator for loading. The charge-mix amount is automatically calculated and the required amount of pure alloy is displayed. Furnace lining, Ladle lining and heat number are recorded for better maintenance.
-              </p>
-              <p>
-                A final report is generated to display requirements and actual data at every step of melting process, product produced in which furnace and its alloy composition and results of all tests performed on parts in the work order. Standard printers can be used to print out all required information. Support for data conversion to popular spreadsheet formats is also provided.
-              </p>
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    
-   
-    <div class="row mt-5">
-      <div class="col-12">
-        <div class="image-overlay-container">
-          <img src="/melt 3 (2).png" alt="Live Data Monitor" class="overlay-image">
-          <div class="overlay-content">
-            <h3>Live Data Monitoring</h3>
-            <p class="content-text overlay-text">
-              Our Industrial IoT software integrates machines, sensors, and cloud computing to streamline production, enhance efficiency, and reduce waste. It provides real-time data, predictive maintenance, and smart planning, optimizing resources and minimizing human effort. Key features include automated data collection, machine integration, and seamless reporting for better performance tracking.
+    <div class="content-box reverse">
+      <div class="text">
+        <h2 class="gradient-text">Planning</h2>
+        <p>
+          Our Industrial IoT software integrates machines, sensors, and cloud computing to streamline production, enhance efficiency, and reduce waste. It provides real-time data, predictive maintenance, and smart planning, optimizing resources and minimizing human effort. Key features include automated data collection, machine integration, and seamless reporting for better performance tracking.
 
               Our smart attendance and payroll management system streamlines employee tracking, attendance, and payroll processes with cloud-based flexibility. Key features include biometric attendance, leave management, payroll integration, and real-time reporting for enhanced compliance and efficiency. It simplifies onboarding, salary components, and attendance data management, boosting productivity and accuracy.
-
-              <br><br>
-              Melting is a technology used for producing a product, where metal materials such as carbon and silicon are melted together at a high temperature to yield a product. A small amount of impurity is added to the pure component to create a high quality product. Melting depends on the amount to melt and properties of the metals, and the melting process is performed under optimum conditions.
-            </p>
-          </div>
+        </p>
+      </div>
+      <img src="/142a35f6-e020-480d-9244-5c1be397a7f1.png" alt="Planning Image" />
+    </div>
+  </div>
+  
+  <section id="features" class="product-showcase" >
+    <div class="container">
+      <h2 class="section-title">Key Features</h2>
+      <div class="features">
+        <div class="feature-card animate-on-scroll" *ngFor="let feature of features">
+          <div class="feature-icon">{{feature.icon}}</div>
+          <h3>{{feature.title}}</h3>
+          <p>{{feature.description}}</p>
         </div>
       </div>
     </div>
-
-    <div class="container-fluid">
-        <div class="row align-items-center beverage-section">
-          <div class="col-md-6">
-            <img src="/142a35f6-e020-480d-9244-5c1be397a7f1.png" alt="Beverage Display" class="beverage-image">
-          </div>
-          <div class="col-md-6">
-            <div class="beverage-card">
-              <p class="content-text">
-                Our AI-driven melting software revolutionizes foundry operations by automating raw material management, alloy additions, and temperature control—eliminating human error and boosting efficiency. With real-time spectrum analysis, automated charge-mix planning, and predictive AI adjustments, it optimizes furnace performance while reducing energy and material waste. Features like live mobile data access, maintenance alerts, and auto-generated reports ensure seamless, high-quality production.
-              </p>
-              
-              
-            </div>
-          </div>
+  </section>
+  
+  <section class="benefits">
+    <div class="container">
+      <h2 class="section-title">Business Benefits</h2>
+      <div class="benefits-grid">
+        <div class="benefit-item animate-on-scroll" *ngFor="let benefit of benefits">
+          <h3>{{benefit.title}}</h3>
+          <p>{{benefit.description}}</p>
         </div>
       </div>
+    </div>
+  </section>
+  
 
+  
+</div>
 
-      <div class="container-fluid">
-        <div class="row align-items-center beverage-section">
-          <div class="col-md-6">
-            <div class="beverage-card2">
-              <p class="content-text">
-                Our online heat treatment software enables real-time monitoring of temperature and cycle data, with cloud storage for easy access anywhere. Key features include live graphs, auto report generation, and energy-saving cycle comparisons for optimized processes. It simplifies cycle management, batch tracking, and customized reporting for improved efficiency and accuracy.
-              </p>
-           
-            </div>
-          </div>
-          <div class="col-md-6">
-            <img src="/melt 13.png" alt="Beverage Display" class="beverage-image">
-          </div>
-        </div>
-      </div>
-
-  </div>
-  <app-footer></app-footer>
+<app-footer></app-footer>

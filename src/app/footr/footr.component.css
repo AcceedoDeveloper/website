@@ -436,7 +436,7 @@ body {
     display: block;
     width: 100%;
     background-color: #ffffff;
-    left: 0px;
+    left: -29px;
     max-height: 320px;
     overflow: hidden;
     transition: max-height 0.3s ease-in-out;

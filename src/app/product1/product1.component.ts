@@ -85,16 +85,7 @@ export class Product1Component implements OnInit {
     this.setupScrollAnimation();
   }
 
-  onSubmit(): void {
-    if (this.demoForm.valid) {
-      // Here you would typically send the form data to your backend
-      console.log('Form submitted:', this.demoForm.value);
-      // Reset form after submission
-      this.demoForm.reset();
-      // Show success message
-      alert('Thank you for your demo request! We will contact you shortly.');
-    }
-  }
+ 
 
   private setupScrollAnimation(): void {
     const observer = new IntersectionObserver((entries) => {

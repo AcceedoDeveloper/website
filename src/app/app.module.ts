@@ -30,6 +30,7 @@ import { ServicesComponent } from './services/services.component';
 import { AboutasComponent } from './aboutas/aboutas.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
+import { Product2Component } from './product2/product2.component';
 
 
 
@@ -56,7 +57,8 @@ import { Product1Component } from './product1/product1.component';
     ServicesComponent,
     AboutasComponent,
     PrivacyPolicyComponent,
-    Product1Component
+    Product1Component,
+    Product2Component
     
   
   

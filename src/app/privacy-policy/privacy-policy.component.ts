@@ -24,7 +24,7 @@ export class PrivacyPolicyComponent implements AfterViewInit {
       observer.observe(section);
     });
 
-    // Smooth scrolling for anchor links
+    
     const anchors = this.elementRef.nativeElement.querySelectorAll('a[href^="#"]');
     anchors.forEach((anchor: HTMLAnchorElement) => {
       anchor.addEventListener('click', (e: Event) => {
