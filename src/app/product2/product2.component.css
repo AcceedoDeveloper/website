@@ -99,6 +99,7 @@
   .content-box .text {
     flex: 1;
     min-width: 250px;
+    margin-left: 15px;
   }
   
   .gradient-text {
@@ -249,11 +250,11 @@
   -webkit-text-fill-color: transparent;
   display: inline-block;
   position: relative;
-  margin-bottom: 63px;
+  margin-bottom: 28px;
   margin-top: -50px;
-  left: 50%;
+  left: 17%;
   transform: translateX(-50%);
-  text-align: center;
+  
 }
 
 .gradient-texts::after {
@@ -267,6 +268,35 @@
 }
 
 
+.section-titles {
+  margin: 0 auto;
+  text-align: center;
+  display: block;
+  font-size: 1.8rem;
+  font-weight: bold;
+  background: linear-gradient(to right, #7B5FFF, #FF5FA2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  position: relative;
+  margin-bottom: 50px;
+  margin-top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.section-titles::after {
+  content: "";
+  display: block;
+  width: 145px;
+  height: 3px;
+  margin: 8px auto 0;
+  background: linear-gradient(to right, #7B5FFF, #FF5FA2);
+  border-radius: 2px;
+}
+.second-card{
+  line-height: 1.1;
+}
 
 
 
