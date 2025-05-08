@@ -1,69 +1,176 @@
 <app-footr></app-footr>
 
-<div class="heat-treatment-monitor">
-  <header>
-    <div class="container hero">
-      <h1>Power Metrics</h1>
-      <p>Power Metrics delivers real-time visibility into energy usage, empowering businesses and individuals to reduce waste, cut costs, and enhance sustainability through data-driven decisions.</p>
-    </div>
-  </header>
-  
 
-  <div class="section-container bo">
-    <div class="content-box">
-      <img src="/142a35f6-e020-480d-9244-5c1be397a7f1.png" alt="Partnering Image" />
-      <div class="text">
-        <h2 class="gradient-text">Partnering</h2>
-        <p>
-          At Power Metrics, we are committed to helping you understand and optimize your energy consumption for a more sustainable and cost-effective future. Our platform is designed to empower individuals, businesses, and organizations to track, analyze, and manage their energy usage effortlessly. we make it easy to gain valuable insights into your energy patterns, enabling you to make informed decisions.<br><br>
 
-Our platform is designed to empower individuals, businesses, and organizations to track, analyze, and manage their energy usage effortlessly. We make it easy to gain valuable insights into your energy patterns, enabling you to make informed decisions.
+    <title>Power Metrics - Energy Intelligence Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-Heat Treatment Monitor
-        </p>
-      </div>
-    </div>
 
-    <div class="content-box reverse">
-      <div class="text">
-        <h2 class="gradient-text">Planning</h2>
-        <p>
-          Energy efficiency recommendations in power metrics are insights derived from analyzing energy usage patterns to identify opportunities for reducing consumption and optimizing performance. These recommendations are based on data collected from power meters, which highlight areas of inefficiency, such as excessive energy usage during peak hours or poorly performing equipment.<br><br>
 
-          By using these insights, users can implement strategies like adjusting usage schedules, upgrading inefficient devices, or modifying operational practices to lower energy consumption and reduce costs. Such recommendations help improve overall energy efficiency, minimize waste, and support sustainability goals.
-        </p>
-      </div>
-      <img src="/1a257692-eb28-425b-8054-0271b72fa8e8.png" alt="Planning Image" />
-    </div>
-  </div>
-  
-  <section id="features" class="product-showcase" >
-    <div class="container">
-      <h2 class="section-title">Key Features</h2>
-      <div class="features">
-        <div class="feature-card animate-on-scroll" *ngFor="let feature of features">
-          <div class="feature-icon">{{feature.icon}}</div>
-          <h3>{{feature.title}}</h3>
-          <p>{{feature.description}}</p>
+        <div class="header-wave"></div>
+        <div class="container">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1>Power Metrics</h1>
+                    <p class="tagline">Real-time visibility into energy usage, empowering businesses and individuals to reduce waste, cut costs, and enhance sustainability through data-driven decisions.</p>
+                    <a href="#partnering" class="btn">Learn More</a>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Power Metrics Dashboard">
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
-  
-  <section class="benefits">
-    <div class="container">
-      <h2 class="section-title">Business Benefits</h2>
-      <div class="benefits-grid">
-        <div class="benefit-item animate-on-scroll" *ngFor="let benefit of benefits">
-          <h3>{{benefit.title}}</h3>
-          <p>{{benefit.description}}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-  
 
-  
-</div>
+    
+    <!-- Partnering Section -->
+    <section class="partnering" id="partnering">
+        <div class="container">
+            <h2 class="section-title">Partnering With You</h2>
+            <div class="partnering-content">
+                <div class="partnering-text">
+                    <p>At Power Metrics, we are committed to helping you understand and optimize your energy consumption for a more sustainable and cost-effective future. Our platform is designed to empower individuals, businesses, and organizations to track, analyze, and manage their energy usage effortlessly.</p>
+                    <p>We make it easy to gain valuable insights into your energy patterns, enabling you to make informed decisions. Our platform is designed to empower individuals, businesses, and organizations to track, analyze, and manage their energy usage effortlessly.</p>
+                </div>
+                <div class="partnering-image">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1415&q=80" alt="Business Analytics">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>Real-Time Energy Tracking</h3>
+                    <p>Continuously monitors electricity, gas, and water consumption via smart meters & IoT sensors. Instant alerts for abnormal usage spikes or inefficiencies.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Comprehensive Analytics</h3>
+                    <p>AI-powered trend analysis identifies waste patterns and peak demand cycles. Compares historical vs. real-time data to forecast future consumption.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Customizable Dashboards</h3>
+                    <p>Drag-and-drop widgets for live KPIs: cost trends, carbon footprint, and demand forecasts. Role-based views for facilities managers, CFOs, and sustainability teams.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Automated Efficiency Recommendations</h3>
+                    <p>AI suggests actionable fixes: equipment upgrades, schedule adjustments, or retrofits. Prioritizes high-impact changes with ROI estimates.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Multi-Site & Cloud Management</h3>
+                    <p>Centralized control for distributed facilities with granular drill-down. Secure API integrations with ERP, BMS, and utility providers.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏭</div>
+                    <h3>Industrial Scalability</h3>
+                    <p>Processes millions of data points daily across manufacturing plants, data centers, and smart grids.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Business Benefits</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3><i class="fas fa-chart-line"></i> Cost Reduction</h3>
+                    <p>Slash energy bills by 15–30% through peak shaving and waste elimination.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3><i class="fas fa-leaf"></i> Sustainability Compliance</h3>
+                    <p>Track carbon emissions in real time for ESG reporting and regulatory audits.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3><i class="fas fa-cogs"></i> Operational Efficiency</h3>
+                    <p>Predictive maintenance flags failing equipment before energy waste escalates.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3><i class="fas fa-database"></i> Data-Backed Decision Making</h3>
+                    <p>Benchmark performance across sites and optimize tariffs/load distribution.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3><i class="fas fa-shield-alt"></i> Cybersecurity & Reliability</h3>
+                    <p>End-to-end encryption with offline data caching during disruptions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Planning Section -->
+    <section class="planning">
+        <div class="container">
+            <h2 class="section-title">Energy Efficiency Planning</h2>
+            <div class="planning-content">
+                <div class="planning-text">
+                    <p>Energy efficiency recommendations in power metrics are insights derived from analyzing energy usage patterns to identify opportunities for reducing consumption and optimizing performance. These recommendations are based on data collected from power meters, which highlight areas of inefficiency, such as excessive energy usage during peak hours or poorly performing equipment.</p>
+                    <p>By using these insights, users can implement strategies like adjusting usage schedules, upgrading inefficient devices, or modifying operational practices to lower energy consumption and reduce costs. Such recommendations help improve overall energy efficiency, minimize waste, and support sustainability goals.</p>
+                </div>
+                <div class="planning-image">
+                    <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80" alt="Energy Planning">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Power Metrics</div>
+            <div class="footer-links">
+                <a href="#">Home</a>
+                <a href="#partnering">About</a>
+                <a href="#">Features</a>
+                <a href="#">Pricing</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+            <p class="copyright">© 2023 Power Metrics. All rights reserved.</p>
+        </div>
+    </footer>
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <app-footer></app-footer>
