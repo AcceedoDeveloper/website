@@ -12,39 +12,7 @@ export class Product2Component implements OnInit {
   currentYear: number = new Date().getFullYear();
   demoForm: FormGroup;
   
-  features = [
-    {
-      icon: '🔍',
-      title: 'Biometric Integration',
-      description: 'Seamless facial recognition and fingerprint scanning ensure 100% accurate attendance tracking, eliminating buddy punching and time theft. Supports contactless check-ins for hygienic workplaces.'
-    },
-    {
-      icon: '⏰',
-      title: 'Real-Time Attendance Monitoring',
-      description: 'Automatically detects late arrivals, early departures, and absenteeism with configurable grace periods. Tracks shift-based schedules for flexible workforce management.'
-    },
-    {
-      icon: '💰',
-      title: 'Automated Payroll & Deductions',
-      description: 'Smart system calculates salaries, overtime (OT), and deductions for late arrivals, unpaid leaves, or policy violations. Ensures compliance with company policies.'
-    },
-    {
-      icon: '📱',
-      title: 'Employee Self-Service Portal',
-      description: 'Single login access for employees to view attendance, salary slips, leave status, and apply for loans. Personalized dashboard for easy tracking of shifts and pending requests.'
-    },
-    {
-      icon: '📊',
-      title: 'Advanced Reporting & Analytics',
-      description: 'Generates customizable reports for payroll, attendance trends, and labor costs. Exportable data for audits and compliance.'
-    },
-    {
-      icon: '🔔',
-      title: 'Alerts & Notifications',
-      description: 'Instant alerts for attendance anomalies, policy violations, or pending approvals. Keeps employees and managers informed in real time.'
-    }
-  ];
-
+  
   benefits = [
     {
       title: 'Eliminates Manual Errors',

@@ -333,53 +333,57 @@
 .bo{
 
 }
+
 .content-box {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
-  
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-left: 20px;
-  margin-right: 20px;
-  
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin: 0 20px;
 }
 
 .content-box img {
-  width: 100%;
-  max-width: 300px;
+  flex: 1 1 55%;
+  max-width: 40%;
   border-radius: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   object-fit: cover;
-  margin-left: 20px;
-  margin-right: 20px;
 }
 
+
 .content-box .text {
-  flex: 1;
+  flex: 1 1 40%;
   min-width: 250px;
-  margin-left: 20px;
-  margin-right: 20px;
+  padding: 0 26px;
 }
+
 
 .content-box h2 {
   margin: 0 0 10px;
-  margin-left: 20px;
-  margin-right: 20px;
 }
 
 
-
 @media (max-width: 768px) {
-  .content-box,
-  .content-box.reverse {
+  .content-box {
     flex-direction: column;
     text-align: center;
   }
 
   .content-box .text {
     text-align: center;
+    padding: 0;
+  }
+
+  .content-box img {
+    width: 100%;
+    max-width: 95%;
+    height: auto;
+    margin: 0 auto 15px;
+
   }
 }
 
@@ -387,13 +391,12 @@
 .gradient-text {
   font-size: 2rem;
   font-weight: bold;
-  background: linear-gradient(to right, #7B5FFF, #FF5FA2); /* Blue to Pink */
+  background: linear-gradient(to right, #7B5FFF, #FF5FA2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
   position: relative;
 }
-
 
 
 .gradient-text::after {
