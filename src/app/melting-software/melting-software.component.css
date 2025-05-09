@@ -16,26 +16,12 @@
     line-height: 1.6;
   }
   
-  header {
-    background: linear-gradient(135deg, #2a5bd7, #00c9a7);
-    color: white;
-    padding: 2rem 0;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
+
   
-  header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-    animation: pulse 15s infinite linear;
+.melt-video{
+  margin-left: 40px;
+
   }
-  
   @keyframes pulse {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -330,9 +316,7 @@
   padding: 40px;
 }
 
-.bo{
 
-}
 
 .content-box {
   display: flex;
@@ -358,7 +342,8 @@
 .content-box .text {
   flex: 1 1 40%;
   min-width: 250px;
-  padding: 0 26px;
+  padding: 0 16px;
+
 }
 
 
@@ -407,4 +392,238 @@
   margin: 8px auto 0;
   background: linear-gradient(to right, #7B5FFF, #FF5FA2);
   border-radius: 2px;
+}
+.background {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  z-index: -1;
+}
+
+.left-bg {
+  left: 0;
+  background-color:#122f3c;
+}
+
+.right-bg {
+  right: 0;
+  background-color: #1ec5bd;
+}
+
+.slider-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden; 
+
+}
+
+.slider {
+  width: 200%;
+  height: 100%;
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+
+/* Content sections */
+.text-content {
+  width: 50%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.image-content {
+  width: 420px;
+  height: 168px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1ec5bd;
+  margin-left: 9%;
+  margin-top: 73px;
+}
+
+/* Slide 1 styling */
+
+.header-title {
+  font-size: 3.5rem;
+  font-weight: normal;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color:white;
+}
+
+.header-para{
+  font-size: 1rem;
+  color: white;
+  margin-bottom: 3rem;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+}
+
+.page-number {
+  font-size: 2rem;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Navigation arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  font-size: 1.5rem;
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-decoration: none;
+}
+
+.arrow-left {
+  left: 2rem;
+}
+
+.arrow-right {
+  right: 2rem;
+}
+
+
+#slide1:checked ~ .arrow-left {
+  display: none;
+}
+
+#slide2:checked ~ .arrow-right {
+  display: none;
+}
+
+
+input[type="radio"] {
+  display: none;
+}
+
+#slide1:checked ~ .slider {
+  transform: translateX(0);
+}
+
+#slide2:checked ~ .slider {
+  transform: translateX(-50%);
+}
+
+@media (max-width: 768px) {
+  .slider {
+    width: 200%;
+    flex-direction: row;
+    height: auto;
+  }
+
+  .slide {
+    width: 100vw;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .slide {
+    height: auto; 
+  }
+
+  .slider {
+    height: auto;
+  }
+
+  .slider-container {
+    height: 100%; 
+    max-height: 200px;
+  }
+
+  .text-content {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .text-content h1 {
+    font-size: 2rem;
+    line-height: 1.3;
+  }
+
+  .text-content p {
+    font-size: 1rem;
+    margin: 1rem 0 2rem;
+    max-width: 90%;
+  }
+
+  .nav-links {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .image-content {
+    width: 100%;
+    max-width: 90%;
+    height: auto;
+    margin: 1.5rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+  }
+  
+  .image-content img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    display: block;
+  }
+  
+
+  .arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .arrow-left {
+    left: 1rem;
+  }
+
+  .arrow-right {
+    right: 1rem;
+  }
+
+  .page-number {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+  }
 }

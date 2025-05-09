@@ -13,8 +13,8 @@
   }
   
   header {
-    background: linear-gradient(135deg, #2a5bd7, #00c9a7);
-    color: white;
+    background: linear-gradient(135deg,  #8467f7);
+    color: rgb(11, 11, 11);
     padding: 2rem 0;
     text-align: center;
     position: relative;
@@ -50,9 +50,10 @@
   }
   
   .hero h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    animation: fadeIn 1s ease;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
   }
   
   .hero p {
@@ -81,32 +82,34 @@
     align-items: center;
     gap: 20px;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.09);
-    width: 100%;
   }
   
   .content-box img {
     width: 100%;
-    max-width: 480px;
+    max-width: 550px;
     border-radius: 10px;
     object-fit: cover;
     margin: auto;
-    margin-left: -10px;
-    
+    margin-left: -60px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transform: perspective(1000px) rotateY(10deg);
+    transition: transform 0.5s ease;    
   }
+  .content-box:hover img {
+    transform: perspective(1000px) rotateY(0deg);
+}
   
   .content-box .text {
     flex: 1;
     min-width: 250px;
     margin-left: 15px;
+    animation: fadeInLeft 1s ease-out;
   }
   
   .gradient-text {
     font-size: 1.8rem;
     font-weight: bold;
     background: linear-gradient(to right, #7B5FFF, #FF5FA2);
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
     position: relative;
@@ -237,6 +240,7 @@
 
 .cycle{
   margin-bottom: 50px;
+    background-color: #dcd6f4;
 }
 
 
@@ -349,7 +353,7 @@
 }
 
 /* Card styling for both cards */
-.card {
+.cardd {
   flex: 1;
   background: rgba(255, 255, 255, 0.95);
   padding: 30px;
@@ -361,18 +365,18 @@
 }
 
 /* Second card with opposite rotation */
-.card:nth-child(2) {
+.cardd:nth-child(2) {
   transform: rotateY(-10deg);
 }
 
 /* Hover effect for cards */
-.card:hover {
+.cardd:hover {
   transform: rotateY(0deg);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 }
 
 /* Card title styling */
-.card h2 {
+.cardd h2 {
   color: #2c3e50;
   font-size: 24px;
   margin-bottom: 15px;
@@ -382,7 +386,7 @@
 }
 
 /* Underline effect for headings */
-.card h2::after {
+.cardd h2::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -393,7 +397,7 @@
 }
 
 /* Text inside cards */
-.card p {
+.cardd p {
   color: #34495e;
   line-height: 1.6;
   font-size: 16px;
@@ -402,11 +406,11 @@
 }
 
 /* Different background gradients for each card's paragraphs */
-.card:first-child p {
+.cardd:first-child p {
   background: linear-gradient(45deg, #3498db22, #e74c3c22);
 }
 
-.card:last-child p {
+.cardd:last-child p {
   background: linear-gradient(45deg, #e74c3c22, #3498db22);
 }
 
@@ -418,37 +422,163 @@
     perspective: none;
   }
 
-  .card {
+  .cardd {
     transform: none;
     padding: 20px;
   }
 
-  .card:nth-child(2) {
+  .cardd:nth-child(2) {
     transform: none;
   }
 
-  .card:hover {
+  .cardd:hover {
     transform: scale(1.02);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   }
 
-  .card h2 {
+  .cardd h2 {
     font-size: 18px;
     margin-bottom: 12px;
   }
 
-  .card p {
+  .cardd p {
     font-size: 14px;
     padding: 10px;
   }
 }
 
 @media (max-width: 576px) {
-  .card h2 {
+  .cardd h2 {
     font-size: 16px;
   }
 
-  .card p {
+  .cardd p {
     font-size: 13px;
+  }
+}
+
+
+
+.card-container {
+  position: relative;
+  width: 100%;
+  max-width: 1190px;
+  margin: 90px auto;
+  margin-top: 50px;
+  padding: 20px;
+  padding-bottom: 100px;
+
+}
+
+.card {
+  position: sticky;
+  width: 100%;
+  padding: 40px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  margin-bottom: -140px; /* This creates the overlap */
+  transition: all 0.8s ease;
+  transform-origin: top center;
+}
+
+/* First Card (Bottom) */
+.card:nth-child(1) {
+  top: 150px;
+  z-index: 1;
+  color: white;
+  border-color: #8467f7;
+  background-color: rgb(254, 254, 254);
+  
+}
+
+/* Second Card (Middle) */
+.card:nth-child(2) {
+  top: 150px;
+  z-index: 2;
+  color: white;
+  opacity: 0;
+  border-color: #8467f7;
+  background-color: rgb(254, 254, 254);
+  transform: translateY(400px);
+  transition: all 0.8s ease;
+}
+
+/* Third Card (Top) */
+.card:nth-child(3) {
+  top: 260px;
+  z-index: 3;
+  color: white;
+  background-color: rgb(254, 254, 254);
+  opacity: 0;
+  border-color: #8467f7;
+  transform: translateY(350px);
+}
+
+.card-img{
+  margin-top: -190px;
+  
+}
+
+/* Animation when scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  .card:nth-child(2) {
+    animation: cardReveal 2.8s 2.2s forwards;
+    animation-timeline: view();
+    animation-range: entry 25% cover 30%;
+}
+  
+  .card:nth-child(3) {
+      animation: cardReveal 2.8s 2.2s forwards;
+      animation-timeline: view();
+      animation-range: entry 30% cover 30%;
+  }
+  
+  @keyframes cardReveal {
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+}
+
+/* Fallback for browsers without animation-timeline support */
+@media (prefers-reduced-motion: no-preference) {
+  @supports not (animation-timeline: view()) {
+      .card-container:hover .card:nth-child(2),
+      .card-container:hover .card:nth-child(3) {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  color: #8467f7;
+  margin-top: 30px;
+  margin-left: 450px;
+}
+
+.card p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-top: 10px;
+  color: #2c3e50;
+  margin-left: 450px;
+}
+
+@media (max-width: 768px) {
+  .card {
+      padding: 30px;
+      margin-bottom: -80px;
+  }
+  
+  .card h2 {
+      font-size: 1.5rem;
+  }
+  
+  .card p {
+      font-size: 1rem;
   }
 }

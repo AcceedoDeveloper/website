@@ -13,19 +13,19 @@ export class Product1Component implements OnInit {
   
   features = [
     {
-      icon: '📊',
-      title: 'Multiple Heat Cycles',
-      description: 'Record any number of heat cycles or curves during the process. This capability allows precise tracking of multiple heating and cooling phases for complex treatments.'
+      icon: '🔥',
+      title: 'Heat Treatment Process Monitoring',
+      description: 'Our device accurately tracks every stage of the heat treatment cycle — heating, holding, and quenching. It ensures the temperature is maintained precisely and detects any deviation in real-time.'
     },
     {
-      icon: '☁️',
-      title: 'Cloud Storage',
-      description: 'Store data on the cloud for secure access to heat treatment records from any device, even if local hardware is unavailable. Ensures continuous monitoring and data retrieval.'
+      icon: '🌡️',
+      title: ' High-Temperature Tracking',
+      description: 'Capable of monitoring temperatures above 500°C with high accuracy. It captures detailed temperature data critical for ensuring the quality of treated materials.'
     },
     {
-      icon: '⚡',
-      title: 'Energy Monitoring',
-      description: 'Tracks energy consumption for every cycle, providing detailed data on power usage. Helps identify energy-saving opportunities and ensures efficient operation.'
+      icon: '💾',
+      title: ' Power Cut Protection & Data Backup',
+      description: 'Even during a power cut, our hardware safely stores your data. It can retain process records for up to 3 days, ensuring no data loss during unexpected outages.'
     },
     {
       icon: '📱',
@@ -33,14 +33,14 @@ export class Product1Component implements OnInit {
       description: 'View live data of your heat treatment process directly on your PC or mobile device. Real-time monitoring ensures you can track temperature, time, and process parameters remotely.'
     },
     {
-      icon: '🔔',
-      title: 'Alerts & Notifications',
-      description: 'Receive immediate alerts if any values fall outside acceptable ranges. Enables quick response to anomalies and maintains optimal process conditions.'
+      icon: '✅',
+      title: 'Quality Control ',
+      description: 'By tracking every step, our system helps maintain high standards and supports compliance with industrial heat treatment protocols. It reduces errors and improves process reliability.'
     },
     {
-      icon: '📈',
+      icon: '📝',
       title: 'Custom Reports',
-      description: 'Additional reports can be added and tailored to meet specific customer or business requirements for enhanced operational insights and decision-making.'
+      description: 'Generates detailed reports for every heat treatment cycle. Helps your team review performance, ensure quality, and maintain accurate records for audits.'
     }
   ];
 
