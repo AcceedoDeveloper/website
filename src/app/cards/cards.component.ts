@@ -7,7 +7,10 @@ import { Component } from '@angular/core';
 })
 
 export class CardsComponent {
+
+
   customOptions: any = {
+     stagePadding: 60,
     loop: true,
     center: true, 
     margin: 30, 
@@ -33,4 +36,6 @@ export class CardsComponent {
     },
     nav: true
   };
+
+  
 }
