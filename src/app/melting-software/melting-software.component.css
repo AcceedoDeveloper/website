@@ -82,6 +82,7 @@
   
   .product-showcase {
     padding: 5rem 0;
+    background-color: #cfe7ff;
     text-align: center;
   }
   
@@ -158,12 +159,14 @@
     margin-bottom: 1rem;
   }
   
-  .benefits {
+    .benefits {
     background-color: #1a2b50;
     color: white;
     padding: 5rem 0;
     text-align: center;
     margin-bottom: 0px;
+    margin-top: -50px;
+    margin-bottom: -10px;
   }
   
   .benefits-grid {
@@ -280,6 +283,28 @@
     margin-top: 1rem;
     color: rgba(255,255,255,0.7);
   }
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px) perspective(1000px) rotateY(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) perspective(1000px) rotateY(0deg);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px) perspective(1000px) rotateY(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) perspective(1000px) rotateY(0deg);
+  }
+}
   
   @media (max-width: 768px) {
     .hero h1 {
@@ -316,9 +341,17 @@
   padding: 40px;
 }
 
-
-
 .content-box {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin: 0 20px;
+}
+.content-box2{
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -331,23 +364,41 @@
 
 .content-box img {
   flex: 1 1 55%;
-  max-width: 40%;
+  max-width: 32%;
   border-radius: 10px;
-  margin-left: 10px;
+  margin-left: 20px;
   margin-right: 10px;
   object-fit: cover;
+  animation: fadeInRight 1s ease forwards;
 }
-
+.content-box2 img {
+  flex: 1 1 55%;
+  max-width: 32%;
+  border-radius: 10px;
+  margin-left: 20px;
+  margin-right: 10px;
+  object-fit: cover;
+  animation: fadeInRight 1s ease forwards;
+}
 
 .content-box .text {
   flex: 1 1 40%;
   min-width: 250px;
   padding: 0 16px;
+}
 
+.content-box2 .text {
+  flex: 1 1 40%;
+  min-width: 250px;
+  padding: 0 16px;
 }
 
 
 .content-box h2 {
+  margin: 0 0 10px;
+}
+
+.content-box2 h2 {
   margin: 0 0 10px;
 }
 
@@ -365,7 +416,25 @@
 
   .content-box img {
     width: 100%;
-    max-width: 95%;
+    max-width: 245px;
+    height: auto;
+    margin: 0 auto 5px;
+    margin-top: -50px;
+
+  }
+    .content-box2 {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .content-box2 .text {
+    text-align: center;
+    padding: 0;
+  }
+
+  .content-box2 img {
+    width: 100%;
+    max-width: 235px;
     height: auto;
     margin: 0 auto 15px;
 
@@ -397,7 +466,7 @@
   position: absolute;
   top: 0;
   width: 50%;
-  height: 100%;
+  height: 90%;
   z-index: -1;
 }
 
@@ -413,7 +482,7 @@
 
 .slider-container {
   width: 100%;
-  height: 100%;
+  height: 85%;
   position: relative;
   overflow: hidden; 
 
@@ -421,7 +490,7 @@
 
 .slider {
   width: 200%;
-  height: 100%;
+  height: 90%;
   display: flex;
   transition: transform 0.5s ease-in-out;
 }
@@ -433,16 +502,16 @@
   position: relative;
 }
 
-/* Content sections */
 .text-content {
   width: 50%;
   padding: 2rem;
+  color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.image-content {
+.image-content1 {
   width: 420px;
   height: 168px;
   display: flex;
@@ -450,10 +519,19 @@
   align-items: center;
   background-color: #1ec5bd;
   margin-left: 9%;
-  margin-top: 73px;
+  margin-top: 12%;
 }
 
-/* Slide 1 styling */
+.image-content2 {
+  width: 420px;
+  height: 115px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1ec5bd;
+  margin-left: 9%;
+  margin-top: 12%;
+}
 
 .header-title {
   font-size: 3.5rem;
@@ -469,18 +547,6 @@
   margin-bottom: 3rem;
   line-height: 1.5;
   max-width: 400px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #333;
-  font-size: 1rem;
 }
 
 .page-number {
@@ -561,8 +627,8 @@ input[type="radio"] {
   }
 
   .slider-container {
-    height: 100%; 
-    max-height: 200px;
+    height: auto; 
+    min-height: 100vh; 
   }
 
   .text-content {
@@ -589,7 +655,7 @@ input[type="radio"] {
     gap: 1rem;
   }
 
-  .image-content {
+  .image-content1 {
     width: 100%;
     max-width: 90%;
     height: auto;
@@ -600,9 +666,26 @@ input[type="radio"] {
     background-color: transparent;
   }
   
-  .image-content img {
+  .image-content1 img {
     width: 100%;
     height: auto;
+    max-width: 100%;
+    display: block;
+  }
+  .image-content2 {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    margin: 1.5rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+  }
+  
+  .image-content2 img {
+    width: 500px;
+    height: 300px;
     max-width: 100%;
     display: block;
   }
@@ -625,5 +708,33 @@ input[type="radio"] {
   .page-number {
     font-size: 1.3rem;
     margin-top: 1rem;
+  }
+  
+  .benefits {
+    margin-top: -60px;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .benefit-item {
+    padding: 0.5rem;
+    border-radius: 8px;
+  }
+
+  .benefit-item h3 {
+    font-size: 0.7rem;
+  
+  }
+
+  .benefit-item p {
+    font-size: 0.6rem;
+    line-height: 1.4;
   }
 }

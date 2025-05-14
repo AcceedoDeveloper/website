@@ -15,7 +15,7 @@ export class Product2Component implements OnInit {
   
   benefits = [
     {
-      title: 'Eliminates Manual Errors',
+      title: 'Eliminates Errors',
       description: 'Automated tracking and payroll processing reduce human errors, ensuring accurate salary calculations and attendance records.'
     },
     {
@@ -31,11 +31,11 @@ export class Product2Component implements OnInit {
       description: 'Maintains transparent records for labor laws, audits, and dispute resolution. Customizable policies ensure adherence to company rules.'
     },
     {
-      title: 'Remote Workforce Management',
+      title: 'Remote Workforce',
       description: 'Cloud-based access allows HR and managers to monitor attendance, approve leaves, and process payroll from anywhere.'
     },
     {
-      title: 'Scalable for High-Traffic Environments',
+      title: 'Scalable for High-Traffic',
       description: 'Processes thousands of biometric check-ins per hour with sub-second response times. Supports 200+ concurrent terminals across multiple locations.'
     }
   ];

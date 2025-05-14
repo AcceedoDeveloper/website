@@ -8,6 +8,7 @@ import { OnInit } from '@angular/core';
   styleUrl: './product1.component.css'
 })
 export class Product1Component implements OnInit {
+  
   currentYear: number = new Date().getFullYear();
   demoForm: FormGroup;
   
@@ -54,17 +55,10 @@ export class Product1Component implements OnInit {
       description: 'Minimizes material waste by detecting process deviations early and enabling immediate corrective actions.'
     },
     {
-      title: 'Operational Efficiency',
-      description: 'Enhances overall efficiency through real-time monitoring, remote access, and automated alerts.'
-    },
-    {
       title: 'Cost Savings',
       description: 'Identifies energy-saving opportunities and helps save companies millions through predictive maintenance.'
     },
-    {
-      title: 'Process Validation',
-      description: 'Provides valuable documentation for quality control and regulatory compliance.'
-    },
+
     {
       title: 'Remote Oversight',
       description: 'Allows management to monitor processes from anywhere, ensuring better oversight and reporting.'
@@ -105,6 +99,30 @@ export class Product1Component implements OnInit {
     }, 0);
   }
 }
+export class CardRotationComponent {
+ rotation = 0;
+  isDragging = false;
+  lastX = 0;
 
+  startDrag(event: MouseEvent | TouchEvent): void {
+    this.isDragging = true;
+    this.lastX = this.getX(event);
+  }
 
+  onDrag(event: MouseEvent | TouchEvent): void {
+    if (!this.isDragging) return;
+    const currentX = this.getX(event);
+    const delta = currentX - this.lastX;
+    this.rotation += delta * 0.5; // Adjust sensitivity
+    this.lastX = currentX;
+  }
+
+  endDrag(): void {
+    this.isDragging = false;
+  }
+
+  private getX(event: MouseEvent | TouchEvent): number {
+    return event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
+  }
+}
 
