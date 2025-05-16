@@ -13,7 +13,7 @@ import { AboutasComponent } from './aboutas/aboutas.component';
 import {PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
-
+import {ProductionMonitorComponent} from './production-monitor/production-monitor.component';
 const routes: Routes = [
   { path: '' , redirectTo: 'acceedo', pathMatch: 'full' },
   { path: 'acceedo', component: HomeComponent },
@@ -28,7 +28,7 @@ const routes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'product1', component: Product1Component },
   { path: 'product2', component: Product2Component },
-
+  { path: 'product-monitor', component: ProductionMonitorComponent}
 
 ];
 

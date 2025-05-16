@@ -9,11 +9,19 @@ export class CareerComponent implements AfterViewInit {
   ngAfterViewInit() {
     const scrollButton = document.querySelector('.btn');
     scrollButton?.addEventListener('click', (event) => {
-      event.preventDefault(); // Prevent default anchor behavior
+      event.preventDefault(); 
       const target = document.querySelector('#jobs');
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
   }
+ openWhatsApp() {
+  const phoneNumber = '919994111214'; 
+  const message = 'Hello, I would like to join in your Company';
+  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
+
+
 }

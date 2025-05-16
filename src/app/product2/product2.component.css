@@ -122,6 +122,103 @@
     margin-left: 15px;
     animation: fadeInLeft 1s ease-out;
   }
+     .content-box3 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-left: 20px;
+    margin-right: 20px; 
+  }
+  
+
+
+  .content-box3 img {
+    flex: 1;
+    width: 100%;
+    max-width: 790px;
+    height: 100%;
+    max-height: 550px;
+    border-radius: 10px;
+    border: 5px solid #8467f7;
+    object-fit: cover;
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+    animation: fadeInLeft 1s ease-out;
+  }
+  
+ 
+    .content-box3 .text {
+    flex: 1;
+    min-width: 250px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+
+    .content-box3 h2 {
+    margin: 0 0 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .content-box3 p{
+    margin: 7px;
+  }
+
+  
+    .content-box4 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px; 
+  }
+  
+
+
+  .content-box4 img {
+    flex: 1;
+    width: 100%;
+    max-width: 790px;
+    height: 100%;
+    max-height: 550px;
+    border-radius: 10px;
+    border: 5px solid #8467f7;
+    object-fit: cover;
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+    animation: fadeInLeft 1s ease-out;
+  }
+  
+ 
+    .content-box4 .text {
+    flex: 1;
+    min-width: 250px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  
+
+    .content-box4 h2 {
+    margin: 0 0 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .content-box4 p{
+    margin: 7px;
+  }
   .col-12{
     height: 650px;
   }
@@ -388,7 +485,7 @@
   .card:nth-child(3) {
       animation: cardReveal 2.8s 2.2s forwards;
       animation-timeline: view();
-      animation-range: entry 30% cover 50%;
+      animation-range: entry 30% cover 60%;
   }
   
   @keyframes cardReveal {

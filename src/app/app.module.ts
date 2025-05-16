@@ -31,6 +31,7 @@ import { AboutasComponent } from './aboutas/aboutas.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
+import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
 
 
 
@@ -58,7 +59,8 @@ import { Product2Component } from './product2/product2.component';
     AboutasComponent,
     PrivacyPolicyComponent,
     Product1Component,
-    Product2Component
+    Product2Component,
+    ProductionMonitorComponent
     
   
   
