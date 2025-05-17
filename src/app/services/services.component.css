@@ -1,4 +1,3 @@
-
 .services-page {
  .services-hero {
   padding: 6rem 0;
@@ -320,7 +319,8 @@
   .service-content {
     flex: 1;
     padding: 0 3rem;
-    
+    margin-left: 25px;
+   
     .service-icon {
       width: 80px;
       height: 80px;
@@ -349,6 +349,50 @@
     }
     
     .service-connector {
+      position: absolute;
+      right: -30px;
+      bottom: -60px;
+      width: 60px;
+      height: 60px;
+      border-left: 2px dashed #0d6efd;
+      border-bottom: 2px dashed #0d6efd;
+      border-radius: 0 0 0 20px;
+    }
+  }
+
+   .service-contentr {
+    flex: 1;
+    padding: 0 3rem;
+    margin-right: 15px;
+   
+    .service-iconr {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #0d6efd, #6f42c1);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 30px rgba(13, 110, 253, 0.3);
+    }
+    
+    h3 {
+      font-weight: 700;
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: #212529;
+    }
+    
+    p {
+      color: #6c757d;
+      line-height: 1.7;
+      font-size: 1.1rem;
+    }
+    
+    .service-connectorr {
       position: absolute;
       right: -30px;
       bottom: -60px;

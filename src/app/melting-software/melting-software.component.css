@@ -1,8 +1,7 @@
-
 .heat-treatment-monitor {
   /* Simplified CSS without :root variables */
   * {
-    margin: 0;
+   
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -358,6 +357,7 @@
             margin-right: 100px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             transition: transform 0.4s ease, box-shadow 0.4s ease;
+           
         }
         .culture-card2 {
             background: white;
@@ -1464,3 +1464,214 @@ main {
     line-height: 1.4;
   }
 }
+   .metrics-wrapper {
+            padding: 40px 20px;
+        }
+
+        /* Metrics Cards Section */
+        .metrics-cards-area {
+            background: #ffffff;
+            padding: 20px 0;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .metric-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #fff;
+            position: relative;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .metric-card-image {
+            height: 260px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .metric-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+            transition: opacity 0.3s ease;
+        }
+
+        .metric-card:hover .metric-image-overlay {
+            opacity: 0.9;
+        }
+
+        .metric-card-body {
+            padding: 25px;
+            background: #fff;
+        }
+
+        .metric-card-title {
+            font-size: 1.5rem;
+            color: #1e3a8a;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .metric-card-text {
+            color: #6b7280;
+            line-height: 1.6;
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 24px;
+            }
+
+            .metric-card-image {
+                height: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .metrics-wrapper {
+                padding: 30px 15px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metric-card-image {
+                height: 180px;
+            }
+
+            .metric-card-body {
+                padding: 20px;
+            }
+
+            .metric-card-title {
+                font-size: 1.4rem;
+            }
+
+            .metric-card-text {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metric-card-image {
+                height: 160px;
+            }
+
+            .metric-card-title {
+                font-size: 1.3rem;
+            }
+
+            .metric-card-text {
+                font-size: 0.9rem;
+            }
+        }
+
+
+
+
+
+    .feature-cards-section {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.feature-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card-item {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+}
+
+.feature-card-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card-visual {
+    height: 260px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.visual-overlay {
+    position: absolute;
+    height: 270px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+}
+
+.feature-card-details {
+    padding: 25px;
+}
+
+.feature-heading {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-bottom: 15px;
+}
+
+.feature-description {
+    color: #4a5568;
+    line-height: 1.6;
+    font-size: 1rem;
+    padding: 10px;
+    margin-left: 10px;
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .feature-grid-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .feature-card-visual {
+        height: 180px;
+    }
+    
+    .feature-card-details {
+        padding: 20px;
+    }
+    .feature-card-item{
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+}
+
