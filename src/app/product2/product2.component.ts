@@ -15,29 +15,17 @@ export class Product2Component implements OnInit {
   
   benefits = [
     {
-      title: 'Eliminates Errors',
-      description: 'Automated tracking and payroll processing reduce human errors, ensuring accurate salary calculations and attendance records.'
+      title: 'Accurate Time and Attendance Tracking',
+      description: 'Eliminate manual errors with automated employee check-ins via fingerprint, card, or mobile app scanning. Ensure precise clocking in and out, including late arrivals and early departures.'
     },
     {
-      title: 'Cost Savings',
-      description: 'Minimizes revenue loss from time theft, unauthorized absences, and payroll discrepancies. Optimizes overtime costs with AI-driven insights.'
+      title: 'Streamlined Payroll & Leave Management',
+      description: 'Automate salary calculations and leave approvals based on real-time attendance data, reducing payroll errors and saving administrative time.'
     },
     {
-      title: 'Enhanced Productivity',
-      description: 'Streamlines HR operations, freeing up time for strategic tasks. Real-time monitoring improves workforce efficiency.'
+      title: 'Comprehensive Reporting & Remote Access',
+      description: 'Generate detailed attendance and payroll reports easily, with cloud-based access for HR and managers to monitor and manage workforce data from anywhere.'
     },
-    {
-      title: 'Regulatory Compliance',
-      description: 'Maintains transparent records for labor laws, audits, and dispute resolution. Customizable policies ensure adherence to company rules.'
-    },
-    {
-      title: 'Remote Workforce',
-      description: 'Cloud-based access allows HR and managers to monitor attendance, approve leaves, and process payroll from anywhere.'
-    },
-    {
-      title: 'Scalable for High-Traffic',
-      description: 'Processes thousands of biometric check-ins per hour with sub-second response times. Supports 200+ concurrent terminals across multiple locations.'
-    }
   ];
 
   constructor(private fb: FormBuilder) {

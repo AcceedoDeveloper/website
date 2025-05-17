@@ -1,4 +1,4 @@
-import { importProvidersFrom, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SmartAttendanceComponent } from './smart-attendance/smart-attendance.component';
 import { AppComponent } from './app.component';
@@ -10,12 +10,13 @@ import { ContactasComponent } from './contactas/contactas.component';
 import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
 import { AboutasComponent } from './aboutas/aboutas.component';
-import {PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
-import {ProductionMonitorComponent} from './production-monitor/production-monitor.component';
+import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
+
 const routes: Routes = [
-  { path: '' , redirectTo: 'acceedo', pathMatch: 'full' },
+  { path: '', redirectTo: 'acceedo', pathMatch: 'full' },
   { path: 'acceedo', component: HomeComponent },
   { path: 'smart-attendance', component: SmartAttendanceComponent },
   { path: 'power-metrics', component: PowerMetricsComponent },
@@ -28,12 +29,13 @@ const routes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'product1', component: Product1Component },
   { path: 'product2', component: Product2Component },
-  { path: 'product-monitor', component: ProductionMonitorComponent}
-
+  { path: 'product-monitor', component: ProductionMonitorComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    scrollPositionRestoration: 'enabled'  
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
