@@ -31,8 +31,11 @@ import { AboutasComponent } from './aboutas/aboutas.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
+
+import { ReactiveFormsModule } from '@angular/forms';
 import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
 
+import { FormsModule,  } from '@angular/forms';
 
 
 
@@ -69,6 +72,7 @@ import { ProductionMonitorComponent } from './production-monitor/production-moni
   
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule, 
@@ -80,6 +84,7 @@ import { ProductionMonitorComponent } from './production-monitor/production-moni
     MatButtonModule,
     MatListModule,
     CarouselModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [],
