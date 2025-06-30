@@ -36,6 +36,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
 
 import { FormsModule,  } from '@angular/forms';
+import { BlogComponent } from './blog/blog.component';
+import { DiwndisplayComponent } from './diwndisplay/diwndisplay.component';
+import { DwincontantComponent } from './dwincontant/dwincontant.component';
+import { Dwincontant2Component } from './dwincontant2/dwincontant2.component';
+import { Dwincontant3Component } from './dwincontant3/dwincontant3.component';
+import { Dwincontant4Component } from './dwincontant4/dwincontant4.component';
+import { Dwincontant5Component } from './dwincontant5/dwincontant5.component';
+import { Dwincontant6Component } from './dwincontant6/dwincontant6.component';
+import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
+import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
+
+
 
 
 
@@ -63,7 +75,19 @@ import { FormsModule,  } from '@angular/forms';
     PrivacyPolicyComponent,
     Product1Component,
     Product2Component,
-    ProductionMonitorComponent
+    ProductionMonitorComponent,
+    BlogComponent,
+    DiwndisplayComponent,
+    DwincontantComponent,
+    Dwincontant2Component,
+    Dwincontant3Component,
+    Dwincontant4Component,
+    Dwincontant5Component,
+    Dwincontant6Component,
+    Dwincontant7Component,
+    Dwincontant8Component,
+   
+  
     
   
   

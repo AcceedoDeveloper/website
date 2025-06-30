@@ -13,7 +13,19 @@ import { AboutasComponent } from './aboutas/aboutas.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
-import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
+import { BlogComponent } from './blog/blog.component';
+import { DiwndisplayComponent } from './diwndisplay/diwndisplay.component';
+import { DwincontantComponent } from './dwincontant/dwincontant.component';
+import { Dwincontant2Component } from './dwincontant2/dwincontant2.component';
+import { Dwincontant3Component } from './dwincontant3/dwincontant3.component';
+import { Dwincontant4Component } from './dwincontant4/dwincontant4.component';
+import { Dwincontant5Component } from './dwincontant5/dwincontant5.component';
+import { Dwincontant6Component } from './dwincontant6/dwincontant6.component';
+import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
+import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
+
+
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'acceedo', pathMatch: 'full' },
@@ -29,7 +41,19 @@ const routes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'product1', component: Product1Component },
   { path: 'product2', component: Product2Component },
-  { path: 'product-monitor', component: ProductionMonitorComponent }
+  {path: 'blog', component: BlogComponent },
+  { path: 'diwndisplay', component: DiwndisplayComponent },
+  {path: 'dwincontant', component: DwincontantComponent },
+  {path: 'dwincontant2', component: Dwincontant2Component },
+  {path: 'dwincontant3', component: Dwincontant3Component },
+  {path: 'dwincontant4', component: Dwincontant4Component },
+  {path: 'dwincontant5', component: Dwincontant5Component },
+  {path: 'dwincontant6', component: Dwincontant6Component },
+  {path: 'dwincontant7', component: Dwincontant7Component },
+  {path: 'dwincontant8', component: Dwincontant8Component }
+
+
+ 
 ];
 
 @NgModule({

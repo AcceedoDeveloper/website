@@ -1,0 +1,140 @@
+<app-footr></app-footr>
+<!-- Header Section -->
+<div class="header-section">
+    <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
+    <div class="header-overlay">
+        <h1 class="title">
+            <span class="title-text">DwinDisplay</span>
+            <span class="title-subtext">Innovative HMI Solutions</span>
+        </h1>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-container">
+    <div class="page-header">
+        <h1 class="page-title">HMI Screen Design and Input Configuration Using DGUS Software</h1>
+        <p class="page-description">DWIN DISPLAY</p>
+    </div>
+
+    <div class="guide-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Configuration Steps</h3>
+            <nav class="sidebar-nav">
+            <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+<a [routerLink]="['/dwincontant2']" class="sidebar-link">Basic Touch and Keyboard Configuration in DGUS</a>
+<a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+<a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
+<a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+<a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+<a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+<a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
+            </nav>
+        </aside>
+
+        <!-- Guide Content -->
+        <article class="guide-content">
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">7</div>
+                    <h2 class="step-title">Reading and Writing Data via UART Command Format</h2>
+                </div>
+                <div class="step-content">
+                    <div class="step-image">
+                        <img src="uart-communication.png" alt="UART Communication Diagram">
+                    </div>
+                    
+                    <p>DWIN displays support UART communication to store and retrieve data using NOR Flash memory. This is essential when working with parameters like machine IDs, server addresses, or port settings that need to persist even after a power cycle.</p>
+                    
+                    <div class="alert">
+                        <div class="alert-icon">•</div>
+                        <div class="alert-content">
+                            <strong>Supported Memory Types:</strong>
+                            <ul style="margin: 0.5rem 0 0 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;"><strong>VP (RAM):</strong> Volatile memory; resets on power off</li>
+                                <li><strong>NOR Flash:</strong> Non-volatile memory; retains data after reboot</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="alert">
+                        <div class="alert-icon">•</div>
+                        <div class="alert-content">
+                            <strong>Functionality:</strong> Using UART commands, you can:
+                            <ul style="margin: 0.5rem 0 0 1.5rem;">
+                                <li style="margin-bottom: 0.5rem;">📝 Write data from VP to Flash</li>
+                                <li>📤 Read data from Flash to VP</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="sub-step">
+                        <h3 class="sub-step-title">Key Components:</h3>
+                        <div class="alert">
+                            <div class="alert-icon">1.</div>
+                            <div class="alert-content">
+                                <strong>Header (5A A5):</strong> Start of frame
+                            </div>
+                        </div>
+                        <div class="alert">
+                            <div class="alert-icon">2.</div>
+                            <div class="alert-content">
+                                <strong>Length (0B):</strong> Number of bytes to follow
+                            </div>
+                        </div>
+                        <div class="alert">
+                            <div class="alert-icon">3.</div>
+                            <div class="alert-content">
+                                <strong>Command (82):</strong> Instruction to write to NOR Flash
+                            </div>
+                        </div>
+                        <div class="alert">
+                            <div class="alert-icon">4.</div>
+                            <div class="alert-content">
+                                <strong>VP (00 08):</strong> Flash operation indicator address
+                            </div>
+                        </div>
+                        <div class="alert">
+                            <div class="alert-icon">5.</div>
+                            <div class="alert-content">
+                                <strong>Opcode (A5):</strong> A5 = Write | 5A = Read
+                            </div>
+                        </div>
+                        <div class="alert">
+                            <div class="alert-icon">6.</div>
+                            <div class="alert-content">
+                                <strong>Flash Address (00 00 02):</strong> Destination address in Flash
+                            </div>
+                        </div>
+                        <div class="alert">
+                            <div class="alert-icon">7.</div>
+                            <div class="alert-content">
+                                <strong>VP Address (30 00):</strong> Source address in RAM
+                            </div>
+                        </div>
+                        <div class="alert">
+                            <div class="alert-icon">8.</div>
+                            <div class="alert-content">
+                                <strong>Length (00 3E):</strong> Number of bytes to copy
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <div class="alert-icon">✅</div>
+                        <div class="alert-content">
+                            This stores 62 bytes from VP 3000h into Flash 000002h.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-navigation">
+                <a href="#" class="btn btn-outline">← Previous Section</a>
+                <div></div> <!-- Empty div for spacing -->
+            </div>
+        </article>
+    </div>
+</main>
+<app-footer></app-footer>

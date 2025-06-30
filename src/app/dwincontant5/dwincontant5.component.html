@@ -1,0 +1,101 @@
+<app-footr></app-footr>
+<!-- Header Section with Hover Effects -->
+<div class="header-section">
+    <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
+    <div class="header-overlay">
+        <h1 class="title">
+            <span class="title-text">DwinDisplay</span>
+            <span class="title-subtext">Innovative HMI Solutions</span>
+        </h1>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-container">
+    <div class="page-header">
+        <h1 class="page-title">HMI Screen Design and Input Configuration Using DGUS Software</h1>
+        <p class="page-description">DWIN DISPLAY</p>
+    </div>
+
+    <div class="guide-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Configuration Steps</h3>
+            <nav class="sidebar-nav">
+<a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+<a [routerLink]="['/dwincontant2']" class="sidebar-link">Basic Touch and Keyboard Configuration in DGUS</a>
+<a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+<a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
+<a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+<a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+<a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+<a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
+
+            </nav>
+        </aside>
+
+        <!-- Guide Content -->
+        <article class="guide-content">
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">6</div>
+                    <h2 class="step-title">Final Step: Saving and Exporting Project to SD Card</h2>
+                </div>
+                <div class="step-content">
+                    <div class="step-image">
+                        <img src="sd-card-export.png" alt="SD Card Export Process">
+                    </div>
+                    
+                    <p>Once the HMI interface has been designed and configured, the final step is to save your project and transfer it to the DWIN display via an SD card. This process allows the DWIN device to boot up with the correct UI and configuration files.</p>
+                    
+                    <div class="sub-step">
+                        <h3 class="sub-step-title">Step-by-Step Instructions:</h3>
+                        <div class="alert">
+                            <div class="alert-icon">🔹</div>
+                            <div class="alert-content">
+                                <strong>Step 1:</strong> Go to the File menu in DGUS Editor, then click Save and Generate. This will build the necessary project files for export.
+                            </div>
+                        </div>
+                        
+                        <div class="alert">
+                            <div class="alert-icon">🔹</div>
+                            <div class="alert-content">
+                                <strong>Step 2:</strong>
+                                <ul style="margin: 0.5rem 0 0 1rem;">
+                                    <li style="margin-bottom: 0.5rem;">Insert your Card Reader into a PC or Laptop</li>
+                                    <li>Format the SD card (recommended: FAT32 format) to ensure compatibility with the DWIN display</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="alert">
+                            <div class="alert-icon">🔹</div>
+                            <div class="alert-content">
+                                <strong>Step 4:</strong>
+                                <ul style="margin: 0.5rem 0 0 1rem;">
+                                    <li style="margin-bottom: 0.5rem;">Eject the SD card safely</li>
+                                    <li style="margin-bottom: 0.5rem;">Power OFF the DWIN display</li>
+                                    <li style="margin-bottom: 0.5rem;">Insert the SD card into the DWIN SD slot</li>
+                                    <li>Wait for the configuration process to complete (usually within a few seconds). Once the screen lights up with the new interface, the process is complete</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <strong>Important:</strong> Always use a high-quality SD card (4GB-32GB recommended) and ensure proper ejection to prevent file corruption.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-navigation">
+                <a href="#" class="btn btn-outline">← Previous Section</a>
+                <a href="#" class="btn btn-primary">Next: UART Commands →</a>
+            </div>
+        </article>
+    </div>
+</main>
+<app-footer></app-footer>

@@ -1,0 +1,105 @@
+<app-footr></app-footr>
+<!-- Header Section -->
+<div class="header-section">
+    <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
+    <div class="header-overlay">
+        <h1 class="title">
+            <span class="title-text">DwinDisplay</span>
+            <span class="title-subtext">Innovative HMI Solutions</span>
+        </h1>
+    </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-container">
+    <div class="page-header">
+        <h1 class="page-title">HMI Screen Design and Input Configuration Using DGUS Software</h1>
+        <p class="page-description">DWIN DISPLAY</p>
+    </div>
+
+    <div class="guide-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Configuration Steps</h3>
+            <nav class="sidebar-nav">
+             <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+<a [routerLink]="['/dwincontant2']" class="sidebar-link">Basic Touch and Keyboard Configuration in DGUS</a>
+<a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+<a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
+<a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+<a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+<a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+<a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
+            </nav>
+        </aside>
+
+        <!-- Guide Content -->
+        <article class="guide-content">
+            <div class="step">
+                <div class="step-header">
+                    <div class="step-number">9</div>
+                    <h2 class="step-title">UART-Based Interaction with DWIN Display: Read & Write</h2>
+                </div>
+                <div class="step-content">
+                    <div class="step-image">
+                        <img src="uart-flash-interaction.png" alt="UART Flash Interaction Diagram">
+                    </div>
+                    
+                    <p>UART communication allows the DWIN HMI to store and retrieve persistent data through command frames. This is essential for cases where values such as server settings, machine numbers, or user preferences need to be retained even after rebooting the display. With the help of Docklight or any serial terminal, we can issue write and read commands that interact with the device's NOR Flash memory using the special VP address 0x0008.</p>
+                    
+                    <div class="sub-step">
+                        <h3 class="sub-step-title">Step-by-Step Process:</h3>
+                        
+                        <div class="alert alert-success">
+                            <div class="alert-icon">🟢</div>
+                            <div class="alert-content">
+                                <strong>Step 1:</strong> Enter the required data into the interface (e.g., machine number, port number, server ID).
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-success">
+                            <div class="alert-icon">🟢</div>
+                            <div class="alert-content">
+                                <strong>Step 2:</strong> Run the Write Command via UART (Docklight) to store the entered data into NOR Flash.
+                            </div>
+                        </div>
+                        
+                        <div class="alert">
+                            <div class="alert-icon">🔁</div>
+                            <div class="alert-content">
+                                <strong>Step 3:</strong> Restart the DWIN Display — You'll notice that the interface resets to default state after reboot.
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-success">
+                            <div class="alert-icon">🟢</div>
+                            <div class="alert-content">
+                                <strong>Step 4:</strong> Run the Read Command — This loads the saved data from Flash back into the working VP address (RAM), making the values appear again.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert">
+                        <div class="alert-icon">✅</div>
+                        <div class="alert-content">
+                            <strong>Key Highlights of This Section:</strong>
+                            <ul style="margin: 0.5rem 0 0 1.5rem;">
+                                <li>Used special VP address 0x0008 to trigger NOR Flash operations</li>
+                                <li>Demonstrated both Write and Read command frames</li>
+                                <li>Explained the persistence of data across power cycles</li>
+                                <li>Simulated real-use case for storing machine configuration settings</li>
+                                <li>Integrated with Docklight software for easy command execution</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-navigation">
+                        <a href="#" class="btn btn-outline">← Previous Section</a>
+                        <a href="#" class="btn btn-primary">Complete Guide →</a>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</main>
+<app-footer></app-footer>
