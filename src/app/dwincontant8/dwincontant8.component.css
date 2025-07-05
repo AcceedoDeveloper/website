@@ -89,9 +89,9 @@ body {
 
 /* Main Content */
 .main-container {
-    max-width: 1280px;
+    max-width: 1700px;
     margin: 2rem auto;
-    padding: 0 2rem;
+   
     flex: 1 0 auto;
 }
 
@@ -172,23 +172,30 @@ body {
     background-color: white;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    padding: 2rem;
+    padding: 0rem;
 }
 
 /* Step Component */
 .step {
-    margin-bottom: 3rem;
+    ul {
+        margin-left: 10px; /* Moves entire list inward */
+    }
+    .step-content li {
+        margin-left: 20px; /* Adds extra space for list items */
+
+    }
+    margin: bottom 3rem;;
 }
 
 .step:last-child {
-    margin-bottom: 0;
+    margin-bottom: 3rem;
 }
 
 .step-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap:0rem;
+    margin-bottom: 1.rem;
 }
 
 .step-number {
@@ -214,8 +221,13 @@ body {
     margin-left: 3rem;
 }
 
+image1{
+    padding-right: 40px;
+    width: 60%;
+    height: fit-content;
+}
 .step-image {
-    margin: 1.5rem 0;
+    margin: 20px;
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow-md);
@@ -223,21 +235,27 @@ body {
 }
 
 .step-image img {
-    width: 100%;
+    width: 50%;
     height: auto;
     display: block;
 }
 
+.image-caption {
+  display: flex;
+  align-items: center;
+  margin: left 40px;;
+}
+
 /* Sub-step styling */
 .sub-step {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0rem;
 }
 
 .sub-step-title {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--dark);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0rem;
 }
 
 /* Alert */
@@ -413,4 +431,6 @@ body {
         flex-direction: column;
         gap: 0.5rem;
     }
+    
+    
 }

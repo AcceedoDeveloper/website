@@ -1,60 +1,77 @@
-
-<div style="height: 60px;"></div>
-<div>
-  <div class="conatainer">
-  <owl-carousel-o [options]="customOptions">
-    <ng-template carouselSlide>
-      <div class="overlay"> 
-      <img src="/freepik__candid-image-photography-natural-textures-highly-r__28920.jpeg" alt="Slide 2">
-      <div class="content-overlay">
-        <h6>COMPREHENSIVE SOLUTIONS</h6>
-        <p>Providing an all-in-one platform that streamlines planning, scheduling, machine production, 
-          rejection management, operator tracking, downtime analysis, detailed reporting.</p>
-          <button class="custom-button">Comprehensive Software Solutions</button>
-      </div>
+  <div style="height: 60px;"></div>
+    <div class="carousel-wrapper">
+        <input type="radio" name="slides" id="slide-1" checked>
+        <input type="radio" name="slides" id="slide-2">
+        <input type="radio" name="slides" id="slide-3">
+        <input type="radio" name="slides" id="slide-4">
+        
+        <div class="carousel-container">
+            <div class="carousel-slides">
+                <!-- Slide 1 -->
+                <div class="carousel-slide">
+                    <label for="slide-2"></label>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-image">
+                        <img src="/freepik__candid-image-photography-natural-textures-highly-r__28920.jpeg" alt="Solutions">
+                    </div>
+                    <div class="slide-content">
+                        <h6>COMPREHENSIVE SOLUTIONS</h6>
+                        <p>Providing an all-in-one platform that streamlines planning, scheduling, machine production, rejection management, operator tracking, downtime analysis, detailed reporting.</p>
+                        <button class="custom-button">Comprehensive Solutions</button>
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="carousel-slide">
+                    <label for="slide-3"></label>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-image">
+                        <img src="/motherboard-background.jpg" alt="Innovation">
+                    </div>
+                    <div class="slide-content Embedded">
+                        <h6>EMBEDDED INNOVATION</h6>
+                        <p>Pioneering the future of technology with high-quality PCB board development and efficient embedded programming solutions.</p>
+                        <button class="custom-button">Embedded Innovation</button>
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="carousel-slide">
+                    <label for="slide-4"></label>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-image">
+                        <img src="/freepik__candid-image-photography-natural-textures-highly-r__22273.jpeg" alt="IoT">
+                    </div>
+                    <div class="slide-content">
+                        <h6>INDUSTRY IoT SOLUTIONS</h6>
+                        <p>Transform your manufacturing process with our Industry IoT solution, enabling real-time data analytics and seamless connectivity for unparalleled efficiency.</p>
+                        <button class="custom-button">Industry Iot Solution</button>
+                    </div>
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="carousel-slide">
+                    <label for="slide-1"></label>
+                    <div class="slide-overlay"></div>
+                    <div class="slide-image">
+                        <img src="modern-equipped-computer-lab.jpg" alt="R&D">
+                    </div>
+                    <div class="slide-content Ino">
+                        <h6>R&D INNOVATION</h6>
+                        <p>Advancing technology through dedicated research, development. Our team focuses on pioneering innovative solutions for embedded systems and web applications.</p>
+                        <button class="custom-button">R&D Innovation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Dots -->
+        <div class="carousel-nav">
+            <label for="slide-1" class="nav-dot"></label>
+            <label for="slide-2" class="nav-dot"></label>
+            <label for="slide-3" class="nav-dot"></label>
+            <label for="slide-4" class="nav-dot"></label>
+        </div>
     </div>
-    </ng-template>
-    <ng-template carouselSlide>
-      <div class="overlay">
-      <img src="/motherboard-background.jpg" alt="Slide 3">
-      <div class="content-overlay Embedded">
-        <h6> EMBEDDED INNOVATION</h6>
-        <p>Pioneering the future of technology with high-quality PCB board 
-          development and efficient embedded programming solutions.
-          </p>
-          <button class="custom-button">Comprehensive Software Solutions</button>
-      </div>
-    </div>
-    </ng-template>
-    <ng-template carouselSlide>
-      <div class="overlay">
-      <img src="/freepik__candid-image-photography-natural-textures-highly-r__22273.jpeg" alt="Slide 1">
-      <div class="content-overlay">
-        <h6>INDUSTRY IoT SOLUTIONS</h6>
-        <p>Transform your manufacturing process with our Industry IoT solution,
-           enabling real-time data analytics and seamless connectivity for 
-           unparalleled efficiency.
-            </p>
-          <button class="custom-button">Comprehensive Software Solutions</button>
-      </div>
-    </div>
-    </ng-template>
-    <ng-template carouselSlide>
-      <div class="overlay">
-      <img src="modern-equipped-computer-lab.jpg" alt="Slide 1">
-      <div class="content-overlay Ino">
-        <h6>R&D INNOVATION</h6>
-        <p>Advancing technology through dedicated research, development. 
-          Our team focuses on pioneering innovative solutions for embedded systems 
-          and web applications.
-        </p>
-          <button class="custom-button">R&D Innovation</button>
-      </div>
-    </div>
-    </ng-template>
-  </owl-carousel-o>
-</div>
-</div>
-
-<app-cards></app-cards>
-<div style="height: 30px;"></div>
+    <app-cards></app-cards>
+    <div style="height: 30px;"></div>

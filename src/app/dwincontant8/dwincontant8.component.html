@@ -5,31 +5,28 @@
     <div class="header-overlay">
         <h1 class="title">
             <span class="title-text">DwinDisplay</span>
-            <span class="title-subtext">Innovative HMI Solutions</span>
+            <span class="title-subtext">Reading and Writing Data via UART Command Format</span>
         </h1>
     </div>
 </div>
 
 <!-- Main Content -->
 <main class="main-container">
-    <div class="page-header">
-        <h1 class="page-title">HMI Screen Design and Input Configuration Using DGUS Software</h1>
-        <p class="page-description">DWIN DISPLAY</p>
-    </div>
+    
 
     <div class="guide-container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <h3 class="sidebar-title">Configuration Steps</h3>
             <nav class="sidebar-nav">
-             <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
-<a [routerLink]="['/dwincontant2']" class="sidebar-link">Basic Touch and Keyboard Configuration in DGUS</a>
-<a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
-<a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
-<a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
-<a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
-<a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
-<a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
+                <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+                <a [routerLink]="['/dwincontant2']" class="sidebar-link">Basic Touch and Keyboard Configuration in DGUS</a>
+                <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+                <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
+                <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+                <a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+                <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+                <a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
             </nav>
         </aside>
 
@@ -38,61 +35,77 @@
             <div class="step">
                 <div class="step-header">
                     <div class="step-number">9</div>
-                    <h2 class="step-title">UART-Based Interaction with DWIN Display: Read & Write</h2>
+                    <h2 class="step-title" style="  position: relative; top: 35px;" >Reading and Writing Data via UART Command Format</h2>
                 </div>
                 <div class="step-content">
                     <div class="step-image">
-                        <img src="uart-flash-interaction.png" alt="UART Flash Interaction Diagram">
+    
                     </div>
                     
-                    <p>UART communication allows the DWIN HMI to store and retrieve persistent data through command frames. This is essential for cases where values such as server settings, machine numbers, or user preferences need to be retained even after rebooting the display. With the help of Docklight or any serial terminal, we can issue write and read commands that interact with the device's NOR Flash memory using the special VP address 0x0008.</p>
+                    <p style="margin-bottom: 20px;">DWIN HMI displays support UART communication to store and retrieve data using onboard NOR Flash memory. This feature is crucial for retaining essential parameters such as machine IDs, server addresses, port numbers, and communication settings, even after a power cycle. It ensures system reliability by preserving configurations without manual re-entry. The use of NOR Flash offers stable, non-volatile storage, ideal for industrial and embedded systems. With UART-based access, updates can be done easily during runtime, making it a reliable and efficient solution for long-term deployment in automation, control panels, and smart interfaces.</p>
                     
-                    <div class="sub-step">
-                        <h3 class="sub-step-title">Step-by-Step Process:</h3>
-                        
-                        <div class="alert alert-success">
-                            <div class="alert-icon">🟢</div>
-                            <div class="alert-content">
-                                <strong>Step 1:</strong> Enter the required data into the interface (e.g., machine number, port number, server ID).
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-success">
-                            <div class="alert-icon">🟢</div>
-                            <div class="alert-content">
-                                <strong>Step 2:</strong> Run the Write Command via UART (Docklight) to store the entered data into NOR Flash.
-                            </div>
-                        </div>
-                        
-                        <div class="alert">
-                            <div class="alert-icon">🔁</div>
-                            <div class="alert-content">
-                                <strong>Step 3:</strong> Restart the DWIN Display — You'll notice that the interface resets to default state after reboot.
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-success">
-                            <div class="alert-icon">🟢</div>
-                            <div class="alert-content">
-                                <strong>Step 4:</strong> Run the Read Command — This loads the saved data from Flash back into the working VP address (RAM), making the values appear again.
-                            </div>
-                        </div>
+                    <h2 class="step-title">Sheet of Dwin Flash memory</h2>
+    <img class="image1" src="image sheet of dwin flash memory comd 8.jpeg" style="display: block; margin: 0 auto;">
+     <div style="display: flex; justify-content: center; align-items: center; height: 10pxs;">             
+    <p>Flash Memory in Diwin Hmi</p>
+    </div>
+
+                    <h2 class="step-title">NOR flash memory</h2>
+                    <p>But our Diwin Hmi support only NOR flash memory. NAND flash memory is not available for our Dwin Hmi. So, now I will store the data in Dwin nor flash memory.</p>
+
+                    <h2 class="step-title">This document explains how to use UART commands to:</h2>
+                    <ul>
+                        <li>Store data from a RAM (VP address) into the DWIN display's NOR Flash memory.</li>
+                        <li>Retrieve the data from NOR Flash back into RAM (VP address).</li>
+                    </ul>
+
+                    <h2 class="step-title">Memory Type:</h2>
+                    <ul>1) VP (RAM)</ul>
+                    <li>      Temporary memory used at runtime.</li>
+                    <ul>2) NOR Flash</ul>
+                    <li>      Permanent memory, used for data storage.</li>
+
+                    <h2 class="step-title">To write to NOR flash memory, the DWIN UART write command format is:</h2>
+                    <strong>[Header] [Length] [Command] [VP=0008] [Opcode=A5] [Flash_Addr] [VP_Addr] [Length]</strong>
+                    <p style="color: #ff3333; font-weight: bold;padding-left: 60px;">Eg: 5A A5 0B 82 00 08 A5 00 00 02 30 00 00 3E</p>
+
+                    <ul style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>1) Header </strong> <span style="color: #ff3333;">5A A5 </span>0B 82 00 08 A5 00 00 02 30 00 00 3E</li></ul>
+                    <ul style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>2) Length </strong>5A A5 <span style="color: #ff3333;">0B </span> 00 08 A5 00 00 02 30 00 00 3E</li></ul>
+                <li style= "padding-left: 40px;">Number of bytes after this byte, The hex value of (0x0B) is 11 it represent length of bytes.</li>
+                    
+                        <p style="color: #ff3333; font-weight: bold;padding-left: 80px;">Eg: 0B 82 00 08 A5 00 00 02 30 00 00 3E</p>
+
+                    <ul  style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>3) Command </strong>5A A5 0B <span style="color: #ff3333;">82 </span>00 08 A5 00 00 02 30 00 00 3E</li></ul>
+                    <li style= "padding-left: 40px;">      0x82 - write to NOR flash.</li>
+                    <li style= "padding-left: 40px;">      But we are going to 0x82 command because we want to store data into NOR flash memory of Dwin Display.</li>
+
+                    <ul  style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>4) VP </strong>5A A5 0B 82 <span style="color: #ff3333;"> 00 08 </span>A5 00 00 02 30 00 00 3E</li></ul>
+                    <ul style= "padding-left: 60px;">      i) VP_Highbyte=00</ul>
+                    <ul style= "padding-left: 60px;">      ii) VP_Low byte = 08</ul>
+                    <li style= "padding-left: 40px;">       This is a special address used to send Flash commands.</li>
+                    <li style= "padding-left: 40px;">       It tells the display: “This is not normal VP write. It’s a NOR Flash operation.”</li>
+
+                    <ul  style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>5) Opcode </strong>5A A5 0B 82 00 08 <span style="color: #ff3333;"> A5 </span>00 00 02 30 00 00 3E</li></ul>
+                    <li style= "padding-left: 40px;">      A5 = Write to Flash.</li>
+                    <li style= "padding-left: 40px;">      5A = Read from Flash.</li>
+
+                    <ul  style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>6) Flash_Addr </strong>5A A5 0B 82 00 08 A5 <span style="color: #ff3333;">00 00 02 </span>A5 30 00 00 3E</li></ul>
+                    <li style= "padding-left: 40px;">       Head address of NOR flash address, Must be it should in even not in odd.</li>
+                    <li style= "padding-left: 40px;">       The range of NOR address is mentioned in dwin flash datasheet.</li>
+
+                    <ul  style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>7) VP_Addr </strong>5A A5 0B 82 00 08 A5 00 00 02 <span style="color: #ff3333;">30 00 00 </span>3E</li></ul>
+                    <li style= "padding-left: 40px;">      VP address holding the data</li>
+
+                    <ul  style="list-style: none; padding-left: 0; margin: 0;"><li style="display: inline;"><strong>8) Length </strong>5A A5 0B 82 00 08 A5 00 00 02 30 00 00  <span style="color: #ff3333;"> 3E</span></li></ul>
+                    <li style= "padding-left: 40px;">       Store no of length of bytes from VP address into NOR Flash address.</li>
+
+                    <h2 class="step-title">Summary:</h2>
+                    <div style="padding-left: 40px;">  
+                    <p style="color: #ff3333; font-weight: bold;padding-left: 80px;">5A A5 0B 82 00 08 A5 00 00 02 30 00 00 3E</p>
+                    <p>According to the example we are saving 3E bytes of data from VP (0x3000) into NOR Flash memory (0x000002).</p>
+                    <p>Once this command is sent via UART, the HMI will permanently store the data in flash memory.</p>
                     </div>
-                    
-                    <div class="alert">
-                        <div class="alert-icon">✅</div>
-                        <div class="alert-content">
-                            <strong>Key Highlights of This Section:</strong>
-                            <ul style="margin: 0.5rem 0 0 1.5rem;">
-                                <li>Used special VP address 0x0008 to trigger NOR Flash operations</li>
-                                <li>Demonstrated both Write and Read command frames</li>
-                                <li>Explained the persistence of data across power cycles</li>
-                                <li>Simulated real-use case for storing machine configuration settings</li>
-                                <li>Integrated with Docklight software for easy command execution</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
+
                     <div class="guide-navigation">
                         <a href="#" class="btn btn-outline">← Previous Section</a>
                         <a href="#" class="btn btn-primary">Complete Guide →</a>
