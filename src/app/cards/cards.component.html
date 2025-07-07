@@ -1,209 +1,107 @@
-<div style="height: 20px;" class="Products">
+<div class="Products">
   <h4>Our Products</h4>
 </div>
-<div class="main">
-  <div class = "nextcard">
-    
-  </div>
-  <div class="conatainer">
-   
-  <owl-carousel-o [options]="customOptions">
-    <ng-template carouselSlide>
-      <div class="card shadow-sm">
-        <div class="card-img-top">
-          <img src="/a 3.jpg" class="img-fluid rounded-top" alt="Melting Software">
-        </div>
-        <div class="card-body">
-          <h3 class="card-title">Smart Attendance</h3>
-          <ul class="card-text">
-            <li>Streamlines employee tracking, attendance, and payroll processes with cloud-based flexibility.</li>
-            <li>Simplifies onboarding, salary components, and attendance data management.</li>
-            <li>Enhances productivity and accuracy in workforce management</li>
-          </ul>
-          <a routerLink="/product2" class="read-more">
-            Read More <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template carouselSlide>
-      <div class="card shadow-sm">
-        <div class="card-img-top">
-          <img src="/melt 3 (2).jpg" class="img-fluid rounded-top" alt="Melting Software">
-        </div>
-        <div class="card-body">
-          <h3 class="card-title">Melting Software</h3>
-          <ul class="card-text">
-            <li>Optimizes production with automated material, alloy, and temperature management.</li>
-            <li>Features spectrum analysis, auto reports, stock updates, and furnace tracking.</li>
-            <li>Boosts efficiency and ensures high-quality production.</li>
-          </ul>
-          <a routerLink="/melting-software" class="read-more">
-            Read More <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template carouselSlide>
-      <div class="card shadow-sm">
-        <div class="card-img-top">
-          <img src="melt 7.jpg" class="img-fluid rounded-top" alt="Melting Software">
-        </div>
-        <div class="card-body">
-          <h3 class="card-title">Heat Treatment</h3>
-          <ul class="card-text">
-            <li>Enables real-time monitoring of temperature and cycle data with cloud storage for easy access from anywhere.</li>
-            <li>Simplifies cycle management, batch tracking, and customized reporting.</li>
-            <li>Enhances efficiency and accuracy in heat treatment operations.</li>
-          </ul>
-          <a routerLink="/product1" class="read-more">
-            Read More<i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template carouselSlide>
-      <div class="card shadow-sm">
-        <div class="card-img-top">
-          <img src="/_a49041bd-3702-4617-b53d-12fd1f1fc0af.jpg" class="img-fluid rounded-top" alt="Melting Software">
-        </div>
-        <div class="card-body">
-          <h3 class="card-title">Power Metrics</h3>
-          <ul class="card-text">
-            <li>Monitors power metrics for efficient energy use and waste reduction.</li>
-            <li>Integrates with IoT for live monitoring, remote control, and predictions.</li>
-            <li>Delivers AI-driven reports to optimize operations and cut costs.</li>
-          </ul>
-          <a routerLink="/power-metrics" class="read-more">
-            Read More <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-    </ng-template>
 
-    <ng-template carouselSlide>
-      <div class="card shadow-sm">
-        <div class="card-img-top">
-          <img src="PD.jpg" class="img-fluid rounded-top" alt="Melting Software">
-        </div>
-        <div class="card-body">
-          <h3 class="card-title">Production Monitor</h3>
-          <ul class="card-text">
-            <li>Real-time visibility into your manufacturing operations with advanced analytics and AI-powered insights to optimize productivity and reduce downtime.
+<div class="carousel-wrapper">
+  <!-- Left Nav Button -->
+  <button class="nav-btn left" (click)="scrollLeft()">❮</button>
 
-            </li>
-            <li>Seamlessly connect with your existing manufacturing equipment to collect real-time data without disrupting operations.</li>
-           
-          </ul>
-          <a routerLink="/product-monitor" class="read-more">
-            Read More <i class="bi bi-arrow-right"></i>
-          </a>
-        </div>
-      </div>
-    </ng-template>
-  </owl-carousel-o>
-  
-</div>
-  <div class = "perviouscard">
-   
-  </div>
-</div>
+  <!-- Scrollable Carousel -->
+  <div #carousel class="carousel-container">
+    <div class="carousel-track">
 
-
-
-
-<div id="carouselExampleControls" class="carousel">
-  <div class="carousel-inner">
-      <div class="carousel-item active">
-          <div class="card">
-              <div class="img-wrapper"><img src="/a 3.jpg" class="d-block w-100" alt="..."> </div>
-              <div class="card-body">
-                  <h5 class="card-title">Smart Attendance</h5>
-                  <ul class="card-text">
-                    <li>Streamlines employee tracking, attendance, and payroll processes with cloud-based flexibility.</li>
-                    <li>Simplifies onboarding, salary components, and attendance data management.</li>
-                    <li>Enhances productivity and accuracy in workforce management</li>
-                  </ul>
-                  <a routerLink="/smart-attendance" class="read-more">
-                    Read More <i class="bi bi-arrow-right"></i>
-                  </a>
-              </div>
-          </div>
-      </div>
-      <div class="carousel-item">
-          <div class="card">
-              <div class="img-wrapper"><img src="/melt 3 (2).jpg" class="d-block w-100" alt="..."> </div>
-              <div class="card-body">
-                  <h5 class="card-title">Melting Software</h5>
-                  <ul class="card-text">
-                    <li>Optimizes production with automated material, alloy, and temperature management.</li>
-                    <li>Features spectrum analysis, auto reports, stock updates, and furnace tracking.</li>
-                    <li>Boosts efficiency and ensures high-quality production.</li>
-                  </ul>
-                  <a routerLink="/melting-software" class="read-more">
-                    Read More <i class="bi bi-arrow-right"></i>
-                  </a>
-              </div>
-          </div>
-      </div>
-      <div class="carousel-item">
-          <div class="card">
-              <div class="img-wrapper"><img src="melt 7.jpg" class="d-block w-100" alt="..."> </div>
-              <div class="card-body">
-                  <h5 class="card-title">Heat Treatment</h5>
-                  <ul class="card-text">
-                    <li>Enables real-time monitoring of temperature and cycle data with cloud storage for easy access from anywhere.</li>
-                    <li>Simplifies cycle management, batch tracking, and customized reporting.</li>
-                    <li>Enhances efficiency and accuracy in heat treatment operations.</li>
-                  </ul>
-                  <a routerLink="/heat-treatment" class="read-more">
-                    Read More<i class="bi bi-arrow-right"></i>
-                  </a>
-              </div>
-          </div>
-      </div>
-      <div class="carousel-item">
-          <div class="card">
-              <div class="img-wrapper"><img src="/_a49041bd-3702-4617-b53d-12fd1f1fc0af.jpg" class="d-block w-100" alt="..."> </div>
-              <div class="card-body">
-                  <h5 class="card-title">Power Metrics</h5>
-                  <ul class="card-text">
-                    <li>Monitors power metrics for efficient energy use and waste reduction.</li>
-                    <li>Integrates with IoT for live monitoring, remote control, and predictions.</li>
-                    <li>Delivers AI-driven reports to optimize operations and cut costs.</li>
-                  </ul>
-                  <a routerLink="/power-metrics" class="read-more">
-                    Read More <i class="bi bi-arrow-right"></i>
-                  </a>
-              </div>
-          </div>
-      </div>
-      <div class="carousel-item">
+      <!-- Smart Attendance -->
+      <div class="carousel-card">
         <div class="card">
-            <div class="img-wrapper"><img src="PD3 (2).jpg" class="d-block w-100" alt="..."> </div>
-            <div class="card-body">
-                <h5 class="card-title">Production Monitor</h5>
-                <ul class="card-text">
-                  <li>Real-time visibility into your manufacturing operations with advanced analytics and AI-powered insights to optimize productivity and reduce downtime.</li>
-                  <li>Seamlessly connect with your existing manufacturing equipment to collect real-time data without disrupting operations.</li>
-                 
-                </ul>
-                <a routerLink="/melting-software" class="read-more">
-                  Read More <i class="bi bi-arrow-right"></i>
-                </a>
-            </div>
+          <div class="img-wrapper">
+            <img src="/a 3.jpg" alt="Smart Attendance" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Attendance System</h5>
+            <ul class="card-text">
+              <li>Streamlines employee tracking and payroll.</li>
+              <li>Simplifies onboarding and data management.</li>
+              <li>Enhances workforce productivity.</li>
+            </ul>
+            <a routerLink="/product2" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+          </div>
         </div>
+      </div>
+
+      <!-- Melting Software -->
+      <div class="carousel-card">
+        <div class="card">
+          <div class="img-wrapper">
+            <img src="/melt 3 (2).jpg" alt="Melting Software" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Melting Software</h5>
+            <ul class="card-text">
+              <li>Automates material & temperature tracking.</li>
+              <li>Auto reports, stock updates, furnace logs.</li>
+              <li>Boosts production quality and speed.</li>
+            </ul>
+            <a routerLink="/melting-software" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Heat Treatment -->
+      <div class="carousel-card">
+        <div class="card">
+          <div class="img-wrapper">
+            <img src="melt 7.jpg" alt="Heat Treatment" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Heat Treatment</h5>
+            <ul class="card-text">
+              <li>Monitors cycle data with cloud backup.</li>
+              <li>Cycle & batch management made easy.</li>
+              <li>Improves treatment efficiency.</li>
+            </ul>
+            <a routerLink="/product1" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Power Metrics -->
+      <div class="carousel-card">
+        <div class="card">
+          <div class="img-wrapper">
+            <img src="/_a49041bd-3702-4617-b53d-12fd1f1fc0af.jpg" alt="Power Metrics" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Power Metrics</h5>
+            <ul class="card-text">
+              <li>Monitors energy usage and waste reduction.</li>
+              <li>IoT + AI for real-time reporting.</li>
+              <li>Optimize operations, lower costs.</li>
+            </ul>
+            <a routerLink="/power-metrics" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Production Monitor -->
+      <div class="carousel-card">
+        <div class="card">
+          <div class="img-wrapper">
+            <img src="PD3 (2).jpg" alt="Production Monitor" />
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Production Monitor</h5>
+            <ul class="card-text">
+              <li>Track real-time productivity & downtime.</li>
+              <li>Collect machine data seamlessly.</li>
+            </ul>
+            <a routerLink="/product-monitor" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
     </div>
-      
-      
-      
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-  </button>
+
+  <!-- Right Nav Button -->
+  <button class="nav-btn right" (click)="scrollRight()">❯</button>
 </div>

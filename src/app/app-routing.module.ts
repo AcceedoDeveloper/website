@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SmartAttendanceComponent } from './smart-attendance/smart-attendance.component';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
@@ -32,7 +31,7 @@ import { ProductionMonitorComponent } from './production-monitor/production-moni
 const routes: Routes = [
   { path: '', redirectTo: 'acceedo', pathMatch: 'full' },
   { path: 'acceedo', component: HomeComponent },
-  { path: 'smart-attendance', component: SmartAttendanceComponent },
+  
   { path: 'power-metrics', component: PowerMetricsComponent },
   { path: 'heat-treatment', component: HeatTreatmentComponent },
   { path: 'melting-software', component: MeltingSoftwareComponent },

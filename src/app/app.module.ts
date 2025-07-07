@@ -20,7 +20,7 @@ import { BrandComponent } from './brand/brand.component';
 
 import { CarouselComponent } from './carousel/carousel.component';
 import { CardsComponent } from './cards/cards.component';
-import { SmartAttendanceComponent } from './smart-attendance/smart-attendance.component';
+
 import { MeltingSoftwareComponent } from './melting-software/melting-software.component';
 import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.component';
 import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
@@ -64,7 +64,7 @@ import { AdobeComponent } from './adobe/adobe.component';
     BrandComponent,
    
     CardsComponent,
-    SmartAttendanceComponent,
+  
     MeltingSoftwareComponent,
     HeatTreatmentComponent,
     PowerMetricsComponent,

@@ -58,6 +58,10 @@
     padding: 20px;
   }
 
+  .content-box{
+    margin-top: 80px;
+  }
+
   .content-box2 {
     display: flex;
     flex-wrap: wrap;
