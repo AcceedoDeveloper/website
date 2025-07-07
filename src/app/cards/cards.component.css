@@ -1,274 +1,186 @@
-.conatainer {
-    width: 100%;
-    margin: 0 auto;
-    overflow: hidden;    
-  }
-  .Products {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100px; 
-    text-align: center;
-  }
+/* Basic styling for the Products header */
+.Products {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  text-align: center;
+}
 
-  .nextcard{
-    position: relative;
-    top: 296px;
-    left: -33px;
-  }
+.Products h4 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
 
-  .perviouscard{
-    margin-left: 99%;
-    position: relative;
-    bottom: 328px;
-  }
-  
-  .Products h4 {
-    margin: 0; 
-    font-size: 24px; 
-  }
-  
-  .main{
-    margin-top: 40px;
-    
-  }
-
-  owl-carousel-o img {
-    border-radius: 18px 18px 0 0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%; 
-    height: 300px;
-    max-height: 300px; 
-    object-fit: cover; 
-    display: block;
-    
-  }
-  
-  .owl-carousel .owl-stage-outer {
-    padding: 0 !important;
-  }
-
-  .slide {
-    border-radius: 18px;
-    display: flex;
-    background-color: rgb(255, 255, 255);
-    height: 600px; /* Adjust height as needed */
-  }
-  
-  .slide-container {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px; /* Space between image and content */
-    padding: 20px; /* Optional padding */
-  }
-  
-  .slide-image {
-    flex: 0 0 30%; /* Occupies 30% width */
-  }
-  
-  .slide-image img {
-    width: 100%; /* Ensure image fits the 30% space */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 22px; /* Optional */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    object-fit: cover;
-  }
-  
-  .slide-content {
-    flex: 0 0 70%; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .slide-content h2 {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .slide-content p {
-    font-size: 16px;
-    line-height: 1.5;
-  }
-  
-  .carousel{
-    display: none;
-  }
-
-  @media (max-width: 1199px) {
-    .owl-carousel .owl-item img {
-      height: 300px;
-      border-radius: 18px;
-    }
-  }
-  
-  @media (max-width: 991px) {
-    .owl-carousel .owl-item img {
-      height: 280px;
-      border-radius: 16px;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .owl-carousel .owl-item img {
-      height: 240px;
-      border-radius: 14px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .carousel{
-      display: block;
-    }
-    .main{
-      display: none;
-    }
-  }
-  .card {
-    border-radius: 18px;
-    height: 600px;
-  }
-  
-  .card-img-top img {
-    border-radius: 18px 18px 0 0;
-    object-fit: cover;
-    height: 250px;
-  }
-  
-  .card-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  
-  .card-text {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-  
-
-
-  h3 {
-    font-family: Arial, sans-serif;
-    font-weight: bold; 
-    font-size: 24px; 
-    margin: 0;
-    color: black; 
-  }
-
-  p{
-    font-family: 'Roboto', sans-serif;
-    font-size: 18px;
-    line-height: 1.6;
-    color: #000;
-  }
-
-  .read-more {
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 16px;
-    color: #000000; 
-    text-decoration: underline; 
-    position: relative;
-    font-weight: bold;
-  }
-  
-  .card:hover .read-more{
-    color: #686262;    
-  }
-  
-  .read-more::after {
-    
-    margin-left: 5px;
-    transition: transform 0.3s ease;
-  }
-  
-
-  .card-text {
-    list-style-type: disc; 
-    padding-left: 20px; 
-    margin: 10px 0; 
-  }
-  
-  .card-text li {
-    margin-bottom: 5px; 
-  }
-  
-  .carousel-inner {
-    padding: 1em;
-  }
-  .card {
-    margin: 0 0.5em;
-    box-shadow: 2px 6px 8px 0 rgba(22, 22, 26, 0.18);
-    border: none;
-  }
-  .carousel-control-prev,
-  .carousel-control-next {
-    background-color: #e1e1e1;
-    width: 6vh;
-    height: 6vh;
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-  @media (min-width: 768px) {
-    .carousel-item {
-      margin-right: 0;
-      flex: 0 0 33.333333%;
-      display: block;
-    }
-    .carousel-inner {
-      display: flex;
-      margin-left: 20px;
-    }
-    .img-wrapper{
-      background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat; 
-    height: auto; 
-    }
-  }
-  .card .img-wrapper {
-      max-width: 100%;
-      height: 13em;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-  }
-  .card img {
-      max-height: 100%;
-  }
-  @media (max-width: 767px) {
-    .card .img-wrapper {
-      height: 17em;
-    }
-  }
-
-  .owl-nav {
-  display: flex !important;
-  justify-content: space-between;
-  position: absolute;
-  top: 35%;
+/* Carousel wrapper styling */
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   width: 100%;
-  padding: 0 10px;
+  overflow: hidden;
+  padding: 0 20px;
   box-sizing: border-box;
 }
 
-.owl-nav button.owl-prev,
-.owl-nav button.owl-next {
-  background: #000;
-  color: #fff;
-  border: none;
-  font-size: 18px;
-  padding: 10px 15px;
-  border-radius: 50%;
-  opacity: 0.7;
-  transition: 0.3s ease;
+/* Carousel container with hidden scrollbar and smooth scrolling */
+.carousel-container {
+  overflow-x: auto;
+  display: flex;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 24px;
+  flex: 1;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 11 */
+  justify-content: center;
 }
 
-.owl-nav button.owl-prev:hover,
-.owl-nav button.owl-next:hover {
-  opacity: 1;
+.carousel-container::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.3s ease;
+}
+
+/* Carousel card styling with rotation effect */
+.carousel-card {
+  flex: 0 0 80%;
+  scroll-snap-align: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+  transform: rotateY(0deg);
+  perspective: 1000px;
+}
+
+.carousel-card:hover {
+  transform: rotateY(8deg) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive adjustment for larger screens */
+@media (min-width: 768px) {
+  .carousel-card {
+    flex: 0 0 30%;
+  }
+}
+
+.card {
+  width: 100%;
+  max-height: 600px;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.card-body {
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.img-wrapper {
+  height: 220px;
+  overflow: hidden;
+  border-radius: 18px 18px 0 0;
+}
+
+.img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 18px 18px 0 0;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.card-text {
+  font-size: 1rem;
+  padding-left: 18px;
+}
+
+.card-text li {
+  margin-bottom: 6px;
+}
+
+.read-more {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 16px;
+  color: #000000;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.card:hover .read-more {
+  color: #555;
+}
+
+.nav-btn {
+  background-color: #000000aa;
+  color: white;
+  border: none;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 10;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nav-btn:hover {
+  background-color: #444;
+}
+
+.nav-btn.left {
+  left: 10px;
+}
+
+.nav-btn.right {
+  right: 10px;
+}
+
+@media (max-width: 768px) {
+  .carousel-wrapper {
+    padding: 0 10px;
+  }
+
+  .carousel-card {
+    flex: 0 0 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-card {
+    flex: 0 0 95%;
+  }
+  .card-body {
+    max-height: 250px;
+  }
+  .card-title {
+    font-size: 1.2rem;
+  }
+  .read-more {
+    font-size: 14px;
+  }
 }
