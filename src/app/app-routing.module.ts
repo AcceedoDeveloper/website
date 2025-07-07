@@ -24,6 +24,7 @@ import { Dwincontant6Component } from './dwincontant6/dwincontant6.component';
 import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
 import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
 import { AdobeComponent } from './adobe/adobe.component';
+import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
 
 
 
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'power-metrics', component: PowerMetricsComponent },
   { path: 'heat-treatment', component: HeatTreatmentComponent },
   { path: 'melting-software', component: MeltingSoftwareComponent },
+  { path: 'product-monitor', component: ProductionMonitorComponent },
   { path: 'contactas', component: ContactasComponent },
   { path: 'career', component: CareerComponent },
   { path: 'services', component: ServicesComponent },
@@ -53,6 +55,7 @@ const routes: Routes = [
   {path: 'dwincontant7', component: Dwincontant7Component },
   {path: 'dwincontant8', component: Dwincontant8Component },
   {path:'adobe',component:AdobeComponent}
+
 
 
  
