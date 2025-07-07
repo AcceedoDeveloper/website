@@ -16,7 +16,7 @@ body {
 /* Header Section */
 .header-section {
     position: relative;
-    height: 600px;
+    height: 400px;
     overflow: hidden;
     margin-bottom: 20px;
     transition: all 0.5s ease;
@@ -94,40 +94,45 @@ body {
 
 /* Sidebar */
 .sidebar {
-    position: sticky;
-    top: 2rem;
-    align-self: start;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    height: fit-content;
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  height: fit-content;
 }
 
 .sidebar-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #666;
-    margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary);
+  margin-bottom: 1rem;
 }
 
 .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .sidebar-link {
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    color: #666;
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: all 0.2s;
+  padding: 0.5rem 1.5rem;
+  padding-left: 1rem; /* add this to shift text right */
+  border-radius: 6px;
+  color: var(--secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
 
+.sidebar-link:hover {
+  background-color: #f5fffa;
+  color: var(--primary);
+}
 
 /* Guide Content */
 .guide-content {
@@ -555,12 +560,20 @@ body {
 }
 
 /* Footer */
-footer {
-    background-color: #f3f7f3;
+.footer {
+    background-color: var(--primary);
     color: white;
     padding: 2rem;
     text-align: center;
     margin-top: 3rem;
+    position: sticky;
+    top: 100vh;
+    transition: all 0.3s ease;
+}
+
+.footer:hover {
+    opacity: 0.9;
+    background-color: var(--primary-dark);
 }
 
 .footer-content {
@@ -581,14 +594,18 @@ footer {
 .footer-link {
     color: white;
     text-decoration: none;
-    font-size: 1rem;
-    padding: 0.5rem;
+    transition: all 0.2s;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
 }
 
 .footer-copyright {
     font-size: 0.875rem;
     opacity: 0.8;
 }
+
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -691,3 +708,14 @@ footer {
 
 }
 
+.title-special-link {
+  cursor: pointer;
+  color: #90ee90;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+/* Hover effect only for that line */
+.title-special-link:hover {
+  color: #124e3a;
+}

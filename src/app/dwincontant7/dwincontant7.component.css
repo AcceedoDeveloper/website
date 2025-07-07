@@ -125,50 +125,45 @@ body {
 
 /* Sidebar */
 .sidebar {
-    position: sticky;
-    top: 2rem;
-    align-self: start;
-    background-color: white;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
-    height: fit-content;
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  height: fit-content;
 }
 
 .sidebar-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--secondary);
-    margin-bottom: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary);
+  margin-bottom: 1rem;
 }
 
 .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .sidebar-link {
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius);
-    color: var(--secondary);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: all 0.2s;
+  padding: 0.5rem 1.5rem;
+  padding-left: 1rem; /* add this to shift text right */
+  border-radius: 6px;
+  color: var(--secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
 
 .sidebar-link:hover {
-    background-color: #F5FFFA; /* Mint Cream */
-    color: var(--primary);
+  background-color: #f5fffa;
+  color: var(--primary);
 }
-
-.sidebar-link.active {
-    background-color: var(--primary);
-    color: white;
-}
-
 /* Guide Content */
 .guide-content {
     background-color: white;
@@ -411,3 +406,14 @@ pointer-paragraph::before {
     color: #333; /* Adjust color */
 }
 
+.title-special-link {
+  cursor: pointer;
+  color: #90ee90;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+/* Hover effect only for that line */
+.title-special-link:hover {
+  color: #124e3a;
+}

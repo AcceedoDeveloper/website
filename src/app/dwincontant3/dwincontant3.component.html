@@ -1,14 +1,20 @@
  <app-footr></app-footr>
-  <!-- Header Section -->
-    <div class="header-section">
-        <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
-        <div class="header-overlay">
-            <h1 class="title">
-                <span class="title-text">DwinDisplay</span>
-                <span class="title-subtext"><h3>Text and ASCII Keyboard Configuration in DGUS Tool</h3></span>
-            </h1>
-        </div>
-    </div>
+ <!-- Header Section -->
+<div class="header-section">
+  <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
+  <div class="header-overlay">
+    <h1 class="title">
+      <span class="title-text">DwinDisplay</span>
+    </h1>
+
+   
+
+    <h6 class="title-special-link" [routerLink]="'/adobe'">
+      Text and ASCII Keyboard Configuration in DGUS Tool
+    </h6>
+  </div>
+</div>
+
 
     <!-- Main Content -->
     <div class="main-container">
@@ -251,10 +257,6 @@
                     </div>
                 </div>
 
-                <div class="guide-navigation">
-                    <a href="#" class="btn btn-outline">← Previous Section</a>
-                    <a href="#" class="btn btn-primary">Next: Variable Input →</a>
-                </div>
             </article>
         </div>
     </div>

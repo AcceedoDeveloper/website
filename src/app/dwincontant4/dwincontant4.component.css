@@ -20,7 +20,7 @@ body {
 
 .header-section {
     position: relative;
-    height: 600px;
+    height: 400px;
     overflow: hidden;
     margin-bottom: 2rem;
     transition: all 0.5s ease;
@@ -79,7 +79,7 @@ body {
 /* Main Content */
 .main-container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1433px;
 
   margin: 0 auto;
   flex: 1 0 auto;
@@ -106,19 +106,19 @@ body {
 .guide-container {
   display: grid;
   grid-template-columns: 240px 1fr;
-  gap: 1.5rem;
+  gap: 2rem;
   width: 100%;
 }
 
 /* Sidebar */
 .sidebar {
   position: sticky;
-  top: 1.5rem;
+  top: 2rem;
   align-self: start;
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(144, 225, 195, 0.1);
-  padding: 1.25rem;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
   height: fit-content;
 }
 
@@ -138,8 +138,8 @@ body {
 }
 
 .sidebar-link {
-  padding: 0.5rem 0.75rem;
-  padding-left: 1.5rem; /* add this to shift text right */
+  padding: 0.5rem 2.8rem;
+  padding-left: 1rem; /* add this to shift text right */
   border-radius: 6px;
   color: var(--secondary);
   text-decoration: none;
@@ -147,12 +147,10 @@ body {
   transition: all 0.2s;
 }
 
-
 .sidebar-link:hover {
   background-color: #f5fffa;
   color: var(--primary);
 }
-
 /* Guide Content */
 .guide-content {
   background-color: white;
@@ -293,5 +291,15 @@ body {
     text-align: center;
   }
 }
+.title-special-link {
+  cursor: pointer;
+  color: #90ee90;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
 
+/* Hover effect only for that line */
+.title-special-link:hover {
+  color: #124e3a;
+}
 

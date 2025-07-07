@@ -5,10 +5,15 @@
   <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
   <div class="header-overlay">
     <h1 class="title">
+      <br>
       <span class="title-text">DwinDisplay</span>
+      
       <span class="title-subtext">HMI Screen Design and Input Configuration Using DGUS Software</span>
-            <span [routerLink]="'/adobe'" class="title-subtext">“UI Designs Crafted in Adobe XD for DGUS Software Interfaces”</span>
-  
+      
+      <!-- Use unique class here -->
+      <h6 class="title-special-link" [routerLink]="'/adobe'">
+        UI Designs Crafted in Adobe XD for DGUS Software Interfaces
+      </h6>
     </h1>
   </div>
 </div>
@@ -40,7 +45,7 @@
           <div class="step-image"></div>
           <p>Enhancing your Human-Machine Interface (HMI) with custom visuals not only improves user experience but also elevates the professionalism of your display. DGUS Editor simplifies this by allowing easy integration of custom images as part of your HMI project.</p>
 
-          <h2 class="step-title">Why Use Custom Images?</h2>
+          <h2 class="sub-step-title">Why Use Custom Images?</h2>
           <p>Custom images can serve multiple purposes in an HMI system:</p>
           <li>Buttons and Icons: Use images to create intuitive control buttons or functional icons.</li>
           <li>Background Elements: Design visually appealing screens with themed or branded backgrounds.</li>
@@ -49,14 +54,26 @@
           <div class="alert">
             <div class="alert-icon"></div>
             <div class="alert-content">
-              <strong class="center-title">Steps to Integrate Images Using DGUS Editor</strong>
+            <div class="sub-step-title shifted-title">Steps to Integrate Images Using DGUS Editor</div>
+
               <div class="cardd">
                 <div class="step-block">
-                  <p class="image-caption">1. Open the DGUS Editor software on your system to start your HMI design project.</p>
+                  <div class="alert-content">
+                    <strong>Step 1:</strong>
+                    <ul style="margin: 0.5rem 0 0 1rem;">
+                      <li style="margin-bottom: 0.5;"><strong>Open the DGUS Editor software on your system to start your HMI design project.</strong></li>
+                    </ul>
+                    </div>
                   <img src="Image Integration Using DGUS Editor.png" alt="Keyboard Configuration in DGUS" class="step-img">
                 </div>
                 <div class="step-block">
-                  <p class="image-caption">2. Navigate to the image library section and import your custom image files (BMP formats are usually supported).</p>
+                   <div class="alert-content">
+                    <strong>Step 2:</strong>
+                    <ul style="margin: 0.5rem 0 0 1rem;">
+                      <li style="margin-bottom: 0.5;"><strong>Navigate to the image library section and import your custom image files (BMP formats are usually supported).</strong></li>
+                    </ul>
+                    </div>
+                 
                   <img src="Image Integration Using DGUS Editor 2.png" alt="Keyboard Configuration in DGUS" class="step-img">
                 </div>
               </div>
@@ -65,10 +82,7 @@
         </div>
       </div>
 
-      <div class="guide-navigation">
-        <a href="#" class="btn btn-outline">← Previous Section</a>
-        <a href="#" class="btn btn-primary">Next: Keyboard Setup →</a>
-      </div>
+      
     </article>
   </div>
 
