@@ -5,17 +5,14 @@
     <div class="header-overlay">
         <h1 class="title">
             <span class="title-text">DwinDisplay</span>
-            <span class="title-subtext">Innovative HMI Solutions</span>
+            <span class="title-subtext">Sending UART Commands Using Docklight</span>
         </h1>
     </div>
 </div>
 
 <!-- Main Content -->
 <main class="main-container">
-    <div class="page-header">
-        <h1 class="page-title">HMI Screen Design and Input Configuration Using DGUS Software</h1>
-        <p class="page-description">DWIN DISPLAY</p>
-    </div>
+
 
     <div class="guide-container">
         <!-- Sidebar -->
@@ -23,13 +20,14 @@
             <h3 class="sidebar-title">Configuration Steps</h3>
             <nav class="sidebar-nav">
         <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
-<a [routerLink]="['/dwincontant2']" class="sidebar-link">Basic Touch and Keyboard Configuration in DGUS</a>
-<a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
-<a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
-<a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
-<a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
-<a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
-<a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
+  <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+
+        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+        <a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
             </nav>
         </aside>
 
@@ -38,99 +36,158 @@
             <div class="step">
                 <div class="step-header">
                     <div class="step-number">8</div>
-                    <h2 class="step-title">Sending UART Commands Using Docklight</h2>
+                    
+                    <strong class= "center-title">Sending UART Commands Using Docklight</strong>
+            
+                  
                 </div>
                 <div class="step-content">
-                    <div class="step-image">
-                        <img src="docklight-interface.png" alt="Docklight Software Interface">
-                    </div>
                     
-                    <p>Docklight is a serial communication tool used to test and send UART command frames to DWIN displays.</p>
+        
+                    
+                    <p>
+                    Using tools like Dock light or any standard serial terminal, developers can send UART commands to interact with the device’s NOR Flash memory. The special VP address 0x0008 is used to trigger Flash operations, allowing data to be written from RAM (VP) to Flash, or read back from Flash into RAM for real-time use.
+
+
+                    </p>
+
+                    <p>
+                        Docklight is a powerful serial communication tool widely used for testing and debugging UART (Universal Asynchronous Receiver-Transmitter) interfaces. To send UART commands to a DWIN HMI display using Docklight, first connect your DWIN screen to your PC via a USB-to-TTL converter or serial port. Launch Docklight and create a new project. Configure the correct COM port settings such as baud rate (typically 115200), data bits, parity, and stop bits according to your DWIN device specifications. In Docklight’s interface, you can create predefined transmit sequences to send commands—these can be HEX or ASCII formats depending on your application. Use the “Send Sequence” function to transmit specific commands to control screen elements, trigger pages, or send data inputs. The “Receive Window” displays responses from the device, allowing real-time monitoring of communication. Docklight is especially useful for debugging command syntax and verifying the responsiveness of your HMI during development and testing.
+                    </p>
                     
                     <div class="sub-step">
-                        <h3 class="sub-step-title">Step-by-Step Docklight Configuration:</h3>
                         
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 1:</strong>
-                                <ul style="margin: 0.5rem 0 0 1rem;">
-                                    <li style="margin-bottom: 0.5rem;">Open the Docklight software</li>
-                                    <li>Set the serial port configuration:
-                                        <ul style="margin: 0.5rem 0 0 1rem;">
-                                            <li>Baud Rate: 115200</li>
-                                            <li>Parity: None</li>
-                                            <li>Data Bits: 8</li>
-                                            <li>Stop Bits: 1</li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <h2 class="step-title">Step-by-Step Docklight Setup for Command Frame Transmission:</h2>
                         
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 2:</strong> Enter the Write Command in Docklight (refer to example frame above). This command writes the value from VP into NOR Flash.
-                            </div>
-                        </div>
                         
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 3:</strong> Enter the Read Command to retrieve the data from NOR Flash back to VP.
-                            </div>
-                        </div>
+                    <p>
+                                <strong>Step 1:</strong></p>
+                            <div class="image-caption">
+                                <strong>
+                            <li class="pointer-paragraph" style= "padding-left: 20px;">Open the Docklight software</li>
+                                    <li class="pointer-paragraph" style= "padding-left: 20px;">And verify the Baudrate ,Parity, Databit, Stopbit setup [15000,None,8,1]</li>  
+
+                                            <li class="pointer-paragraph" style= "padding-left: 20px;">Baud Rate: 115200</li>
+                                            <li class="pointer-paragraph" style= "padding-left: 20px;">Parity: None</li>
+                                            <li class="pointer-paragraph" style= "padding-left: 20px;">Data Bits: 8</li>
+                                            <li class="pointer-paragraph" style= "padding-left: 20px;">Stopbit setup [15000,None,8,1]</li>
+                                        
+                                        </strong>
+                                        </div>
+
+                                
                         
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 4:</strong> Reminder of essential VP addresses:
-                                <ul style="margin: 0.5rem 0 0 1rem;">
-                                    <li>Machine No → 3002</li>
-                                    <li>Port No → 3004</li>
-                                    <li>Server Addr → 3006</li>
-                                </ul>
-                            </div>
-                        </div>
+                            
+
+                                <img  class="image1" style="margin-bottom: 50spx;" src="Screenshot 7 (1).jpeg">
+                                <img class="image1" src="Screenshot 7(2).jpeg">
                         
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 5:</strong>
-                                <ul style="margin: 0.5rem 0 0 1rem;">
-                                    <li style="margin-bottom: 0.5rem;">Run the Write command to save data permanently</li>
-                                    <li>After success, restart the display to verify</li>
-                                </ul>
-                            </div>
-                        </div>
+                            
                         
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 6:</strong>
-                                <ul style="margin: 0.5rem 0 0 1rem;">
-                                    <li style="margin-bottom: 0.5rem;">Run the Read command to retrieve and load saved values from Flash into VP memory</li>
-                                    <li>You can now see this data reflected on your HMI</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                        
+                            
+                            
+                               <p> <strong>Step 2:</strong></p>
+                                <div class="image-caption">
+                                <strong>
+                                
+                                    <li class="pointer-paragraph" style= "padding-left: 20px;">
+                                Enter the command frame to write the data into flash memory.
+                                </li>
+                             <li class="pointer-paragraph" style= "padding-left: 20px;">
+                                Explanation of command frame is already mentioned. Kindly refer that.
+                             </li>
+                                
+                                </strong>
+                                </div>
+
+                                <img class="image1" src="Screenshot 7 2.jpeg">
+                            
+                            
+                        
+                        
+        
+                                <p><strong>step 3:</strong></p>
+                                <div class="image-caption">
+                                <strong>
+                                
+                                    <li class="pointer-paragraph" style= "padding-left: 20px;">
+                                 Enter the command frame to read the data from flash memory.</li>
+                            
+                                </strong>
+                                </div>
+                                <img class="image1" src="Screenshot 7 3.jpeg">
+                                
+            
+                        
+                
+                                <p><strong>Step 4: We have already discussed the address of both.
+Gentle remainder:</strong></p>
+</div>
+                                
+                                <div class="image-caption">
+                                <strong>
+                                
+                                    <p style= "padding-left: 20px; margin-bottom: 0px;">1)  Server add (vp address) =3006</p>
+                             <p style= "padding-left: 20px; margin-bottom: 0px;">2) Port no (vp address)=3004</p>
+                                    <p style= "padding-left: 20px; margin-bottom: 0px;">3)  Machine no (vp address) =3002</p>
+                            
+                                
+                                </strong>
+                                </div>
+                            
+                               <img class="image2" src="Screenshot 7 4.jpeg">
+                            
                     
-                    <div class="alert alert-warning">
-                        <div class="alert-icon">⚠️</div>
-                        <div class="alert-content">
-                            <strong>Note:</strong> Always verify communication settings match your DWIN display configuration before sending commands.
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        
+                        
+                               <p> <strong>Step 5:</strong></p>
+                                <div class="image-caption">
+                                <strong >
+                                
+                                <li class="pointer-paragraph" style= "padding-left: 20px;">Run the Write command to store the data into the flash memory.</li>
+                                 <li class="pointer-paragraph" style= "padding-left: 20px;">So now it is successfully stored into flash memory.</li>
+                                 <li class="pointer-paragraph" style= "padding-left: 20px;">Now restart the display and follow next step.</li>
+                                
+                                </strong>
+                                </div>
+                                <img class="image1" src="Screenshot 7 5.jpeg">
+                
+                        
+            
+                                <p><strong>Step 6:</strong></p>
+                                <div class="image-caption">
+                                <strong>
+                                
+                               <li class="pointer-paragraph" style= "padding-left: 20px;">Run the Read command to retrieve the data into the flash memory.</li>
+                               <li class="pointer-paragraph" style= "padding-left: 20px;">So now it is successfully Read from flash memory.</li>
+                               <li class="pointer-paragraph" style= "padding-left: 20px;">Let we see Practically.</li>
+                                
+                                </strong>
+                                </div>
+                                <img class="image1" src="Screenshot 7 6.jpeg">
+                            
+
+    
+                    
+                    
+                
+                
+            
 
             <div class="guide-navigation">
                 <a href="#" class="btn btn-outline">← Previous Section</a>
                 <div></div> <!-- Empty div for spacing -->
             </div>
-        </article>
     </div>
+            </div>
+
+        </article>
+
+    </div>
+
 </main>
+
+    
 <app-footer></app-footer>
+

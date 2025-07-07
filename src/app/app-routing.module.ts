@@ -16,13 +16,14 @@ import { Product2Component } from './product2/product2.component';
 import { BlogComponent } from './blog/blog.component';
 import { DiwndisplayComponent } from './diwndisplay/diwndisplay.component';
 import { DwincontantComponent } from './dwincontant/dwincontant.component';
-import { Dwincontant2Component } from './dwincontant2/dwincontant2.component';
+
 import { Dwincontant3Component } from './dwincontant3/dwincontant3.component';
 import { Dwincontant4Component } from './dwincontant4/dwincontant4.component';
 import { Dwincontant5Component } from './dwincontant5/dwincontant5.component';
 import { Dwincontant6Component } from './dwincontant6/dwincontant6.component';
 import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
 import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
+import { AdobeComponent } from './adobe/adobe.component';
 
 
 
@@ -44,13 +45,14 @@ const routes: Routes = [
   {path: 'blog', component: BlogComponent },
   { path: 'diwndisplay', component: DiwndisplayComponent },
   {path: 'dwincontant', component: DwincontantComponent },
-  {path: 'dwincontant2', component: Dwincontant2Component },
+  
   {path: 'dwincontant3', component: Dwincontant3Component },
   {path: 'dwincontant4', component: Dwincontant4Component },
   {path: 'dwincontant5', component: Dwincontant5Component },
   {path: 'dwincontant6', component: Dwincontant6Component },
   {path: 'dwincontant7', component: Dwincontant7Component },
-  {path: 'dwincontant8', component: Dwincontant8Component }
+  {path: 'dwincontant8', component: Dwincontant8Component },
+  {path:'adobe',component:AdobeComponent}
 
 
  

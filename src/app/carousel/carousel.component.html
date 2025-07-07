@@ -1,77 +1,39 @@
-  <div style="height: 60px;"></div>
-    <div class="carousel-wrapper">
-        <input type="radio" name="slides" id="slide-1" checked>
-        <input type="radio" name="slides" id="slide-2">
-        <input type="radio" name="slides" id="slide-3">
-        <input type="radio" name="slides" id="slide-4">
-        
-        <div class="carousel-container">
-            <div class="carousel-slides">
-                <!-- Slide 1 -->
-                <div class="carousel-slide">
-                    <label for="slide-2"></label>
-                    <div class="slide-overlay"></div>
-                    <div class="slide-image">
-                        <img src="/freepik__candid-image-photography-natural-textures-highly-r__28920.jpeg" alt="Solutions">
-                    </div>
-                    <div class="slide-content">
-                        <h6>COMPREHENSIVE SOLUTIONS</h6>
-                        <p>Providing an all-in-one platform that streamlines planning, scheduling, machine production, rejection management, operator tracking, downtime analysis, detailed reporting.</p>
-                        <button class="custom-button">Comprehensive Solutions</button>
-                    </div>
-                </div>
-                
-                <!-- Slide 2 -->
-                <div class="carousel-slide">
-                    <label for="slide-3"></label>
-                    <div class="slide-overlay"></div>
-                    <div class="slide-image">
-                        <img src="/motherboard-background.jpg" alt="Innovation">
-                    </div>
-                    <div class="slide-content Embedded">
-                        <h6>EMBEDDED INNOVATION</h6>
-                        <p>Pioneering the future of technology with high-quality PCB board development and efficient embedded programming solutions.</p>
-                        <button class="custom-button">Embedded Innovation</button>
-                    </div>
-                </div>
-                
-                <!-- Slide 3 -->
-                <div class="carousel-slide">
-                    <label for="slide-4"></label>
-                    <div class="slide-overlay"></div>
-                    <div class="slide-image">
-                        <img src="/freepik__candid-image-photography-natural-textures-highly-r__22273.jpeg" alt="IoT">
-                    </div>
-                    <div class="slide-content">
-                        <h6>INDUSTRY IoT SOLUTIONS</h6>
-                        <p>Transform your manufacturing process with our Industry IoT solution, enabling real-time data analytics and seamless connectivity for unparalleled efficiency.</p>
-                        <button class="custom-button">Industry Iot Solution</button>
-                    </div>
-                </div>
-                
-                <!-- Slide 4 -->
-                <div class="carousel-slide">
-                    <label for="slide-1"></label>
-                    <div class="slide-overlay"></div>
-                    <div class="slide-image">
-                        <img src="modern-equipped-computer-lab.jpg" alt="R&D">
-                    </div>
-                    <div class="slide-content Ino">
-                        <h6>R&D INNOVATION</h6>
-                        <p>Advancing technology through dedicated research, development. Our team focuses on pioneering innovative solutions for embedded systems and web applications.</p>
-                        <button class="custom-button">R&D Innovation</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Navigation Dots -->
-        <div class="carousel-nav">
-            <label for="slide-1" class="nav-dot"></label>
-            <label for="slide-2" class="nav-dot"></label>
-            <label for="slide-3" class="nav-dot"></label>
-            <label for="slide-4" class="nav-dot"></label>
-        </div>
+<div class="carousel-wrapper" (touchstart)="touchStart($event)" (touchend)="touchEnd($event)">
+  <div class="carousel-container">
+    <!-- Previous Arrow -->
+    <div class="carousel-arrow prev" (click)="prevSlide($event)">
+      <svg viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+      </svg>
     </div>
-    <app-cards></app-cards>
-    <div style="height: 30px;"></div>
+
+    <!-- Slides -->
+    <div class="carousel-slide" *ngFor="let slide of slides; let i = index" 
+         [class.active]="currentSlide === i"
+         [class.prev-slide]="getPrevIndex() === i"
+         [class.next-slide]="getNextIndex() === i"
+         (click)="onSlideClick($event, i)">
+      <div class="slide-image" [style.background-image]="'url(' + slide.image + ')'"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content" [ngClass]="slide.contentClass">
+        <h2>{{slide.title}}</h2>
+        <p>{{slide.description}}</p>
+        <button class="custom-button">{{slide.buttonText}}</button>
+      </div>
+    </div>
+
+    <!-- Next Arrow -->
+    <div class="carousel-arrow next" (click)="nextSlide($event)">
+      <svg viewBox="0 0 24 24">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Navigation Dots -->
+  <div class="carousel-nav">
+    <span *ngFor="let slide of slides; let i = index" 
+          class="nav-dot" [class.active]="currentSlide === i"
+          (click)="goToSlide(i, $event)"></span>
+  </div>
+</div>

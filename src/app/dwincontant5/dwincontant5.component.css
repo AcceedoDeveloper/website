@@ -1,9 +1,9 @@
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 html, body {
     height: 100%;
 }
@@ -89,9 +89,9 @@ body {
 
 /* Main Content */
 .main-container {
-    max-width: 1280px;
+    max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 2rem;
+   
     flex: 1 0 auto;
 }
 
@@ -188,7 +188,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.0rem;
 }
 
 .step-number {
@@ -205,7 +205,7 @@ body {
 }
 
 .step-title {
-    font-size: 1.25rem;
+    font-size: 1.rem;
     font-weight: 600;
     color: var(--dark);
 }
@@ -214,18 +214,35 @@ body {
     margin-left: 3rem;
 }
 
+/* Updated Image Styling for Centering */
 .step-image {
-    margin: 1.5rem 0;
+    margin: 1.5rem auto;
     border-radius: var(--radius);
     overflow: hidden;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border);
+    text-align: center;
+    max-width: 90%;
+    left: -30px;
 }
 
 .step-image img {
-    width: 100%;
-    height: auto;
     display: block;
+    max-width: 90%;
+    height: auto;
+    margin: 3;
+}
+
+/* For images that need to be smaller but centered */
+.centered-image {
+    display: block;
+    max-width: 80%;
+    height: auto;
+    margin: 1.5rem auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    border: 1px solid var(--border);
 }
 
 /* Sub-step styling */
@@ -242,12 +259,11 @@ body {
 
 /* Alert */
 .alert {
-    padding: 1rem;
+    padding: 0rem;
     border-radius: var(--radius);
     margin: 1.5rem 0;
     display: flex;
     gap: 1rem;
-    background-color: #F0FFF0; /* Honeydew */
     border-left: 4px solid var(--primary);
 }
 
@@ -364,7 +380,6 @@ body {
 }
 
 .footer-link:hover {
-    color: #98FB98;
     text-decoration: underline;
 }
 
@@ -407,10 +422,15 @@ body {
     
     .step-content {
         margin-left: 0;
+        padding-left: 30px; 
+    }
+
+    .step-image, .centered-image {
+        max-width: 100%;
     }
 
     .footer-links {
         flex-direction: column;
         gap: 0.5rem;
     }
-}
+}    

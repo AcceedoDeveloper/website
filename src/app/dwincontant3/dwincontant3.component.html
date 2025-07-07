@@ -1,121 +1,261 @@
-
-<app-footr></app-footr>
-<!-- Header Section with Hover Effects -->
-<div class="header-section">
-    <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
-    <div class="header-overlay">
-        <h1 class="title">
-            <span class="title-text">DwinDisplay</span>
-            <span class="title-subtext">Innovative HMI Solutions</span>
-        </h1>
+ <app-footr></app-footr>
+  <!-- Header Section -->
+    <div class="header-section">
+        <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
+        <div class="header-overlay">
+            <h1 class="title">
+                <span class="title-text">DwinDisplay</span>
+                <span class="title-subtext"><h3>Text and ASCII Keyboard Configuration in DGUS Tool</h3></span>
+            </h1>
+        </div>
     </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="guide-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h3 class="sidebar-title">Configuration Steps</h3>
+                <nav class="sidebar-nav">
+                      <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+
+        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+        <a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
+                </nav>
+            </aside>
+
+            <!-- Guide Content -->
+           <article class="guide-content">
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number"></div>
+       <h1 class="step-title" style="  position: relative;" >Text and ASCII Keyboard Configuration in DGUS Tool</h1>
+      </div>
+      <div class="step-content" style= "font-size: large;">
+                        One of its key features is enabling on-screen text input using an ASCII keyboard, without needing an external keyboard or terminal.
+                        
+                        <div class="sub-step">
+
+                            <strong> <h3 class="sub-step-title">Step-by-Step Instructions:</h3></strong>
+                            
+                            <!-- Slideshow Container -->
+                            <div class="slideshow-container">
+                                <!-- Radio buttons for slide selection -->
+                                <input type="radio" name="slide" id="slide1" class="slide-radio" checked>
+                                <input type="radio" name="slide" id="slide2" class="slide-radio">
+                                <input type="radio" name="slide" id="slide3" class="slide-radio">
+                                <input type="radio" name="slide" id="slide4" class="slide-radio">
+                                <input type="radio" name="slide" id="slide5" class="slide-radio">
+                                <input type="radio" name="slide" id="slide6" class="slide-radio">
+                                <input type="radio" name="slide" id="slide7" class="slide-radio">
+                                <input type="radio" name="slide" id="slide8" class="slide-radio">
+                                <input type="radio" name="slide" id="slide9" class="slide-radio">
+                                <input type="radio" name="slide" id="slide10" class="slide-radio">
+                                <input type="radio" name="slide" id="slide11" class="slide-radio">
+                                
+                                <!-- Slides -->
+                                <div class="slides">
+                                    <!-- Slide 1 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">1</div>
+                                                <div class="step-text-card"><h5><strong> Text show, Click the option Text display and the drag the widget and select the area.</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide11" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step 1.3.png" alt="Text Display Setup - Step 1" class="step-image">
+                                                <label for="slide2" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 2 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">2</div>
+                                                <div class="step-text-card"><h5><strong> The parameters here I have set the vp address as 3006 because the vp address must be even and select the encoding mode as 0x03=BIG5.Enter the text length whatever do you want.</strong></h5>
 </div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide1" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step2.3.jpg" alt="Text Display Setup - Step 2" class="step-image">
+                                                <label for="slide3" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 3 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">3</div>
+                                                <div class="step-text-card"><h5><strong> The option ASCII input in Touch option and drag the widget and select the area</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide2" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step3.3.jpg" alt="Text Display Setup - Step 3" class="step-image">
+                                                <label for="slide4" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 4 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">4</div>
+                                                <div class="step-text-card"><h5><strong> The parameter for ASCII text input here.I set the VP address as 3600 and give the text width and height whatever do you want .scroll down and follow the next step.</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide3" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step4.3.jpg" alt="Text Display Setup - step 4"class="step-image">
+                                                <label for="slide5" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 5 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">5</div>
+                                                <div class="step-text-card"><h5><strong> The key board location as other page</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide4" class="slide-arrow prev" title="Previous step"></label>
+                                                 <img src="step5.3.jpg" class="step-image">
+                                                <label for="slide6" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 6 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">6</div>
+                                                <div class="step-text-card"><h5><strong> The Keyboard Image</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide5" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step 6.3.jpg" class="step-image">
+                                                <label for="slide7" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 7 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">7</div>
+                                                <div class="step-text-card"><h5><strong> The widget and select the full keyboard and give OK</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                 <label for="slide6" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step 7.3.png" class="step-image">
+                                                <label for="slide8" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 8 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">8</div>
+                                                <div class="step-text-card"><h5><strong> The size from keyboard area and paste into show location.</strong></h5>
 
-<!-- Main Content -->
-<main class="main-container">
-    <div class="page-header">
-        <h1 class="page-title">HMI Screen Design and Input Configuration Using DGUS Software</h1>
-        <p class="page-description">DWIN DISPLAY</p>
-    </div>
-
-    <div class="guide-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <h3 class="sidebar-title">Configuration Steps</h3>
-            <nav class="sidebar-nav">
-        <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
-<a [routerLink]="['/dwincontant2']" class="sidebar-link">Basic Touch and Keyboard Configuration in DGUS</a>
-<a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
-<a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
-<a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
-<a [routerLink]="['/dwincontant6']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
-<a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
-<a [routerLink]="['/dwincontant8']" class="sidebar-link">UART-Based Interaction with DWIN Display: Read & Write</a>
-
-            </nav>
-        </aside>
-
-        <!-- Guide Content -->
-        <article class="guide-content">
-            <div class="step">
-                <div class="step-header">
-                    <div class="step-number">4</div>
-                    <h2 class="step-title">Text and ASCII Keyboard Configuration in DGUS Tool</h2>
+</div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide7" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step 8.3.jpg" class="step-image">
+                                                <label for="slide9" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 9 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">9</div>
+                                                <div class="step-text-card"><h5><strong>  Click the set</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide8" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step 9.3.jpg" class="step-image">
+                                               
+                                                <label for="slide10" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 10 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">10</div>
+                                                <div class="step-text-card"><h5><strong> Enable this option..</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide9" class="slide-arrow prev" title="Previous step"></label>
+                                                <img src="step 10.3.jpg" class="step-image">
+                                                <label for="slide11" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Slide 11 -->
+                                    <div class="slide">
+                                        <div class="step-card">
+                                            <div class="step-header-card">
+                                                <div class="step-number-card">11</div>
+                                                <div class="step-text-card"><h5><strong> Keyboard is visible, Drag the widget and select the texting area and click ok.</strong></h5></div>
+                                            </div>
+                                            <div class="step-image-container">
+                                                <label for="slide10" class="slide-arrow prev" title="Previous step"></label>
+                                                 <img src="step 11.3.jpg" class="step-image">
+                                                <label for="slide1" class="slide-arrow next" title="Next step"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Centered Slide Navigation Dots -->
+                                <div class="slide-nav-container">
+                                    <div class="slide-nav">
+                                        <label for="slide1" class="slide-dot active" title="Go to step 1"></label>
+                                        <label for="slide2" class="slide-dot" title="Go to step 2"></label>
+                                        <label for="slide3" class="slide-dot" title="Go to step 3"></label>
+                                        <label for="slide4" class="slide-dot" title="Go to step 4"></label>
+                                        <label for="slide5" class="slide-dot" title="Go to step 5"></label>
+                                        <label for="slide6" class="slide-dot" title="Go to step 6"></label>
+                                        <label for="slide7" class="slide-dot" title="Go to step 7"></label>
+                                        <label for="slide8" class="slide-dot" title="Go to step 8"></label>
+                                        <label for="slide9" class="slide-dot" title="Go to step 9"></label>
+                                        <label for="slide10" class="slide-dot" title="Go to step 10"></label>
+                                        <label for="slide11" class="slide-dot" title="Go to step 11"></label>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </div>
                 </div>
-                <div class="step-content">
-                    <div class="step-image">
-                        <img src="ascii-keyboard-config.png" alt="ASCII Keyboard Configuration">
-                    </div>
-                    
-                    <p>This configuration allows users to input text through an on-screen keyboard and display it dynamically on the HMI screen. The ASCII keyboard is useful for fields such as names, IDs, and manual data entry. In this setup, the text display and input widgets are linked, enabling real-time character input and visualization.</p>
-                    
-                    <div class="sub-step">
-                        <h3 class="sub-step-title">Step-by-Step Instructions:</h3>
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 1:</strong> In the Text Show module, click Text Display, drag the widget, and place it where the text should appear.
-                            </div>
-                        </div>
-                        
-                        <div class="step-image">
-                            <img src="text-display-widget.png" alt="Text Display Widget Placement">
-                        </div>
-                        
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 3:</strong> Navigate to the Touch tab and select ASCII Input. Drag the widget and align it with the input area.
-                            </div>
-                        </div>
-                        
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 5:</strong> 
-                                <ul style="margin: 0.5rem 0 0 1rem;">
-                                    <li style="margin-bottom: 0.5rem;">Set the Keyboard Location to refer to another page where the keyboard layout is placed.</li>
-                                    <li>Click Keyboard Setting to configure which keyboard layout to show.</li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 9:</strong> Click the Set button to apply the configuration.
-                            </div>
-                        </div>
-                        
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 10:</strong> Enable the Keyboard Input option to activate keyboard function.
-                            </div>
-                        </div>
-                        
-                        <div class="alert">
-                            <div class="alert-icon">🔹</div>
-                            <div class="alert-content">
-                                <strong>Step 11:</strong> The keyboard will now appear. Drag the widget again and align it with the text input area. Click OK to finalize.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="alert alert-warning">
-                        <div class="alert-icon">⚠️</div>
-                        <div class="alert-content">
-                            <strong>Note:</strong> Ensure the text display area and input widgets are properly linked in the Variable settings for real-time updates.
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="guide-navigation">
-                <a href="#" class="btn btn-outline">← Previous Section</a>
-                <a href="#" class="btn btn-primary">Next: Variable Input →</a>
-            </div>
-        </article>
+                <div class="guide-navigation">
+                    <a href="#" class="btn btn-outline">← Previous Section</a>
+                    <a href="#" class="btn btn-primary">Next: Variable Input →</a>
+                </div>
+            </article>
+        </div>
     </div>
-</main>
-<app-footer></app-footer>
+<footer></footer>

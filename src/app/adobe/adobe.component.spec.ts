@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Dwincontant2Component } from './dwincontant2.component';
+import { AdobeComponent } from './adobe.component';
 
-describe('Dwincontant2Component', () => {
-  let component: Dwincontant2Component;
-  let fixture: ComponentFixture<Dwincontant2Component>;
+describe('AdobeComponent', () => {
+  let component: AdobeComponent;
+  let fixture: ComponentFixture<AdobeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Dwincontant2Component]
+      declarations: [AdobeComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Dwincontant2Component);
+    fixture = TestBed.createComponent(AdobeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

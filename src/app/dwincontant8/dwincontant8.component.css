@@ -89,7 +89,7 @@ body {
 
 /* Main Content */
 .main-container {
-    max-width: 1700px;
+    max-width: 1425px;
     margin: 2rem auto;
    
     flex: 1 0 auto;
@@ -117,7 +117,7 @@ body {
 /* Guide Container */
 .guide-container {
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 220px 1fr;
     gap: 2rem;
 }
 
