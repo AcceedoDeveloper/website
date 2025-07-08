@@ -76,7 +76,9 @@ body {
     font-weight: 400;
     color: #98FB98;
 }
-
+.header-section:hover .title-subtext {
+  color: #7FFFD4;
+}
 /* Main Content */
 .main-container {
     max-width: 1425px;

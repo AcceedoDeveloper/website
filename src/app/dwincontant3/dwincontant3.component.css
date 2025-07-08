@@ -1,4 +1,11 @@
 
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 html, body {
     height: 100%;
 }
@@ -41,6 +48,7 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
     justify-content: center;
     align-items: center;
     color: white;
@@ -57,12 +65,14 @@ body {
 .title {
     font-size: 3rem;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-top: -5rem;
+   
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .title-text {
     display: block;
+    margin-bottom: 0rem;
     color: #ffffff;
 }
 
@@ -71,6 +81,9 @@ body {
     font-size: 1.5rem;
     font-weight: 400;
     color: #98FB98;
+}
+.header-section:hover .title-subtext {
+  color: #7FFFD4;
 }
 
 /* Main Content */
