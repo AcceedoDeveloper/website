@@ -14,13 +14,13 @@ export class CarouselComponent {
       buttonText: 'Comprehensive Solutions',
       contentClass: ''
     },
-    {
-      image: '/motherboard-background.jpg',
-      title: 'EMBEDDED INNOVATION',
-      description: 'Pioneering the future of technology with high-quality PCB board development and efficient embedded programming solutions.',
-      buttonText: 'Embedded Innovation',
-      contentClass: 'Embedded'
-    },
+{
+  image: '/image.jpg.jpg',
+  title: 'EMBEDDED INNOVATION',
+  description: 'Pioneering the future of technology with high-quality PCB board development and efficient embedded programming solutions.',
+  buttonText: 'Embedded Innovation',
+  contentClass: 'Embedded'
+},
     {
       image: '/freepik__candid-image-photography-natural-textures-highly-r__22273.jpeg',
       title: 'INDUSTRY IoT SOLUTIONS',

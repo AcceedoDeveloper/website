@@ -48,6 +48,7 @@ import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
 import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
 import { AdobeComponent } from './adobe/adobe.component';
 
+import { RouterModule } from '@angular/router';
 
 
 
@@ -98,6 +99,7 @@ import { AdobeComponent } from './adobe/adobe.component';
   
   ],
   imports: [
+    RouterModule,
     FormsModule,
     BrowserModule,
     AppRoutingModule,

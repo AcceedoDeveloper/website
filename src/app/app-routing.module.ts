@@ -24,6 +24,10 @@ import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
 import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
 import { AdobeComponent } from './adobe/adobe.component';
 import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
+import { CardsComponent } from './cards/cards.component.spec';
+import { BrowserModule } from '@angular/platform-browser';
+
+
 
 
 
@@ -53,12 +57,22 @@ const routes: Routes = [
   {path: 'dwincontant6', component: Dwincontant6Component },
   {path: 'dwincontant7', component: Dwincontant7Component },
   {path: 'dwincontant8', component: Dwincontant8Component },
-  {path:'adobe',component:AdobeComponent}
+  {path:'adobe',component:AdobeComponent},
+  {path:'Cards',component:CardsComponent},
+    { path: 'product2', component: Product2Component },
+ 
+  { path: 'product1', component: Product1Component },
+  { path: 'power-metrics', component: PowerMetricsComponent },
+   { path: '', redirectTo: 'cards', pathMatch: 'full'},
+ 
+
 
 
 
  
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {

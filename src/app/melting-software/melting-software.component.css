@@ -6,7 +6,7 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-bottom: 20px;
-    margin-top: 35px;
+    margin-top: 10px;
   }
 
   
@@ -31,6 +31,7 @@
     max-width: 500px;
     margin: 0 auto;
     padding: 0 20px;
+   
   }
   
   .hero {
@@ -106,7 +107,7 @@
   }
   
   .product-image {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
     border-radius: 10px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.1);
@@ -164,30 +165,28 @@
     color: white;
     padding: 5rem 0;
     text-align: center;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
     margin-top: -50px;
-    margin-bottom: -10px;
+    margin-bottom: 10px;
   }
   
   .benefits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin-top: 3rem;
+    margin-top: 2rem;
   }
   
-  .benefit-item {
+ .benefit-item {
     background-color: rgba(255,255,255,0.1);
     padding: 2rem;
     border-radius: 10px;
     transition: all 0.3s ease;
   }
-  
   .benefit-item:hover {
     background-color: rgba(255,255,255,0.2);
     transform: translateY(-5px);
   }
-  
   .benefit-item h3 {
     margin-bottom: 1rem;
     color: #00c9a7;
@@ -1110,14 +1109,16 @@
 .slider-container {
   width: 100%;
   height: 85%;
+  margin-top: 120px;
   position: relative;
   overflow: hidden; 
+
 
 }
 
 .slider {
   width: 200%;
-  height: 90%;
+  height: 80%;
   display: flex;
   transition: transform 0.5s ease-in-out;
 }
@@ -1173,7 +1174,7 @@
   color: white;
   margin-bottom: 3rem;
   line-height: 1.5;
-  max-width: 400px;
+  max-width: 1400px;
 }
 
 .page-number {
@@ -1439,15 +1440,9 @@ main {
     margin-top: 1rem;
   }
   
-  .benefits {
-    margin-top: -60px;
-    padding: 2rem 1rem;
-    text-align: center;
-  }
-
   .benefits-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); 
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
     gap: 1rem;
     margin-top: 2rem;
   }
@@ -1466,80 +1461,74 @@ main {
     font-size: 0.6rem;
     line-height: 1.4;
   }
+  .col-12{
+    height: 1000px;
+  }
+
+  .card-container {
+  position: relative;
+  width: 100%;
+  max-width: 1100px;
+  margin: 90px auto;
+  padding: 20px;
+  padding-bottom: 100px;
+
 }
-   .metrics-wrapper {
-            padding: 40px 20px;
-        }
 
-        /* Metrics Cards Section */
-        .metrics-cards-area {
-            background: #ffffff;
-            padding: 20px 0;
-        }
+.card {
+  position: sticky;
+  width: 100%;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  margin-bottom: -140px; 
+  transition: all 0.8s ease;
+  transform-origin: top center;
+}
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+  .card:nth-child(1) {
+  top: 150px;
+  z-index: 1;
+  color: white;
+  border-color: #8467f7;
+  background-color: rgb(254, 254, 254);
+  
+}
 
-        .metric-card {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #fff;
-            position: relative;
-        }
+.card:nth-child(2) {
+  top: 150px;
+  z-index: 2;
+  color: white;
+  opacity: 0;
+  border-color: #8467f7;
+  background-color: rgb(254, 254, 254);
+  transform: translateY(400px);
+  transition: all 0.8s ease;
+}
 
-        .metric-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-        }
+.card:nth-child(3) {
+  top: 170px;
+  z-index: 3;
+  color: white;
+  background-color: rgb(254, 254, 254);
+  opacity: 0;
+  border-color: #8467f7;
+  transform: translateY(350px);
+}
+.card-img1,.card-img2,.card-img3{
+  margin-top: -10px;
+}
+.card-img3{
+  height: 160px;
+}
+.cycle{
+  margin-bottom: 50px;
+    background-color: #dcd6f4;
+}
+}
 
-        .metric-card-image {
-            height: 260px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-
-        .metric-image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
-            transition: opacity 0.3s ease;
-        }
-
-        .metric-card:hover .metric-image-overlay {
-            opacity: 0.9;
-        }
-
-        .metric-card-body {
-            padding: 25px;
-            background: #fff;
-        }
-
-        .metric-card-title {
-            font-size: 1.5rem;
-            color: #1e3a8a;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .metric-card-text {
-            color: #6b7280;
-            line-height: 1.6;
-            font-size: 1rem;
-            font-weight: 300;
-        }
-
-        /* Responsive Styles */
+       /* Responsive Styles */
         @media (max-width: 1024px) {
             .metrics-grid {
                 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

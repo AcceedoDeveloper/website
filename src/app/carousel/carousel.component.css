@@ -13,22 +13,21 @@
   position: relative;
   width: 100%;
   max-width: 1200px;
-  height: 500px;
+  height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
   perspective: 1500px;
-  
 }
 
 .carousel-slide {
   position: absolute;
-  width: 800px;
-  height: 400px;
-  max-width: 90vw;
-  max-height: 75vh;
+  width: 1400px;           /* increased from 800px */
+  height: 525px;           /* increased from 400px */
+  max-width: 95vw;         /* you can adjust this too */
+  max-height: 80vh;
   min-width: 320px;
-  border-radius: 12px;
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   transition: all 0.5s ease;
@@ -74,25 +73,44 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 250%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
 
 .slide-content {
-  position: absolute;
-  bottom: 8%;
-  right: 8%;
-  background: linear-gradient(45deg, rgba(255, 54, 15, 0.9), rgba(255, 96, 27, 0.9));
-  padding: 20px;
-  border-radius: 10px;
-  width: 45%;
-  max-width: 400px;
-  min-width: 250px;
-  color: white;
-  z-index: 2;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+    color: #fff;
+    text-align: left;
+    padding: 15px 20px;
+    border-radius: 20px;
+    width: 45%;
+    height: auto;
+    z-index: 1;
+    box-shadow: 0 8px 15px #0003;
+    transition: all .3s ease-in-out;
+}
+
+
+
+/* Distinct background colors for each slide */
+.carousel-slide:nth-child(1) .slide-content {
+  background: linear-gradient(45deg, #FF416C, #FF4B2B); /* red-pink */
+}
+.carousel-slide:nth-child(2) .slide-content {
+  background: linear-gradient(45deg, #3a7bd5, #00d2ff); /* blue-cyan */
+}
+.carousel-slide:nth-child(3) .slide-content {
+  background: linear-gradient(45deg, #e5b86a, #dcb56b); /* gold-beige */
+}
+.carousel-slide:nth-child(4) .slide-content {
+   background: linear-gradient(45deg, #ff360f, #ff601b);
+}
+.carousel-slide:nth-child(5) .slide-content {
+   background: linear-gradient(45deg, #FF416C, #FF4B2B);
 }
 
 .slide-content h2 {
@@ -107,14 +125,31 @@
 
 .custom-button {
   background: white;
-  color: #ff361f;
+  color: #333;
   border: none;
-  padding: 10px 20px;
-  border-radius: 25px;
-  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 400;
   cursor: pointer;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
   transition: 0.2s;
+}
+
+/* Button colors to match each slide */
+.carousel-slide:nth-child(1) .custom-button {
+  color: #ff0000;
+}
+
+.carousel-slide:nth-child(2) .custom-button {
+  color: #3a7bd5;
+}
+
+.carousel-slide:nth-child(3) .custom-button {
+  color: #8E2DE2;
+}
+
+.carousel-slide:nth-child(4) .custom-button {
+  color: #11998e;
 }
 
 .custom-button:hover {
@@ -122,7 +157,7 @@
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Arrows */
+/* Arrows - moved slightly inward */
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -144,11 +179,11 @@
 }
 
 .carousel-arrow.prev {
-  left: 15px;
+  left: 5px; /* Moved closer to the edge */
 }
 
 .carousel-arrow.next {
-  right: 15px;
+  right: 5px; /* Moved closer to the edge */
 }
 
 .carousel-arrow svg {
@@ -157,27 +192,6 @@
   fill: #333;
 }
 
-/* Dots */
-.carousel-nav {
-  position: absolute;
-  bottom: 15px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  z-index: 4;
-}
-
-.nav-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-  border: 2px solid white;
-  cursor: pointer;
-  transition: 0.2s;
-}
 
 .nav-dot:hover {
   background: rgba(255, 255, 255, 0.9);
@@ -218,6 +232,11 @@
     font-size: 0.85rem;
     padding: 8px 16px;
   }
+
+  .carousel-arrow {
+    width: 35px;
+    height: 35px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -242,4 +261,17 @@
     padding: 7px 14px;
     font-size: 0.75rem;
   }
+
+  .carousel-arrow {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .carousel-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
 }
+
+
+
