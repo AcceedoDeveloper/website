@@ -8,28 +8,28 @@ import { Component, HostListener } from '@angular/core';
 export class CarouselComponent {
   slides = [
     {
-      image: '/freepik__candid-image-photography-natural-textures-highly-r__28920.jpeg',
+      image: '/assets/freepik__candid-image-photography-natural-textures-highly-r__28920.jpeg',
       title: 'COMPREHENSIVE SOLUTIONS',
       description: 'Providing an all-in-one platform that streamlines planning, scheduling, machine production, rejection management, operator tracking, downtime analysis, detailed reporting.',
       buttonText: 'Comprehensive Solutions',
       contentClass: ''
     },
 {
-  image: '/image.jpg.jpg',
+  image: '/assets/image.jpg.jpg',
   title: 'EMBEDDED INNOVATION',
   description: 'Pioneering the future of technology with high-quality PCB board development and efficient embedded programming solutions.',
   buttonText: 'Embedded Innovation',
   contentClass: 'Embedded'
 },
     {
-      image: '/freepik__candid-image-photography-natural-textures-highly-r__22273.jpeg',
+      image: '/assets/freepik__candid-image-photography-natural-textures-highly-r__22273.jpeg',
       title: 'INDUSTRY IoT SOLUTIONS',
       description: 'Transform your manufacturing process with our Industry IoT solution, enabling real-time data analytics and seamless connectivity for unparalleled efficiency.',
       buttonText: 'Industry Iot Solution',
       contentClass: ''
     },
     {
-      image: 'modern-equipped-computer-lab.jpg',
+      image: '/assets/modern-equipped-computer-lab.jpg',
       title: 'R&D INNOVATION',
       description: 'Advancing technology through dedicated research, development. Our team focuses on pioneering innovative solutions for embedded systems and web applications.',
       buttonText: 'R&D Innovation',

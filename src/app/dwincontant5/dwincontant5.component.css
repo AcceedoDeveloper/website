@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -183,7 +182,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.0rem;
+    margin-bottom:1.0rem;
 }
 
 .step-number {
@@ -305,9 +304,9 @@ body {
 }
 
 .btn-outline {
-    border: 1px solid var(--border);
-    color: var(--secondary);
-    background-color: white;
+  border: 1px solid var(--border);
+  color: var(--secondary);
+  background-color: white;
 }
 
 .btn-outline:hover {
@@ -317,10 +316,11 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--primary);
-    color: white;
-    border: 1px solid var(--primary);
+  border: 1px solid var(--border);
+  color: var(--secondary);
+  background-color: white;
 }
+
 
 .btn-primary:hover {
     background-color: var(--primary-dark);
@@ -406,6 +406,9 @@ body {
     .title-subtext {
         font-size: 1.2rem;
     }
+    .step-header {
+        margin-bottom: -1rem;
+    }
     
     .main-container {
         padding: 0 1rem;
@@ -440,3 +443,94 @@ body {
 .title-special-link:hover {
   color: #124e3a;
 } 
+@media (max-width: 768px) {
+  .header-section {
+    height: 300px;
+  }
+  .guide-container{
+    margin-bottom:0rem;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .title-subtext {
+        line-height: 1.2;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0.5rem;
+  }
+   .step-title {
+    line-height: 1.2;
+    font-size: 1.2rem;
+    margin-left: -3rem;
+    padding-bottom: 1rem;
+  }
+ .sub-step-title{
+  margin-left: -1.8rem;
+ }
+ @media (max-width: 768px) {
+  .sub-step-title {
+    margin-bottom: 0.3rem; 
+  }
+
+  .sub-step .alert:first-of-type {
+    margin-top: 0.3rem; 
+  }
+}
+ 
+ .sub-step-title.shifted-title{
+  margin-left: -2rem;
+ }
+  .guide-content {
+    padding: 1.5rem;
+  }
+  .alert-content{
+    margin-left:-2.5rem;
+  }
+  .step-content {
+    margin-left: 0;
+  }
+ 
+  .title-special-link{
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+}
+.title-special-link {
+  cursor: pointer;
+  color: #90ee90;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+@media (max-width: 768px) {
+  .bridge-paragraph {
+    margin-left: -1rem; 
+  }
+}
+
+/* Hover effect only for that line */
+.title-special-link:hover {
+  color: #124e3a;
+}
+@media (max-width: 768px) {
+  .guide-container {
+    grid-template-columns: 1fr; /* Make content full width */
+  }
+
+  .sidebar {
+    display: none; /* Hide sidebar */
+  }
+}
+.mobile-nav-buttons {
+  display: none; /* Hidden by default */
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-buttons {
+    display: flex; /* Only show in mobile view */
+    flex-direction: row;
+  }
+}

@@ -1,6 +1,6 @@
 * {
   margin: 0;
-  padding: 1;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -187,15 +187,20 @@ body {
 .step-image {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  align-items: center;
+  overflow: hidden;
+  padding: 0rem;
 }
 
 .step-image img {
-  width: 80%; /* or max-width: 600px; */
+  width: 100%;
   height: auto;
   display: block;
+  max-width: 100%;
+  object-fit: contain; /* Prevents cropping */
   border-radius: 6px;
 }
+
 
 
 /* Alert */
@@ -227,6 +232,7 @@ body {
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
   .main-container {
+    width: 100%;
     padding: 0 1.25rem;
   }
 
@@ -236,11 +242,17 @@ body {
   }
 
   .guide-content {
+    width: 100%;
     padding: 1.5rem;
   }
 }
 
 @media (max-width: 768px) {
+  .main-container {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
   .header-section {
     height: 320px;
   }
@@ -254,12 +266,24 @@ body {
   }
 
   .guide-container {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
   }
 
   .sidebar {
     position: static;
     margin-bottom: 1.5rem;
+    width: 100%;
+  }
+
+  .guide-content {
+    width: 100%;
+  }
+
+  .sidebar-link {
+    white-space: normal;
+    word-wrap: break-word;
   }
 
   .step-title {
@@ -268,11 +292,14 @@ body {
 }
 
 @media (max-width: 576px) {
-  .header-section {
-    height: 280px;
-  }
+ .step-image img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
 
   .main-container {
+    width: 100%;
     padding: 0 1rem;
   }
 
@@ -281,7 +308,18 @@ body {
   }
 
   .guide-content {
+    width: 100%;
     padding: 1.25rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .sidebar-link {
+    white-space: normal;
+    word-wrap: break-word;
   }
 
   .guide-navigation {
@@ -289,11 +327,33 @@ body {
     gap: 0.75rem;
   }
 
-  .btn {
-    width: 100%;
-    text-align: center;
-  }
+.btn-outline {
+  padding: 3%;
+  padding-inline: 15.2px;
+  border: 1px solid var(--border);
+  color: var(--secondary);
+  background-color: white;
+
+
 }
+.btn-primary {
+   padding-inline: 15.2px;
+ border: 1px solid var(--border);
+  color: var(--secondary);
+  background-color: white;
+}
+   .step-image{
+    height: 200px;
+    
+   }
+    .title-special-link{
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+}
+
+/* Hover Effect Line */
 .title-special-link {
   cursor: pointer;
   color: #90ee90;
@@ -301,8 +361,28 @@ body {
   display: inline-block;
 }
 
-/* Hover effect only for that line */
 .title-special-link:hover {
   color: #124e3a;
 }
+@media (max-width: 768px) {
+  .guide-container {
+    grid-template-columns: 1fr; /* Make content full width */
+  }
 
+  .sidebar {
+    display: none; /* Hide sidebar */
+  }
+  .mobile-nav-buttons {
+  display: none; /* Hidden by default */
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-buttons {
+    display: flex; /* Only show in mobile view */
+    flex-direction: row;
+  }
+}
+}

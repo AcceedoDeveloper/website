@@ -49,6 +49,7 @@ import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
 import { AdobeComponent } from './adobe/adobe.component';
 
 import { RouterModule } from '@angular/router';
+import { Product3Component } from './product3/product3.component';
 
 
 
@@ -89,6 +90,7 @@ import { RouterModule } from '@angular/router';
     Dwincontant7Component,
     Dwincontant8Component,
     AdobeComponent,
+    Product3Component,
    
   
     

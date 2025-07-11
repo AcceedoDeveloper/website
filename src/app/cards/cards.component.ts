@@ -19,7 +19,7 @@ export class CardsComponent implements OnInit {
   products = [
     {
       title: ' Attendance System',
-      image: '/a 3.jpg',
+      image: '/assets/a 3.jpg',
       points: [
         'Streamlines employee tracking, attendance, and payroll processes with cloud-based flexibility.',
         'Simplifies onboarding, salary components, and attendance data management.',
@@ -30,7 +30,7 @@ export class CardsComponent implements OnInit {
     },
     {
       title: 'Melting Software',
-      image: '/melt 3 (2).jpg',
+      image: '/assets/melt 3 (2).jpg',
       points: [
         'Optimizes production with automated material, alloy, and temperature management.',
         'Features spectrum analysis, auto reports, stock updates, and furnace tracking.',
@@ -40,7 +40,7 @@ export class CardsComponent implements OnInit {
     },
     {
       title: 'Heat Treatment',
-      image: 'melt 7.jpg',
+      image: '/assets/melt 7.jpg',
       points: [
         'Real-time monitoring of temperature and cycle data with cloud storage.',
         'Simplifies cycle management, batch tracking, and customized reporting.',
@@ -50,7 +50,7 @@ export class CardsComponent implements OnInit {
     },
     {
       title: 'Power Metrics',
-      image: '/_a49041bd-3702-4617-b53d-12fd1f1fc0af.jpg',
+      image: '/assets/_a49041bd-3702-4617-b53d-12fd1f1fc0af.jpg',
       points: [
         'Monitors power metrics for efficient energy use and waste reduction.',
         'Integrates with IoT for live monitoring, remote control, and predictions.',
@@ -60,7 +60,7 @@ export class CardsComponent implements OnInit {
     },
     {
       title: 'Production Monitor',
-      image: 'PD.jpg',
+      image: '/assets/PD.jpg',
       points: [
         'Real-time visibility with advanced analytics and AI-powered insights.',
         'Collect real-time data without disrupting operations.'

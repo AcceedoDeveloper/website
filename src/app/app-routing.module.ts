@@ -25,7 +25,7 @@ import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
 import { AdobeComponent } from './adobe/adobe.component';
 import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
 import { CardsComponent } from './cards/cards.component.spec';
-import { BrowserModule } from '@angular/platform-browser';
+import { Product3Component } from './product3/product3.component';
 
 
 
@@ -63,7 +63,9 @@ const routes: Routes = [
  
   { path: 'product1', component: Product1Component },
   { path: 'power-metrics', component: PowerMetricsComponent },
-   { path: '', redirectTo: 'cards', pathMatch: 'full'},
+  { path: '', redirectTo: 'cards', pathMatch: 'full'},
+  {path:'product3',component:Product3Component}
+
  
 
 

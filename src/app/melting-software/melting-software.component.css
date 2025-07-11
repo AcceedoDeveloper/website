@@ -576,7 +576,7 @@
         .srm-benefits {
             display: flex;
             min-height: 600px;
-            background: url('/Melttt.webp') no-repeat center center/cover;
+            background: url('/assets/Melttt.webp') no-repeat center center/cover;
             position: relative;
             overflow: hidden;
         }

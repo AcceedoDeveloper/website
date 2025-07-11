@@ -1,5 +1,4 @@
 
-
 * {
     margin: 0;
     padding: 0;
@@ -300,9 +299,9 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--primary);
-    color: white;
-    border: 1px solid var(--primary);
+    border: 1px solid var(--border);
+    color: var(--secondary);
+    background-color: white;
 }
 
 .btn-primary:hover {
@@ -399,6 +398,12 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.image2{
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+  display:block;
+}
 
 pointer-paragraph::before {
     content: "• "; /* Bullet point */
@@ -416,4 +421,79 @@ pointer-paragraph::before {
 /* Hover effect only for that line */
 .title-special-link:hover {
   color: #124e3a;
+}
+@media (max-width: 768px) {
+  .header-section {
+    height: 300px;
+  }
+  .guide-container{
+    margin-bottom:0rem;
+  }
+  .title {
+    font-size: 2rem;
+  }
+  .title-subtext {
+        line-height: 1.2;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0.5rem;
+  }
+   .step-title {
+    line-height: 1.2;
+    font-size: 1.2rem;
+    margin-left: 0rem;
+    padding-bottom: 1rem;
+  }
+ .sub-step-title{
+  margin-left: -1rem;
+ }
+ .sub-step-title.shifted-title{
+  margin-left: -2rem;
+ }
+  .guide-content {
+    padding: 1.5rem;
+  }
+  .alert-content{
+    margin-left:-1rem;
+  }
+  .step-content {
+    margin-left: 0;
+  }
+  .title-special-link{
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+}
+.title-special-link {
+  cursor: pointer;
+  color: #90ee90;
+  transition: color 0.3s ease;
+  display: inline-block;
+}
+
+/* Hover effect only for that line */
+.title-special-link:hover {
+  color: #124e3a;
+}
+@media (max-width: 768px) {
+  .guide-container {
+    grid-template-columns: 1fr; /* Make content full width */
+  }
+
+  .sidebar {
+    display: none; /* Hide sidebar */
+  }
+}
+.mobile-nav-buttons {
+  display: none; /* Hidden by default */
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-buttons {
+    display: flex; /* Only show in mobile view */
+    flex-direction: row;
+  }
 }

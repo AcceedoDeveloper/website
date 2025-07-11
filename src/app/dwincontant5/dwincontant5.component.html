@@ -1,7 +1,7 @@
 <app-footr></app-footr>
 <!-- Header Section with Hover Effects -->
 <div class="header-section">
-    <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
+    <img src="/assets/motherboard-background.jpg" alt="Header Background" class="header-bg">
     <div class="header-overlay">
         <h1 class="title">
             
@@ -25,16 +25,14 @@
         <aside class="sidebar">
             <h3 class="sidebar-title">Configuration Steps</h3>
             <nav class="sidebar-nav">
-
-  <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
-
-        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
-        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
-        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
         <a [routerLink]="['/dwincontant6']" class="sidebar-link">Image Animation using Dwin DGUS Tool</a>
-        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>    
         <a [routerLink]="['/dwincontant8']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
-            </nav>
+        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+      </nav>
         </aside>
 
         <!-- Guide Content -->
@@ -49,12 +47,12 @@
         <h2 class="sub-step-title">Role of the SD card</h2>
                     </div>
                     
-                 
-                    <p>SD card act as a bridge, it enables communication between the software and display hardware.
+                    <p class="bridge-paragraph">
+                    SD card act as a bridge, it enables communication between the software and display hardware.
 This ensures smooth rendering of visuals from the development environment onto the screen.
 </p>
-
-                   <p> After designing and configuring the HMI interface, the final and essential step is to save the project and export it to an SD card for deployment to the DWIN display. This ensures the device boots up with the correct user interface and configuration settings. First, save your project and compile it using the DWIN development tool, which generates a folder—usually named DWIN_SET—containing all the necessary binary and resource files. Format an SD card to FAT32 (preferably 8GB–16GB), then copy the generated folder to the root directory of the card. Insert the SD card into the powered-off DWIN display, and then power it on. The device will automatically begin updating, displaying a progress bar. Once the update is complete, power off the device, remove the SD card, and restart the screen. Your custom HMI interface should now load and operate correctly on the DWIN display.</p>
+                    <p class="bridge-paragraph">
+                   After designing and configuring the HMI interface, the final and essential step is to save the project and export it to an SD card for deployment to the DWIN display. This ensures the device boots up with the correct user interface and configuration settings. First, save your project and compile it using the DWIN development tool, which generates a folder—usually named DWIN_SET—containing all the necessary binary and resource files. Format an SD card to FAT32 (preferably 8GB–16GB), then copy the generated folder to the root directory of the card. Insert the SD card into the powered-off DWIN display, and then power it on. The device will automatically begin updating, displaying a progress bar. Once the update is complete, power off the device, remove the SD card, and restart the screen. Your custom HMI interface should now load and operate correctly on the DWIN display.</p>
                     <div class="sub-step">
                         <h2 class="sub-step-title">Step-by-Step Instructions:</h2>
                        <div class="center-wrapper">
@@ -69,7 +67,7 @@ This ensures smooth rendering of visuals from the development environment onto t
                         </div>
                         </div>
                          <div class="step-image">
-                          <img src="step 1.jpeg"
+                          <img src="/assets/step 1.jpeg"
                               alt="Text Display Setup - Step 1">
                               <div style="text-align: center;">
                           
@@ -96,7 +94,7 @@ This ensures smooth rendering of visuals from the development environment onto t
                             </div>
                         </div>
                         <div class="step-image">
-                            <img src="step 3.1.jpeg"
+                            <img src="/assets/step 3.1.jpeg"
                             alt="Text Display Setup - Step 3">
                         </div>
                         <div class="alert">
@@ -112,11 +110,11 @@ This ensures smooth rendering of visuals from the development environment onto t
                             </div>
                         </div>
                         <div class="step-image">
-                            <img src="step 4.jpeg"
+                            <img src="/assets/step 4.jpeg"
                             alt="Text Display Setup - Step 4">
                         </div>
                          <div class="step-image">
-                            <img src="step 4.2.jpeg"
+                            <img src="/assets/step 4.2.jpeg"
                             alt="Text Display Setup - Step 4.2">
                         </div>
                     </div>
@@ -126,6 +124,10 @@ This ensures smooth rendering of visuals from the development environment onto t
 
            
         </article>
+        <div class="mobile-nav-buttons">
+  <button class="btn btn-outline" [routerLink]="'/dwincontant4'">Previous</button>
+  <button class="btn btn-primary" [routerLink]="'/dwincontant6'">Next</button>
+</div>
     </div>
 </main>
 <app-footer></app-footer>

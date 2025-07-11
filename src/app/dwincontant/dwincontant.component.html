@@ -2,7 +2,7 @@
 
 <!-- Header Section with Hover Effects -->
 <div class="header-section">
-  <img src="motherboard-background.jpg" alt="Header Background" class="header-bg">
+  <img src="/assets/motherboard-background.jpg" alt="Header Background" class="header-bg">
   <div class="header-overlay">
     <h1 class="title">
       
@@ -24,14 +24,13 @@
     <aside class="sidebar">
       <h3 class="sidebar-title">Configuration Steps</h3>
       <nav class="sidebar-nav">
-        <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
-
-        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
-        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>
-        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
         <a [routerLink]="['/dwincontant6']" class="sidebar-link">Image Animation using Dwin DGUS Tool</a>
-        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a>    
         <a [routerLink]="['/dwincontant8']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
       </nav>
     </aside>
 
@@ -64,7 +63,7 @@
                       <li style="margin-bottom: 0.5;"><strong>Open the DGUS Editor software on your system to start your HMI design project.</strong></li>
                     </ul>
                     </div>
-                  <img src="Image Integration Using DGUS Editor.png" alt="Keyboard Configuration in DGUS" class="step-img">
+                  <img src="/assets/Image Integration Using DGUS Editor.png" alt="Keyboard Configuration in DGUS" class="step-img">
                 </div>
                 <div class="step-block">
                    <div class="alert-content">
@@ -74,7 +73,7 @@
                     </ul>
                     </div>
                  
-                  <img src="Image Integration Using DGUS Editor 2.png" alt="Keyboard Configuration in DGUS" class="step-img">
+                  <img src="/assets/Image Integration Using DGUS Editor 2.png" alt="Keyboard Configuration in DGUS" class="step-img">
                 </div>
               </div>
             </div>
@@ -84,6 +83,10 @@
 
       
     </article>
+    <div class="mobile-nav-buttons">
+  <button class="btn btn-outline" [routerLink]="'/dwincontant0'">Previous</button>
+  <button class="btn btn-primary" [routerLink]="'/dwincontant3'">Next</button>
+</div>
   </div>
 
 <app-footer></app-footer>
