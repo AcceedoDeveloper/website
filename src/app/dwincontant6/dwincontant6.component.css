@@ -699,6 +699,12 @@ body {
     height: 35px;
     z-index: 1000;
   }
+  .main-container {
+  max-width: 600px;        /* Prevents full-width stretch */
+  margin: 0 auto;          /* This centers the container */
+  padding: 1rem;           /* Some padding for spacing */
+  box-sizing: border-box;  /* Ensures padding doesn't overflow */
+}
   
 
     /* Slideshow mobile adjustments */

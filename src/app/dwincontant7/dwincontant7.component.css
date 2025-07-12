@@ -496,4 +496,6 @@ pointer-paragraph::before {
     display: flex; /* Only show in mobile view */
     flex-direction: row;
   }
+  
 }
+
