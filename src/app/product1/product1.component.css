@@ -31,6 +31,8 @@
   animation: fadeInUp 1.5s ease-out forwards;
 }
 
+
+
 /* Gradient-animated text */
 .animated-text {
   font-size: 2.5rem;
@@ -120,6 +122,7 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
+      
     }
     
     .hero {
@@ -271,13 +274,28 @@
 }
 
 /* Responsive Design */
+     @media (max-width: 768px) {
+  .benefits-grid {
+    grid-template-columns: 1fr; /* stack vertically */
+    gap: 1.5rem;
+   
+  }
 
+  .benefit-item {
+    transform: none !important;
+    opacity: 1 !important;
+    animation: none !important;
+    margin: 0 auto;
+   
+  }
+}
     
      .benefits {
           padding: 2rem 0;
           background: linear-gradient(135deg, #0061ff, #60efff);
           color: white;
           clip-path: polygon(0 0%, 100% 0, 100% 90%, 0 100%);
+        
       }
 
       .benefits-grid {
@@ -336,7 +354,7 @@
     }
     
     .demo-description {
-      max-width: 700px;
+      max-width: 500px;
       margin: 0 auto 2rem;
     }
     
@@ -472,7 +490,7 @@
 
   .content-box2 img {
     flex: 1;
-    width: 100%;
+    width: 80%;
     max-width: 790px;
     height: 100%;
     max-height: 550px;
@@ -480,8 +498,8 @@
     border: 3px solid #36f76f;
     object-fit: cover;
     margin-top: 50px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     animation: fadeInLeft 1s ease-out;
   }
   
@@ -704,7 +722,7 @@
     }
     
     .process-step {
-        flex-direction: column;
+        flex-direction:column;
     }
     
     .step-number {
@@ -715,6 +733,7 @@
     .step-content {
         width: 100%;
         margin-left: 0;
+      
     }
 
       .content-box img {
@@ -737,16 +756,33 @@
       text-align: center;
     }
     .card {
+    
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
-.card-container{
-  width: 100%;
-  max-width: 590px;
-  padding-top: 100px;
-  margin: 0 auto;
-}
+  .process {
+    padding-bottom: 100px; /* ensures enough space before next section */
+    height: auto !important; /* prevent fixed height issues */
+  }
+
+  .card-container {
+    margin-bottom: 120px !important;
+    width: 100%;
+    max-width: 590px;
+    padding-top: 100px;
+    margin: 0 auto;
+    transform: translateX(-150px); 
+  
+  }
+
+  .benefits {
+    margin-top: 0 !important;
+    padding-top: 80px !important;
+    clip-path: none !important; /* optional: to avoid weird shapes overlapping */
+  }
+
+
 
   .card-img1 img{
     width: 100%;
@@ -782,7 +818,16 @@
     padding: 10px;
     font-size: 0.75rem;
   }
-  .section-title{
-    margin-left: 0px;
+    .section-title {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    text-align: left !important;
   }
-    }
+  .container {
+    
+    margin-top: 250px;
+  }
+
+ 
+}
+    

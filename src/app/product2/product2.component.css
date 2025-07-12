@@ -1,4 +1,5 @@
-  body {
+ 
+body {
     background-color: #f8f9fa;
     width: 100%;
     color: #1a2b50;
@@ -589,7 +590,24 @@
     width: 90%;
     max-width: 400px;
   }
-
+     .content-box3 .text {
+    flex: 1;
+    min-width: 250px;
+    margin-left: 0px;
+    margin-right: 20px;
+  }
+     .content-box3 h2 {
+    font-size: 2.5rem;
+    margin: 0 0 10px;
+    margin-left: 0px;
+    margin-right: 20px;
+  }
+    .content-box4 .text {
+    flex: 1;
+    min-width: 250px;
+    margin-left: 5px;
+    margin-right: 20px;
+  }
   .content-box h1 {
     margin: 10px 0;
     font-size: 1.7rem;
@@ -603,10 +621,15 @@
     max-width: 300px;
     font-size: 14px;
     color: #555;
-    line-height: 1.5;
+    line-height: 1.;
     margin-right: 23px;
   }
-
+     .content-box4 h2 {
+      font-size: 2.5rem;
+    margin: 0 0 10px;
+    margin-left: -20px;
+    margin-right: 20px;
+  }
   .content-box img {
     width: 100%;
     max-width: 300px;
@@ -618,7 +641,20 @@
     margin-left: auto;
     margin-right: auto;
   }
-
+   .content-box4 img {
+    flex: 1;
+    width: 100%;
+    max-width: 790px;
+    height: 100%;
+    max-height: 550px;
+    border-radius: 10px;
+    border: 5px solid #8467f7;
+    object-fit: cover;
+    margin-top: 50px;
+    margin-left: 0px;
+    margin-right: 20px;
+    animation: fadeInLeft 1s ease-out;
+  }
   .content-box2 {
     width: 100%;
     max-width: 400px;
@@ -759,6 +795,21 @@
     margin-left: 0;
     text-align: center;
   }
+    .content-box3 img {
+    flex: 1;
+    width: 100%;
+    max-width: 790px;
+    height: 100%;
+    max-height: 550px;
+    border-radius: 10px;
+    border: 5px solid #8467f7;
+    object-fit: cover;
+    margin-top: 50px;
+    margin-left: 0px;
+    margin-right: 20px;
+    animation: fadeInLeft 1s ease-out;
+  }
+  
 
   .card-img1 img,
   .card-img2 img,
@@ -777,7 +828,7 @@
   }
 
 .benefits {
-    margin-top: -60px;
+    margin-top: -40px;
     padding: 2rem 1rem;
     text-align: center;
   }
@@ -794,9 +845,10 @@
     border-radius: 8px;
   }
 
-  .benefit-item h3 {
-    font-size: 0.7rem;
-  
+   .benefit-item h3 {
+    line-height: 1.5 !important;
+    font-size: 0.7rem !important; /* adjust this if needed */
+    margin-bottom: 15px !important;
   }
 
   .benefit-item p {
@@ -804,7 +856,7 @@
     line-height: 1.4;
   }
   .col-12{
-    height: 1000px;
+    height: 1100px;
   }
 
   .card-container {
@@ -869,4 +921,3 @@
     background-color: #dcd6f4;
 }
 }
-

@@ -1,4 +1,6 @@
-      * {
+
+
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -190,6 +192,8 @@
         .container {
             max-width: 100%;
             margin: 0 auto;
+        
+            
            
         }
 
@@ -301,7 +305,9 @@
 
         @media (max-width: 480px) {
             .container {
-                padding: 2rem 1rem;
+                padding: 0;
+                margin: 0;
+                
             }
 
             .section h2 {
@@ -324,529 +330,8 @@
 
         
 
- @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .wtpcontainer {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-            
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            color: #0f172a;
-        }
-        
-        .logo i {
-            margin-right: 10px;
-            color: #2563eb;
-            font-size: 28px;
-        }
-        
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-        
-        nav ul li {
-            margin-left: 30px;
-        }
-        
-        nav ul li a {
-            color: #475569;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        nav ul li a:hover {
-            color: #2563eb;
-        }
-        
-        nav ul li a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #2563eb;
-            transition: width 0.3s ease;
-        }
-        
-        nav ul li a:hover::after {
-            width: 100%;
-        }
-        
-        /* Features Section */
-        .wtpfeatures {
-            padding: 100px 0;
-            background-color: #5F9EA0;
-        }
-        
-        .wtpsection-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        
-        .wtpsection-header h2 {
-            font-size: 40px;
-            font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 15px;
-        }
-        
-        .wtpsection-header p {
-            color: #475569;
-            max-width: 700px;
-            margin: 0 auto;
-            font-size: 18px;
-        }
-        
-        .wtpfeatures-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            
-        }
-        
-        .wtpfeature-card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .wtpfeature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color:#327678;
-        }
-        
-        .wtpfeature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 0;
-            background-color:#09ccd3;
-            transition: height 0.3s ease;
-        }
-        
-        .wtpfeature-card:hover::before {
-            height: 100%;
-        }
-        
+ 
        
-        
-        .wtpfeature-card:nth-child(2) .feature-icon {
-            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-        }
-        
-        .wtpfeature-card:nth-child(3) .feature-icon {
-            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-        }
-        
-        .wtpfeature-card:nth-child(4) .feature-icon {
-            background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-        }
-        
-        .wtpfeature-card:nth-child(5) .feature-icon {
-            background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
-        }
-        
-        .wtpfeature-card:nth-child(6) .feature-icon {
-            background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-        }
-        
-        .wtpfeature-card h3 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #0f172a;
-        }
-        
-        .wtpfeature-card p {
-            color: #475569;
-            font-size: 16px;
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .wtpsection-header h2 {
-                font-size: 36px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .wtpsection-header h2 {
-                font-size: 32px;
-            }
-            
-            .wtpfeatures-container {
-                grid-template-columns: 1fr;
-            }
-            
-            nav ul li {
-                margin-left: 15px;
-                margin-right: 15px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .wtpfeatures {
-                padding: 80px 0;
-            }
-            
-            .wtpsection-header h2 {
-                font-size: 28px;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            nav ul li {
-                margin: 5px 10px;
-            }
-        }
-      
- .wtpfeature-icon-text {
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: #0f172a;
-}
-
-
-
-
-* {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    body {
-      background: #f8fafc;
-      padding: 40px 20px;
-    }
-
-    .iot-timeline-section {
-      max-width: 1100px;
-      margin: auto;
-    }
-
-    .iot-timeline-header {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .iot-timeline-header h2 {
-      font-size: 40px;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 15px;
-    }
-
-    .timeline {
-      position: relative;
-      padding-left: 40px;
-      border-left: 3px solid #5F9EA0;
-    }
-
-    .timeline-card {
-      position: relative;
-      background: white;
-      margin-bottom: 40px;
-      padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-      border: 1px solid #e2e8f0;
-    }
-
-    .timeline-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.08);
-      border-color:  #5F9EA0;
-    }
-
-    .timeline-icon {
-      position: absolute;
-      left: -30px;
-      top: 20px;
-      background:  #5F9EA0;;
-      color: white;
-      font-size: 18px;
-      padding: 10px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-    }
-
-    .timeline-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: #0f172a;
-    }
-
-    .timeline-desc {
-      font-size: 16px;
-      color: #475569;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .timeline {
-        padding-left: 20px;
-      }
-
-      .timeline-icon {
-        left: -20px;
-        width: 30px;
-        height: 30px;
-        font-size: 16px;
-      }
-
-      .iot-timeline-header h2 {
-        font-size: 28px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .timeline {
-        border-left: none;
-        padding-left: 0;
-      }
-
-      .timeline-icon {
-        display: none;
-      }
-
-      .timeline-card {
-        padding: 15px 20px;
-        margin: 20px;
-      }
-
-      .timeline-title {
-        font-size: 18px;
-      }
-    }
-
-
-
-    /* Benefits List */
-.benefits-list {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 40px;
-    gap: 20px;
-    z-index: 2;
-}
-
-
-
-.benefit-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
-    border-left-color: #15b2d9;
-}
-
-.benefit-icon {
-    width: 56px;
-    height: 56px;
-    margin-right: 20px;
-    border-radius: 50%;
-    padding: 12px;
-    background: #e5eeee;
-    transition: all 0.3s ease;
-}
-
-.benefit-card:hover .benefit-icon {
-    background: #2eddda;
-    transform: scale(1.1);
-}
-
-.benefit-details h3 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: black;
-    margin: 0 0 8px;
-}
-
-.benefit-details p {
-    font-size: 1.1rem;
-    color: lightslategrey;
-    margin: 0;
-    font-weight: 400;
-}
-
-
-
-
-
-
-.key-benefits {
-  padding: 4rem 0;
-  background: linear-gradient(135deg, #1a6f73, #2a9d8f);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.key-benefits::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
-  z-index: 1;
-}
-
-.ksection-title {
-  font-size: 3rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 3rem;
-  letter-spacing: 2px;
-  position: relative;
-  z-index: 2;
-}
-
-.benefits-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-  position: relative;
-  z-index: 2;
-}
-
-.benefit-card {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-  border-left: 4px solid #2a9d8f;
-  position: relative;
-  overflow: hidden;
-}
-
-.benefit-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(42, 157, 143, 0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.benefit-card:hover::before {
-  left: 100%;
-}
-
-.benefit-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  border-left-color: #e9c46a;
-}
-
-.benefit-icon {
-  font-size: 2rem;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #e5eeee;
-  border-radius: 50%;
-  margin-right: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.benefit-card:hover .benefit-icon {
-  background: #5F9EA0;
-  color: #ffffff;
-  transform: scale(1.1);
-}
-
-.benefit-details h3 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #2c1a4a;
-  margin-bottom: 0.5rem;
-}
-
-.benefit-details p {
-  font-size: 1rem;
-  color: #4b0082;
-  line-height: 1.5;
-}
-
-@media (max-width: 768px) {
-  .ksection-title {
-    font-size: 2.2rem;
-  }
-
-  .benefits-container {
-    grid-template-columns: 1fr;
-  }
-
-  .benefit-card {
-    padding: 1.2rem;
-  }
-
-  .benefit-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 1.8rem;
-  }
-
-  .benefit-details h3 {
-    font-size: 1.2rem;
-  }
-
-  .benefit-details p {
-    font-size: 0.9rem;
-  }
-}
-
-
-
-
-
-
 /* Contact Section */
 .contact {
     padding: 4rem 0;
@@ -1041,3 +526,165 @@
         max-width: 300px; /* Further reduce for small screens */
     }
 }
+
+
+
+
+
+
+
+
+ .container {
+            max-width: 80%;
+            margin: 20px;
+            padding: 20px;
+        }
+
+       
+
+        .spec-table {
+            width: 80%;
+            border-collapse: collapse;
+            background: white;
+            margin: auto;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .spec-table th, .spec-table td {
+            padding: 18px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .spec-table th {
+            background: #2c5282;
+            color: white;
+            font-weight: 600;
+            font-size: 1.15rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-table td {
+            font-size: 1rem;
+            color: #2d3748;
+        }
+
+        .spec-table tr {
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .spec-table tr:hover {
+            background: #e6f0fa;
+            transform: translateX(10px);
+        }
+
+        .highlight {
+            color: #4c8bf5;
+            font-weight: 600;
+            background: rgba(76, 139, 245, 0.1);
+            padding: 2px 6px 2px;
+            border-radius: 4px;
+        }
+
+        
+
+        
+
+
+       
+
+/* Base styles for all devices */
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1rem;
+}
+
+.spec-table th, 
+.spec-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.container {
+  max-width: webkit-fill-available;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Tablet styles (768px and below) */
+@media (max-width: 768px) {
+  .spec-table th, 
+  .spec-table td {
+    padding: 10px 12px;
+  }
+}
+
+/* Mobile styles (480px and below) - transforms to card layout */
+@media (max-width: 480px) {
+  .spec-table, 
+  .spec-table tbody, 
+  .spec-table tr, 
+  .spec-table td {
+    display: block;
+    width: 100%;
+  }
+  
+  .spec-table thead {
+    display: none;
+  }
+  
+  .spec-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .spec-table td {
+    padding: 10px 15px;
+    text-align: center;
+    font-size: medium;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  
+  .spec-table td:last-child {
+    border-bottom: 0;
+  }
+  
+  /* Add data labels before each cell */
+  .spec-table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
+
+  @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+                
+            }
+        }
+
+
+     .image24 {
+         width: 32px; /* Adjust size as needed */
+    height: 32px; /* Adjust size as needed */
+    display:inline-flex;
+    vertical-align: middle;
+    position: relative;
+    bottom:  9px;
+}
+     
+.header-text h4 {
+    margin-right: 8px; /* Adds space between text and icon */
+    display: inline-block;
+}
+    

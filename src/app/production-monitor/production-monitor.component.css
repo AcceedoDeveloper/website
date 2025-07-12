@@ -1,5 +1,6 @@
-* {
-    margin: 0;
+   
+   *{
+   margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
@@ -84,7 +85,7 @@ body {
 
 /* Hardware Section */
 .section {
-    padding: 80px 0;
+    padding: 60px 0;
 }
 
 .section-title {
@@ -134,7 +135,7 @@ body {
 .feature-img img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: scale-down;
     transition: transform 0.5s ease;
 }
 
@@ -308,6 +309,13 @@ body {
             .heroo-content h1 {
                 font-size: 2.2rem;
             }
+            .dashboard-image img {
+    width: 80%;
+    
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
 
             .heroo-content p {
                 font-size: 1rem;
@@ -336,6 +344,7 @@ body {
         padding: 10px 0;
         
     }
+    
     
     .machine-monitoring .container {
         max-width: 1200px;
@@ -718,3 +727,23 @@ body {
                 font-size: 0.9rem;
             }
         }
+      @media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .dashboard-image {
+    display: block;
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .dashboard-image img {
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+}

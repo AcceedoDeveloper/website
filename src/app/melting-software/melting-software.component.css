@@ -1528,7 +1528,7 @@ main {
 }
 }
 
-       /* Responsive Styles */
+      /* Responsive Styles */
         @media (max-width: 1024px) {
             .metrics-grid {
                 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1666,4 +1666,3 @@ main {
       margin-right: 20px;
     }
 }
-
