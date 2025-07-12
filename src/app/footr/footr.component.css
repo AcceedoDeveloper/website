@@ -428,6 +428,57 @@ body {
     border-top: 2px solid #000;
   }
 }
+.nav-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between items */
+  align-items: center;
+}
+
+.nav-links ul li {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.nav-links ul li a:hover {
+  color: #007bff;
+}
+
+/* Icon next to support */
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+/* Optional: style for the dropdown */
+.dropdown-menu {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* Optional: mobile-friendly stacking */
+@media (max-width: 768px) {
+  .nav-links ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
 
 @media (max-width: 480px) {
   .hero-content {
