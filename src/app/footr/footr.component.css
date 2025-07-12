@@ -11,6 +11,10 @@ body {
   font-family: 'Noto Sans', sans-serif;
 }
 
+.nav-header{
+  cursor: pointer;
+}
+
 /* Navigation Styles */
 .nav {
   height: 65px;

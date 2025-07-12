@@ -1,9 +1,9 @@
 <div class="nav">
   <input type="checkbox" id="nav-check" (change)="onNavCheckChange($event)" />
-  <div class="nav-header">
+  <div class="nav-header"    routerLink="/acceedo">
     <div  routerLink="acceedo" class="nav-title">Acceedo
       <br>
-      <span class="nav-subtitle">IIoT Solutions</span>
+      <span class="nav-subtitle" href="">IIoT Solutions</span>
     </div>
   </div>
   <div class="nav-btn">
@@ -15,7 +15,7 @@
   </div>
   <div class="nav-links">
     <ul>
-      <li><a href="#" class="lik">Our Company</a></li>
+      <li><a href="" class="lik">Our Company</a></li>
       <li class="dropdown" data-testid="dropdown">
         <a  class="dropdown-toggle"  data-testid="dropdown-toggle">
         Product
@@ -73,10 +73,9 @@
       <li><a routerLink="/contactas">Contact</a></li>
 
 
-       <!-- ✅ New Point with Icon -->
       <li class="support-link">
         <a routerLink="//product3">
-          <img src="/assets/hot-deal.png" class="nav-icon" />
+          
         Product & Sale
         </a>
       </li>
