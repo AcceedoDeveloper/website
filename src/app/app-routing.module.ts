@@ -13,7 +13,7 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
 import { BlogComponent } from './blog/blog.component';
-import { DiwndisplayComponent } from './diwndisplay/diwndisplay.component';
+
 import { DwincontantComponent } from './dwincontant/dwincontant.component';
 
 import { Dwincontant3Component } from './dwincontant3/dwincontant3.component';
@@ -48,7 +48,7 @@ const routes: Routes = [
   { path: 'product1', component: Product1Component },
   { path: 'product2', component: Product2Component },
   {path: 'blog', component: BlogComponent },
-  { path: 'diwndisplay', component: DiwndisplayComponent },
+
   {path: 'dwincontant', component: DwincontantComponent },
   
   {path: 'dwincontant3', component: Dwincontant3Component },

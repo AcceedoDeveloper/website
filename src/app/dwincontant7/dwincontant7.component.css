@@ -54,7 +54,30 @@ body {
     z-index: 10;
     transition: all 0.5s ease;
 }
+/* Updated Date Display: Fixed Bottom-Left */
+.date-display {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  z-index: 20; /* Make sure it appears above the background */
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+}
 .header-section:hover .header-overlay {
     transform: translateY(-10px);
 }
@@ -183,7 +206,7 @@ body {
 .step-header {
     display: flex;
     align-items: center;
-    gap: 0rem;
+    gap: 2.7rem;
     margin-bottom: 1.rem;
 }
 
@@ -330,6 +353,7 @@ body {
 }
 
 @media (max-width: 768px) {
+  
     .header-section {
         height: 300px;
     }
@@ -341,7 +365,7 @@ body {
     .title-subtext {
         font-size: 1.2rem;
     }
-    
+
     .main-container {
         padding: 0 2rem;
     }
@@ -369,7 +393,8 @@ body {
 .center-title {
   display: block;
   font-size: 1.5rem;
-  text-align: center;
+  text-align: left;
+  margin-left: -30px;
   margin-bottom: 2rem;
   font-weight: 700;
   color: var(--primary);
@@ -432,6 +457,9 @@ pointer-paragraph::before {
   .title {
     font-size: 2rem;
   }
+  .step-header{
+      margin-left: -45px;
+    }
   .title-subtext {
         line-height: 1.2;
     font-size: 1.2rem;
@@ -498,4 +526,11 @@ pointer-paragraph::before {
   }
   
 }
-
+@media (max-width: 768px) {
+  .date-display {
+    left: 0rem;     /* Move more left */
+    bottom: 0rem;   /* Move more down */
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

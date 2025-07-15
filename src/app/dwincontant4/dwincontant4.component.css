@@ -52,6 +52,30 @@ body {
     z-index: 10;
     transition: all 0.5s ease;
 }
+/* Updated Date Display: Fixed Bottom-Left */
+.date-display {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  z-index: 20; /* Make sure it appears above the background */
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+}
 .header-section:hover .hover-overlay{
     transform: translateY(-10px);
 }
@@ -66,6 +90,7 @@ body {
 
 .title-text {
     display: block;
+    margin-top:-30px;
     color: #ffffff;
 }
 
@@ -385,4 +410,12 @@ body {
     flex-direction: row;
   }
 }
+}
+@media (max-width: 768px) {
+  .date-display {
+    left: 0rem;     /* Move more left */
+    bottom: 0rem;   /* Move more down */
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
 }

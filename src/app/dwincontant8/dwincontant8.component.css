@@ -53,7 +53,30 @@ body {
     z-index: 10;
     transition: all 0.5s ease;
 }
+/* Updated Date Display: Fixed Bottom-Left */
+.date-display {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
 
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  z-index: 20; /* Make sure it appears above the background */
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+}
 .header-section:hover .header-overlay {
     transform: translateY(-10px);
 }
@@ -192,7 +215,11 @@ body {
     gap:0rem;
     margin-bottom: 1.rem;
 }
-
+.stepmain-title{
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-left: 3rem;
+}
 .step-number {
     width: 32px;
     height: 32px;
@@ -217,9 +244,9 @@ body {
 }
 
 .image1 {
-  width: 100%;
+  width: 90%;
   height: auto;
-  padding-right: 0;
+  padding-right: 3rem;
   display: block;
   margin: 0 auto;
   max-width: 100%;
@@ -405,7 +432,14 @@ body {
     .header-section {
         height: 300px;
     }
-    
+    .stepmain-title{
+    margin-top: -50px;
+     font-size: 1.5rem;
+     font-weight: 600;
+     
+     margin-left: 0px;
+     margin-bottom: -10px;
+   }
     
     .title {
         font-size: 2rem;
@@ -573,4 +607,20 @@ body {
     flex-direction: row;
   }
 }
+}
+@media (max-width: 768px) {
+  .stepmain-title {
+    font-size: 1.3rem !important;
+    line-height: 1.1 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+@media (max-width: 768px) {
+  .date-display {
+    left: 0rem;     /* Move more left */
+    bottom: 0rem;   /* Move more down */
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
 }

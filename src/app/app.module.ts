@@ -37,7 +37,7 @@ import { ProductionMonitorComponent } from './production-monitor/production-moni
 
 import { FormsModule,  } from '@angular/forms';
 import { BlogComponent } from './blog/blog.component';
-import { DiwndisplayComponent } from './diwndisplay/diwndisplay.component';
+
 import { DwincontantComponent } from './dwincontant/dwincontant.component';
 
 import { Dwincontant3Component } from './dwincontant3/dwincontant3.component';
@@ -80,7 +80,7 @@ import { Product3Component } from './product3/product3.component';
     Product2Component,
     ProductionMonitorComponent,
     BlogComponent,
-    DiwndisplayComponent,
+
     DwincontantComponent,
    
     Dwincontant3Component,

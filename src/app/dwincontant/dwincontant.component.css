@@ -4,12 +4,13 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   color: var(--dark);
   background-color: var(--light);
@@ -53,6 +54,30 @@ body {
   z-index: 10;
   transition: all 0.5s ease;
 }
+/* Updated Date Display: Fixed Bottom-Left */
+.date-display {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  z-index: 20; /* Make sure it appears above the background */
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+}
 
 .header-section:hover .header-overlay {
   transform: translateY(-10px);
@@ -61,7 +86,7 @@ body {
 .title {
   font-size: 3rem;
   font-weight: 900;
-  
+
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
@@ -73,13 +98,14 @@ body {
 .title-subtext {
   display: block;
   font-size: 1.5rem;
+  margin-bottom: -20px;
   font-weight: 400;
-  color: #98FB98;
+  color: #98fb98;
   transition: all 0.5s ease;
 }
 
 .header-section:hover .title-subtext {
-  color: #7FFFD4;
+  color: #7fffd4;
 }
 
 /* Main Layout */
@@ -89,9 +115,7 @@ body {
   gap: 2rem; /* increased from 2rem */
   max-width: 1433px;
   margin: 1rem auto;
-  
 }
-
 
 /* Sidebar */
 .sidebar {
@@ -159,7 +183,7 @@ body {
   padding-left: 17px;
   font-weight: 600;
   color: var(--dark);
-  text-align: left; 
+  text-align: left;
 }
 .sub-step-title {
   font-size: 20px;
@@ -169,7 +193,7 @@ body {
   font-weight: bold;
   color: var(--dark);
   text-align: left;
-  margin-bottom: 1rem; 
+  margin-bottom: 1rem;
 }
 .shifted-title {
   margin-left: -2.5rem;
@@ -183,7 +207,7 @@ body {
   display: block;
   font-size: 1.5rem;
   text-align: left;
-  margin-left: -3rem; 
+  margin-left: -3rem;
   margin-bottom: 2rem;
   font-weight: 700;
   color: var(--dark);
@@ -268,7 +292,7 @@ body {
 }
 
 .btn-outline:hover {
-  background-color: #F5FFFA;
+  background-color: #f5fffa;
   border-color: var(--primary-light);
   color: var(--primary);
 }
@@ -298,40 +322,40 @@ body {
   .header-section {
     height: 300px;
   }
-  .guide-container{
-    margin-bottom:0rem;
+  .guide-container {
+    margin-bottom: 0rem;
   }
   .title {
     font-size: 2rem;
   }
   .title-subtext {
-        line-height: 1.2;
+    line-height: 1.2;
     font-size: 1.2rem;
     margin: 0;
     padding: 0.5rem;
   }
-   .step-title {
+  .step-title {
     line-height: 1.2;
     font-size: 1.2rem;
     margin-left: -2rem;
     padding-bottom: 1rem;
   }
- .sub-step-title{
-  margin-left: -1rem;
- }
- .sub-step-title.shifted-title{
-  margin-left: -2rem;
- }
+  .sub-step-title {
+    margin-left: -1rem;
+  }
+  .sub-step-title.shifted-title {
+    margin-left: -2rem;
+  }
   .guide-content {
     padding: 1.5rem;
   }
-  .alert-content{
-    margin-left:-1rem;
+  .alert-content {
+    margin-left: -1rem;
   }
   .step-content {
     margin-left: 0;
   }
-  .title-special-link{
+  .title-special-link {
     font-size: 1rem;
     line-height: 1.2;
   }
@@ -368,4 +392,12 @@ body {
     display: flex; /* Only show in mobile view */
     flex-direction: row;
   }
-} 
+}
+@media (max-width: 768px) {
+  .date-display {
+    left: 0rem;     /* Move more left */
+    bottom: 0rem;   /* Move more down */
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
