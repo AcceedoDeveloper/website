@@ -1,0 +1,63 @@
+<!-- ✅ Top Bar -->
+<header class="top-bar">
+  <div class="left-section">
+    <i class=""></i> <span class="brand-title">ACCEEDO</span>
+  </div>
+  <div class="brand-subtitle">Your trusted platform</div> 
+  
+  <div class="right-icons">
+    <div class="login-dropdown">
+      <input type="checkbox" id="toggle-login" hidden />
+      <label for="toggle-login" class="login-icon">
+        <i class="fa fa-user-circle"></i>
+      </label>
+      <div class="login-menu">
+        <label for="username">Username</label>
+        <input type="text" id="username" [value]="userData?.username || 'Guest'" readonly />
+        <a href="#" (click)="signOut()">Sign Out</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ✅ Main Layout: Sidebar + Main Content -->
+<div class="container">
+  <aside class="sidebar">
+    <div class="sidebar-header"><i class="fa fa-bars"></i> Menu</div>
+    <nav class="menu">
+      <a href="#" class="active">For you</a>
+      <a href="#">Recent</a>
+      <a href="#">Notifications</a>
+      <a href="#">Jira Product Discovery</a>
+      <a href="#">View all apps</a>
+      <span class="no-underline">New</span>
+      <span class="underline">Register</span>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <div class="greeting-banner">
+      <div class="greeting-text">
+        <p>{{ todayDate }}</p>
+        <h2>Hello, {{ userData?.username || 'User' }}</h2>
+      </div>
+      <div class="greeting-image">
+        <div class="placeholder">📘</div>
+      </div>
+    </div>
+
+    <section class="helpful-links">
+      <div class="section-header">
+        <h4>Helpful Links</h4>
+      </div>
+      <div class="cards">
+        <div class="card"><i class="fa fa-cog"></i><span>Account settings</span></div>
+        <div class="card"><i class="fa fa-question-circle"></i><span>Atlassian Support</span></div>
+        <div class="card"><i class="fa fa-users"></i><span>Atlassian Community</span></div>
+        <div class="card"><i class="fa fa-file-alt"></i><span>Self-managed licensing</span></div>
+        <div class="card"><i class="fa fa-book"></i><span>Documentation</span></div>
+        <div class="card"><i class="fa fa-box"></i><span>Try Atlassian products</span></div>
+      </div>
+    </section>
+  </main>
+</div>

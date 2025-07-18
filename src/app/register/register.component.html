@@ -1,0 +1,110 @@
+<app-footr></app-footr>
+<h2>User Registration</h2>
+
+<form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate>
+
+  <!-- First Name -->
+  <label>First Name:</label>
+  <input type="text" name="firstName" [(ngModel)]="user.firstName" required #firstName="ngModel" />
+  <div *ngIf="firstName.invalid && firstName.touched" style="color:red;">
+    First Name is required.
+  </div>
+
+  <!-- Last Name -->
+  <label>Last Name:</label>
+  <input type="text" name="lastName" [(ngModel)]="user.lastName" required #lastName="ngModel" />
+  <div *ngIf="lastName.invalid && lastName.touched" style="color:red;">
+    Last Name is required.
+  </div>
+
+ <!-- Email -->
+<label>Email:</label>
+<input
+  type="email"
+  name="email"
+  [(ngModel)]="user.email"
+  required
+  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+  #email="ngModel"
+/>
+<div *ngIf="email.errors?.['required'] && email.touched" style="color:red;">
+  Email is required.
+</div>
+<div *ngIf="email.errors?.['pattern'] && email.touched" style="color:red;">
+  Please enter a valid email address.
+</div>
+
+  <!-- Mobile -->
+  <label>Mobile:</label>
+  <input type="tel" name="mobile" [(ngModel)]="user.mobile" required pattern="^[0-9]{10}$" #mobile="ngModel" />
+  <div *ngIf="mobile.errors?.['required'] && mobile.touched" style="color:red;">
+    Mobile number is required.
+  </div>
+  <div *ngIf="mobile.errors?.['pattern'] && mobile.touched" style="color:red;">
+    Mobile number must be 10 digits.
+  </div>
+
+  <!-- Role -->
+  <label>Role:</label>
+  <input type="text" name="role" [(ngModel)]="user.role" required #role="ngModel" />
+  <div *ngIf="role.invalid && role.touched" style="color:red;">
+    Role is required.
+  </div>
+
+  <!-- Username -->
+  <label>Username:</label>
+  <input type="text" name="username" [(ngModel)]="user.username" required #username="ngModel" />
+  <div *ngIf="username.invalid && username.touched" style="color:red;">
+    Username is required.
+  </div>
+
+<!-- Password -->
+<label>Password:</label>
+<div class="password-container">
+  <input
+    [type]="showPassword ? 'text' : 'password'"
+    name="password"
+    [(ngModel)]="user.password"
+    required
+    minlength="6"
+    #password="ngModel"
+  />
+  <span class="toggle-eye" (click)="showPassword = !showPassword">
+    {{ showPassword ? '🙈' : '👁️' }}
+  </span>
+</div>
+<div *ngIf="password.invalid && password.touched" style="color:red;">
+  Password is required (min 6 characters).
+</div>
+
+<!-- Confirm Password -->
+<label>Confirm Password:</label>
+<div class="password-container">
+  <input
+    [type]="showConfirmPassword ? 'text' : 'password'"
+    name="confirmPassword"
+    [(ngModel)]="confirmPassword"
+    required
+    #confirmPasswordField="ngModel"
+  />
+  <span class="toggle-eye" (click)="showConfirmPassword = !showConfirmPassword">
+    {{ showConfirmPassword ? '🙈' : '👁️' }}
+  </span>
+</div>
+<div *ngIf="confirmPassword !== user.password && registerForm.submitted" style="color:red;">
+  Confirm Password does not match.
+</div>
+
+
+  <!-- Submit -->
+  <button type="submit" [disabled]="registerForm.invalid || confirmPassword !== user.password">
+    Register
+  </button>
+
+  <!-- Success Message -->
+  <div *ngIf="formSubmitted" style="color: green; margin-top: 10px;">
+    ✅ Registration successful!
+  </div>
+</form>
+
+<app-footer></app-footer>

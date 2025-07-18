@@ -1,0 +1,116 @@
+
+/* Container styling */
+form {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 25px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Title styling */
+h2 {
+  text-align: center;
+  color: #333;
+  margin-top: 80px;
+  margin-bottom: -30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Label and Input styling */
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #555;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border 0.3s ease;
+}
+
+input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Button styling */
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+  width: 350px;
+  margin: 5px 0 15px;
+  padding: 8px;
+  border: 1px solid #ccc;
+ 
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+button:disabled {
+  background-color: #999;
+}
+
+div[style*="color:red"] {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+/* Style for the container holding password inputs */
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* The input should have right padding to make space for the eye icon */
+.password-container input {
+  width: 100%;
+  padding-right: 32px;
+  box-sizing: border-box;
+}
+
+/* Eye icon (👁️ / 🙈) */
+.toggle-eye {
+  position: absolute;
+  right: 8px;
+  top: 40%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}

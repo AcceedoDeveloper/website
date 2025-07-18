@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap');
 
 /* General Styles */
@@ -347,7 +348,7 @@ body {
 
   .brands-columns {
     flex-direction: column;
-    padding: 32px;
+    padding: 30px;
   }
 }
 
@@ -475,6 +476,557 @@ body {
   padding: 10px;
   border-radius: 4px;
 }
+.login-dropdown {
+  position: relative;
+  margin-right: -70px;
+  right:-35px /* adjust this value as needed */
+}
+.arrow-up {
+  position: absolute;
+  top: -8px;
+  right: 16px; /* ✅ Adjust to align arrow with icon */
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
+  z-index: 101;
+}
+
+
+.login-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-right: 100px;
+  color: white;
+  border-radius: 20px;
+  transition: 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+
+.login-menu {
+  position: absolute;
+  top: 45px;
+  margin-right: 100px;
+  
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 200px;              /* ✅ Enough width */
+  padding: 10px 0;           /* ✅ Top and bottom spacing */
+  z-index: 100;
+  text-align:left ;          /* ✅ Consistent alignment */
+  font-family: 'Noto Sans', sans-serif;
+}
+
+
+
+.login-menu a {
+  display: block;
+  margin-right: 20px;
+  
+  color: #333;
+  text-decoration: underline;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background-color 0.3s, color 0.3s;
+}
+.login-menu a:first-child {
+  text-decoration: underline;
+  color: #333; /* Optional: set your color */
+}
+
+.login-menu .underline {
+  text-decoration: underline;
+   /* Change to your desired color */
+  font-weight: 600;
+}
+
+.login-menu a:hover .underline {
+  color:#007bff; /* Hover color for Register */
+}
+nav-links {
+  width: 100%;
+}
+.nav-inner {
+  display: flex;
+  justify-content: space-between; /* Key line */
+  align-items: center;
+  width: 100%;
+}
+
+/* Menu list */
+.nav-inner ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-items-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-items-container ul {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Circle login icon */
+.user-circle {
+  width: 35px;
+  height: 35px;
+  background-color: #0052a3;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.user-icon {
+  color: white;
+  font-size: 16px;
+}
+
+.login-dropdown {
+  position: relative;
+  margin-left: 18rem;
+}
+
+.login-menu {
+  
+  position: absolute;
+  top: 40px;
+  left: auto;
+  right: 2px;
+  box-sizing: border-box ;
+  background-color: white;
+  padding-right: -120px;
+  height: 100px;
+  max-width: fit-content ;
+  border-radius: 16px;
+  gap: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 100;
+}
+
+.login-menu a {
+  display: block;
+  padding: 6px 10px;
+  width: 100%;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  z-index: 10;
+}
+.login-menu a:first-child {
+  text-decoration: underline;
+  color: #333; /* Optional: set your color */
+}
+
+.login-menu a:hover {
+  background-color: #f2f2f2;
+}
+
+.login-dropdown:hover .login-menu {
+  display: block;
+  width: 180px;
+}
+/* Optional: hover effect for the circle */
+.login-btn:hover .user-circle {
+  background-color: #003d7a;
+}
+
+
+
+/* Optional: mobile-friendly stacking */
+@media (max-width: 768px) {
+  .nav-links ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+    .dropdown-menu {
+    max-height: 60vh; /* or adjust as needed */
+    overflow-y: auto;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+  .hero-content {
+    padding: 30px 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 0.9rem;
+  }
+
+  .explore-button {
+    padding: 10px 30px;
+    font-size: 0.9rem;
+  }
+
+  .brands-columns {
+    padding: 20px;
+  }
+
+  .brands-column h6 {
+    font-size: 1.1rem;
+  }
+
+  .nav > .nav-header > .nav-title {
+    font-size: 18px;
+    margin-left: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .border-color {
+    display: none;
+  }
+
+  .dropdown-menu {
+    width: 100% !important;
+    left: 30px !important;
+    right: 0 !important;
+    box-sizing: border-box;
+    padding: 0 16px;
+  }
+
+  .explore-brands,
+  .brands-columns,
+  .brands-column,
+  .dropdown-toggle {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .brands-column {
+    padding: 10px 0;
+  }
+
+  .brands-column h6 {
+    margin-left: 0;
+    padding-left: 0;
+  }
+}
+@media (max-width: 768px) {
+  /* Default: hide dropdown */
+  .dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  /* Show dropdown when checkbox is checked */
+  #product-toggle:checked + .dropdown-toggle + .dropdown-menu {
+    max-height: 1000px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (max-width: 768px) {
+  .dropdown-toggle {
+    display: block;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .dropdown-toggle:hover,
+  #product-toggle:checked + .dropdown-toggle {
+    background-color: #0052a3;
+    color: #fff;
+  }
+}
+.dropdown-toggle {
+  display: block;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-decoration: none;
+}
+/* GLOBAL for both desktop & mobile */
+.dropdown-toggle {
+  display: block;
+  padding: 15px 20px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+  text-decoration: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.dropdown-toggle:hover {
+  background-color: #0052a3;
+  color: #fff;
+}
+
+/* MOBILE DROPDOWN TOGGLE STYLING */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  #product-toggle:checked + .dropdown-toggle + .dropdown-menu {
+    max-height: 1000px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #product-toggle:checked + .dropdown-toggle {
+    background-color: #0052a3;
+    color: #fff;
+  }
+
+  .dropdown-toggle {
+    display: block;
+    width: 100%;
+    padding: 0px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    background-color: transparent;
+    color: #000;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  #product-toggle:checked + .dropdown-toggle {
+    background-color: #0052a3;
+    color: #fff;
+  }
+
+  /* Hide dropdown by default */
+  .dropdown-menu {
+    max-height: 0;
+    margin-left: 0px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    
+  }
+
+  
+  #product-toggle:checked + .dropdown-toggle + .dropdown-menu {
+    max-height: 1000px;
+    opacity: 1;
+    pointer-events: auto;
+    overflow-y: auto;
+  }
+
+ 
+  .dropdown-menu .explore-brands {
+    flex-direction: column;
+    padding: 0px;
+    
+  }
+
+  .brands-columns {
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  .brands-column {
+    padding: 10px 0;
+  }
+
+  .brands-column ul {
+    padding-left: 16px;
+  }
+
+  .view-more {
+    color: #0052a3;
+    font-weight: 500;
+  }
+
+  .dropdown-menu .brands-columns .brands-column:last-child ul {
+    padding-bottom: 30rem;
+  }
+}
+@media (max-width: 1024px) {
+  .explore-brands {
+    flex-direction: column;
+  }
+
+  .hero-content {
+    padding: 40px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+
+  .hero-content p {
+    font-size: 1.2rem;
+  }
+
+  .brands-columns {
+    flex-direction: column;
+    padding: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .explore-button {
+    padding: 12px 36px;
+    font-size: 1rem;
+  }
+
+  .brands-column h6 {
+    font-size: 1.3rem;
+  }
+
+  .brands-column li {
+    font-size: 1rem;
+  }
+
+  .nav > .nav-links {
+    position: absolute;
+    display: block;
+    width: 100%;
+    background-color: #fff;
+    height: 0;
+    transition: all 0.3s ease-in;
+    overflow-y: hidden;
+    top: 50px;
+    left: 0;
+  }
+
+  .nav > .nav-links > ul {
+    padding: 10px 0;
+  }
+
+  .nav > .nav-links > ul li {
+    display: block;
+    width: 100%;
+  }
+
+  .nav > .nav-links > ul li a {
+    padding: 12px 20px;
+  }
+
+  .nav > #nav-check:not(:checked) ~ .nav-links {
+    height: 0;
+  }
+
+  .nav > #nav-check:checked ~ .nav-links {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .nav > .nav-btn {
+    display: inline-block;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+  }
+
+  .nav > .nav-btn label {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    padding: 10px;
+  }
+
+  .nav > .nav-btn label:hover,
+  .nav #nav-check:checked ~ .nav-btn label {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .nav > .nav-btn label span {
+    display: block;
+    width: 25px;
+    height: 10px;
+    border-top: 2px solid #000;
+  }
+}
+.nav-links ul {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+}
+
+.nav-links ul li {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+.nav-links ul li a:hover {
+  color: #007bff;
+}
+
+/* Icon next to support */
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+/* Optional: style for the dropdown */
+.dropdown-menu {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 4px;
+}
 
 /* Optional: mobile-friendly stacking */
 @media (max-width: 768px) {
@@ -516,3 +1068,44 @@ body {
     margin-left: 20px;
   }
 }
+/* Responsive styles for login button on mobile */
+@media (max-width: 768px) {
+  .login-dropdown {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    z-index: 999;
+  }
+
+  .login-btn {
+    padding: 0;
+  }
+
+  .user-circle {
+    width: 32px;
+    height: 32px;
+    background-color: #0052a3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .user-icon {
+    font-size: 16px;
+    color: #fff;
+  }
+
+  .login-menu {
+    top: 40px;
+    right: 0;
+    min-width: 160px;
+    font-size: 14px;
+  }
+
+  .login-menu a {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}
+

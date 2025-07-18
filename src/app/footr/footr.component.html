@@ -1,11 +1,13 @@
 <div class="nav">
   <input type="checkbox" id="nav-check" (change)="onNavCheckChange($event)" />
-  <div class="nav-header"    routerLink="/acceedo">
-    <div  routerLink="acceedo" class="nav-title">Acceedo
-      <br>
-      <span class="nav-subtitle" href="">IIoT Solutions</span>
+  
+  <div class="nav-header" routerLink="/acceedo">
+    <div routerLink="acceedo" class="nav-title">
+      Acceedo<br>
+      <span class="nav-subtitle">IIoT Solutions</span>
     </div>
   </div>
+
   <div class="nav-btn">
     <label for="nav-check">
       <span></span>
@@ -13,74 +15,86 @@
       <span></span>
     </label>
   </div>
+
   <div class="nav-links">
     <ul>
       <li><a href="" class="lik">Our Company</a></li>
+
+      <!-- Dropdown: Product -->
       <li class="dropdown" data-testid="dropdown">
-        <a  class="dropdown-toggle"  data-testid="dropdown-toggle">
-        Product
-        </a>
-       <div class="dropdown-menu">
-        <div class="border-color"></div>
-      <!-- Explore Brands Section -->
-    <section class="explore-brands">
-        
-        <div class="brands-columns">
-            <div class="brands-column">
+        <input type="checkbox" id="product-toggle" hidden>
+        <label for="product-toggle" class="dropdown-toggle">Product</label>
+
+        <div class="dropdown-menu">
+          <div class="border-color"></div>
+          <section class="explore-brands">
+            <div class="brands-columns">
+              <div class="brands-column">
                 <h6>Power Metrics</h6>
                 <ul>
-                   
-                    <li class="view-more" routerLink="/power-metrics" >View More</li>
+                  <li class="Power Metrics" routerLink="/power-metrics">View More</li>
                 </ul>
-            </div>
-            <div class="brands-column">
+              </div>
+              <div class="brands-column">
                 <h6>Attendance System</h6>
                 <ul>
-                    <li class="view-more" routerLink="/product2" >View More</li>
+                  <li class="view-more" routerLink="/product2">View More</li>
                 </ul>
-            </div>
-            <div class="brands-column">
+              </div>
+              <div class="brands-column">
                 <h6>Melting Software</h6>
                 <ul>
-                    <li class="view-more" routerLink="/melting-software" >View More</li>
+                  <li class="view-more" routerLink="/melting-software">View More</li>
                 </ul>
-            </div>
-            <div class="brands-column">
+              </div>
+              <div class="brands-column">
                 <h6>Heat Treatment</h6>
                 <ul>
-                    <li class="view-more" routerLink="/product1" >View More</li>
+                  <li class="view-more" routerLink="/product1">View More</li>
                 </ul>
-            </div>
-          
-            <div class="brands-column">
+              </div>
+              <div class="brands-column">
                 <h6>Production Monitor</h6>
                 <ul>
-                    <li class="view-more" routerLink="/product-monitor" >View More</li>
+                  <li class="view-more" routerLink="/product-monitor">View More</li>
                 </ul>
+              </div>
             </div>
+          </section>
         </div>
-
-        
-    
-        
-    </section>
-       </div>
       </li>
-      <li><a routerLink="/services" >Our Services</a></li>
-      <li><a routerLink="/career" >Careers</a></li>
+
+      <li><a routerLink="/services">Our Services</a></li>
+      <li><a routerLink="/career">Careers</a></li>
       <li><a routerLink="/blog">Blog</a></li>
-      <li><a routerLink = "/aboutas">About us</a></li>
+      <li><a routerLink="/aboutas">About us</a></li>
       <li><a routerLink="/contactas">Contact</a></li>
 
-
       <li class="support-link">
-        <a routerLink="//product3">
-          
-        Product & Sale
-        </a>
+        <a routerLink="/product3">Product & Sale</a>
       </li>
+
+      <!-- Login dropdown -->
+      <div class="login-dropdown">
+        <a class="login-btn">
+          <div class="user-circle">
+            <i class="fas fa-user user-icon"></i>
+          </div>
+        </a>
+        <div class="login-menu">
+          <div class="arrow-up"></div>
+
+          <!-- ✅ Fixed Sign in link -->
+          <a routerLink="/signin">Sign in</a>
+
+          <!-- ✅ Fixed Register link -->
+          <a routerLink="/register">
+            <span class="no-underline">New</span>
+            <span class="underline"> Register</span>
+          </a>
+        </div>
+      </div>
 
     </ul>
   </div>
 </div>
-<div class="botttom"></div>

@@ -1,0 +1,313 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8f9fb;
+}
+
+/* Page Wrapper */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Top Bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 26px;
+  background-color: #1976d2;
+  color: white;
+  position: relative;
+  z-index: 100;
+}
+
+.brand-title {
+  font-size: 20px;
+  top: -10px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-top: 10px;
+  position: relative;
+}
+
+.brand-subtitle {
+  font-size: 12px;
+  color: #e0e0e0;
+  margin-top: 15px;
+  position: relative;
+  bottom: -21px;
+}
+
+/* Nav Links */
+.nav-links ul {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links ul li {
+  position: relative;
+  margin: 0 15px;
+}
+
+.nav-links a,
+.dropdown-toggle {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 0;
+  display: block;
+  margin-left: 5rem;
+  cursor: pointer;
+}
+
+.nav-links a:hover,
+.dropdown-toggle:hover {
+  border-bottom: 2px solid #fff;
+}
+
+/* Login Section */
+.right-icons {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.login-icon {
+  cursor: pointer;
+  font-size: 26px;
+  color: white;
+  margin-left: 16px;
+}
+
+.login-dropdown {
+  position: relative;
+}
+
+#toggle-login {
+  display: none;
+}
+
+#toggle-login:checked ~ .login-menu {
+  display: block;
+}
+
+.login-menu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  min-width: 180px;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.login-menu input[type="text"] {
+  width: 100%;
+  padding: 6px;
+  margin: 6px 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-menu a {
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  color: #000;
+  font-size: 0.95rem;
+}
+
+.login-menu a:hover {
+  background-color: #f1f1f1;
+}
+
+.login-menu label {
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.login-menu input#username:hover {
+  background-color: #e9f2ff;
+  box-shadow: 0 0 5px #ddd;
+}
+
+/* Layout Container */
+.container {
+  display: flex;
+  flex-grow: 1;
+  margin-top: 20px;
+  min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background-color: #f4f5f7;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  margin-left: -80px;
+}
+
+.sidebar-header {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.menu a {
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: #444;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.menu a.active {
+  font-weight: 500;
+}
+
+.menu a:hover {
+  background-color: #dcdcdc;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 30px;
+}
+
+/* Greeting Banner */
+.greeting-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fcd34d;
+  padding: 20px 30px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.greeting-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.greeting-text h2 {
+  margin-top: 5px;
+  font-size: 24px;
+  color: #000;
+}
+
+.greeting-image .placeholder {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* Helpful Links */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.section-header h4 {
+  font-size: 18px;
+  color: #222;
+}
+
+.show-all {
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 25px 15px;
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.card i {
+  font-size: 22px;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.card span {
+  display: block;
+  font-size: 14px;
+  margin-top: 6px;
+  color: #333;
+}
+
+.card:hover {
+  background-color: #f0f4ff;
+  transform: translateY(-3px);
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .greeting-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .top-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .brand-title,
+  .brand-subtitle {
+    text-align: center;
+  }
+
+  .right-icons {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .login-menu {
+    right: 10px;
+    top: 45px;
+  }
+}
