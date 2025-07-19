@@ -1,63 +1,154 @@
-<!-- ✅ Top Bar -->
 <header class="top-bar">
   <div class="left-section">
-    <i class=""></i> <span class="brand-title">ACCEEDO</span>
+    <span class="brand-title">ACCEEDO</span>
   </div>
-  <div class="brand-subtitle">Your trusted platform</div> 
-  
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input
+      type="text"
+      placeholder="Search..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+    />
+    <i class="fa fa-search search-icon"></i>
+  </div>
+
   <div class="right-icons">
+    <!-- Notification Bell -->
+    <div class="notification-icon">
+      <img
+        [src]="hasNotification 
+          ? 'https://cdn-icons-png.flaticon.com/128/594/594838.png' 
+          : 'https://cdn-icons-png.flaticon.com/128/17383/17383017.png'"
+        alt="Notification"
+        class="notification-bell"
+      />
+    </div>
+
+    <!-- Login Icon with Dropdown -->
     <div class="login-dropdown">
       <input type="checkbox" id="toggle-login" hidden />
       <label for="toggle-login" class="login-icon">
-        <i class="fa fa-user-circle"></i>
+        <ng-container *ngIf="userData?.photoURL && userData.photoURL !== 'assets/default-avatar.png'; else initialsIcon">
+          <img [src]="userData.photoURL" alt="User Avatar" class="avatar" />
+        </ng-container>
+        <ng-template #initialsIcon>
+          <div class="user-initial">
+            {{ getInitials(userData?.username || userData?.email) }}
+          </div>
+        </ng-template>
       </label>
+
       <div class="login-menu">
-        <label for="username">Username</label>
-        <input type="text" id="username" [value]="userData?.username || 'Guest'" readonly />
+        <p><strong>Name:</strong> {{ userData?.username || 'Dhaya' }}</p>
+        <p><strong>Email:</strong> {{ userData?.email || 'dhayanidhi794@gmail.com' }}</p>
+        <p><strong>Role:</strong> {{ userData?.role || 'hero' }}</p>
         <a href="#" (click)="signOut()">Sign Out</a>
       </div>
     </div>
   </div>
 </header>
 
-<!-- ✅ Main Layout: Sidebar + Main Content -->
+<!-- Layout -->
 <div class="container">
+  <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="sidebar-header"><i class="fa fa-bars"></i> Menu</div>
     <nav class="menu">
       <a href="#" class="active">For you</a>
       <a href="#">Recent</a>
-      <a href="#">Notifications</a>
-      <a href="#">Jira Product Discovery</a>
-      <a href="#">View all apps</a>
-      <span class="no-underline">New</span>
-      <span class="underline">Register</span>
+      <a href="#">Month View</a>
+      <a href="#">Plan</a>
     </nav>
   </aside>
 
+  <!-- Main Content -->
   <main class="main-content">
-    <div class="greeting-banner">
-      <div class="greeting-text">
-        <p>{{ todayDate }}</p>
-        <h2>Hello, {{ userData?.username || 'User' }}</h2>
-      </div>
-      <div class="greeting-image">
-        <div class="placeholder">📘</div>
-      </div>
-    </div>
-
+    <div class="welcome-card">
+  <div class="date-time">
+    <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+    <span>Friday, July 19, 2025 – 2:30 PM</span>
+  </div>
+  <div class="user-welcome">
+    <span>Welcome, IMMAN</span>
+    <img
+      class="user-icon"
+      src="assets/imman.jpeg"
+      alt="User Avatar"
+    />
+  </div>
+</div>
+      
+    <!-- Assigned Tasks Section -->
     <section class="helpful-links">
       <div class="section-header">
-        <h4>Helpful Links</h4>
+        <h4>ASSIGNED TASKS</h4>
+        <i class="fa fa-plus add-task-icon" (click)="toggleTaskBox()"></i>
       </div>
-      <div class="cards">
-        <div class="card"><i class="fa fa-cog"></i><span>Account settings</span></div>
-        <div class="card"><i class="fa fa-question-circle"></i><span>Atlassian Support</span></div>
-        <div class="card"><i class="fa fa-users"></i><span>Atlassian Community</span></div>
-        <div class="card"><i class="fa fa-file-alt"></i><span>Self-managed licensing</span></div>
-        <div class="card"><i class="fa fa-book"></i><span>Documentation</span></div>
-        <div class="card"><i class="fa fa-box"></i><span>Try Atlassian products</span></div>
+
+      <!-- Task Input Box -->
+      <div *ngIf="showTaskBox" class="task-box">
+        <input type="text" placeholder="Assignee Name" [(ngModel)]="task.assignee" />
+        <input type="text" placeholder="Task Description" [(ngModel)]="task.description" />
+        <button (click)="addTask()">Add Task</button>
       </div>
-    </section>
-  </main>
+
+      <!-- Helpful Cards -->
+    <!-- Cards Section -->
+<div class="cards">
+  <div class="card">
+    <i class="fa fa-cog"></i>
+    <span>Account settings</span>
+    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
+  </div>
+  <div class="card">
+    <i class="fa fa-question-circle"></i>
+    <span>Atlassian Support</span>
+    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
+  </div>
+  <div class="card">
+    <i class="fa fa-users"></i>
+    <span>Atlassian Community</span>
+    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
+  </div>
+  <div class="card">
+    <i class="fa fa-file-alt"></i>
+    <span>Self-managed licensing</span>
+    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
+  </div>
+  <div class="card">
+    <i class="fa fa-book"></i>
+    <span>Documentation</span>
+    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
+  </div>
+  <div class="card">
+    <i class="fa fa-box"></i>
+    <span>Try Atlassian products</span>
+    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
+  </div>
 </div>
+
+<!-- Hidden Checkbox to Control Modal -->
+<input type="checkbox" id="modal-toggle" hidden />
+
+<!-- Modal -->
+<div class="modal">
+  <label class="overlay" for="modal-toggle"></label>
+  <div class="modal-content">
+    <label for="modal-toggle" class="close-btn">&times;</label>
+    <h3>✏️ Edit</h3>
+
+    <div class="edit-section">
+      <label>Upload File</label>
+      <input type="file" />
+
+      <label>Comment</label>
+      <textarea placeholder="Enter your comment..." rows="3"></textarea>
+
+      <button class="save-btn">Save</button>
+    </div>
+  </div>
+</div>
+</section>
+</main></div>
+<app-footer></app-footer>

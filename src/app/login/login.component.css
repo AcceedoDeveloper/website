@@ -3,12 +3,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f1f5f9;
+  background: url('/assets/login.jpg') ;
+ 
 }
 
 .login-box {
   width: 350px;
-  background: #ffffff;
+ 
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -17,7 +18,7 @@
 h2 {
   text-align: center;
   margin-bottom: 24px;
-  color: #333;
+  color: white;
 }
 
 .input-group {
@@ -29,6 +30,7 @@ h2 {
 label {
   font-weight: 500;
   margin-bottom: 6px;
+  color: white;
 }
 
 input {
