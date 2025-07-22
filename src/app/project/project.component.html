@@ -41,9 +41,9 @@
       </label>
 
       <div class="login-menu">
-        <p><strong>Name:</strong> {{ userData?.username || 'Dhaya' }}</p>
-        <p><strong>Email:</strong> {{ userData?.email || 'dhayanidhi794@gmail.com' }}</p>
-        <p><strong>Role:</strong> {{ userData?.role || 'hero' }}</p>
+        <p><strong>{{ userData?.username || 'Username' }}</strong></p>
+        <p>{{ userData?.email || 'Email' }}</p>
+        <p>{{ userData?.role || 'Role' }}</p>
         <a href="#" (click)="signOut()">Sign Out</a>
       </div>
     </div>
@@ -64,21 +64,18 @@
 
   <!-- Main Content -->
   <main class="main-content">
+    <!-- Welcome Header -->
     <div class="welcome-card">
-  <div class="date-time">
-    <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
-    <span>Friday, July 19, 2025 – 2:30 PM</span>
-  </div>
-  <div class="user-welcome">
-    <span>Welcome, IMMAN</span>
-    <img
-      class="user-icon"
-      src="assets/imman.jpeg"
-      alt="User Avatar"
-    />
-  </div>
-</div>
-      
+      <div class="date-time">
+        <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+        <span>{{ dateTime }}</span>
+      </div>
+      <div class="user-welcome">
+        <span>Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+        <img class="user-icon" [src]="userData?.photoURL || 'assets/imman.jpeg'" alt="User Avatar" />
+      </div>
+    </div>
+
     <!-- Assigned Tasks Section -->
     <section class="helpful-links">
       <div class="section-header">
@@ -91,64 +88,47 @@
         <input type="text" placeholder="Assignee Name" [(ngModel)]="task.assignee" />
         <input type="text" placeholder="Task Description" [(ngModel)]="task.description" />
         <button (click)="addTask()">Add Task</button>
+
+        <div *ngIf="showSuccessMessage" style="color: green; margin-top: 10px;">
+          ✅ Task added successfully
+        </div>
       </div>
 
-      <!-- Helpful Cards -->
-    <!-- Cards Section -->
-<div class="cards">
-  <div class="card">
-    <i class="fa fa-cog"></i>
-    <span>Account settings</span>
-    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
-  </div>
-  <div class="card">
-    <i class="fa fa-question-circle"></i>
-    <span>Atlassian Support</span>
-    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
-  </div>
-  <div class="card">
-    <i class="fa fa-users"></i>
-    <span>Atlassian Community</span>
-    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
-  </div>
-  <div class="card">
-    <i class="fa fa-file-alt"></i>
-    <span>Self-managed licensing</span>
-    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
-  </div>
-  <div class="card">
-    <i class="fa fa-book"></i>
-    <span>Documentation</span>
-    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
-  </div>
-  <div class="card">
-    <i class="fa fa-box"></i>
-    <span>Try Atlassian products</span>
-    <label for="modal-toggle" class="edit-btn">✏️ Edit</label>
-  </div>
-</div>
+      <!-- Card List -->
+      <div class="cards">
+        <div class="card" *ngFor="let task of tasks">
+          <i class="fa fa-tasks"></i>
+          <div>
+            <strong>{{ task.assignee }}</strong><br />
+            {{ task.description }}
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Modal Section (Outside of <section>) -->
+    <!-- Hidden Checkbox to Control Modal -->
+    <input type="checkbox" id="modal-toggle" hidden />
 
-<!-- Hidden Checkbox to Control Modal -->
-<input type="checkbox" id="modal-toggle" hidden />
+    <!-- Modal -->
+    <div class="modal">
+      <label class="overlay" for="modal-toggle"></label>
+      <div class="modal-content">
+        <label for="modal-toggle" class="close-btn">&times;</label>
+        <h3>✏️ Edit</h3>
 
-<!-- Modal -->
-<div class="modal">
-  <label class="overlay" for="modal-toggle"></label>
-  <div class="modal-content">
-    <label for="modal-toggle" class="close-btn">&times;</label>
-    <h3>✏️ Edit</h3>
+        <div class="edit-section">
+          <label>Upload File</label>
+          <input type="file" />
 
-    <div class="edit-section">
-      <label>Upload File</label>
-      <input type="file" />
+          <label>Comment</label>
+          <textarea placeholder="Enter your comment..." rows="3"></textarea>
 
-      <label>Comment</label>
-      <textarea placeholder="Enter your comment..." rows="3"></textarea>
-
-      <button class="save-btn">Save</button>
+          <button class="save-btn">Save</button>
+        </div>
+      </div>
     </div>
-  </div>
+  </main>
 </div>
-</section>
-</main></div>
+
+<!-- Footer -->
 <app-footer></app-footer>

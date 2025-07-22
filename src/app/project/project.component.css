@@ -304,47 +304,100 @@ body {
   color: #555;
   cursor: pointer;
 }
-.cards {
+.task-cards {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
 }
-.card {
-  position: relative;
-  width: 200px;
-  height: 120px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+
+.task-card {
+  background: white;
+  border-radius: 12px;
   padding: 16px;
+  width: 260px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.task-card:hover {
+  transform: scale(1.02);
+}
+
+.task-header {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.task-body {
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+.task-footer button {
+  margin-right: 8px;
+}
+
+.success-message {
+  color: green;
+  margin-top: 10px;
+}
+
+.edit-modal {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  border-radius: 10px;
+}
+.cards {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.card {
+  display: flex;
   align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-.card i {
-  font-size: 28px;
-  margin-bottom: 10px;
-}
-.card span {
-  font-size: 14px;
-  font-weight: 600;
-  color: #444;
-  text-align: center;
-}
-.edit-btn {
-  position: absolute;
-  bottom: 8px;
-  right: 10px;
-  font-size: 12px;
+
+.card i.fa-tasks {
+  font-size: 20px;
   color: #007bff;
-  background: none;
-  border: none;
-  cursor: pointer;
-  opacity: 0.8;
-  text-decoration: underline;
 }
+
+.task-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.task-box input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.task-box button {
+  padding: 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 /* Modal Styles */
 .modal {
@@ -621,4 +674,25 @@ body {
   margin-right: 16px; /* Optional spacing */
   display: flex;
   align-items: center;
+}
+.task-form input {
+  display: block;
+  margin: 8px 0;
+  padding: 8px;
+  width: 100%;
+}
+
+.task-card {
+  background: #f4f4f4;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+.task-header {
+  font-weight: bold;
+}
+
+.task-actions button {
+  margin-right: 10px;
 }

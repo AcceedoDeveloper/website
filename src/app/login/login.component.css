@@ -1,9 +1,12 @@
 .login-container {
-  min-height: 100vh;
+  min-height: 135vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: url('/assets/login.jpg') ;
+  background: url('/assets/htmllogin.jpeg') ;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
  
 }
 

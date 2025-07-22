@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-cards',
+  
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.css']
 })

@@ -59,6 +59,7 @@ import { Dwincontant5Component } from './dwincontant5/dwincontant5.component';
 import { Dwincontant6Component } from './dwincontant6/dwincontant6.component';
 import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
 import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
+import { HttpservicesComponent } from './httpservices/httpservices.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
     Dwincontant6Component,
     Dwincontant7Component,
     Dwincontant8Component,
+    HttpservicesComponent,
   ],
   imports: [
     BrowserModule,

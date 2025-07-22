@@ -6,22 +6,21 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
-  styleUrls: ['./project.component.css']
+  styleUrls: ['./project.component.css'],
 })
 export class ProjectComponent implements OnInit {
-  todayDate!: string;
-  dateTime: string = '';
-  userData: any = null;
-  loading: boolean = true;
+  userData: any = {}; // 🔧 Fix for userData
+  dateTime: string = ''; // 🔧 Fix for dateTime
   searchQuery: string = '';
-  hasNotification = false;
+  hasNotification: boolean = false;
 
-  // Task Logic
+  showTaskBox = false;
+  showSuccessMessage = false;
+  tasks: any[] = [];
   task = {
     assignee: '',
-    description: ''
+    description: '',
   };
-  showTaskBox = false;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -30,71 +29,41 @@ export class ProjectComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.todayDate = new Date().toDateString();
+    this.loadUserData();
+    this.updateDateTime();
+    setInterval(() => this.updateDateTime(), 1000); // Live time update
+    this.fetchTasks();
+  }
 
-    const now = new Date();
-    this.dateTime = now.toLocaleString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  updateDateTime() {
+    this.dateTime = new Date().toLocaleString();
+  }
 
-    this.afAuth.authState.subscribe(user => {
-      if (user && user.uid) {
+  loadUserData() {
+    this.afAuth.authState.subscribe((user) => {
+      if (user) {
         const uid = user.uid;
-
-        this.firestore.collection('users').doc(uid).valueChanges().subscribe(
-          (data: any) => {
-            if (data) {
-              this.userData = {
-                username: data.username || 'Unknown User',
-                email: data.email || user.email || '',
-                role: data.role || 'Viewer',
-                photoURL: data.photoURL || ''
-              };
-              console.log('Firestore data:', data);
-              console.log('userData:', this.userData);
-            } else {
-              this.userData = {
-                username: 'Unknown',
-                email: user.email || '',
-                role: 'Viewer',
-                photoURL: ''
-              };
-            }
-            this.loading = false;
-          },
-          error => {
-            console.error('Error fetching user data:', error);
-            this.loading = false;
-          }
-        );
-
-        // Simulate notification (for demo)
-        setTimeout(() => {
-          this.hasNotification = true;
-        }, 2000);
-      } else {
-        this.loading = false;
-        this.userData = null;
+        this.firestore
+          .collection('users')
+          .doc(uid)
+          .valueChanges()
+          .subscribe((data: any) => {
+            this.userData = data;
+          });
       }
     });
   }
 
   signOut() {
     this.afAuth.signOut().then(() => {
-      sessionStorage.clear();
       this.router.navigate(['/login']);
-    }).catch(err => {
-      console.error('Sign-out error:', err);
     });
   }
 
-  onSearch() {
-    console.log('Searching for:', this.searchQuery);
+  getInitials(name: string | undefined): string {
+    if (!name) return '?';
+    const parts = name.split(' ');
+    return parts.map((p) => p[0]).join('').toUpperCase();
   }
 
   toggleTaskBox() {
@@ -102,21 +71,43 @@ export class ProjectComponent implements OnInit {
   }
 
   addTask() {
-    if (this.task.assignee && this.task.description) {
-      console.log('New Task:', this.task);
+  const { assignee, description } = this.task;
+  if (!assignee.trim() || !description.trim()) return;
+
+  const newTask = {
+    assignee,
+    description,
+    createdAt: new Date(),
+    assignerUid: this.userData?.uid || '',
+    assigneeUid: assignee, // Assuming this is the UID of the assignee
+  };
+
+  this.firestore
+    .collection('tasks')
+    .add(newTask)
+    .then(() => {
       this.task = { assignee: '', description: '' };
-      this.showTaskBox = false;
-    } else {
-      alert('Please fill in all required fields.');
-    }
+      this.showSuccessMessage = true;
+      setTimeout(() => (this.showSuccessMessage = false), 2000);
+      this.fetchTasks();
+    });
+}
+
+
+  fetchTasks() {
+    this.firestore
+      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
+      .snapshotChanges()
+      .subscribe((res) => {
+        this.tasks = res.map((e: any) => {
+          const data = e.payload.doc.data();
+          const id = e.payload.doc.id;
+          return { id, ...data }; // ✅ Your previous error fixed
+        });
+      });
   }
 
-  // ✅ Get initials from email or name
-  getInitials(value: string = ''): string {
-    if (!value) return '?';
-
-    const trimmed = value.trim();
-    const namePart = trimmed.includes('@') ? trimmed.split('@')[0] : trimmed;
-    return namePart.charAt(0).toUpperCase();
+  onSearch() {
+    // Optional: implement search logic
   }
 }
