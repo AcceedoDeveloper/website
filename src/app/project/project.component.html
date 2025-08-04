@@ -9,8 +9,7 @@
       type="text"
       placeholder="Search..."
       [(ngModel)]="searchQuery"
-      (input)="onSearch()"
-    />
+      (input)="onSearch()" />
     <i class="fa fa-search search-icon"></i>
   </div>
 
@@ -18,15 +17,14 @@
     <!-- Notification Bell -->
     <div class="notification-icon">
       <img
-        [src]="hasNotification 
-          ? 'https://cdn-icons-png.flaticon.com/128/594/594838.png' 
+        [src]="hasNotification
+          ? 'https://cdn-icons-png.flaticon.com/128/594/594838.png'
           : 'https://cdn-icons-png.flaticon.com/128/17383/17383017.png'"
         alt="Notification"
-        class="notification-bell"
-      />
+        class="notification-bell" />
     </div>
 
-    <!-- Login Icon with Dropdown -->
+    <!-- Login Dropdown -->
     <div class="login-dropdown">
       <input type="checkbox" id="toggle-login" hidden />
       <label for="toggle-login" class="login-icon">
@@ -35,15 +33,15 @@
         </ng-container>
         <ng-template #initialsIcon>
           <div class="user-initial">
-            {{ getInitials(userData?.username || userData?.email) }}
+            {{ getInitials(userData?.username || userData?.email || '') }}
           </div>
         </ng-template>
       </label>
 
       <div class="login-menu">
         <p><strong>{{ userData?.username || 'Username' }}</strong></p>
-        <p>{{ userData?.email || 'Email' }}</p>
         <p>{{ userData?.role || 'Role' }}</p>
+        <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
         <a href="#" (click)="signOut()">Sign Out</a>
       </div>
     </div>
@@ -52,15 +50,25 @@
 
 <!-- Layout -->
 <div class="container">
-  <!-- Sidebar -->
   <aside class="sidebar">
-    <nav class="menu">
-      <a href="#" class="active">For you</a>
-      <a href="#">Recent</a>
-      <a href="#">Month View</a>
-      <a href="#">Plan</a>
-    </nav>
-  </aside>
+  <h3 class="menu-title">Menu</h3>
+  <ul class="menu-list">
+    <li class="active">
+      <a href="#"><i class="icon">👁️</i> For you</a>
+    </li>
+    <li>
+      <a href="#"><i class="icon">🕘</i> Recent</a>
+    </li>
+    <li>
+      <a href="#"><i class="icon">📅</i> Month View</a>
+    </li>
+    <li>
+      <a href="#"><i class="icon">📝</i> Plan</a>
+    </li>
+  </ul>
+</aside>
+
+
 
   <!-- Main Content -->
   <main class="main-content">
@@ -77,6 +85,7 @@
     </div>
 
     <!-- Assigned Tasks Section -->
+  <!-- Assigned Tasks Section -->
     <section class="helpful-links">
       <div class="section-header">
         <h4>ASSIGNED TASKS</h4>
@@ -84,51 +93,128 @@
       </div>
 
       <!-- Task Input Box -->
-      <div *ngIf="showTaskBox" class="task-box">
-        <input type="text" placeholder="Assignee Name" [(ngModel)]="task.assignee" />
-        <input type="text" placeholder="Task Description" [(ngModel)]="task.description" />
-        <button (click)="addTask()">Add Task</button>
+     <div *ngIf="showTaskBox" class="task-box">
+  <!-- Assignee with Filter Dropdown -->
+ <div class="assignee-container" #assigneeContainer>
+  <input
+    type="text"
+    placeholder="Assigned to"
+    [(ngModel)]="task.assignee"
+    (focus)="showUserDropdown = true"
+  />
+  <i class="fa fa-filter filter-icon" (click)="toggleUserDropdown()"></i>
 
-        <div *ngIf="showSuccessMessage" style="color: green; margin-top: 10px;">
-          ✅ Task added successfully
-        </div>
-      </div>
+  <!-- Styled user dropdown -->
+  <ul *ngIf="showUserDropdown" class="user-dropdown">
+    <li *ngFor="let user of users" (click)="selectAssignee(user)">
+      <span class="user-name">{{ user.name }}</span>
+    </li>
+  </ul>
+</div>
+
+
+  <!-- Task Description -->
+  <input
+    type="text"
+    placeholder="Task Description"
+    [(ngModel)]="task.description"
+  />
+
+  <!-- Add Button -->
+  <button (click)="addTask()">Add Task</button>
+
+  <!-- Success Message -->
+  <div *ngIf="showSuccessMessage" style="color: green; margin-top: 10px;">
+    ✅ Task added successfully
+  </div>
+</div>
 
       <!-- Card List -->
-      <div class="cards">
-        <div class="card" *ngFor="let task of tasks">
-          <i class="fa fa-tasks"></i>
-          <div>
-            <strong>{{ task.assignee }}</strong><br />
-            {{ task.description }}
+    
+      <div class="task-card-container">
+        <div *ngFor="let task of tasks" class="task-card">
+          <h4>{{ task.description }}</h4>
+          <p>Assigned to: {{ task.assignee }}</p>
+          <p><small>{{ task.createdAt?.toDate?.() | date:'short' }}</small></p>
+          <div class="task-actions">
+            <button class="edit-btn" (click)="openEditModal(task)">✏️ Edit</button>
+            <button class="delete-btn" (click)="deleteTask(task)">🗑️ Delete</button>
           </div>
         </div>
       </div>
     </section>
-    <!-- Modal Section (Outside of <section>) -->
+    <!-- Modal Section (Outside of <section>) --> 
     <!-- Hidden Checkbox to Control Modal -->
     <input type="checkbox" id="modal-toggle" hidden />
 
     <!-- Modal -->
-    <div class="modal">
-      <label class="overlay" for="modal-toggle"></label>
-      <div class="modal-content">
-        <label for="modal-toggle" class="close-btn">&times;</label>
-        <h3>✏️ Edit</h3>
 
-        <div class="edit-section">
-          <label>Upload File</label>
-          <input type="file" />
-
-          <label>Comment</label>
-          <textarea placeholder="Enter your comment..." rows="3"></textarea>
-
-          <button class="save-btn">Save</button>
-        </div>
-      </div>
-    </div>
   </main>
 </div>
 
-<!-- Footer -->
+<!-- Profile Edit Modal -->
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+
+ <form class="grid-form">
+      <!-- Row 1 -->
+<!-- Combine First + Last Name in one grid cell -->
+<div class="form-group first-last-combined">
+  <label>First name:</label>
+  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
+
+  <label style="margin-top: 30px;">Last name:</label>
+  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
+</div>
+
+<!-- Profile remains as-is in the right cell -->
+<div class="form-group">
+ <div *ngIf="previewImage" class="profile-preview-wrapper">
+    <img [src]="previewImage" class="profile-preview-img" />
+  </div>
+  <input type="file" (change)="onPhotoSelected($event)" />
+  
+</div>
+
+
+ 
+
+      <!-- Row 3 -->
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="editUserData.email" name="email" />
+      </div>
+      <div class="form-group">
+        <label>User name:</label>
+        <input type="text" [(ngModel)]="editUserData.username" name="username" />
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-group">
+        <label>Mobile:</label>
+        <input type="text" [(ngModel)]="editUserData.mobile" name="mobile" />
+      </div>
+      <div class="form-group">
+        <label>Password:</label>
+        <input type="password" [(ngModel)]="editUserData.Password" name="Password" />
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-group">
+        <label>Role:</label>
+        <input type="text" [(ngModel)]="editUserData.role" name="role" />
+      </div>
+      <div></div>
+
+      <!-- Row 6: Buttons centered -->
+      <div class="form-buttons" style="grid-column: span 2;">
+        <button type="button" (click)="saveProfilePicture()">Save</button>
+        <button type="button" (click)="closeEditModal()">Cancel</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
 <app-footer></app-footer>

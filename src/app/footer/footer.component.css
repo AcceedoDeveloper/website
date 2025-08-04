@@ -77,6 +77,7 @@
     flex-direction: column !important;
     align-items: flex-start;
   }
+  
 
   .footer-custom .d-sm-flex > div {
     display: flex;
