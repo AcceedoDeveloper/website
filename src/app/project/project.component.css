@@ -314,9 +314,10 @@ margin-right: -200px;
   width: 120px;         /* You can adjust to 100–150px as needed */
   height: 150px;
   object-fit: cover;    /* Ensures the image fills the box properly */
-  border-radius: 4px;   /* Slight rounding, like passport photos */
+  border-radius: 4px;   
   border: 1px solid #ccc;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: -30px;
 }
 /* Helpful Links */
 .section-header {
@@ -665,7 +666,8 @@ margin-right: -200px;
   cursor: pointer;
   color: #007bff;
   transition: transform 0.2s ease;
-  margin-right: 400px;
+  margin-right: 1000px;
+  margin-top: -8px;
 }
 
 .add-task-icon:hover {
@@ -678,6 +680,7 @@ margin-right: -200px;
   border: 1px solid #ddd;
   border-radius: 8px;
   margin-bottom: 20px;
+  width: 700px;
 }
 
 .task-box input {
@@ -726,6 +729,8 @@ margin-right: -200px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   margin-bottom: 16px;
+  width: 500px;
+  height: 250px;
 }
 
 /* Action buttons bottom right */
@@ -738,12 +743,12 @@ margin-right: -200px;
 }
 
 .task-actions button {
-  padding: 2px 5px;
+  padding: 2px 10px;
   font-size: 12px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  margin-bottom: -12px;
+  margin-bottom: 5px;
 }
 
 .edit-btn {
@@ -867,6 +872,7 @@ margin-right: -200px;
   background-color: #45a049;
 }
 .modal {
+  
   position: fixed;
   top: 0;
   left: 0;
@@ -1057,24 +1063,21 @@ margin-right: -200px;
 }
 
 .user-dropdown {
-  position: absolute;
-  top: 38px;
-  left: 0;
-  width: 100%;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   list-style: none;
+  padding: 0;
   margin: 0;
-  padding: 5px 0;
-  z-index: 1000;
+  margin-bottom: -200px;
+  border: 1px solid #ccc;
+  background-color: white;
   max-height: 150px;
   overflow-y: auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
 }
 
 .user-dropdown li {
-  padding: 6px 10px;
+  padding: 8px 12px;
   cursor: pointer;
 }
 
@@ -1082,3 +1085,189 @@ margin-right: -200px;
   background-color: #f0f0f0;
 }
 
+.cancel-button {
+  margin-left: 20px;
+}
+.edit-task-modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  z-index: 1001;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+
+.edit-task-modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+  z-index: 1001;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+/* Scoped only for Edit Task Modal */
+.edit-task-modal {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.edit-task-content {
+  background-color: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.edit-task-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.edit-task-content textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 5px;
+}
+/* Save button - Green */
+/* Common Button Style */
+button.save-btn,
+button.cancel-btn {
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+/* Save Button Color */
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+/* Cancel Button Color */
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}
+/* Add these styles to your CSS */
+.menu-section {
+  margin-bottom: 10px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: white;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.section-title i {
+  font-size: 12px;
+  transition: transform 0.3s;
+}
+
+.section-toggle:checked ~ .section-title i {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding-left: 15px;
+}
+
+.section-toggle:checked ~ .submenu {
+  max-height: 500px; /* Adjust based on content */
+}
+
+.submenu a {
+  display: block;
+  padding: 8px 15px 8px 25px;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #faf8f8;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.submenu a:hover {
+  background-color: #e0e0e0;
+  color: #faf4f4f4;
+}
+
+/* Active state for section titles */
+.section-toggle:checked ~ .section-title {
+  font-weight: 500;
+  background-color: #e0e0e0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+    margin-left: 0;
+  }
+  
+  .menu-section {
+    margin-bottom: 5px;
+  }
+  
+  .section-title, .submenu a {
+    padding: 8px 10px;
+  }
+  
+  .submenu a {
+    padding-left: 20px;
+  }
+}
+.card {
+  position: relative;
+  padding: 15px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.timestamp {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 15px;
+  color: #666;
+}

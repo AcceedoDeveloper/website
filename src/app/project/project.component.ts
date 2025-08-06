@@ -19,11 +19,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
   todayDate!: string;
   dateTime: string = '';
   userData: any = null;
-  
 
-  tasks: any[] = []; // at the top of the class
-showSuccessMessage: boolean = false;
-
+  tasks: any[] = [];
+  showSuccessMessage: boolean = false;
 
   editUserData: any = {
     firstName: '',
@@ -46,16 +44,18 @@ showSuccessMessage: boolean = false;
     assignee: '',
     description: ''
   };
-  users: any[] = []; // ✅ All users for dropdown
-  showUserDropdown: boolean = false; // ✅ Toggle dropdown
+
+  users: any[] = [];
+  showUserDropdown: boolean = false;
 
   showTaskBox = false;
   intervalId: any;
-isModalOpen: boolean = false;
+  isModalOpen: boolean = false;
   editComment: string = '';
   selectedFile: File | null = null;
   editTaskId: string | null = null;
   isProfileMenuOpen = false;
+
   @ViewChild('profileMenu', { static: false }) profileMenuRef!: ElementRef;
 
   constructor(
@@ -64,57 +64,55 @@ isModalOpen: boolean = false;
     private router: Router
   ) {}
 
-ngOnInit() {
-  this.todayDate = new Date().toDateString();
-  this.updateDateTime();
-  this.intervalId = setInterval(() => this.updateDateTime(), 1000);
-  
+  ngOnInit() {
+    this.todayDate = new Date().toDateString();
+    this.updateDateTime();
+    this.intervalId = setInterval(() => this.updateDateTime(), 1000);
+    console.log('Modal state at init:', this.isModalOpen);
 
-  this.afAuth.authState.subscribe(user => {
-    if (user && user.email) {
-      this.firestore
-        .collection('users', ref => ref.where('email', '==', user.email))
-        .get()
-        .subscribe(snapshot => {
-          if (!snapshot.empty) {
-            const doc = snapshot.docs[0];
-            const data: any = doc.data();
+    this.afAuth.authState.subscribe(user => {
+      if (user && user.email) {
+        this.firestore
+          .collection('users', ref => ref.where('email', '==', user.email))
+          .get()
+          .subscribe(snapshot => {
+            if (!snapshot.empty) {
+              const doc = snapshot.docs[0];
+              const data: any = doc.data();
 
-            this.userData = {
-              username: data.username || `${data.firstName || ''} ${data.lastName || ''}`.trim(),
-              email: data.email || user.email,
-              role: data.role || 'User',
-              photoURL: data.photoURL || user.photoURL || '',
-              mobile: data.mobile || '',
-              uid: data.uid || ''
-            };
+              this.userData = {
+                username: data.username || `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+                email: data.email || user.email,
+                role: data.role || 'User',
+                photoURL: data.photoURL || user.photoURL || '',
+                mobile: data.mobile || '',
+                uid: data.uid || ''
+              };
 
-            sessionStorage.setItem('firstName', data.firstName || '');
-            sessionStorage.setItem('lastName', data.lastName || '');
-            sessionStorage.setItem('username', this.userData.username);
-            sessionStorage.setItem('email', this.userData.email);
-            sessionStorage.setItem('role', this.userData.role);
-            sessionStorage.setItem('mobile', this.userData.mobile);
-            sessionStorage.setItem('photoURL', this.userData.photoURL);
-          } else {
-            this.loadFromSession();
-          }
+              Object.keys(this.userData).forEach(key => {
+                const typedKey = key as keyof typeof this.userData;
+                sessionStorage.setItem(key, this.userData[typedKey]);
+              });
+            } else {
+              this.loadFromSession();
+            }
 
-          this.fetchTasks(); // ✅ fetch tasks after user data is loaded
-          this.loading = false;
-        });
-    } else {
-      this.loadFromSession();
-      this.fetchTasks(); // ✅ still fetch even if no user document
-      this.loading = false;
-    }
+            this.fetchTasks();
+            this.loading = false;
+          });
+      } else {
+        this.loadFromSession();
+        this.fetchTasks();
+        this.loading = false;
+      }
 
-    setTimeout(() => {
-      this.hasNotification = true;
-    }, 2000);
-  });
-}
+      setTimeout(() => {
+        this.hasNotification = true;
+      }, 2000);
+    });
 
+    this.fetchUsers();
+  }
 
   ngOnDestroy() {
     if (this.intervalId) {
@@ -152,36 +150,42 @@ ngOnInit() {
   }
 
   addTask() {
-  const { assignee, description } = this.task;
-  if (!assignee.trim() || !description.trim()) return;
+    const { assignee, description } = this.task;
+    if (!assignee.trim() || !description.trim()) return;
 
-  const newTask = {
-    assignee,
-    description,
-    createdAt: new Date(),
-    assignerUid: this.userData?.uid || '',
-    assigneeUid: assignee, // Assuming this is the UID of the assignee
-  };
+    const newTask = {
+      assignee,
+      description,
+      createdAt: new Date(),
+      assignerUid: this.userData?.uid || '',
+      assigneeUid: assignee
+    };
 
-  this.firestore
-    .collection('tasks')
-    .add(newTask)
-    .then(() => {
-      this.task = { assignee: '', description: '' };
-      this.showSuccessMessage = true;
-      setTimeout(() => (this.showSuccessMessage = false), 2000);
-      this.fetchTasks();
-    });
-}
-fetchTasks() {
     this.firestore
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
+      .collection('tasks')
+      .add(newTask)
+      .then(() => {
+        this.task = { assignee: '', description: '' };
+        this.showSuccessMessage = true;
+        setTimeout(() => (this.showSuccessMessage = false), 2000);
+        this.fetchTasks();
+      });
+  }
+
+  cancel() {
+    this.task = { assignee: '', description: '' };
+    this.showTaskBox = false;
+  }
+
+  fetchTasks() {
+    this.firestore
+      .collection('tasks', ref => ref.orderBy('createdAt', 'desc'))
       .snapshotChanges()
-      .subscribe((res) => {
+      .subscribe(res => {
         this.tasks = res.map((e: any) => {
           const data = e.payload.doc.data();
           const id = e.payload.doc.id;
-          return { id, ...data }; // ✅ Your previous error fixed
+          return { id, ...data };
         });
       });
   }
@@ -213,24 +217,55 @@ fetchTasks() {
     this.previewImage = this.userData.photoURL || null;
     this.showEditModal = true;
   }
-  deleteTask(task: any) {
-    this.firestore
-      .collection('tasks')
-      .doc(task.id)
-      .delete()
-      .then(() => {
-        this.fetchTasks();
-      });
-  }
-openEditModal(task: any) {
-    this.isModalOpen = true;
-    this.editComment = task.description || '';
-    this.editTaskId = task.id;
-  }
+
   closeEditModal() {
     this.showEditModal = false;
     this.previewImage = null;
     this.selectedPhotoFile = null;
+  }
+
+  openEditModal(task: any) {
+    console.log('button is on');
+    this.isModalOpen = true;
+    this.editComment = task.description || '';
+    this.editTaskId = task.id;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.editComment = '';
+    this.editTaskId = null;
+    this.selectedFile = null;
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
+  saveEdit() {
+    if (!this.editTaskId) return;
+
+    const updatedTask: any = {
+      description: this.editComment
+    };
+
+    if (this.selectedFile) {
+      updatedTask.fileName = this.selectedFile.name;
+    }
+    console.log('edit data', this.editComment);
+    this.firestore.collection('tasks').doc(this.editTaskId).update(updatedTask).then(() => {
+      this.fetchTasks();
+      this.closeModal();
+    });
+  }
+
+  deleteTask(task: any) {
+    this.firestore.collection('tasks').doc(task.id).delete().then(() => {
+      this.fetchTasks();
+    });
   }
 
   onPhotoSelected(event: any) {
@@ -274,13 +309,10 @@ openEditModal(task: any) {
       }
 
       this.userData = { ...updatedData };
-      sessionStorage.setItem('firstName', updatedData.firstName);
-      sessionStorage.setItem('lastName', updatedData.lastName);
-      sessionStorage.setItem('username', updatedData.username);
-      sessionStorage.setItem('email', updatedData.email);
-      sessionStorage.setItem('role', updatedData.role);
-      sessionStorage.setItem('mobile', updatedData.mobile);
-      sessionStorage.setItem('photoURL', updatedData.photoURL);
+      Object.keys(updatedData).forEach(key => {
+        const typedKey = key as keyof typeof updatedData;
+        sessionStorage.setItem(key, updatedData[typedKey] as string);
+      });
 
       alert('✅ Profile updated successfully!');
       this.closeEditModal();
@@ -290,16 +322,13 @@ openEditModal(task: any) {
     }
   }
 
-  // ---------------------------
-  // Profile Menu Dropdown Logic
-  // ---------------------------
   toggleProfileMenu(event: MouseEvent): void {
     event.stopPropagation();
     this.isProfileMenuOpen = !this.isProfileMenuOpen;
   }
 
   onInsideClick(event: MouseEvent) {
-    event.stopPropagation(); // Do not close when clicking inside
+    event.stopPropagation();
   }
 
   @HostListener('document:click', ['$event'])
@@ -314,7 +343,7 @@ openEditModal(task: any) {
       this.showUserDropdown = false;
     }
   }
-  // ✅ Fetch user list from Firestore
+
   fetchUsers() {
     this.firestore
       .collection('users')
@@ -323,14 +352,16 @@ openEditModal(task: any) {
         this.users = users;
       });
   }
-  // ✅ Toggle user dropdown
+
   toggleUserDropdown() {
     this.showUserDropdown = !this.showUserDropdown;
   }
-  // ✅ Set selected user as assignee
-selectAssignee(user: any) {
-  this.task.assignee = user.name;
-  this.showUserDropdown = false;
-}
 
+  selectAssignee(user: any) {
+    this.task.assignee =
+      user.username ||
+      `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
+      user.email;
+    this.showUserDropdown = false;
+  }
 }

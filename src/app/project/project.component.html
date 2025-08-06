@@ -60,10 +60,34 @@
       <a href="#"><i class="icon">🕘</i> Recent</a>
     </li>
     <li>
-      <a href="#"><i class="icon">📅</i> Month View</a>
+      <a href="#"><i class="icon">📅</i> Month and Plan</a>
     </li>
-    <li>
-      <a href="#"><i class="icon">📝</i> Plan</a>
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/webdev">webdev</a>
+<a routerLink="/software">angular developer</a>
+<a routerLink="/ngrx">NGRX</a>
+      
+      </div>
+    </div>
+    </li>
+    <!-- Backend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+        <a routerLink="/backend">node.js</a>
+     <a routerLink="/database">API & database</a>
+      </div>
+    </div>
+    </li>
+      <li>
+      <a href="#"> Full satck</a>
     </li>
   </ul>
 </aside>
@@ -80,7 +104,7 @@
       </div>
       <div class="user-welcome">
         <span>Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
-        <img class="user-icon" [src]="userData?.photoURL || 'assets/imman.jpeg'" alt="User Avatar" />
+        <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
       </div>
     </div>
 
@@ -95,19 +119,20 @@
       <!-- Task Input Box -->
      <div *ngIf="showTaskBox" class="task-box">
   <!-- Assignee with Filter Dropdown -->
- <div class="assignee-container" #assigneeContainer>
+<div class="assignee-container" #assigneeContainer>
   <input
     type="text"
     placeholder="Assigned to"
     [(ngModel)]="task.assignee"
     (focus)="showUserDropdown = true"
+    (click)="showUserDropdown = true"
   />
   <i class="fa fa-filter filter-icon" (click)="toggleUserDropdown()"></i>
 
-  <!-- Styled user dropdown -->
+  <!-- Dropdown showing user names -->
   <ul *ngIf="showUserDropdown" class="user-dropdown">
     <li *ngFor="let user of users" (click)="selectAssignee(user)">
-      <span class="user-name">{{ user.name }}</span>
+      {{ user.username || user.firstName + ' ' + user.lastName || user.email }}
     </li>
   </ul>
 </div>
@@ -122,6 +147,7 @@
 
   <!-- Add Button -->
   <button (click)="addTask()">Add Task</button>
+<button class="cancel-button" (click)="cancel()">Cancel</button>
 
   <!-- Success Message -->
   <div *ngIf="showSuccessMessage" style="color: green; margin-top: 10px;">
@@ -133,21 +159,51 @@
     
       <div class="task-card-container">
         <div *ngFor="let task of tasks" class="task-card">
-          <h4>{{ task.description }}</h4>
-          <p>Assigned to: {{ task.assignee }}</p>
-          <p><small>{{ task.createdAt?.toDate?.() | date:'short' }}</small></p>
+           <div class="timestamp">
+    <small>{{ task.createdAt?.toDate?.() | date:'short' }}</small>
+  </div>
+           <h6>Assigned by:  {{ userData?.username?.toUpperCase() || 'User' }}</h6>
+          <h6>Assigned to: {{ task.assignee }}</h6>
+         
+          <p>Description :{{ task.description }}</p>
+          
+          
           <div class="task-actions">
             <button class="edit-btn" (click)="openEditModal(task)">✏️ Edit</button>
             <button class="delete-btn" (click)="deleteTask(task)">🗑️ Delete</button>
+            
           </div>
         </div>
       </div>
+      
     </section>
     <!-- Modal Section (Outside of <section>) --> 
     <!-- Hidden Checkbox to Control Modal -->
     <input type="checkbox" id="modal-toggle" hidden />
 
     <!-- Modal -->
+     <!-- Edit Task Modal -->
+<!-- Edit Task Modal -->
+<!-- Edit Task Modal -->
+<div class="edit-task-modal" *ngIf="isModalOpen">
+  <div class="edit-task-content">
+    <h3>Edit Task</h3>
+
+    <label>Description:</label>
+    <textarea [(ngModel)]="editComment" rows="4" cols="50"></textarea>
+
+    <label>Upload New File (optional):</label>
+    <input type="file" (change)="onFileSelected($event)" />
+
+    <div class="edit-task-buttons">
+   <button class="save-btn" (click)="saveEdit()">Save</button>
+  <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+
 
   </main>
 </div>
@@ -218,3 +274,4 @@
 </div>
 
 <app-footer></app-footer>
+
