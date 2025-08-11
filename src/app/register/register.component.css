@@ -1,191 +1,182 @@
-
-
-:host {
-  display: block;
-  min-height: 100vh;
-  background-image: url('/assets/user-background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+/* Main container for the form */
+.form-container {
+  margin-top: 100px;
+  background-image: url(./7016010.jpg);
+  background-size: cover;       /* Ensures the image covers the whole area */
+  background-position: center;  /* Centers the image */
+  background-attachment: fixed; /* Prevents tiling */
+  border-radius: 10px;          /* Matches your form’s rounded edges */
 }
 
-
-
-
-/* Container styling */
-form {
-  max-width: 400px;
-  margin: 50px auto;
-  padding: 25px;
-  
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-}
-
-/* Title styling */
-h2 {
-  text-align: center;
-  color: #333;
-  margin-top: 70px;
-  margin-bottom: -30px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Label and Input styling */
-label {
-  display: block;
-  margin-bottom: 6px;
-
-  font-weight: 600;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  transition: border 0.3s ease;
-}
-
-input:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-/* Button styling */
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-input[type="text"],
-input[type="email"],
-input[type="tel"] {
-  width: 350px;
-  margin: 5px 0 15px;
-  padding: 8px;
-  border: 1px solid #ccc;
- 
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  margin-top: 10px;
-  color: black;
-}
-
-button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-}
-
-button:disabled {
-  background-color: #999;
-}
-
-div[style*="color:red"] {
-  font-size: 13px;
-  margin-bottom: 5px;
-}
-
-/* Style for the container holding password inputs */
-.password-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-/* The input should have right padding to make space for the eye icon */
-.password-container input {
-  width: 100%;
-  padding-right: 32px;
-  box-sizing: border-box;
-}
-
-/* Eye icon (👁️ / 🙈) */
-.toggle-eye {
-  position: absolute;
-  right: 8px;
-  top: 40%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 18px;
-  user-select: none;
-}
-.form-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: -40px;
-  color: black;
-}
 
 .two-column-form {
+  margin: 20px auto;
   max-width: 850px;
-  
   padding: 20px;
-
+  margin-top: 30px;
+  background: linear-gradient(to right, #f0f4f8, #dbeeff, #b3d7ff);
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Subtle scale on hover */
+.two-column-form:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Form title */
+.form-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 18px;
+  color: #222;
+  letter-spacing: 0.5px;
+  animation: fadeSlideIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
+
+/* Row layout */
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 14px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  align-items: flex-start;
 }
 
+/* Two equal columns */
 .form-group {
-  flex: 1 1 48%;
+  flex: 1 1 calc(50% - 14px);
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s ease;
 }
 
+/* Slight pop effect on hover for each input group */
+.form-group:hover {
+  transform: translateY(-2px);
+}
+
+/* Full-width row option */
+.form-group.full-width {
+  flex: 1 1 100%;
+}
+
+/* Input styling */
 .form-group input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.form-group input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+}
+/* Labels */
+label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: black;
+}
+#roles
+{
+    display: flex;
+   padding: 10px;
+   /* background: red; */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#roles:hover
+{
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+}
+
+.rolelabel
+{
+  display: flex;
+   padding: 10px;
+   /* background: red; */
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rolelabel:hover
+{
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.4);
+}
+
+/* Error messages */
 .error {
   font-size: 13px;
   color: red;
   margin-top: 4px;
 }
 
+/* Password container */
 .password-container {
   position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  padding-right: 2.5rem;
 }
 
 .toggle-eye {
   position: absolute;
   right: 10px;
-  top: 38px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
-  user-select: none;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+.toggle-eye:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Submit button */
 button[type="submit"] {
-  width: 96%;
+  width: 100%;
   padding: 12px;
   background-color: #007bff;
   color: #fff;
@@ -193,47 +184,15 @@ button[type="submit"] {
   font-size: 16px;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button[type="submit"]:hover {
   background-color: #0056b3;
-}
-.form-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
+  transform: translateY(-2px);
 }
 
-.form-group {
-  flex: 1 1 48%;
-}
-
-.password-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.password-container input {
-  flex: 1;
-  padding-right: 2rem;
-}
-
-.toggle-eye {
-  position: absolute;
-  right: 0px;
-  margin-top: -15px;
-  cursor: pointer;
-  user-select: none;
-}
-.password-container {
-  position: relative;
-  width: 90%; /* ✅ Ensure it fills the full width */
-}
-
-.password-container input {
-  width: 100%; /* ✅ Make input fill the container */
-  padding-right: 2rem; /* Leave space for the eye icon */
-  box-sizing: border-box; /* Important for consistent sizing */
+button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
 }

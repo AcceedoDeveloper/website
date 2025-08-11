@@ -1,22 +1,22 @@
 <app-footr></app-footr>
 <div class="form-container">
  
-<h2 class="form-title">User Registration</h2>
-
-<form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate class="two-column-form">
-
+  
+  <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate class="two-column-form">
+    
+    <h2 class="form-title">User Registration</h2>
   <!-- Row 1 -->
   <div class="form-row">
     <div class="form-group">
-      <label>First Name:</label>
-      <input type="text" name="firstName" [(ngModel)]="user.firstName" required #firstName="ngModel" />
-      <div *ngIf="firstName.invalid && firstName.touched" class="error">First Name is required.</div>
+      <label>Employee First Name:</label>
+      <input type="text" name="Employee_firstName" [(ngModel)]="user.Employee_firstName" required #Employee_firstName="ngModel" />
+      <div *ngIf="Employee_firstName.invalid && Employee_firstName.touched" class="error">Employee firstName is required.</div>
     </div>
 
     <div class="form-group">
-      <label>Last Name:</label>
-      <input type="text" name="lastName" [(ngModel)]="user.lastName" required #lastName="ngModel" />
-      <div *ngIf="lastName.invalid && lastName.touched" class="error">Last Name is required.</div>
+      <label>Employee Last Name:</label>
+      <input type="text" name="Employee_lastName" [(ngModel)]="user.Employee_lastName" required #Employee_lastName="ngModel" />
+      <div *ngIf="Employee_lastName.invalid && Employee_lastName.touched" class="error">Employee Last Name is required.</div>
     </div>
   </div>
 
@@ -27,14 +27,14 @@
       <input type="email" name="email" [(ngModel)]="user.email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel" />
       <div *ngIf="email.errors?.['required'] && email.touched" class="error">Email is required.</div>
       <div *ngIf="email.errors?.['pattern'] && email.touched" class="error">Enter a valid email.</div>
-    </div>
+    </div> 
 
     <div class="form-group">
       <label>Mobile:</label>
       <input type="tel" name="mobile" [(ngModel)]="user.mobile" required pattern="^[0-9]{10}$" #mobile="ngModel" />
       <div *ngIf="mobile.errors?.['required'] && mobile.touched" class="error">Mobile number is required.</div>
       <div *ngIf="mobile.errors?.['pattern'] && mobile.touched" class="error">Must be 10 digits.</div>
-    </div>
+    </div> 
   </div>
 
   <!-- Row 3 -->
@@ -67,7 +67,7 @@
         #password="ngModel"
       />
       <span class="toggle-eye" (click)="showPassword = !showPassword">
-        {{ showPassword ? '🙈' : '👁️' }}
+        {{ showPassword ? '' : '' }}
       </span>
     </div>
     <div *ngIf="password.invalid && password.touched" style="color:red;">
@@ -87,7 +87,7 @@
         #confirmPasswordField="ngModel"
       />
       <span class="toggle-eye" (click)="showConfirmPassword = !showConfirmPassword">
-        {{ showConfirmPassword ? '🙈' : '👁️' }}
+        {{ showConfirmPassword ? '' : '' }}
       </span>
     </div>
     <div *ngIf="confirmPassword !== user.password && registerForm.submitted" style="color:red;">

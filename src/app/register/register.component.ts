@@ -10,8 +10,8 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent {
   user = {
-    firstName: '',
-    lastName: '',
+    Employee_firstName: '',
+    Employee_lastName: '',
     email: '',
     mobile: '',
     role: '',
@@ -38,8 +38,8 @@ export class RegisterComponent {
           const uid = userCredential.user?.uid;
           if (uid) {
             const userData = {
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
+              Employee_firstName: this.user.Employee_firstName,
+             Employee_lastName: this.user.Employee_lastName,
               email: this.user.email,
               mobile: this.user.mobile,
               role: this.user.role,
@@ -51,7 +51,7 @@ export class RegisterComponent {
               console.log('User data saved to Firestore!');
 
               sessionStorage.setItem('uid', uid);
-             sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
+             sessionStorage.setItem('username', `${this.user.Employee_firstName} ${this.user.Employee_lastName}`);
 
               sessionStorage.setItem('email', this.user.email);
               sessionStorage.setItem('role', this.user.role);

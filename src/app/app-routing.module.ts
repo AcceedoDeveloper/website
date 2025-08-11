@@ -27,6 +27,8 @@ import { Product3Component } from './product3/product3.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ProjectComponent } from './project/project.component';
+import {CreateprojectComponent} from "./createproject/createproject.component";
+import { ProjectsComponent } from './projects/projects.component';
 
 
 const routes: Routes = [
@@ -49,7 +51,7 @@ const routes: Routes = [
   { path: 'dwincontant4', component: Dwincontant4Component },
   { path: 'dwincontant5', component: Dwincontant5Component },
   { path: 'dwincontant6', component: Dwincontant6Component },
-  { path: 'dwincontant7', component: Dwincontant7Component },
+  { path: 'dwincontant78', component: Dwincontant7Component },
   { path: 'dwincontant8', component: Dwincontant8Component },
   { path: 'adobe', component: AdobeComponent },
   { path: 'cards', component: CardsComponent },
@@ -58,7 +60,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   {path:'signin', component:LoginComponent},
   {path:'project', component:ProjectComponent},
-  
+  {path:'create' , component:CreateprojectComponent},
+ {path:'projects',component:ProjectsComponent}
+
 
 ];
 

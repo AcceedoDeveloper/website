@@ -1,7 +1,121 @@
-<app-footr></app-footr>
+
+
+<div class="nav">
+  <input type="checkbox" id="nav-check" (change)="onNavCheckChange($event)" />
+  
+  <div class="nav-header" routerLink="/acceedo">
+    <div routerLink="acceedo" class="nav-title">
+      Acceedo<br>
+      <span class="nav-subtitle">IIoT Solutions</span>
+    </div>
+  </div>
+
+  <div class="nav-btn">
+    <label for="nav-check">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
+  </div>
+
+  <div class="nav-links">
+    <ul>
+      <li><a href="" class="lik">Our Company</a></li>
+
+      <!-- Dropdown: Product -->
+      <li class="dropdown" data-testid="dropdown">
+        <input type="checkbox" id="product-toggle" hidden>
+        <label for="product-toggle" class="dropdown-toggle">Product</label>
+
+        <div class="dropdown-menu">
+          <div class="border-color"></div>
+          <section class="explore-brands">
+            <div class="brands-columns">
+              <div class="brands-column">
+                <h6>Power Metrics</h6>
+                <ul>
+                  <li class="Power Metrics" routerLink="/power-metrics">View More</li>
+                </ul>
+              </div>
+              <div class="brands-column">
+                <h6>Attendance System</h6>
+                <ul>
+                  <li class="view-more" routerLink="/product2">View More</li>
+                </ul>
+              </div>
+              <div class="brands-column">
+                <h6>Melting Software</h6>
+                <ul>
+                  <li class="view-more" routerLink="/melting-software">View More</li>
+                </ul>
+              </div>
+              <div class="brands-column">
+                <h6>Heat Treatment</h6>
+                <ul>
+                  <li class="view-more" routerLink="/product1">View More</li>
+                </ul>
+              </div>
+              <div class="brands-column">
+                <h6>Production Monitor</h6>
+                <ul>
+                  <li class="view-more" routerLink="/product-monitor">View More</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
+      </li>
+
+      <li><a routerLink="/services">Our Services</a></li>
+      <li><a routerLink="/career">Careers</a></li>
+      <li><a routerLink="/blog">Blog</a></li>
+      <li><a routerLink="/aboutas">About us</a></li>
+      <li><a routerLink="/contactas">Contact</a></li>
+
+      <li class="support-link">
+        <a routerLink="/product3">Product & Sale</a>
+      </li>
+
+      <!-- Login dropdown -->
+      <div class="login-dropdown">
+        <a class="login-btn">
+          <div class="user-circle">
+            <i class="fas fa-user user-icon"></i>
+          </div>
+        </a>
+        <div class="login-menu">
+          <div class="arrow-up"></div>
+
+          <!-- ✅ Fixed Sign in link -->
+          <a routerLink="/signin">Sign in</a>
+
+          <!-- ✅ Fixed Register link -->
+          <a routerLink="/acceedo">
+            <span class="no-underline">sign out</span>
+            <!-- <span class="underline"> Register</span> -->
+          </a>
+        </div>
+      </div>
+
+    </ul>
+  </div>
+</div>
+
 <div class="login-container">
   <div class="login-box">
-    <h2>Login</h2>
+  
+ <div class="form-content">
+    <h2 class="login">Login</h2>
+    
+  </div>
+ <div class="login-box2">
+    <div class="login-img">
+   
+       
+     
+   </div>
+
+   <div class="login-text">
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="input-group">
@@ -18,7 +132,7 @@
         <div class="password-wrapper">
           <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Enter password" />
           <button type="button" class="toggle-btn" (click)="togglePasswordVisibility()">
-            {{ hidePassword ? '👁️' : '🙈' }}
+            {{ hidePassword ? '' : '' }}
           </button>
         </div>
         <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')" class="error">
@@ -27,9 +141,17 @@
       </div>
 
       <div *ngIf="message" class="error-message">{{ message }}</div>
+   <div class="register-text">
+  <p>If you don't have an account,<a href="/register">Register here</a></p>
+</div>
 
       <button type="submit" class="submit-btn">Login</button>
     </form>
   </div>
 </div>
+</div>
+</div>
 <app-footer></app-footer>
+
+
+

@@ -547,7 +547,7 @@ body {
   font-weight: 600;
 }
 
-.login-menu a:hover .underline {
+.login-menu a:active .underline {
   color:#007bff; /* Hover color for Register */
 }
 nav-links {
@@ -609,16 +609,16 @@ nav-links {
 
 .login-menu {
   
-  position: absolute;
+  position: unset;
   top: 40px;
   left: auto;
   right: 2px;
   box-sizing: border-box ;
-  background-color: white;
-  padding-right: -120px;
-  height: 100px;
+  background-color: rgb(255, 255, 255);
+  /* padding-right: -120px; */
+  height: 50px;
   max-width: fit-content ;
-  border-radius: 16px;
+  border-radius: 13px;
   gap: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   z-index: 100;
@@ -1108,4 +1108,3 @@ nav-links {
     font-size: 14px;
   }
 }
-

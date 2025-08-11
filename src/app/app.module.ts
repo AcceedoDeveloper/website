@@ -60,6 +60,9 @@ import { Dwincontant6Component } from './dwincontant6/dwincontant6.component';
 import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
 import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
 import { HttpservicesComponent } from './httpservices/httpservices.component';
+import { FilterPipe } from './filter.pipe';
+import { CreateprojectComponent } from './createproject/createproject.component';
+import { ProjectsComponent } from './projects/projects.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +98,9 @@ import { HttpservicesComponent } from './httpservices/httpservices.component';
     Dwincontant7Component,
     Dwincontant8Component,
     HttpservicesComponent,
+    FilterPipe,
+    CreateprojectComponent,
+    ProjectsComponent,
   ],
   imports: [
     BrowserModule,

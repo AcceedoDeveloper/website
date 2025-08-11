@@ -9,6 +9,8 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+   isDropdownOpen = false;
+  isNavOpen = false;
   loginForm!: FormGroup;
   hidePassword: boolean = true;
   message: string = '';
@@ -84,4 +86,13 @@ export class LoginComponent implements OnInit {
     this.message = 'Please fill in all required fields ❌';
   }
 }
+ onNavCheckChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isNavOpen = target.checked;
+    console.log('Hamburger menu toggled, nav open:', this.isNavOpen);
+    if (!this.isNavOpen) {
+      this.isDropdownOpen = false; 
+      console.log('Dropdown closed due to hamburger menu closing');
+    }
+  }
 }
