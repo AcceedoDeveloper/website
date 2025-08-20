@@ -1,112 +1,280 @@
-<app-footr></app-footr>
-<div class="form-container">
- 
+
+
+
+
+<app-loginheader></app-loginheader>
+
+
+
+<!-- Profile Edit Modal -->
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+
+
+  </div>
+</div>
+
+<div class="contains">
+
+
+  <aside class="sidebar">
+  <h3 class="menu-title">Menu</h3>
+  <ul class="menu-list">
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/register">User</a>
+      <a routerLink="/department">department</a>
+  <a routerLink="/role" >Role</a>
+<a routerLink="/create">create project</a>
+      
+      </div>
+    </div>
+    </li>
   
-  <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate class="two-column-form">
+    <li>
+     <a routerLink="/projects">Projects</a>
+    </li>
     
-    <h2 class="form-title">User Registration</h2>
-  <!-- Row 1 -->
-  <div class="form-row">
-    <div class="form-group">
-      <label>Employee First Name:</label>
-      <input type="text" name="Employee_firstName" [(ngModel)]="user.Employee_firstName" required #Employee_firstName="ngModel" />
-      <div *ngIf="Employee_firstName.invalid && Employee_firstName.touched" class="error">Employee firstName is required.</div>
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/webdev">webdev</a>
+  <a routerLink="/angulardeveloper">angular developer</a>
+  <a routerLink="/ngrx">NGRX</a>
+      
+      </div>
     </div>
+    </li>
+    <!-- Backend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+        <a routerLink="/node">node.js</a>
+     <a routerLink="/api&database">API & database</a>
+      </div>
+    </div>
+    </li>
+      <li>
+      <a href="#"> Full satck</a>
 
-    <div class="form-group">
-      <label>Employee Last Name:</label>
-      <input type="text" name="Employee_lastName" [(ngModel)]="user.Employee_lastName" required #Employee_lastName="ngModel" />
-      <div *ngIf="Employee_lastName.invalid && Employee_lastName.touched" class="error">Employee Last Name is required.</div>
-    </div>
-  </div>
+    </li>
+  </ul>
+  </aside>
 
-  <!-- Row 2 -->
-  <div class="form-row">
-    <div class="form-group">
-      <label>Email:</label>
-      <input type="email" name="email" [(ngModel)]="user.email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel" />
-      <div *ngIf="email.errors?.['required'] && email.touched" class="error">Email is required.</div>
-      <div *ngIf="email.errors?.['pattern'] && email.touched" class="error">Enter a valid email.</div>
-    </div> 
+  <!-- Main Content -->
+  <div class="maincontent">
+    
+       <!-- Welcome Header -->
+       <div class="welcome-card">
+         <div class="date-time">
+           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+           <!-- <span>{{ dateTime }}</span> -->
+         </div>
+         <div class="user-welcome">
+           <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+           <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
+         </div>
+       </div>
+   
+   <!-- Assigned Tasks Section -->
+     <div class="section-header">
+       <div class="createuser">
+       <h4>create user</h4>
+       <button mat-icon-button (click)="showcreateuserss()">
 
-    <div class="form-group">
-      <label>Mobile:</label>
-      <input type="tel" name="mobile" [(ngModel)]="user.mobile" required pattern="^[0-9]{10}$" #mobile="ngModel" />
-      <div *ngIf="mobile.errors?.['required'] && mobile.touched" class="error">Mobile number is required.</div>
-      <div *ngIf="mobile.errors?.['pattern'] && mobile.touched" class="error">Must be 10 digits.</div>
-    </div> 
-  </div>
+         <i  class="fa fa-plus add-task-icon" ></i>
+       </button>
+    
+     </div>
+     <!-- Filter Section -->
+<div class="filter-section">
+  <label for="filterRole">Filter by Role:</label>
+  <select id="filterRole">
+    <option value="">All Roles</option>
+    <option value="Developer">Developer</option>
+    <option value="Designer">Designer</option>
+    <option value="Tester">Tester</option>
+    <option value="Manager">Manager</option>
+  </select>
 
-  <!-- Row 3 -->
-  <div class="form-row">
-    <div class="form-group">
-      <label>Role:</label>
-      <input type="text" name="role" [(ngModel)]="user.role" required #role="ngModel" />
-      <div *ngIf="role.invalid && role.touched" class="error">Role is required.</div>
-    </div>
-
-    <div class="form-group">
-      <label>Username:</label>
-      <input type="text" name="username" [(ngModel)]="user.username" required #username="ngModel" />
-      <div *ngIf="username.invalid && username.touched" class="error">Username is required.</div>
-    </div>
-  </div>
-
-  <!-- Row 4 -->
-  <div class="form-row">
-  <!-- Password -->
-  <div class="form-group">
-    <label>Password:</label>
-    <div class="password-container">
-      <input
-        [type]="showPassword ? 'text' : 'password'"
-        name="password"
-        [(ngModel)]="user.password"
-        required
-        minlength="6"
-        #password="ngModel"
-      />
-      <span class="toggle-eye" (click)="showPassword = !showPassword">
-        {{ showPassword ? '' : '' }}
-      </span>
-    </div>
-    <div *ngIf="password.invalid && password.touched" style="color:red;">
-      Password is required (min 6 characters).
-    </div>
-  </div>
-
-  <!-- Confirm Password -->
-  <div class="form-group">
-    <label>Confirm Password:</label>
-    <div class="password-container">
-      <input
-        [type]="showConfirmPassword ? 'text' : 'password'"
-        name="confirmPassword"
-        [(ngModel)]="confirmPassword"
-        required
-        #confirmPasswordField="ngModel"
-      />
-      <span class="toggle-eye" (click)="showConfirmPassword = !showConfirmPassword">
-        {{ showConfirmPassword ? '' : '' }}
-      </span>
-    </div>
-    <div *ngIf="confirmPassword !== user.password && registerForm.submitted" style="color:red;">
-      Confirm Password does not match.
-    </div>
-  </div>
+  <label for="filterDate">Filter by Date:</label>
+  <input type="date" id="filterDate" />
+  
+  <button id="applyFilter">🔍 Apply Filter</button>
 </div>
 
-
-  <!-- Submit Button -->
-  <div class="form-row">
-    <button type="submit" [disabled]="registerForm.invalid || confirmPassword !== user.password">Register</button>
+     </div>
+ 
+<div class="">
+  <div class="showusers">
+    <table class="usershowtable" role="grid" aria-describedby="user-table-desc">
+      <thead>
+        <tr class="tableheader">
+          <th scope="col">Username</th>
+          <th scope="col">Department</th>
+          <th scope="col">Sub-Department</th>
+          <th scope="col">Role</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone Number</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of userdata; let i = index" role="row" class="tabledata">
+          <td>{{ item.userName || 'N/A' }}</td>
+        
+          <td>{{ item.department?.departmentName || 'N/A' }}</td>
+          <td>{{ item.subDepartment || item.department?.subDepartments?.[0]?.name || 'N/A' }}</td>
+          <td>{{ item.role?.role || 'N/A' }}</td>
+          <td>{{ item.emailId || 'N/A' }}</td>
+          <td>{{ item.phoneNumber || 'N/A' }}</td>
+          <td class="buttontable">
+            <button class="action-btn edit-btn" (click)="editUser(item)" >Edit</button>
+            <span class="action-divider">|</span>
+            <button class="action-btn delete-btn" (click)="deleteUser(item._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
-  <!-- Success Message -->
-  <div *ngIf="formSubmitted" style="color: green; margin-top: 10px;">
-    ✅ Registration successful!
-  </div>
-</form>
 </div>
+        
+   
+   
+   
+        
+         
+      
+       <!-- Modal Section (Outside of <section>) --> 
+       <!-- Hidden Checkbox to Control Modal -->
+       <input type="checkbox" id="modal-toggle" hidden />
+   
+       <!-- Modal -->
+        <!-- edit user Task Modal -->
+ 
+ 
 
-<app-footer></app-footer>
+ 
+
+     </div>
+   
+      </div>
+
+
+
+
+ 
+
+
+
+
+     
+   
+
+   
+  
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+ 
+   
+   
+   
+   
+ 
+
+   <app-footer></app-footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

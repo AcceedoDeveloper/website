@@ -1,0 +1,74 @@
+.main {
+  width: 90%;
+  height: 90%;
+  margin: 40px auto;
+  padding: 100px;
+  background-color: #fffdf9; /* soft beige */
+  border-radius: 12px;
+  font-family: 'Georgia', serif;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* Label */
+.user-role label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #3e4a3f; /* deep green-gray */
+  font-size: 14px;
+}
+
+/* Select dropdown */
+.user-role select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #c2b9a7;
+  background-color: #fffdf9;
+  font-size: 14px;
+  color: #2e3b2f;
+  transition: border-color 0.3s ease;
+}
+.user-role select:focus {
+  border-color: #4a7856;
+  outline: none;
+  box-shadow: 0 0 4px rgba(74, 120, 86, 0.4);
+}
+
+/* Buttons container */
+.buttons {
+  margin-top: 40px;
+  text-align: right;
+}
+
+/* Buttons */
+.buttons button {
+  padding: 8px 16px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Save button */
+.buttons button:first-child {
+  background-color: #4a7856; /* deep green */
+  color: #fff;
+}
+.buttons button:first-child:hover {
+  background-color: #2f5a3e;
+  transform: translateY(-2px);
+}
+
+/* Cancel button */
+.buttons button:last-child {
+  background-color: #b5a58a; /* muted gold-beige */
+  color: #fff;
+}
+.buttons button:last-child:hover {
+  background-color: #9d8b70;
+  transform: translateY(-2px);
+}

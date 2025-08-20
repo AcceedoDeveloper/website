@@ -1,0 +1,57 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <!-- User Code -->
+  <label>User Code:</label>
+  <input type="text" formControlName="userCode">
+
+  <!-- Name -->
+  <label>Name:</label>
+  <input type="text" formControlName="name">
+
+  <!-- Username -->
+  <label>Username:</label>
+  <input type="text" formControlName="userName">
+
+  <!-- Email -->
+  <label>Email:</label>
+  <input type="email" formControlName="emailId">
+
+  <!-- Password -->
+  <label>Password:</label>
+  <input type="password" formControlName="password">
+
+  <!-- Phone Number -->
+  <label>Phone Number:</label>
+  <input type="tel" formControlName="phoneNumber">
+
+  <!-- Role -->
+  <label>Role:</label>
+  <input list="rolesList" formControlName="role">
+  <datalist id="rolesList">
+    <option *ngFor="let r of roles" [value]="r.role"></option>
+  </datalist>
+
+  <!-- Department -->
+  <div formGroupName="department">
+    <label>Department:</label>
+    <input list="departmentsList" formControlName="departmentName" (change)="onDepartmentChange($event)">
+    <datalist id="departmentsList">
+      <option *ngFor="let d of departments" [value]="d.departmentName"></option>
+    </datalist>
+
+    <!-- SubDepartments -->
+    <div formArrayName="subDepartments">
+      <div *ngFor="let subDept of subDepartments.controls; let i = index" [formGroupName]="i">
+        <label>SubDepartment:</label>
+        <input list="subDepartmentsList" formControlName="name">
+        <datalist id="subDepartmentsList">
+          <option *ngFor="let sd of subDepartmentsData" [value]="sd.name"></option>
+        </datalist>
+        <!-- <button type="button" (click)="removeSubDepartment(i)"> Remove</button> -->
+      </div>
+      <!-- <button type="button" (click)="addSubDepartment()"> Add SubDepartment</button> -->
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="registerForm.invalid">Register</button>
+  <button type="button" (click)="cancel()">Cancel</button>
+</form>

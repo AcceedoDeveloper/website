@@ -1,0 +1,42 @@
+         
+       
+
+            <!-- showrole -->
+          <!-- <form #roledata="ngForm"  (ngSubmit)="getroledata(roledata.value)" class="main" method="get">
+         <div class="user-role">
+             <label for="role">Role</label>
+             <input type="text" placeholder="Enter the Role" id="role" name="role" ngModel required role="ngModel" >
+             <span *ngIf="roledata.invalid && roledata.touched " style= "display: block; color: red;" >Enter the Role</span>
+           </div>  -->
+
+
+           <!-- button -->
+
+          <!-- <div class="buttons">
+              
+          <button type="submit" [disabled]="roledata.invalid">Save</button>
+          <button type="button" (click)="resetForm()">Cancel</button>
+           </div>
+           
+           
+         </form>  -->
+
+
+      <form class="main" [formGroup]="roleform" (ngSubmit)="saveroledata()">
+           <div class="user-role">
+          <label for="role">Role</label>
+
+        <input type="text" placeholder="Enter the Role" id="role" name="role"  formControlName="role"  ><br>
+        <span *ngIf="vrole?.invalid && vrole?.touched" style="color: red;">Please enter role</span>
+
+           </div> 
+
+             <div class="buttons">
+              
+          <button type="submit" [disabled]="roleform.invalid">Save</button>
+          <button type="button" (click)="resetForm()">Cancel</button>
+           </div> 
+          
+
+         </form> 
+       

@@ -1,0 +1,468 @@
+
+
+
+<app-loginheader></app-loginheader>
+
+
+
+<!-- Profile Edit Modal -->
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+
+ <form class="grid-form">
+      <!-- Row 1 -->
+<!-- Combine First + Last Name in one grid cell -->
+<div class="form-group first-last-combined">
+  <label>First name:</label>
+  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
+
+  <label style="margin-top: 30px;">Last name:</label>
+  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
+</div>
+
+<!-- Profile remains as-is in the right cell -->
+<div class="form-group">
+ <div *ngIf="previewImage" class="profile-preview-wrapper">
+    <img [src]="previewImage" class="profile-preview-img" />
+  </div>
+  <input type="file" (change)="onPhotoSelected($event)" />
+  
+</div>
+
+
+ 
+
+      <!-- Row 3 -->
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="editUserData.email" name="email" />
+      </div>
+      <div class="form-group">
+        <label>User name:</label>
+        <input type="text" [(ngModel)]="editUserData.username" name="username" />
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-group">
+        <label>Mobile:</label>
+        <input type="text" [(ngModel)]="editUserData.mobile" name="mobile" />
+      </div>
+      <div class="form-group">
+        <label>Password:</label>
+        <input type="password" [(ngModel)]="editUserData.Password" name="Password" />
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-group">
+        <label>Role:</label>
+        <input type="text" [(ngModel)]="editUserData.role" name="role" />
+      </div>
+      <div></div>
+
+      <!-- Row 6: Buttons centered -->
+      <div class="form-buttons" style="grid-column: span 2;">
+        <button type="button" (click)="saveProfilePicture()">Save</button>
+        <button type="button" (click)="closeEditModal()">Cancel</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<div class="contains">
+
+
+  <aside class="sidebar">
+  <h3 class="menu-title">Menu</h3>
+  <ul class="menu-list">
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/register">User</a>
+  <a (click)="getrole()" routerLink="/role" >Role</a>
+
+      
+      </div>
+    </div>
+    </li>
+    <li><a routerLink="/create">create project</a></li>
+    <li>
+     <a routerLink="/projects">Projects</a>
+    </li>
+    
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/webdev">webdev</a>
+  <a routerLink="/angulardeveloper">angular developer</a>
+  <a routerLink="/ngrx">NGRX</a>
+      
+      </div>
+    </div>
+    </li>
+    <!-- Backend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+        <a routerLink="/node">node.js</a>
+     <a routerLink="/api&database">API & database</a>
+      </div>
+    </div>
+    </li>
+      <li>
+      <a href="#"> Full satck</a>
+
+    </li>
+  </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="maincontent">
+    
+       <!-- Welcome Header -->
+       <div class="welcome-card">
+         <div class="date-time">
+           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+           <span>{{ dateTime }}</span>
+         </div>
+
+        
+         <div class="user-welcome">
+           <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+           <p>webdev</p>
+           <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
+         </div>
+       </div>
+   
+ 
+ 
+<!-- blogger -->
+<div class="webdevblogger">
+
+    <div class="vision-section">
+        <div class="vision-content">
+            <h2 class="gradient-text">What is a web page?</h2>
+            <div class="quote">
+               <p>A web page is a digital canvas on the internet, showcasing text, images, videos, or buttons. It's what you see in browsers like Chrome or Safari.</p>
+                <strong>Example:</strong> The search bar and results on www.google.com are a web page.
+            </div>
+        </div>
+    </div>
+
+<div class="requirements-container">
+    <div class="section-header">
+        <h1>Requirements to Create a Web Page</h1>
+        <p>Everything you need to start building your first web page</p>
+    </div>
+    
+    <div class="slides-wrapper">
+        <div class="slides-track">
+            <div class="slide editor">
+                <div class="slide-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h2>Text Editor</h2>
+                <ul>
+                    <li>Notepad (Basic)</li>
+                    <li>Sublime Text</li>
+                    <li>VS Code (Recommended)</li>
+                </ul>
+            </div>
+            
+            <div class="slide languages">
+                <span class="essential-tag">Essential</span>
+                <div class="slide-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h2>Web Languages</h2>
+                <ul>
+                    <li>HTML for structure</li>
+                    <li>CSS for style</li>
+                    <li>JavaScript for interactivity</li>
+                </ul>
+            </div>
+            
+            <div class="slide browser">
+                <div class="slide-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h2>Web Browser</h2>
+                <ul>
+                    <li>Google Chrome</li>
+                    <li>Mozilla Firefox</li>
+                    <li>Safari</li>
+                </ul>
+            </div>
+            
+            <div class="slide computer">
+                <div class="slide-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <h2>Computer</h2>
+                <ul>
+                    <li>Any modern computer</li>
+                    <li>No internet needed</li>
+                    <li>Basic specs sufficient</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="creation-steps">
+    <div class="creation-header">
+        <h1>How to Create a Web Page ?</h1>
+        <p>Follow these simple steps to build your first web page from scratch:</p>
+    </div>
+    
+    <div class="steps-container">
+        <div class="step step-1">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2 class="step-title">Open your text editor</h2>
+            </div>
+            <div class="step-content">
+                <p>Begin by opening your preferred text editor. You can use basic editors like Notepad or more advanced ones like VS Code.</p>
+            </div>
+        </div>
+        
+        <div class="step-connector"></div>
+        
+        <div class="step step-2">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2 class="step-title">Write your HTML code</h2>
+            </div>
+            <div class="step-content">
+                <p>Create the structure of your web page using HTML. Start with basic tags like <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code>.</p>
+                <p>Example of basic HTML structure:</p>
+                  <div class="images-container">
+                <img src="/assets/html 1.png" alt="Basic HTML structure example"></div>
+            </div>
+        </div>
+        
+        <div class="step-connector"></div>
+        
+        <div class="step step-3">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2 class="step-title">Save and view your page</h2>
+            </div>
+            <div class="step-content">
+                <p>Save your file with a <code>.html</code> extension (e.g., <code>mypage.html</code>). Then open it in any web browser by double-clicking the file.</p>
+                <p>Congratulations! You've just created your first web page. You can now view it in any browser like Chrome, Firefox, or Safari.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-section highlight-section">
+    <h1>web Developer: <span class="highlight">like Building a Digital Human !!!</span></h1>
+    <div class="analogy-grid">
+        <div class="analogy-item">
+            <i class="fas fa-bone"></i>
+            <h3>HTML: The skeleton</h3>
+            <p>Provides the basic structure of your application</p>
+        </div>
+        <div class="analogy-item">
+            <i class="fas fa-tshirt"></i>
+            <h3>CSS: The style</h3>
+            <p>Adds visual appeal and design to your application</p>
+        </div>
+        <div class="analogy-item">
+            <i class="fas fa-running"></i>
+            <h3>JavaScript: The actions</h3>
+            <p>Enables interactivity and dynamic behavior</p>
+        </div>
+        <div class="analogy-item">
+            <i class="fas fa-brain"></i>
+            <h3>TypeScript: The brain</h3>
+            <p>Adds logic and intelligence to your application</p>
+        </div>
+        <div class="analogy-item">
+            <i class="fas fa-globe"></i>
+            <h3>Browser: The stage</h3>
+            <p>Where your application performs for users</p>
+        </div>
+    </div>
+</section>
+
+<div class="component-details">
+    <section class="component-section html-section">
+        <div class="component-header">
+            <div class="component-icon">
+                <i class="fas fa-bone"></i>
+            </div>
+            <h1>1. HTML – <span class="highlight">The Skeleton</span></h1>
+        </div>
+        <div class="component-content">
+            <p>HTML forms the structure of your web app, like a skeleton gives shape to a body. It defines the bones and framework that everything else builds upon.</p>
+            
+            <div class="component-features">
+                <ul>
+                    <li>Defines document structure</li>
+                    <li>Organizes content hierarchy</li>
+                    <li>Provides semantic meaning</li>
+                </ul>
+            </div>
+            
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+                <img src="/assets/html 2.png" alt="HTML example">
+            </div>
+            <p>The HTML code above creates the basic structure of a web page with a heading and paragraph.</p>
+        </div>
+    </section>
+
+    <section class="component-section css-section">
+        <div class="component-header">
+            <div class="component-icon">
+                <i class="fas fa-tshirt"></i>
+            </div>
+            <h1>2. CSS – <span class="highlight">The Style</span></h1>
+        </div>
+        <div class="component-content">
+            <p>CSS brings your app to life with colors, fonts, and layouts. It's like the skin and clothing that makes your digital human visually appealing.</p>
+            
+            <div class="component-features">
+                <ul>
+                    <li>Customize colors and fonts</li>
+                    <li>Style interactive buttons</li>
+                    <li>Create stunning visuals</li>
+                    <li>Responsive layouts</li>
+                </ul>
+            </div>
+            
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+                <img src="/assets/code 16.png" alt="CSS example">
+            </div>
+            <p>Now you're looking great, like a well-dressed developer!</p>
+        </div>
+    </section>
+
+    <section class="component-section js-section">
+        <div class="component-header">
+            <div class="component-icon">
+                <i class="fas fa-running"></i>
+            </div>
+            <h1>3. JavaScript – <span class="highlight">The Energy</span></h1>
+        </div>
+        <div class="component-content">
+            <p>JavaScript powers interactivity, like clicks and hover effects, making your app dynamic. It's the muscles that enable your digital human to move and interact.</p>
+            
+            <div class="component-features">
+                <ul>
+                    <li>Add fun interactions</li>
+                    <li>Make buttons responsive</li>
+                    <li>Handle user input</li>
+                    <li>Dynamic content updates</li>
+                </ul>
+            </div>
+            
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+                <img src="/assets/code 15.png" alt="JavaScript example">
+            </div>
+            <p>Now your app is full of life, like a dancer grooving on the stage, making everyone smile!</p>
+        </div>
+    </section>
+
+    <section class="component-section ts-section">
+        <div class="component-header">
+            <div class="component-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h1>4. TypeScript – <span class="highlight">The Brain</span></h1>
+        </div>
+        <div class="component-content">
+            <p>TypeScript, used in Angular, adds logic and smart reactions to your app. It's the brain that gives your digital human intelligence and decision-making capabilities.</p>
+            
+            <div class="component-features">
+                <ul>
+                    <li>Type safety and interfaces</li>
+                    <li>Better tooling support</li>
+                    <li>Enhanced code organization</li>
+                    <li>Advanced features like decorators</li>
+                </ul>
+            </div>
+            
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+                <img src="/assets/code 14.png" alt="TypeScript example">
+            </div>
+            <p>And connect it in your HTML:</p>
+            <div class="images-container">
+                <img src="/assets/html 3.png" alt="HTML connection example">
+            </div>
+            <p>Now your app comes to life with intelligence!</p>
+        </div>
+    </section>
+
+
+    <section class="component-section browser-section">
+        <div class="component-header">
+            <div class="component-icon">
+                <i class="fas fa-globe"></i>
+            </div>
+            <h1>5. The Browser – <span class="highlight">The Stage</span></h1>
+        </div>
+        <div class="component-content">
+            <p>Your app performs in the browser, bringing HTML, CSS, and TypeScript together. This is the stage where your digital human comes alive for the world to see.</p>
+            
+            <div class="component-features">
+                <ul>
+                    <li>Renders your application</li>
+                    <li>Executes JavaScript</li>
+                    <li>Provides developer tools</li>
+                    <li>Handles network requests</li>
+                </ul>
+            </div>
+            
+            <div class="browser-demo">
+                <div class="browser-header">
+                    <div class="browser-controls">
+                        <span class="browser-dot red"></span>
+                        <span class="browser-dot yellow"></span>
+                        <span class="browser-dot green"></span>
+                    </div>
+                </div>
+                <div class="browser-content">
+                    <h3>Your web App Lives Here</h3>
+                    <p>All your components work together to create an amazing user experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+</div>
+
+     </div>
+   
+      </div>
+
+
+
+
+    <app-footer></app-footer>
+
+
+
+
+
+
+
+
+
+
+

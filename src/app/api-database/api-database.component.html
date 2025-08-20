@@ -1,0 +1,384 @@
+
+
+<app-loginheader></app-loginheader>
+
+
+<!-- Profile Edit Modal -->
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+
+ <form class="grid-form">
+      <!-- Row 1 -->
+<!-- Combine First + Last Name in one grid cell -->
+<div class="form-group first-last-combined">
+  <label>First name:</label>
+  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
+
+  <label style="margin-top: 30px;">Last name:</label>
+  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
+</div>
+
+<!-- Profile remains as-is in the right cell -->
+<div class="form-group">
+ <div *ngIf="previewImage" class="profile-preview-wrapper">
+    <img [src]="previewImage" class="profile-preview-img" />
+  </div>
+  <input type="file" (change)="onPhotoSelected($event)" />
+  
+</div>
+
+
+ 
+
+      <!-- Row 3 -->
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="editUserData.email" name="email" />
+      </div>
+      <div class="form-group">
+        <label>User name:</label>
+        <input type="text" [(ngModel)]="editUserData.username" name="username" />
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-group">
+        <label>Mobile:</label>
+        <input type="text" [(ngModel)]="editUserData.mobile" name="mobile" />
+      </div>
+      <div class="form-group">
+        <label>Password:</label>
+        <input type="password" [(ngModel)]="editUserData.Password" name="Password" />
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-group">
+        <label>Role:</label>
+        <input type="text" [(ngModel)]="editUserData.role" name="role" />
+      </div>
+      <div></div>
+
+      <!-- Row 6: Buttons centered -->
+      <div class="form-buttons" style="grid-column: span 2;">
+        <button type="button" (click)="saveProfilePicture()">Save</button>
+        <button type="button" (click)="closeEditModal()">Cancel</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<div class="contains">
+
+
+  <aside class="sidebar">
+  <h3 class="menu-title">Menu</h3>
+  <ul class="menu-list">
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/register">User</a>
+      <a routerLink="/department">department</a>
+  <a (click)="getrole()" routerLink="/role" >Role</a>
+
+      
+      </div>
+    </div>
+    </li>
+    <li><a routerLink="/create">create project</a></li>
+    <li>
+     <a routerLink="/projects">Projects</a>
+    </li>
+    
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/webdev">webdev</a>
+  <a routerLink="/angulardeveloper">angular developer</a>
+  <a routerLink="/ngrx">NGRX</a>
+      
+      </div>
+    </div>
+    </li>
+    <!-- Backend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+        <a routerLink="/node">node.js</a>
+     <a routerLink="/api&database">API & database</a>
+      </div>
+    </div>
+    </li>
+      <li>
+      <a href="#"> Full satck</a>
+
+    </li>
+  </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="maincontent">
+    
+       <!-- Welcome Header -->
+       <div class="welcome-card">
+         <div class="date-time">
+           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+           <span>{{ dateTime }}</span>
+         </div>
+         <div class="user-welcome">
+           <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+           <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
+         </div>
+       </div>
+    
+ 
+<!-- blogger -->
+
+ <main class="apibloger">
+<!-- API Concepts Card -->
+<div class="content-card">
+    <div class="card-header">API Concepts</div>
+    <div class="card-body">
+        <h2>🌐 What is an API?</h2>
+        <p><span class="highlight">API stands for Application Programming Interface.</span></p>
+        <p><span class="highlight">An API allows two programs or systems to communicate with each other.</span></p>
+        <img src="/assets/api.png" alt="api" class="img img--code">
+
+        <div class="info-box">
+            <div class="info-box-title">Simple Example:</div>
+            <p><strong>Imagine you're at a restaurant:</strong></p>
+            <ul>
+                <li><strong>You = Client (frontend)</strong></li>
+                <li><strong>Waiter = API (messenger)</strong></li>
+                <li><strong>Kitchen = Server (backend/database)</strong></li>
+            </ul>
+            <p>You tell the waiter what you want (a request), and the waiter brings you the food (a response). You don't need to know how the food is made — just order and receive.</p>
+        </div>
+
+        <h3>✅ What Does an API Do?</h3>
+        <ul>
+            <li><strong>Sends data from frontend to backend</strong></li>
+            <li><strong>Gets data from a server</strong></li>
+            <li><strong>Updates or deletes info from a database</strong></li>
+        </ul>
+
+        <h3>📦 Common Types of APIs</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>REST API</strong></td>
+                        <td><strong>Simple, uses HTTP methods (GET, POST, PUT, DELETE)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>GraphQL API</strong></td>
+                        <td><strong>Flexible, ask only for the data you need</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>WebSocket API</strong></td>
+                        <td><strong>For real-time data (like chat apps)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>💻 REST API Methods (CRUD Style)</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Meaning</th>
+                        <th>Example URL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>GET</strong></td>
+                        <td><strong>Read</strong></td>
+                        <td><strong>/users</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>POST</strong></td>
+                        <td><strong>Create</strong></td>
+                        <td><strong>/users</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>PUT</strong></td>
+                        <td><strong>Update</strong></td>
+                        <td><strong>/users/1</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>DELETE</strong></td>
+                        <td><strong>Delete</strong></td>
+                        <td><strong>/users/1</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>🧪 Sample API Request</h3>
+        <p>Using JavaScript (frontend) to call a backend API:</p>
+        <img src="/assets/node5.png" alt="node5" class="img img--code">
+        
+        <h3>📍 Example Response (from server)</h3>
+        <img src="/assets/node6.png" alt="node6" class="img img--code">
+
+        <h3>🧰 Tools to Work with APIs:</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tools</th>
+                        <th>functionality</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>postman</strong></td>
+                        <td><strong>test APIs manually</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>curl</strong></td>
+                        <td><strong>command-line tool to call APIs</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Axios / Fetch</strong></td>
+                        <td><strong>JS libraries to call APIs in frontend</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Swagger</strong></td>
+                        <td><strong>auto-document APIs</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Postman Card -->
+<div class="content-card">
+    <div class="card-header">Postman</div>
+    <div class="card-body">
+        <h2>🚀 What is Postman?</h2>
+        <p><span class="highlight">Postman</span> is a <span class="highlight">free tool</span> used to <span class="highlight">test APIs</span> (like your Node.js CRUD app). It helps you send <span class="highlight">HTTP requests</span> (GET, POST, PUT, DELETE) to your server and view the response easily.</p>
+        
+        <h3>✅ Why Use Postman?</h3>
+        <ul>
+            <li>Test backend APIs (without writing frontend code)</li>
+            <li>Send data in JSON format</li>
+            <li>Check responses (status, body, headers)</li>
+            <li>Simulate real-world API calls</li>
+            <li>Automate and save API requests for later</li>
+        </ul>
+
+        <h3>postman's tools supports every stage of the API cycle: faster and easier API development without chaos</h3>
+        <img src="/assets/node6.png" alt="postman" class="img img--code">
+
+        <h3>🧰 How to Use Postman for CRUD in Node.js</h3>
+        <ol>
+            <li><strong>Install Postman:</strong>
+                <p>Go to 👉 <a href="https://www.postman.com/downloads" target="_blank" class="button">Postman Downloads</a></p>
+            </li>
+            <li><strong>Start Your Node.js Server</strong>
+                <p>Make sure it's running on http://localhost:3000</p>
+                <img src="/assets/node7.png" alt="node7" class="img img--code">
+            </li>
+        </ol>
+
+        <div class="info-box">
+            <div class="info-box-title">Postman Tips:</div>
+            <ul>
+                <li>Use the <strong>"Save"</strong> button to save requests.</li>
+                <li>Use <strong>Collections</strong> to group related requests.</li>
+                <li>You can even automate testing with <strong>Test scripts</strong> (advanced).</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- MongoDB Card -->
+<div class="content-card">
+    <div class="card-header">MongoDB</div>
+    <div class="card-body">
+        <h2>🌱 What is MongoDB?</h2>
+        <p><span class="highlight">MongoDB is a NoSQL database where data is stored in JSON-like documents (not tables like in MySQL).</span></p>
+        <img src="/assets/Mongo-DB.jpg" alt="mongodb" class="img img--code">
+        <p><strong>It's:</strong></p>
+        <ul>
+            <li><strong>Flexible</strong></li>
+            <li><strong>Fast</strong></li>
+            <li><strong>Easy to scale</strong></li>
+            <li><strong>Perfect for Node.js apps</strong></li>
+        </ul>
+
+        <h3>✅ Key Features</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>NoSQL</strong></td>
+                        <td><strong>Stores data as documents, not tables</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>JSON-like syntax</strong></td>
+                        <td><strong>Data is stored as BSON (like JSON)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Schema-less</strong></td>
+                        <td><strong>You can store any structure</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>High performance</strong></td>
+                        <td><strong>Good for large data and fast apps</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>🗃 Example Document in MongoDB</h3>
+        <img src="/assets/node8.png" alt="node8" class="img img--code">
+        
+        <p>This is stored inside a collection, which is like a table. Many collections are grouped into a database.</p>
+
+        <h3>🧰 How to Install MongoDB</h3>
+        <p><strong>Install on Your Computer</strong></p>
+        <ol>
+            <li>Go to 👉 <a href="https://www.mongodb.com/try/download/community" target="_blank" class="button">MongoDB Community Download</a></li>
+            <li>Download MongoDB Community Server</li>
+            <li>Install with default settings</li>
+        </ol>
+        <p>Then, start MongoDB using:</p>
+        <img src="/assets/node9.png" alt="node9" class="img img--code">
+    </div>
+</div>
+</main>
+
+
+     </div>
+ 
+      </div>
+
+
+
+<app-footer></app-footer>

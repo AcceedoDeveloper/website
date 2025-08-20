@@ -1,0 +1,62 @@
+<div class="userdata">
+  <form [formGroup]="dmform" (ngSubmit)="savedmdata()">
+    <!-- Department Input -->
+    <label for="department">{{ isEdit ? 'Edit Department' : 'Department' }}:</label>
+    <input 
+      type="text" 
+      id="department"
+      placeholder="Enter department" 
+      formControlName="departmentName">
+    <div *ngIf="dmform.get('departmentName')?.hasError('required') && dmform.get('departmentName')?.touched" style="color: red;">
+      Department name is required.
+    </div>
+    <div *ngIf="dmform.get('departmentName')?.hasError('pattern') && dmform.get('departmentName')?.touched" style="color: red;">
+      Department name can only contain letters, numbers, and spaces (max 50 characters).
+    </div>
+    <div *ngIf="dmform.get('departmentName')?.hasError('minlength') && dmform.get('departmentName')?.touched" style="color: red;">
+      Department name must be at least 1 character.
+    </div>
+
+    <!-- Subdepartment Inputs -->
+    <div class="createdeptsubdept" formArrayName="subDepartments">
+      <label>Subdepartments:</label>
+      <div *ngFor="let sub of name.controls; let i = index" [formGroupName]="i" class="input-icon-container">
+        <input 
+          type="text" 
+          placeholder="Enter subdepartment"
+          formControlName="name"
+          class="subdepartment-input">
+        <button 
+          type="button" 
+          (click)="removeSubDepartment(i)" 
+          class="remove-subdepartment-btn" 
+          aria-label="Remove subdepartment"
+          [disabled]="name.length === 1 && !isEdit">
+          <i class="fa fa-minus" style="color: red;"></i>
+        </button>
+        <div *ngIf="sub.get('name')?.hasError('required') && sub.get('name')?.touched" style="color: red;">
+          Subdepartment name is required.
+        </div>
+        <div *ngIf="sub.get('name')?.hasError('pattern') && sub.get('name')?.touched" style="color: red;">
+          Subdepartment name can only contain letters, numbers, and spaces (max 50 characters).
+        </div>
+        <div *ngIf="sub.get('name')?.hasError('minlength') && sub.get('name')?.touched" style="color: red;">
+          Subdepartment name must be at least 1 character.
+        </div>
+      </div>
+      <button 
+        type="button" 
+        (click)="addSubDepartment()" 
+        class="add-subdepartment-btn" 
+        aria-label="Add subdepartment">
+        <i class="fa fa-plus" style="color: red;"></i> Add Subdepartment
+      </button>
+    </div>
+
+    <!-- Form Buttons -->
+    <div class="createdeptsubdeptbutton">
+      <button type="submit">{{ isEdit ? 'Update' : 'Save' }}</button>
+      <button type="button" (click)="createcancel()">Cancel</button>
+    </div>
+  </form>
+</div>

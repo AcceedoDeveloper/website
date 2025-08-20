@@ -63,7 +63,20 @@ import { HttpservicesComponent } from './httpservices/httpservices.component';
 import { FilterPipe } from './filter.pipe';
 import { CreateprojectComponent } from './createproject/createproject.component';
 import { ProjectsComponent } from './projects/projects.component';
-
+import { RoleComponent } from './role/role.component';
+import { NgrxComponent } from './ngrx/ngrx.component';
+import { WebdevComponent } from './webdev/webdev.component';
+import { MatDialogModule } from '@angular/material/dialog'; // ✅ Added for mat-dialog-content
+import { MatInputModule } from '@angular/material/input';
+import { NodeComponent } from './node/node.component';
+import { ApiDatabaseComponent } from './api-database/api-database.component';
+import { AngularDeveloperComponent } from './angular-developer/angular-developer.component';
+import { LoginheaderComponent } from './loginheader/loginheader.component';
+import { DepartmentComponent } from './department/department.component';
+import { DepartmentDialogComponent } from './department/department-dialog/department-dialog.component';
+import { RoledialogComponent } from './role/roledialog/roledialog.component';
+import { HttpClientModule } from '@angular/common/http';
+import { RegistermatComponent } from './register/registermat/registermat.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -101,7 +114,20 @@ import { ProjectsComponent } from './projects/projects.component';
     FilterPipe,
     CreateprojectComponent,
     ProjectsComponent,
+    RoleComponent,
+    NgrxComponent,
+    WebdevComponent,
+
+    NodeComponent,
+    ApiDatabaseComponent,
+    AngularDeveloperComponent,
+    LoginheaderComponent,
+    DepartmentComponent,
+   DepartmentDialogComponent,
+   RoledialogComponent,
+   RegistermatComponent
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -110,6 +136,8 @@ import { ProjectsComponent } from './projects/projects.component';
     FormsModule,            // ✅ Required for ngModel
     ReactiveFormsModule,    // ✅ For reactive forms (if needed)
     MatIconModule,
+    MatDialogModule, // ✅ Added for dialog directives
+    MatInputModule,
     MatCardModule,
     MatGridListModule,
     MatToolbarModule,
@@ -117,13 +145,17 @@ import { ProjectsComponent } from './projects/projects.component';
     MatButtonModule,
     MatListModule,
     CarouselModule,
-
+ MatIconModule,
+ FormsModule,
+ HttpClientModule,
     // ✅ Firebase Initialization
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+
+  
 })
 export class AppModule {}

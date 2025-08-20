@@ -1,0 +1,351 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<app-loginheader></app-loginheader>
+
+
+
+
+
+
+<!-- Profile Edit Modal -->
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+
+ <form class="grid-form">
+      <!-- Row 1 -->
+<!-- Combine First + Last Name in one grid cell -->
+<div class="form-group first-last-combined">
+  <label>First name:</label>
+  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
+
+  <label style="margin-top: 30px;">Last name:</label>
+  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
+</div>
+
+<!-- Profile remains as-is in the right cell -->
+<div class="form-group">
+ <div *ngIf="previewImage" class="profile-preview-wrapper">
+    <img [src]="previewImage" class="profile-preview-img" />
+  </div>
+  <input type="file" (change)="onPhotoSelected($event)" />
+  
+</div>
+
+
+ 
+
+      <!-- Row 3 -->
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="editUserData.email" name="email" />
+      </div>
+      <div class="form-group">
+        <label>User name:</label>
+        <input type="text" [(ngModel)]="editUserData.username" name="username" />
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-group">
+        <label>Mobile:</label>
+        <input type="text" [(ngModel)]="editUserData.mobile" name="mobile" />
+      </div>
+      <div class="form-group">
+        <label>Password:</label>
+        <input type="password" [(ngModel)]="editUserData.Password" name="Password" />
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-group">
+        <label>Role:</label>
+        <input type="text" [(ngModel)]="editUserData.role" name="role" />
+      </div>
+      <div></div>
+
+      <!-- Row 6: Buttons centered -->
+      <div class="form-buttons" style="grid-column: span 2;">
+        <button type="button" (click)="saveProfilePicture()">Save</button>
+        <button type="button" (click)="closeEditModal()">Cancel</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<div class="contains">
+
+  <aside class="sidebar">
+  <h3 class="menu-title">Menu</h3>
+  <ul class="menu-list">
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/register">User</a>
+      <a routerLink="/department">department</a>
+  <a (click)="getrole()" routerLink="/role" >Role</a>
+
+      
+      </div>
+    </div>
+    </li>
+    <li><a routerLink="/create">create project</a></li>
+    <li>
+     <a routerLink="/projects">Projects</a>
+    </li>
+    
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/webdev">webdev</a>
+  <a routerLink="/angulardeveloper">angular developer</a>
+  <a routerLink="/ngrx">NGRX</a>
+      
+      </div>
+    </div>
+    </li>
+    <!-- Backend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+        <a routerLink="/node">node.js</a>
+     <a routerLink="/api&database">API & database</a>
+      </div>
+    </div>
+    </li>
+      <li>
+      <a href="#"> Full satck</a>
+
+    </li>
+  </ul>
+  </aside>
+
+  
+
+  <!-- Main Content -->
+  <div class="maincontent">
+    
+       <!-- Welcome Header -->
+       <div class="welcome-card">
+         <div class="date-time">
+           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+           <span>{{ dateTime }}</span>
+         </div>
+         <div class="user-welcome">
+           <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+           <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
+         </div>
+       </div>
+   
+
+    
+ 
+<!-- blogger -->
+
+  <div class="heat-treatment-monitor">
+  <header>
+            <h1>NgRx - State Management for Angular</h1>
+          
+        </header>
+ <div class="ngrxcontainer">
+       
+
+
+
+<div class="card-grid">
+            <div class="card">
+    
+            <h2> NgRx State Management</h2>
+        <div class="component-content">
+            <div class="purpose">NgRx is RxJS powered global state management for Angular applications, inspired by Redux. It's a controlled state container designed to help write performant, consistent applications on top of Angular.</div>
+            
+             <div class="key-points">
+                <ul>
+                    <li>Centralized application state</li>
+                    <li>Predictable state container</li>
+                    <li>Inspired by Redux pattern</li>
+                    <li>Reactive programming with RxJS</li>
+                </ul>
+            </div>
+            
+            <div class="ngrx-image-container">
+                <img src="/assets/NGRX.png" alt="NgRx Store Diagram" class="ngrx-store-image">
+                <div class="ngrx-caption">NgRx State Management Flow</div>
+            </div>
+            </div>
+        </div>
+    
+</div>
+
+         
+
+        <div class="card-grid">
+            <div class="card">
+                <h2><span>1</span>Actions</h2>
+                <div class="purpose">Define events that can change the state</div>
+                <img src="/assets/ng1.png" alt="ng1" class="ngrx-code-image">
+ 
+                <div class="key-points">
+                    <h3>Key Points:</h3>
+                    <ul>
+                        <li>Each action is like a message that says "this thing happened"</li>
+                        <li>The format <code>[Source] Event</code> helps with debugging</li>
+                        <li>Components or effects dispatch these actions</li>
+                        <li>No logic here - just declarations of what can happen</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span>2</span>Reducer</h2>
+                <div class="purpose">Pure function that determines how state changes</div>
+                <img src="/assets/ng2.png" alt="ng2" class="ngrx-code-image">
+ 
+ 
+                <div class="key-points">
+                    <h3>Key Points:</h3>
+                    <ul>
+                        <li>Reducers must be pure functions (no side effects)</li>
+                        <li>They take current state and return new state</li>
+                        <li>The <code>on()</code> function associates actions with state changes</li>
+                        <li>Initial state defines the starting value (0)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span>3</span>Selectors</h2>
+                <div class="purpose">Efficiently get specific pieces of state</div>
+                  <img src="/assets/ng3.png" alt="ng3" class="ngrx-code-image">
+                <div class="key-points">
+                    <h3>Why Use Selectors:</h3>
+                    <ul>
+                        <li>Avoid duplicating state access logic</li>
+                        <li>Memoization (cache results until inputs change)</li>
+                        <li>Can compose selectors together</li>
+                        <li>Keep component code clean</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span>4</span>Store Registration</h2>
+            <div class="purpose">Make the store available throughout the app</div>
+            <img src="/assets/ng4.png" alt="ng4" class="ngrx-code-image">
+            <div class="key-points">
+                <h3>What Happens:</h3>
+                <ul>
+                    <li>The reducer is registered with the global store</li>
+                    <li>The state will be accessible at <code>state.counter</code></li>
+                    <li><code>forRoot()</code> sets up the store for the entire app</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="counter-demo">
+            <h2>Counter Demo</h2>
+            <div class="counter-label">Current Value</div>
+            <div class="counter-value">0</div>
+           <div class="counter-actions">
+                <button class="btn btn-increment">Increment</button>
+                <button class="btn btn-decrement">Decrement</button>
+                <button class="btn btn-reset">Reset</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span>5</span>Component Implementation</h2>
+            <div class="purpose">Display and interact with the counter state</div>
+
+            <div class="key-points">
+                <h3>Component Breakdown:</h3>
+                <ul>
+                    <li><strong>State Access:</strong> <code>store.select()</code> gets current value</li>
+                    <li><strong>State Modification:</strong> Methods dispatch actions</li>
+                    <li><strong>Data Flow:</strong> User action → dispatch → reducer → store → selector → component</li>
+                    <li><strong>Async Pipe:</strong> Automatically handles subscriptions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <h2>Complete NgRx Lifecycle</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">User clicks button → Component dispatches Action</div>
+                    <div class="arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Action → Reducer processes it → Updates Store state</div>
+                    <div class="arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">Store → Notifies Selectors → Component receives new state</div>
+                    <div class="arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">Component re-renders with updated values</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+
+
+     </div>
+   
+   
+
+   
+ 
+   
+ 
+  
+   
+   
+      </div>
+
+
+     <app-footer></app-footer>

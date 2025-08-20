@@ -1,0 +1,178 @@
+/* General form styling with light blue palette */
+form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #E6F0FA; /* Light blue background */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Label styling */
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2C5282; /* Darker blue for text */
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Input fields */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #4A90E2; /* Primary blue border */
+  border-radius: 4px;
+  background-color: #D1E3F6; /* Light blue input background */
+  color: #2C5282;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #2C5282; /* Darker blue on focus */
+  background-color: #F7FAFC; /* Slightly lighter background on focus */
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Subtle blue glow */
+}
+
+/* Datalist input styling */
+input[list] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #4A90E2;
+  border-radius: 4px;
+  background-color: #D1E3F6;
+  color: #2C5282;
+  font-size: 14px;
+}
+
+input[list]:focus {
+  outline: none;
+  border-color: #2C5282;
+  background-color: #F7FAFC;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Department group styling */
+div[formGroupName="department"] {
+  padding: 15px;
+  background-color: #F7FAFC; /* Slightly lighter blue background for nested group */
+  border: 1px solid #4A90E2;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+/* SubDepartments FormArray styling */
+div[formArrayName="subDepartments"] {
+  margin-top: 10px;
+}
+
+div[formArrayName="subDepartments"] > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+div[formArrayName="subDepartments"] label {
+  flex: 0 0 120px;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"] {
+  background-color: #4A90E2; /* Primary blue */
+  color: white;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #2C5282; /* Darker blue on hover */
+}
+
+button[type="submit"]:disabled {
+  background-color: #A3BFFA; /* Lighter blue when disabled */
+  cursor: not-allowed;
+}
+
+button[type="button"] {
+  background-color: #E6F0FA; /* Light blue background */
+  color: #2C5282;
+  border: 1px solid #4A90E2;
+}
+
+button[type="button"]:hover {
+  background-color: #D1E3F6; /* Slightly darker blue on hover */
+}
+
+/* Add/Remove SubDepartment buttons */
+button[ng-reflect-type="button"] {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+button[ng-reflect-type="button"]:first-of-type {
+  background-color: #E53E3E; /* Red for remove button */
+  color: white;
+}
+
+button[ng-reflect-type="button"]:first-of-type:hover {
+  background-color: #C53030; /* Darker red on hover */
+}
+
+button[ng-reflect-type="button"]:last-of-type {
+  background-color: #38A169; /* Green for add button */
+  color: white;
+}
+
+button[ng-reflect-type="button"]:last-of-type:hover {
+  background-color: #2F855A; /* Darker green on hover */
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  form {
+    padding: 15px;
+  }
+
+  label {
+    font-size: 12px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[list] {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  div[formArrayName="subDepartments"] > div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  div[formArrayName="subDepartments"] label {
+    flex: none;
+  }
+}

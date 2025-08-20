@@ -1,0 +1,370 @@
+
+
+
+
+<app-loginheader></app-loginheader>
+
+
+
+<!-- Profile Edit Modal -->
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-content">
+    <h3>Edit Profile</h3>
+
+ <form class="grid-form">
+      <!-- Row 1 -->
+<!-- Combine First + Last Name in one grid cell -->
+<div class="form-group first-last-combined">
+  <label>First name:</label>
+  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
+
+  <label style="margin-top: 30px;">Last name:</label>
+  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
+</div>
+
+<!-- Profile remains as-is in the right cell -->
+<div class="form-group">
+ <div *ngIf="previewImage" class="profile-preview-wrapper">
+    <img [src]="previewImage" class="profile-preview-img" />
+  </div>
+  <input type="file" (change)="onPhotoSelected($event)" />
+  
+</div>
+
+
+ 
+
+      <!-- Row 3 -->
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" [(ngModel)]="editUserData.email" name="email" />
+      </div>
+      <div class="form-group">
+        <label>User name:</label>
+        <input type="text" [(ngModel)]="editUserData.username" name="username" />
+      </div>
+
+      <!-- Row 4 -->
+      <div class="form-group">
+        <label>Mobile:</label>
+        <input type="text" [(ngModel)]="editUserData.mobile" name="mobile" />
+      </div>
+      <div class="form-group">
+        <label>Password:</label>
+        <input type="password" [(ngModel)]="editUserData.Password" name="Password" />
+      </div>
+
+      <!-- Row 5 -->
+      <div class="form-group">
+        <label>Role:</label>
+        <input type="text" [(ngModel)]="editUserData.role" name="role" />
+      </div>
+      <div></div>
+
+      <!-- Row 6: Buttons centered -->
+      <div class="form-buttons" style="grid-column: span 2;">
+        <button type="button" (click)="saveProfilePicture()">Save</button>
+        <button type="button" (click)="closeEditModal()">Cancel</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<div class="contains">
+
+
+  <aside class="sidebar">
+  <h3 class="menu-title">Menu</h3>
+  <ul class="menu-list">
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/register">User</a>
+     <a routerLink="/department">department</a>
+  <a (click)="getrole()" routerLink="/role" >Role</a>
+
+      
+      </div>
+    </div>
+    </li>
+    <li><a routerLink="/create">create project</a></li>
+    <li>
+     <a routerLink="/projects">Projects</a>
+    </li>
+    
+    <!-- Frontend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+     <a routerLink="/webdev">webdev</a>
+  <a routerLink="/angulardeveloper">angular developer</a>
+  <a routerLink="/ngrx">NGRX</a>
+      
+      </div>
+    </div>
+    </li>
+    <!-- Backend with subdivisions -->
+     <li>
+    <div class="menu-section">
+      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
+      <div class="submenu">
+        <a routerLink="/node">node.js</a>
+     <a routerLink="/api&database">API & database</a>
+      </div>
+    </div>
+    </li>
+      <li>
+      <a href="#"> Full satck</a>
+
+    </li>
+  </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="maincontent">
+    
+       <!-- Welcome Header -->
+       <div class="welcome-card">
+         <div class="date-time">
+           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+           <span>{{ dateTime }}</span>
+         </div>
+         <div class="user-welcome">
+           <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+           <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
+         </div>
+       </div>
+   
+ 
+ 
+<!-- blogger -->
+<main class="nodecontainer">
+
+    <!-- Animated Title Container -->
+    <div class="title-container">
+        <div class="title-content">
+            <h1>Backend developer</h1>
+            <strong><p>A Backend Developer designs and builds the server-side logic, databases, and APIs that power web applications. They ensure efficient data handling, security, and integration with frontend systems.</p></strong>
+        </div>
+        <div class="title-image">
+            <div class="floating-img-container">
+                <img src="/assets/jss.jpg" alt="Node.js Logo" class="floating-img">
+                <div class="floating-dots">
+                    <div class="dot dot-1"></div>
+                    <div class="dot dot-2"></div>
+                    <div class="dot dot-3"></div>
+                    <div class="dot dot-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <div class="content-card">
+            <div class="card-header">Introduction to Node.js</div>
+            <div class="card-body">
+                <p><span class="highlight">Node.js</span> is a <span class="highlight">JavaScript runtime environment</span> that lets you run JavaScript code <span class="highlight">outside a web browser</span> — mainly used to build backend (server-side) applications.</p>
+                
+                <div class="info-box">
+                    <div class="info-box-title">Think of it like this:</div>
+                    <p>When you use JavaScript in a browser, it's for things like clicking buttons or changing webpage content. But with Node.js, you can use JavaScript to:</p>
+                    <ul>
+                        <li>Create web servers</li>
+                        <li>Read/write files</li>
+                        <li>Connect to databases</li>
+                        <li>Build APIs</li>
+                        <li>Handle user requests</li>
+                    </ul>
+                </div>
+
+                <h3>✅ Why use Node.js?</h3>
+                <ul>
+                    <li><strong>Fast</strong> — Uses Google's V8 JavaScript engine</li>
+                    <li><strong>Single language (JavaScript)</strong> — No need to switch between frontend and backend languages</li>
+                    <li><strong>Non-blocking I/O</strong> — Handles many users at once without getting slow</li>
+                    <li><strong>Huge library support</strong> — Thanks to npm (Node Package Manager)</li>
+                </ul>
+
+                <h3>📦 Example: Simple Web Server in Node.js</h3>
+                <img src="/assets/node1.png" alt="node1" class="img img--code">
+                
+                <h3>🔧 Common Use Cases:</h3>
+                <ul>
+                    <li>Real-time chat apps</li>
+                    <li>REST APIs</li>
+                    <li>File upload/download</li>
+                    <li>IoT (Internet of Things) applications</li>
+                    <li>Backend for mobile apps</li>
+                </ul>
+
+                <h3>How to install Node.js?</h3>
+                <p>Download from the official website: <a href="https://nodejs.org" target="_blank" class="button">Node.js Official Site</a></p>
+
+                <h3>popular websites use node.js :</h3>
+                <img src="/assets/node.js-websites.png" alt="websites" class="img img--code">
+            </div>
+        </div>
+
+<!-- Added Express.js Documentation Here -->
+        <div class="content-card">
+            <div class="card-header">Express.js Framework</div>
+            <div class="card-body">
+                <div class="express-container">
+                    <div class="express-card">
+                        <h2 class="express-card__heading">What is Express.js?</h2>
+                        <ul class="express-list">
+                            <li class="express-list__item">Express.js is a web application framework for Node.js.</li>
+                            <li class="express-list__item">It simplifies the process of building server-side applications.</li>
+                            <li class="express-list__item">Known for its speed, minimalism, and flexibility.</li>
+                        </ul>
+                         <img src="/assets/expfeature.png" alt="exp" class="img img--code">
+                    </div>
+                    
+                    <div class="express-card">
+                        <h2 class="express-card__heading">Why Use Express.js?</h2>
+                        <ul class="express-list">
+                            <li class="express-list__item">Handles HTTP requests and responses.</li>
+                            <li class="express-list__item">Simplifies routing, middleware, and server creation.</li>
+                            <li class="express-list__item">Can be used to build RESTful APIs, websites, and single-page applications.</li>
+                        </ul>
+<img src="/assets/advexp.png" alt="expadv" class="img img--code">
+
+                    </div>
+                    
+                    <div class="express-card">
+                        <h2 class="express-card__heading">Core Concepts</h2>
+                        
+                        <h3 class="express-card__subheading">1. Creating an Express Server</h3>
+                        <img src="/assets/expcode1.png" alt="expcode1" class="img img--code">  
+                        
+                        <h3 class="express-card__subheading">2. Routing</h3>
+                       <img src="/assets/expcode2.png" alt="expcode2" class="img img--code">  
+                        
+                        
+                        <h3 class="express-card__subheading">3. Middleware</h3>
+                        <p>Middleware are functions that run between the request and the response.</p>
+                       <img src="/assets/c3.png" alt="code3" class="img img--code">  
+                        
+                        
+                        
+                        <h3 class="express-card__subheading">4. Serving Static Files</h3>
+                        <img src="/assets/c4.png" alt="code4" class="img img--code">  
+                        
+                        
+                        
+                        <h3 class="express-card__subheading">5. Using Parameters and Query Strings</h3>
+                        <img src="/assets/expcode3.png" alt="expcode3" class="img img--code">  
+                    </div>
+
+
+                   
+                    
+                    <div class="express-card">
+                        <h2 class="express-card__heading">Commonly Used Methods</h2>
+                        <table class="express-method-table">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>app.get()</td>
+                                    <td>Handles GET requests</td>
+                                </tr>
+                                <tr>
+                                    <td>app.post()</td>
+                                    <td>Handles POST requests</td>
+                                </tr>
+                                <tr>
+                                    <td>app.put()</td>
+                                    <td>Updates data</td>
+                                </tr>
+                                <tr>
+                                    <td>app.delete()</td>
+                                    <td>Deletes data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                       <div class="express-card">
+                        <h2 class="express-card__heading">Real-World Use Cases</h2>
+                        <ul class="express-list">
+                            <li class="express-list__item">E-commerce backend</li>
+                            <li class="express-list__item">Social media APIs</li>
+                            <li class="express-list__item">Contact forms and user registration</li>
+                            <li class="express-list__item">Chat apps with Socket.io</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="content-card">
+            <div class="card-header">CRUD Operations with Node.js</div>
+            <div class="card-body">
+                <h2>✅ What is CRUD?</h2>
+                 <img src="/assets/crud2.png" alt="CRUD" class="img img--code">
+                <p>CRUD stands for:</p>
+                <ul>
+                    <li><strong>C</strong> — Create (Add data)</li>
+                     <img src="/assets/create.png" alt="create" class="img img--code">
+                    <li><strong>R</strong> — Read (Get data)</li>
+                     <img src="/assets/read.png" alt="read" class="img img--code">
+                    <li><strong>U</strong> — Update (Change data)</li>
+                     <img src="/assets/update.png" alt="Update" class="img img--code">
+                    <li><strong>D</strong> — Delete (Remove data)</li>
+                     <img src="/assets/delete.png" alt="Delete" class="img img--code">
+                </ul>
+                <p>These operations are common in any application that deals with a database (like users, products, tasks).</p>
+
+                <h3>🛠 Technology Stack:</h3>
+                <ul>
+                    <li><strong>Node.js</strong> — Server</li>
+                    <li><strong>Express.js</strong> — Simplifies routes</li>
+                    <li><strong>JavaScript</strong> — Language</li>
+                    <li><strong>MongoDB</strong> — Database (we can also use in-memory data for simplicity)</li>
+                </ul>
+
+                <h3>📦 1. Setup</h3>
+                <img src="/assets/node2.png" alt="node2" class="img img--code">
+               
+                <p>Create a file index.js</p>
+
+                <h3>✏️ 2. Basic CRUD Example (without database)</h3>
+                <img src="/assets/node3.png" alt="node3" class="img img--code">
+              
+                <h3>🧪 Test It Using Postman or Browser:</h3>
+                <ul>
+                    <li>POST /users → Add a new user</li>
+                    <li>GET /users → See all users</li>
+                    <li>PUT /users/:id → Update a user by ID</li>
+                    <li>DELETE /users/:id → Remove a user</li>
+                </ul>
+
+                <p>Sample JSON body for POST/PUT:</p>
+                <img src="/assets/node4.png" alt="node4" class="img img--code">
+            </div>
+        </div>
+
+        
+    </main>
+ 
+
+     </div>
+   
+      </div>
+
+
+
+
+    <app-footer></app-footer>

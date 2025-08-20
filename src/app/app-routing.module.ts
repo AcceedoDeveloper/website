@@ -29,6 +29,16 @@ import { LoginComponent } from './login/login.component';
 import { ProjectComponent } from './project/project.component';
 import {CreateprojectComponent} from "./createproject/createproject.component";
 import { ProjectsComponent } from './projects/projects.component';
+import { RoleComponent } from './role/role.component';
+import { NgrxComponent } from './ngrx/ngrx.component';
+import { WebdevComponent } from './webdev/webdev.component';
+
+import { NodeComponent } from './node/node.component';
+import { ApiDatabaseComponent } from './api-database/api-database.component';
+import { AngularDeveloperComponent } from './angular-developer/angular-developer.component';
+import { LoginheaderComponent } from './loginheader/loginheader.component';
+import { DepartmentComponent } from './department/department.component';
+import { RoledialogComponent } from './role/roledialog/roledialog.component';
 
 
 const routes: Routes = [
@@ -61,9 +71,17 @@ const routes: Routes = [
   {path:'signin', component:LoginComponent},
   {path:'project', component:ProjectComponent},
   {path:'create' , component:CreateprojectComponent},
- {path:'projects',component:ProjectsComponent}
-
-
+ {path:'projects',component:ProjectsComponent},
+ {path:'role',component:RoleComponent},
+{path:'ngrx',component:NgrxComponent},
+{path:'webdev',component:WebdevComponent},
+{path:'angulardeveloper',component:AngularDeveloperComponent},
+{path:'node',component:NodeComponent},
+{path:'api&database',component:ApiDatabaseComponent},
+{path:'loginheader',component:LoginheaderComponent},
+{path:'department',component:DepartmentComponent},
+{path:'roledialog',component:RoledialogComponent},
+{path:'role/edit/:id',component:RoledialogComponent}
 ];
 
 @NgModule({
