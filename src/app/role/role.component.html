@@ -131,20 +131,22 @@
   <aside class="sidebar">
   <h3 class="menu-title">Menu</h3>
   <ul class="menu-list">
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-      <label for="frontend-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-        <a routerLink="/register">User</a>
-        <a href="/department">department</a>
-  <a routerLink="/role">Role</a>
-<a routerLink="/create">create project</a>
-      
-      </div>
+
+<li *ngIf="isAdmin()">
+  <div class="menu-section">
+    <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+    <label for="master-toggle" class="section-title">
+      Master <i class="fa fa-chevron-down"></i>
+    </label>
+    <div class="submenu">
+      <a routerLink="/register">User</a>
+      <a routerLink="/department">Department</a>
+      <a routerLink="/role">Role</a>
+      <a routerLink="/create">Create Project</a>
     </div>
-    </li>
+  </div>
+</li>
+
     
     <li>
      <a routerLink="/projects">Projects</a>
@@ -219,7 +221,7 @@
   <select id="filterRole">
     <option value="">All Roles</option>
     <option value="Developer">Developer</option>
-    <option value="Designer">Designer</option>
+    <option value="Designer">Admin</option>
     <option value="Tester">Tester</option>
     <option value="Manager">Manager</option>
   </select>
@@ -272,28 +274,6 @@
 
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

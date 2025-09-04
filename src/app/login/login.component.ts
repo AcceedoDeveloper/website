@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AuthService } from '../service/auth.service.service';
 
 @Component({
   selector: 'app-login',
@@ -9,16 +9,14 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-   isDropdownOpen = false;
-  isNavOpen = false;
   loginForm!: FormGroup;
-  hidePassword: boolean = true;
-  message: string = '';
+  hidePassword = true;
+  message = '';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private firestore: AngularFirestore
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -27,72 +25,140 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    // Ensure fields are blank
-    this.loginForm.patchValue({
-      username: '',
-      password: ''
-    });
+ 
+    sessionStorage.clear();
 
-    // Clear session storage if needed
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('userKey');
-
-    // Force browser to not autocomplete
+ 
     setTimeout(() => {
       const inputs = document.querySelectorAll('input');
       inputs.forEach((input) => input.setAttribute('autocomplete', 'off'));
     }, 0);
   }
 
-  togglePasswordVisibility() {
+  togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;
   }
 
- onSubmit() {
-  if (this.loginForm.valid) {
+
+  private extractRoleFromResponse(res: any): string {
+    try {
+     
+      if (res?.role && typeof res.role === 'string') return res.role;
+
+    
+      const u = res?.user;
+      if (u) {
+        
+        if (typeof u === 'string') return u;
+
+       
+        if (typeof u === 'object') {
+    
+          if (typeof u.role === 'string') return u.role;
+          if (typeof u.role === 'object') {
+     
+            return (u.role.name || u.role.role || u.role.roleName || JSON.stringify(u.role));
+          }
+         
+          if (Array.isArray(u.roles) && u.roles.length) {
+            const r0 = u.roles[0];
+            if (typeof r0 === 'string') return r0;
+            if (typeof r0 === 'object') return (r0.name || r0.role || r0.roleName || '');
+          }
+    
+          if (u.roleName && typeof u.roleName === 'string') return u.roleName;
+          if (u.name && typeof u.name === 'string') return u.name;
+          if (u.role_id) return String(u.role_id);
+        }
+      }
+
+
+      if (res?.data) {
+        const d = res.data;
+        if (typeof d.role === 'string') return d.role;
+        if (d?.user) {
+  
+          const u2 = d.user;
+          if (typeof u2 === 'string') return u2;
+          if (typeof u2 === 'object') {
+            if (typeof u2.role === 'string') return u2.role;
+            if (u2.roleName) return u2.roleName;
+            if (Array.isArray(u2.roles) && u2.roles.length) {
+              const r0 = u2.roles[0];
+              if (typeof r0 === 'string') return r0;
+              if (typeof r0 === 'object') return r0.name || r0.role || '';
+            }
+          }
+        }
+      }
+
+
+      if (res?.userRole && typeof res.userRole === 'string') return res.userRole;
+      if (Array.isArray(res?.roles) && res.roles.length) {
+        const r0 = res.roles[0];
+        if (typeof r0 === 'string') return r0;
+        if (typeof r0 === 'object') return r0.name || r0.role || '';
+      }
+
+
+      return '';
+    } catch (e) {
+      console.warn('extractRoleFromResponse error', e);
+      return '';
+    }
+  }
+
+  onSubmit(): void {
+    if (!this.loginForm.valid) {
+      this.message = 'Please fill username and password';
+      return;
+    }
+
     const { username, password } = this.loginForm.value;
 
-    this.firestore
-      .collection('users', ref =>
-        ref.where('username', '==', username).where('password', '==', password)
-      )
-      .get()
-      .subscribe(
-        (snapshot) => {
-          if (!snapshot.empty) {
-            const userDoc = snapshot.docs[0];
-            const userData: any = userDoc.data();
+    this.authService.login(username, password).subscribe({
+      next: (res) => {
+        console.log('✅ Raw login response from server:', res);
 
-            // Save user data to session storage
-            sessionStorage.setItem('userKey', userDoc.id);
-            sessionStorage.setItem('username', userData.firstName + ' ' + userData.lastName);
-            sessionStorage.setItem('email', userData.email || '');
-            sessionStorage.setItem('role', userData.role || '');
-
-            console.log('Logged in as:', userData.firstName, userData.lastName);
-
-            this.message = '';
-            this.router.navigate(['/project']);
-          } else {
-            this.message = 'Invalid username or password ❌';
+     
+        const userRaw = res?.user ?? res?.data?.user ?? null;
+        if (userRaw) {
+          try {
+            sessionStorage.setItem('user', JSON.stringify(userRaw));
+          } catch {
+       
+            sessionStorage.setItem('user', String(userRaw));
           }
-        },
-        (error) => {
-          console.error('Login error:', error);
-          this.message = 'Something went wrong ❌';
         }
-      );
-  } else {
-    this.message = 'Please fill in all required fields ❌';
-  }
-}
- onNavCheckChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    this.isNavOpen = target.checked;
-    console.log('Hamburger menu toggled, nav open:', this.isNavOpen);
-    if (!this.isNavOpen) {
-      this.isDropdownOpen = false; 
-      console.log('Dropdown closed due to hamburger menu closing');
-    }
+
+  
+        const token = res?.token || res?.accessToken || res?.data?.token || '';
+        if (token) sessionStorage.setItem('token', token);
+
+      
+        const rawRole = this.extractRoleFromResponse(res);
+        const role = rawRole ? rawRole.toString().trim().toLowerCase() : '';
+        if (role) {
+          sessionStorage.setItem('role', role);
+        } else {
+  
+          sessionStorage.removeItem('role');
+        }
+
+        console.log('🔎 extracted role:', role, 'rawRole:', rawRole);
+
+    
+        if (role === 'admin') {
+          this.router.navigate(['/role']);
+        } else {
+          this.router.navigate(['/projects']); 
+        }
+      },
+      error: (err) => {
+        console.error('❌ Login error:', err);
+     
+        this.message = err?.error?.message || 'Invalid username or password';
+      }
+    });
   }
 }

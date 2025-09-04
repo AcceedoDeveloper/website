@@ -1,9 +1,5 @@
 
-
-
-
 <app-loginheader></app-loginheader>
-
 
 
 <!-- Profile Edit Modal -->
@@ -16,60 +12,66 @@
 </div>
 
 <div class="contains">
-
-
-  <aside class="sidebar">
+<aside class="sidebar">
   <h3 class="menu-title">Menu</h3>
   <ul class="menu-list">
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-     <a routerLink="/register">User</a>
-      <a routerLink="/department">department</a>
-  <a routerLink="/role" >Role</a>
-<a routerLink="/create">create project</a>
-      
-      </div>
-    </div>
-    </li>
-  
-    <li>
-     <a routerLink="/projects">Projects</a>
-    </li>
-    
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-     <a routerLink="/webdev">webdev</a>
-  <a routerLink="/angulardeveloper">angular developer</a>
-  <a routerLink="/ngrx">NGRX</a>
-      
-      </div>
-    </div>
-    </li>
-    <!-- Backend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-        <a routerLink="/node">node.js</a>
-     <a routerLink="/api&database">API & database</a>
-      </div>
-    </div>
-    </li>
-      <li>
-      <a href="#"> Full satck</a>
 
+    <!-- ✅ Master submenu visible ONLY for admin -->
+<!-- Master menu (only for Admin role) -->
+<li *ngIf="isAdmin()">
+  <div class="menu-section">
+    <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+    <label for="master-toggle" class="section-title">
+      Master <i class="fa fa-chevron-down"></i>
+    </label>
+    <div class="submenu">
+      <a routerLink="/register">User</a>
+      <a routerLink="/department">Department</a>
+      <a routerLink="/role">Role</a>
+      <a routerLink="/create">Create Project</a>
+    </div>
+  </div>
+</li>
+
+
+    <!-- ✅ Other menus (visible for all users) -->
+    <li>
+      <a routerLink="/projects">Projects</a>
+    </li>
+
+    <li>
+      <div class="menu-section">
+        <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+        <label for="frontend-toggle" class="section-title">
+          Frontend <i class="fa fa-chevron-down"></i>
+        </label>
+        <div class="submenu">
+          <a routerLink="/webdev">Webdev</a>
+          <a routerLink="/angulardeveloper">Angular Developer</a>
+          <a routerLink="/ngrx">NGRX</a>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <div class="menu-section">
+        <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+        <label for="backend-toggle" class="section-title">
+          Backend <i class="fa fa-chevron-down"></i>
+        </label>
+        <div class="submenu">
+          <a routerLink="/node">Node.js</a>
+          <a routerLink="/api&database">API & Database</a>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <a href="#">Full stack</a>
     </li>
   </ul>
-  </aside>
+</aside>
+
 
   <!-- Main Content -->
   <div class="maincontent">
@@ -149,10 +151,6 @@
   </div>
 </div>
         
-   
-   
-   
-        
          
       
        <!-- Modal Section (Outside of <section>) --> 
@@ -164,91 +162,13 @@
  
  
 
- 
-
      </div>
    
       </div>
 
 
 
-
- 
-
-
-
-
-     
-   
-
-   
-  
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
- 
-   
-   
-   
-   
- 
-
    <app-footer></app-footer>
-
 
 
 

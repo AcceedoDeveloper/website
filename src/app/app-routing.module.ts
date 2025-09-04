@@ -41,6 +41,8 @@ import { DepartmentComponent } from './department/department.component';
 import { RoledialogComponent } from './role/roledialog/roledialog.component';
 
 
+
+
 const routes: Routes = [
   { path: '', redirectTo: 'acceedo', pathMatch: 'full' },
   { path: 'acceedo', component: HomeComponent },
@@ -81,7 +83,13 @@ const routes: Routes = [
 {path:'loginheader',component:LoginheaderComponent},
 {path:'department',component:DepartmentComponent},
 {path:'roledialog',component:RoledialogComponent},
-{path:'role/edit/:id',component:RoledialogComponent}
+{path:'role/edit/:id',component:RoledialogComponent},
+ 
+
+
+
+
+
 ];
 
 @NgModule({

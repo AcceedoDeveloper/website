@@ -4,41 +4,26 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class UserservicesService {
+  constructor(private httpuser: HttpClient) {}
 
-  constructor( private httpuser:HttpClient) { }
+  private getuserapi = 'http://localhost:3008/getUser';
+  private saveuserapi = 'http://localhost:3008/createUser';
+  private edituserapi = 'http://localhost:3008/updateUser';
+  private deleteuserapi = 'http://localhost:3008/deleteUser';
 
-  //http --> user
-
-  getuserapi='http://localhost:3008/getUser';
-  saveuserapi='http://localhost:3008/createUser';
-  edituserapi='http://localhost:3008/updateUser';
-  deleteuserapi='http://localhost:3008/deleteUser';
-
-
-  //get user
-  getuser()
-  {
-    return this.httpuser.get(this.getuserapi)
+  getuser() {
+    return this.httpuser.get(this.getuserapi);
   }
 
-  //save user
-
-  saveuser(datas:any)
-  {
-    return this.httpuser.post(this.saveuserapi,datas)
+  saveuser(data: any) {
+    return this.httpuser.post(this.saveuserapi, data);
   }
 
-//update
-  edituser(_id:any,data:any)
-  {
-    return this.httpuser.put(this.edituserapi+'/'+_id,data);
+  edituser(_id: any, data: any) {
+    return this.httpuser.put(`${this.edituserapi}/${_id}`, data);
   }
 
-  //delete
-
-  deleteuser(_id:any)
-  {
-    return this.httpuser.delete(this.deleteuserapi+'/'+_id);
+  deleteuser(_id: any) {
+    return this.httpuser.delete(`${this.deleteuserapi}/${_id}`);
   }
-
 }

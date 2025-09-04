@@ -9,6 +9,8 @@ import { LoginheaderComponent } from '../loginheader/loginheader.component';
 import { UserservicesService } from './services/userservices.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../service/auth.service.service'; // ✅ correct path
+
 // import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 
@@ -36,8 +38,10 @@ export class RegisterComponent {
   formSubmitted = false;
 showcreateuser=false;
 showuser=true;
+  userRole: string | null = null;
   showPassword = false;
   showConfirmPassword = false;
+  authService: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -85,6 +89,7 @@ showuser=true;
 
   }
 
+  
 
   //delete user
 
@@ -179,7 +184,17 @@ showuser=true;
       this.fetchUsers();
       this.updateTime();
        this.fetchTasks();
-    }
+
+         this.userRole = this.authService.getUserRole();
+    console.log('🔎 Current Role:', this.userRole);
+  }
+isAdmin(): boolean {
+  // role may come from backend userData or from sessionStorage
+  const role = this.userData?.role || sessionStorage.getItem('role');
+  return role?.toLowerCase() === 'admin';
+}
+
+    
   
   
     updateTime() {

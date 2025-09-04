@@ -37,6 +37,7 @@ export class RoleComponent {
 
     // form edit
 roleid:any;
+  userService: any;
 
   constructor(
     private firestore: AngularFirestore,
@@ -121,14 +122,6 @@ editrole(role: any) {
 
 
 
-
-
-
-
-
-
-
-
   //role 
 
 
@@ -191,6 +184,10 @@ editrole(role: any) {
       this.fetchUsers();
       this.updateTime();
        this.fetchTasks();
+
+       
+  console.log('🔎 Role from Firestore/UserData:', this.userData?.role);
+  console.log('🔎 Role from SessionStorage:', sessionStorage.getItem('role'));
     }
   
   
@@ -410,46 +407,42 @@ editrole(role: any) {
         .join('')
         .toUpperCase();
     }
-  onSubmit(form: any) {
+
+
+isAdmin(): boolean {
+
+  const role = this.userData?.role || sessionStorage.getItem('role');
+  return role?.toLowerCase() === 'admin';
+}
+
+ onSubmit(form: any) {
     if (form.valid && this.user.password === this.confirmPassword) {
-      this.afAuth.createUserWithEmailAndPassword(this.user.email, this.user.password)
-        .then((userCredential) => {
-          const uid = userCredential.user?.uid;
-          if (uid) {
-            const userData = {
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              email: this.user.email,
-              mobile: this.user.mobile,
-              role: this.user.role,
-              username: this.user.username,
-              password: this.user.password
-            };
+      this.userService.createUser(this.user).subscribe({
+        next: (res: any) => {
+          console.log('✅ User created:', res);
 
-            this.firestore.collection('users').doc(uid).set(userData).then(() => {
-              console.log('User data saved to Firestore!');
+          // Save role in sessionStorage for menu access
+          sessionStorage.setItem('role', this.user.role);
+          sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
+          sessionStorage.setItem('email', this.user.email);
 
-              sessionStorage.setItem('uid', uid);
-             sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
+          this.snackBar.open('User created successfully!', 'Close', { duration: 3000 });
 
-              sessionStorage.setItem('email', this.user.email);
-              sessionStorage.setItem('role', this.user.role);
-
-              this.formSubmitted = true;
-              setTimeout(() => {
-                this.router.navigate(['/login']);
-              }, 1000);
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error during Firebase Auth or Firestore:', error);
-        });
+          this.formSubmitted = true;
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1000);
+        },
+        error: (err: { error: { message: any; }; }) => {
+          console.error('❌ Error creating user:', err);
+          this.snackBar.open(err.error?.message || 'User creation failed', 'Close', { duration: 5000 });
+        }
+      });
     } else {
-      console.log('Form not valid or passwords do not match.');
+      this.snackBar.open('Form invalid or passwords do not match!', 'Close', { duration: 3000 });
     }
   }
+}
 
   
  
-}
