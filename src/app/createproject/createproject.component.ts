@@ -117,6 +117,12 @@ export class CreateprojectComponent implements OnInit {
       });
   }
 
+
+  isAdmin(): boolean {
+ 
+  const role = sessionStorage.getItem('role') || this.userData?.role || '';
+  return role?.toLowerCase() === 'admin';
+}
   fetchEmployees() {
     this.userService.getuser().subscribe({
       next: (response: any) => {
