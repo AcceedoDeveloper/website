@@ -410,8 +410,8 @@ editrole(role: any) {
 
 
 isAdmin(): boolean {
-
-  const role = this.userData?.role || sessionStorage.getItem('role');
+ 
+  const role = sessionStorage.getItem('role') || this.userData?.role || '';
   return role?.toLowerCase() === 'admin';
 }
 

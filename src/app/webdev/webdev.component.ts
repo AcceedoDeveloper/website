@@ -89,6 +89,13 @@ filteredTasks: any[] = [];
      this.fetchTasks();
   }
 
+  isAdmin(): boolean {
+  // Always read from sessionStorage first
+  const role = sessionStorage.getItem('role') || this.userData?.role || '';
+  return role?.toLowerCase() === 'admin';
+}
+
+
 
   updateTime() {
     const now = new Date();

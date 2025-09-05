@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit {
   }
 
 
+
   private extractRoleFromResponse(res: any): string {
     try {
      
@@ -108,57 +109,60 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
-    if (!this.loginForm.valid) {
-      this.message = 'Please fill username and password';
-      return;
-    }
 
-    const { username, password } = this.loginForm.value;
+onSubmit(): void {
+  if (!this.loginForm.valid) {
+    this.message = 'Please fill username and password';
+    return;
+  }
 
-    this.authService.login(username, password).subscribe({
-      next: (res) => {
-        console.log('✅ Raw login response from server:', res);
+  const { username, password } = this.loginForm.value;
 
-     
-        const userRaw = res?.user ?? res?.data?.user ?? null;
-        if (userRaw) {
-          try {
-            sessionStorage.setItem('user', JSON.stringify(userRaw));
-          } catch {
-       
-            sessionStorage.setItem('user', String(userRaw));
-          }
+  this.authService.login(username, password).subscribe({
+    next: (res) => {
+      console.log('✅ Raw login response from server:', res);
+
+      // Store user data
+      const userRaw = res?.user ?? res?.data?.user ?? null;
+      if (userRaw) {
+        try {
+          sessionStorage.setItem('user', JSON.stringify(userRaw));
+        } catch {
+          sessionStorage.setItem('user', String(userRaw));
         }
+      }
 
-  
-        const token = res?.token || res?.accessToken || res?.data?.token || '';
-        if (token) sessionStorage.setItem('token', token);
+      // Store token
+      const token = res?.token || res?.accessToken || res?.data?.token || '';
+      if (token) sessionStorage.setItem('token', token);
+
+      // Extract and store role
+      const rawRole = this.extractRoleFromResponse(res);
+      const role = rawRole ? rawRole.toString().trim().toLowerCase() : '';
+      if (role) {
+        sessionStorage.setItem('role', role);
+      } else {
+        sessionStorage.removeItem('role');
+      }
+
+      console.log('🔎 extracted role:', role, 'rawRole:', rawRole);
 
       
-        const rawRole = this.extractRoleFromResponse(res);
-        const role = rawRole ? rawRole.toString().trim().toLowerCase() : '';
-        if (role) {
-          sessionStorage.setItem('role', role);
-        } else {
-  
-          sessionStorage.removeItem('role');
-        }
-
-        console.log('🔎 extracted role:', role, 'rawRole:', rawRole);
-
-    
-        if (role === 'admin') {
-          this.router.navigate(['/role']);
-        } else {
-          this.router.navigate(['/projects']); 
-        }
-      },
-      error: (err) => {
-        console.error('❌ Login error:', err);
-     
-        this.message = err?.error?.message || 'Invalid username or password';
+      if (role === 'admin') {
+        this.router.navigate(['/role']);
+      } else {
+        this.router.navigate(['/projects']);
       }
-    });
-  }
+      
+      // Reload the page to update navigation
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    },
+    error: (err) => {
+      console.error('❌ Login error:', err);
+      this.message = err?.error?.message || 'Invalid username or password';
+    }
+  });
+}
 }

@@ -100,6 +100,13 @@ filteredTasks: any[] = [];
   toggleTaskBox() {
     this.showTaskBox = !this.showTaskBox;
   }
+  
+
+  isAdmin(): boolean {
+  // Always read from sessionStorage first
+  const role = sessionStorage.getItem('role') || this.userData?.role || '';
+  return role?.toLowerCase() === 'admin';
+}
 
 
   toggleDropdown() {

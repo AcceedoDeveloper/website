@@ -38,6 +38,7 @@ export class RegisterComponent {
   formSubmitted = false;
 showcreateuser=false;
 showuser=true;
+openMenu: string | null = null;
   userRole: string | null = null;
   showPassword = false;
   showConfirmPassword = false;
@@ -167,7 +168,7 @@ showuser=true;
    
   filteredTasks: any[] = [];
   
-    // Profile Edit Modal
+
     showEditModal = false;
     editUserData: any = {};
     previewImage: string | ArrayBuffer | null = null;
@@ -189,10 +190,10 @@ showuser=true;
     console.log('🔎 Current Role:', this.userRole);
   }
 isAdmin(): boolean {
-  // role may come from backend userData or from sessionStorage
-  const role = this.userData?.role || sessionStorage.getItem('role');
+  const role = sessionStorage.getItem('role') || this.userData?.role || '';
   return role?.toLowerCase() === 'admin';
 }
+
 
     
   
@@ -246,6 +247,11 @@ isAdmin(): boolean {
         this.task.attachment = file.name;
       }
     }
+
+    
+toggleMenu(menu: string) {
+  this.openMenu = this.openMenu === menu ? null : menu;
+}
   
     onFileSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
@@ -395,6 +401,10 @@ isAdmin(): boolean {
       this.afAuth.signOut();
     }
   
+
+    
+
+  
     getInitials(name: string): string {
       return name
         .split(' ')
@@ -402,6 +412,7 @@ isAdmin(): boolean {
         .join('')
         .toUpperCase();
     }
+  
   onSubmit(form: any) {
     if (form.valid && this.user.password === this.confirmPassword) {
       this.afAuth.createUserWithEmailAndPassword(this.user.email, this.user.password)
@@ -422,14 +433,13 @@ isAdmin(): boolean {
               console.log('User data saved to Firestore!');
 
               sessionStorage.setItem('uid', uid);
-             sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
-
+              sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
               sessionStorage.setItem('email', this.user.email);
               sessionStorage.setItem('role', this.user.role);
 
               this.formSubmitted = true;
               setTimeout(() => {
-                this.router.navigate(['/login']);
+                this.router.navigate(['/register']);
               }, 1000);
             });
           }
@@ -441,6 +451,6 @@ isAdmin(): boolean {
       console.log('Form not valid or passwords do not match.');
     }
   }
-
-
 }
+
+

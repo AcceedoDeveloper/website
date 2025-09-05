@@ -1,13 +1,10 @@
-
-
-
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from 'firebase/firestore';
 import { Pipe, PipeTransform } from '@angular/core';
-
+import { CreatprojectService } from '../service/creatproject.service';
+import { UserservicesService } from '../register/services/userservices.service';
 
 @Pipe({
   name: 'filter'
@@ -26,39 +23,31 @@ export class FilterPipe implements PipeTransform {
   }
 }
 
-
 @Component({
   selector: 'app-createproject',
   templateUrl: './createproject.component.html',
-  styleUrl: './createproject.component.css'
+  styleUrls: ['./createproject.component.css']
 })
 export class CreateprojectComponent implements OnInit {
-  tasks: any[] = [];
-  users: any[] = [];
+  projects: any[] = [];
+  employees: any[] = [];
   userData: any = null;
 
-  task: any = {
-    assignee: '',
-    description: '',
-      priority: '',
-    status: 'todo',
-    createdAt: null,
-    dueDate: null,
-    timeEstimate: '',
-    attachment: '',
-    fileName: ''
+  project: any = {
+    projectName: '',
+    employees: [],
+    startDate: '',
+    expectedEndDate: ''
   };
 
-  editComment: string = '';
-  showcreateprojectBox =false;
+  showCreateProjectBox = false;
   showSuccessMessage = false;
-  showUserDropdown = false;
   searchQuery: string = '';
-  dropdownOpen = false;
   isModalOpen = false;
-  selectedTask: any = null;
- 
-filteredTasks: any[] = [];
+  selectedProject: any = null;
+  filteredProjects: any[] = [];
+  showEmployeeDropdown = false;
+  employeeSearchText = '';
 
   // Profile Edit Modal
   showEditModal = false;
@@ -69,16 +58,19 @@ filteredTasks: any[] = [];
   dateTime: string = '';
   hasNotification = false;
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) {}
+  constructor(
+    private afs: AngularFirestore, 
+    private afAuth: AngularFireAuth,
+    private projectService: CreatprojectService,
+    private userService: UserservicesService
+  ) {}
 
   ngOnInit(): void {
     this.getCurrentUser();
-    this.fetchTasks();
-    this.fetchUsers();
+    this.fetchProjects();
+    this.fetchEmployees();
     this.updateTime();
-     this.fetchTasks();
   }
-
 
   updateTime() {
     const now = new Date();
@@ -86,69 +78,84 @@ filteredTasks: any[] = [];
     this.currentDateTime = now.toDateString() + ' ' + now.toLocaleTimeString();
   }
 
-  togglecreateprojectBox() {
-    this.showcreateprojectBox = !this.showcreateprojectBox;
-  }
-
-
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  
-
-  cancel() {
-    this.task = {
-      assignee: '',
-      description: '',
-      status: 'todo',
-      createdAt: null,
-      dueDate: null,
-      timeEstimate: '',
-      attachment: ''
-    };
-    this.showcreateprojectBox = false;
-  }
-
- onSearch() {
-  const query = this.searchQuery.toLowerCase();
-  this.filteredTasks = this.tasks.filter(task =>
-    task.description.toLowerCase().includes(query)
-  );
-}
-
-  handleFileUpload(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.task.attachment = file.name;
+  toggleCreateProjectBox() {
+    this.showCreateProjectBox = !this.showCreateProjectBox;
+    if (this.showCreateProjectBox) {
+      this.project = {
+        projectName: '',
+        employees: [],
+        startDate: '',
+        expectedEndDate: ''
+      };
     }
   }
 
-  onFileSelected(event: Event): void {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    this.task.attachment = file;
-    this.task.fileName = file.name;
+  cancel() {
+    this.project = {
+      projectName: '',
+      employees: [],
+      startDate: '',
+      expectedEndDate: ''
+    };
+    this.showCreateProjectBox = false;
   }
-}
 
-  fetchTasks() {
+  onSearch() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredProjects = this.projects.filter(project =>
+      project.projectName.toLowerCase().includes(query)
+    );
+  }
+
+  fetchProjects() {
     this.afs
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
+      .collection('projects', (ref) => ref.orderBy('createdAt', 'desc'))
       .valueChanges({ idField: 'id' })
       .subscribe((data) => {
-        this.tasks = data;
+        this.projects = data;
+        this.filteredProjects = data;
       });
   }
 
-
-  fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
+  fetchEmployees() {
+    this.userService.getuser().subscribe({
+      next: (response: any) => {
+        console.log('API Response:', response);
+        
+        // Extract usernames from the response
+        if (Array.isArray(response)) {
+          this.employees = response
+            .filter(user => user && user.userName) // Filter out undefined/null users
+            .map(user => user.userName);
+        } else if (response && typeof response === 'object') {
+          // Handle object response
+          if (response.data && Array.isArray(response.data)) {
+            this.employees = response.data
+              .filter((user: { userName: any; }) => user && user.userName)
+              .map((user: { userName: any; }) => user.userName);
+          } else {
+            // Convert object values to array
+            this.employees = Object.values(response)
+              .filter(user => user && (user as any).userName)
+              .map(user => (user as any).userName);
+          }
+        }
+        
+        console.log('Processed employees:', this.employees);
+        
+        // If still empty, use fallback data
+        if (this.employees.length === 0) {
+          this.employees = ['Sabari', 'rushi'];
+          console.log('Using fallback employee data:', this.employees);
+        }
+      },
+      error: (error: any) => {
+        console.error('Error fetching employees:', error);
+        // Fallback data
+        this.employees = ['Sabari', 'rushi'];
+        console.log('Using fallback employee data due to error:', this.employees);
+      }
+    });
   }
 
   getCurrentUser() {
@@ -165,74 +172,109 @@ filteredTasks: any[] = [];
     });
   }
 
-  selectAssignee(user: any) {
-    this.task.assignee =
-      user.username ||
-      `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-      user.email;
-    this.showUserDropdown = false;
-  }
-
-  toggleUserDropdown() {
-    this.showUserDropdown = !this.showUserDropdown;
-  }
-
-  addTask() {
-    if (!this.task.description || !this.task.assignee) return;
-
-    const newTask = {
-      ...this.task,
-      createdAt: Timestamp.now(),
-      assignedBy: this.userData?.uid || 'admin'
-    };
-
-    this.afs.collection('tasks').add(newTask).then(() => {
-      this.showSuccessMessage = true;
-      setTimeout(() => (this.showSuccessMessage = false), 2000);
-      this.fetchTasks();
-      this.cancel();
-    });
-  }
-
-  deleteTask(task: any) {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.afs.collection('tasks').doc(task.id).delete();
+  toggleEmployeeSelection(employee: string) {
+    const index = this.project.employees.indexOf(employee);
+    
+    if (index > -1) {
+      this.project.employees.splice(index, 1);
+    } else {
+      this.project.employees.push(employee);
     }
   }
 
-  openEditModal(task: any) {
-    this.selectedTask = { ...task };
-    this.editComment = task.description;
+  isEmployeeSelected(employee: string): boolean {
+    return this.project.employees.includes(employee);
+  }
+
+  getSelectedEmployeesNames(): string {
+    return this.project.employees.join(', ');
+  }
+
+  getFilteredEmployees() {
+    if (!this.employeeSearchText) {
+      return this.employees;
+    }
+    
+    return this.employees.filter(employee => 
+      employee.toLowerCase().includes(this.employeeSearchText.toLowerCase())
+    );
+  }
+
+  createProject() {
+    if (!this.project.projectName || this.project.employees.length === 0) {
+      alert('Please fill all required fields');
+      return;
+    }
+
+    if (!this.project.startDate || !this.project.expectedEndDate) {
+      alert('Please select both start and end dates');
+      return;
+    }
+
+    // Format dates properly
+    const projectData = {
+      projectName: this.project.projectName,
+      employees: this.project.employees,
+      startDate: new Date(this.project.startDate).toISOString().split('T')[0],
+      expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
+    };
+
+    console.log('Sending project data:', projectData);
+
+    this.projectService.createProject(projectData).subscribe({
+      next: (response: any) => {
+        console.log('Project created successfully:', response);
+        this.showSuccessMessage = true;
+        setTimeout(() => {
+          this.showSuccessMessage = false;
+          this.showCreateProjectBox = false;
+        }, 2000);
+        
+        // Also save to Firestore if needed
+        this.afs.collection('projects').add({
+          ...projectData,
+          createdAt: Timestamp.now(),
+          createdBy: this.userData?.uid || 'admin'
+        }).then(() => {
+          this.fetchProjects();
+        });
+      },
+      error: (error: { error: { message: any; }; message: any; }) => {
+        console.error('Error creating project:', error);
+        console.error('Error details:', error.error);
+        alert('Failed to create project: ' + (error.error?.message || error.message || 'Unknown error'));
+      }
+    });
+  }
+
+  deleteProject(project: any) {
+    if (confirm('Are you sure you want to delete this project?')) {
+      this.afs.collection('projects').doc(project.id).delete();
+    }
+  }
+
+  openEditModal(project: any) {
+    this.selectedProject = { ...project };
     this.isModalOpen = true;
   }
 
   saveEdit() {
-    if (!this.selectedTask || !this.editComment) return;
+    if (!this.selectedProject) return;
 
     this.afs
-      .collection('tasks')
-      .doc(this.selectedTask.id)
+      .collection('projects')
+      .doc(this.selectedProject.id)
       .update({
-        description: this.editComment
+        projectName: this.selectedProject.projectName
       })
       .then(() => {
         this.isModalOpen = false;
-        this.fetchTasks();
+        this.fetchProjects();
       });
   }
 
   closeModal() {
     this.isModalOpen = false;
-  }
-
-  markAsCompleted(task: any) {
-    this.afs
-      .collection('tasks')
-      .doc(task.id)
-      .update({ status: 'done' })
-      .then(() => {
-        this.fetchTasks();
-      });
   }
 
   // Profile Modal Methods
@@ -273,10 +315,19 @@ filteredTasks: any[] = [];
   }
 
   getInitials(name: string): string {
+    if (!name) return 'U';
     return name
       .split(' ')
       .map((n) => n[0])
       .join('')
       .toUpperCase();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.employees-dropdown-container')) {
+      this.showEmployeeDropdown = false;
+    }
   }
 }

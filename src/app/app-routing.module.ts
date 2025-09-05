@@ -39,6 +39,7 @@ import { AngularDeveloperComponent } from './angular-developer/angular-developer
 import { LoginheaderComponent } from './loginheader/loginheader.component';
 import { DepartmentComponent } from './department/department.component';
 import { RoledialogComponent } from './role/roledialog/roledialog.component';
+import { AuthGuard }from '../../src/app/guard/guards/auth.guard';
 
 
 
@@ -68,11 +69,11 @@ const routes: Routes = [
   { path: 'adobe', component: AdobeComponent },
   { path: 'cards', component: CardsComponent },
   { path: 'product3', component: Product3Component },
-  { path: 'register', component: RegisterComponent },// ✅ NEW route for registration
+
   { path: 'login', component: LoginComponent},
   {path:'signin', component:LoginComponent},
   {path:'project', component:ProjectComponent},
-  {path:'create' , component:CreateprojectComponent},
+
  {path:'projects',component:ProjectsComponent},
  {path:'role',component:RoleComponent},
 {path:'ngrx',component:NgrxComponent},
@@ -85,12 +86,29 @@ const routes: Routes = [
 {path:'roledialog',component:RoledialogComponent},
 {path:'role/edit/:id',component:RoledialogComponent},
  
+  // Master (only admin can see + access)
+  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+  { path: 'department', component: DepartmentComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+  { path: 'role', component: RoleComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
+  { path: 'create', component: CreateprojectComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
 
+  // Projects → all users
+  { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
 
+  // Frontend → all users
+  { path: 'webdev', component: WebdevComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
+  { path: 'angulardeveloper', component: AngularDeveloperComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
+  { path: 'ngrx', component: NgrxComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
 
+  // Backend → all users
+  { path: 'node', component: NodeComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
+  { path: 'api&database', component: AppComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
 
-
+  { path: '', redirectTo: 'projects', pathMatch: 'full' },
+  { path: '**', redirectTo: 'projects' }
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {

@@ -16,29 +16,28 @@
   <h3 class="menu-title">Menu</h3>
   <ul class="menu-list">
 
-    <!-- ✅ Master submenu visible ONLY for admin -->
-<!-- Master menu (only for Admin role) -->
-<li *ngIf="isAdmin()">
-  <div class="menu-section">
-    <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-    <label for="master-toggle" class="section-title">
-      Master <i class="fa fa-chevron-down"></i>
-    </label>
-    <div class="submenu">
-      <a routerLink="/register">User</a>
-      <a routerLink="/department">Department</a>
-      <a routerLink="/role">Role</a>
-      <a routerLink="/create">Create Project</a>
-    </div>
-  </div>
-</li>
+    <!-- Show ONLY for Admin -->
+    <li *ngIf="isAdmin()">
+      <div class="menu-section">
+        <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+        <label for="master-toggle" class="section-title">
+          Master <i class="fa fa-chevron-down"></i>
+        </label>
+        <div class="submenu">
+          <a routerLink="/register">User</a>
+          <a routerLink="/department">Department</a>
+          <a routerLink="/role">Role</a>
+          <a routerLink="/create">Create Project</a>
+        </div>
+      </div>
+    </li>
 
-
-    <!-- ✅ Other menus (visible for all users) -->
+    <!-- Always visible -->
     <li>
       <a routerLink="/projects">Projects</a>
     </li>
 
+    <!-- Frontend -->
     <li>
       <div class="menu-section">
         <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
@@ -46,13 +45,14 @@
           Frontend <i class="fa fa-chevron-down"></i>
         </label>
         <div class="submenu">
-          <a routerLink="/webdev">Webdev</a>
+          <a routerLink="/webdev">WebDev</a>
           <a routerLink="/angulardeveloper">Angular Developer</a>
           <a routerLink="/ngrx">NGRX</a>
         </div>
       </div>
     </li>
 
+    <!-- Backend -->
     <li>
       <div class="menu-section">
         <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
@@ -67,10 +67,11 @@
     </li>
 
     <li>
-      <a href="#">Full stack</a>
+      <a href="#">Full Stack</a>
     </li>
   </ul>
 </aside>
+
 
 
   <!-- Main Content -->

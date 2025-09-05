@@ -73,57 +73,66 @@
 <div class="contains">
 
 
-  <aside class="sidebar">
+<aside class="sidebar">
   <h3 class="menu-title">Menu</h3>
   <ul class="menu-list">
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-     <a routerLink="/register">User</a>
-  <a (click)="getrole()" routerLink="/role" >Role</a>
 
-      
+    <!-- Show ONLY for Admin -->
+    <li *ngIf="isAdmin()">
+      <div class="menu-section">
+        <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+        <label for="master-toggle" class="section-title">
+          Master <i class="fa fa-chevron-down"></i>
+        </label>
+        <div class="submenu">
+          <a routerLink="/register">User</a>
+          <a routerLink="/department">Department</a>
+          <a routerLink="/role">Role</a>
+          <a routerLink="/create">Create Project</a>
+        </div>
       </div>
-    </div>
     </li>
-    <li><a routerLink="/create">create project</a></li>
+
+    <!-- Always visible -->
     <li>
-     <a routerLink="/projects">Projects</a>
+      <a routerLink="/projects">Projects</a>
     </li>
-    
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-     <a routerLink="/webdev">webdev</a>
-  <a routerLink="/angulardeveloper">angular developer</a>
-  <a routerLink="/ngrx">NGRX</a>
-      
-      </div>
-    </div>
-    </li>
-    <!-- Backend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-        <a routerLink="/node">node.js</a>
-     <a routerLink="/api&database">API & database</a>
-      </div>
-    </div>
-    </li>
-      <li>
-      <a href="#"> Full satck</a>
 
+    <!-- Frontend -->
+    <li>
+      <div class="menu-section">
+        <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+        <label for="frontend-toggle" class="section-title">
+          Frontend <i class="fa fa-chevron-down"></i>
+        </label>
+        <div class="submenu">
+          <a routerLink="/webdev">WebDev</a>
+          <a routerLink="/angulardeveloper">Angular Developer</a>
+          <a routerLink="/ngrx">NGRX</a>
+        </div>
+      </div>
+    </li>
+
+    <!-- Backend -->
+    <li>
+      <div class="menu-section">
+        <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+        <label for="backend-toggle" class="section-title">
+          Backend <i class="fa fa-chevron-down"></i>
+        </label>
+        <div class="submenu">
+          <a routerLink="/node">Node.js</a>
+          <a routerLink="/api&database">API & Database</a>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <a href="#">Full Stack</a>
     </li>
   </ul>
-  </aside>
+</aside>
+
 
   <!-- Main Content -->
   <div class="maincontent">

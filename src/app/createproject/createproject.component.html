@@ -1,5 +1,3 @@
-
-
 <header class="top-bar">
   <div class="left-section">
     <span class="brand-title">ACCEEDO</span>
@@ -9,7 +7,7 @@
   <div class="search-bar">
     <input
       type="text"
-      placeholder="Search..."
+      placeholder="Search projects..."
       [(ngModel)]="searchQuery"
       (input)="onSearch()" />
     <i class="fa fa-search search-icon"></i>
@@ -51,234 +49,198 @@
 </header>
 
 <div class="contains">
-
-
   <aside class="sidebar">
-  <h3 class="menu-title" routerLink="/dwincontant78">Menu</h3>
-  <ul class="menu-list">
-
-    <li><a routerLink="/projects">Projects</a></li>
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-     <a routerLink="/webdev">webdev</a>
-  <a routerLink="/software">angular developer</a>
-  <a routerLink="/ngrx">NGRX</a>
-      
-      </div>
-    </div>
-    </li>
-    <!-- Backend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-        <a routerLink="/backend">node.js</a>
-     <a routerLink="/database">API & database</a>
-      </div>
-    </div>
-    </li>
+    <h3 class="menu-title" routerLink="/dwincontant78">Menu</h3>
+    <ul class="menu-list">
+      <li><a routerLink="/projects">Projects</a></li>
+      <!-- Frontend with subdivisions -->
       <li>
-      <a href="#"> Full satck</a>
-
-    </li>
-  </ul>
+        <div class="menu-section">
+          <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+          <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
+          <div class="submenu">
+            <a routerLink="/webdev">webdev</a>
+            <a routerLink="/software">angular developer</a>
+            <a routerLink="/ngrx">NGRX</a>
+          </div>
+        </div>
+      </li>
+      <!-- Backend with subdivisions -->
+      <li>
+        <div class="menu-section">
+          <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+          <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
+          <div class="submenu">
+            <a routerLink="/backend">node.js</a>
+            <a routerLink="/database">API & database</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a href="#"> Full satck</a>
+      </li>
+    </ul>
   </aside>
 
   <!-- Main Content -->
   <div class="maincontent">
-    
-       <!-- Welcome Header -->
-       <div class="welcome-card">
-         <div class="date-time">
-           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
-           <span>{{ dateTime }}</span>
-         </div>
-         <div class="user-welcome">
-           <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
-           <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
-         </div>
-       </div>
-   
-       <!-- Assigned Tasks Section -->
-     <!-- Assigned Tasks Section -->
-     <div class="section-header">
-       <div class="ASSIGNED">
-       <h4>Create project</h4>
-       <i  class="fa fa-plus add-task-icon" (click)="togglecreateprojectBox()"></i>
-    
-     </div>
-     <!-- Filter Section -->
-<div class="filter-section">
-  <label for="filterRole">Filter by Role:</label>
-  <select id="filterRole">
-    <option value="">All Roles</option>
-    <option value="Developer">Developer</option>
-    <option value="Designer">Designer</option>
-    <option value="Tester">Tester</option>
-    <option value="Manager">Manager</option>
-  </select>
+    <!-- Welcome Header -->
+    <div class="welcome-card">
+      <div class="date-time">
+        <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+        <span>{{ dateTime }}</span>
+      </div>
+      <div class="user-welcome">
+        <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+        <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
+      </div>
+    </div>
 
-  <label for="filterDate">Filter by Date:</label>
-  <input type="date" id="filterDate" />
-  
-  <button id="applyFilter">🔍 Apply Filter</button>
-</div>
-
-     </div>
-   
-   
+    <!-- Create Project Section -->
+    <div class="section-header">
+      <div class="ASSIGNED">
+        <h4>Create project</h4>
+        <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
+      </div>
       
-   
-         <!-- Task Input Box -->
-        <div *ngIf="showcreateprojectBox" class="task-box">
-     <!-- Assignee with Filter Dropdown -->
-       <div class="assignee-container" #assigneeContainer>
-        <label for="assignedTo" id="to" >Assigned to</label>
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <label for="filterRole">Filter by Role:</label>
+        <select id="filterRole">
+          <option value="">All Roles</option>
+          <option value="Developer">Developer</option>
+          <option value="Designer">Designer</option>
+          <option value="Tester">Tester</option>
+          <option value="Manager">Manager</option>
+        </select>
+
+        <label for="filterDate">Filter by Date:</label>
+        <input type="date" id="filterDate" />
         
-       <input
-         type="text"
-         placeholder="Assigned to"
-         [(ngModel)]="task.assignee"
-         (focus)="showUserDropdown = true"
-         (click)="showUserDropdown = true"
-       />
-       
-   
-       <ul *ngIf="showUserDropdown" class="user-dropdown">
-         <li *ngFor="let user of users" (click)="selectAssignee(user)">
-           {{ user.username ? user.username : (user.firstName && user.lastName ? user.firstName + ' ' + user.lastName : user.email) }}
-         </li>
-       </ul>
-     </div>
-   
+        <button id="applyFilter">🔍 Apply Filter</button>
+      </div>
+    </div>
 
-          <!-- role -->
-
-          <div class="form-row">
-  <label for="role">Role</label>
-  <select id="role" required>
-    <option value="" disabled selected>Select Role</option>
-    <option value="Developer">Developer</option>
-    <option value="Manager">Manager</option>
-  </select>
-</div>
-
-
-     <!-- priority -->
-
-             <div class="form-row">
-          <label for="priority">Priority</label>
-          <select id="priority" required>
-            <option value="" disabled selected>Select Priority</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
-        </div>
-
-        <!-- deadline date -->
-
-        <div class="form-row">
-          <label for="deadline">Deadline</label>
-          <input type="datetime-local" id="deadline" required />
-        </div>
-
-   
-     <!-- Task Description -->
-     <input
-       type="text"
-       placeholder="Task Description"
-       [(ngModel)]="task.description"
-     />
-     <!-- File Upload -->
-
-        <div class="form-row">
-          <label for="fileUpload">Attach File (optional)</label>
-          <input type="file" id="fileUpload" />
-          <div class="file-preview" id="filePreview"></div>
-        </div>
-   
-     <!-- Add Button -->
-     <button (click)="addTask()">Add Task</button>
-   <button class="cancel-button" (click)="cancel()">Cancel</button>
-   
-     <!-- Success Message -->
-     <div *ngIf="showSuccessMessage" style="color: green; margin-top: 10px;">
-       ✅ Task added successfully
-     </div>
-   </div>
-   
-         <!-- Card List -->
-      
-      
-       <!-- Modal Section (Outside of <section>) --> 
-       <!-- Hidden Checkbox to Control Modal -->
-       <input type="checkbox" id="modal-toggle" hidden />
-   
-       <!-- Modal -->
-        <!-- Edit Task Modal -->
-   <!-- Edit Task Modal -->
-   <!-- Edit Task Modal -->
-   <div class="edit-task-modal" *ngIf="isModalOpen">
-     <div class="edit-task-content">
-       <h3>Edit Task</h3>
-   
-       <label>Description:</label>
-       <textarea [(ngModel)]="editComment" rows="4" cols="50"></textarea>
-   
-       <label>Upload New File (optional):</label>
-       <input type="file" (change)="onFileSelected($event)" />
-   
-       <div class="edit-task-buttons">
-      <button class="save-btn" (click)="saveEdit()">Save</button>
-     <button class="cancel-btn" (click)="closeModal()">Cancel</button>
-       </div>
-     </div>
-   </div>
-   
-   
-   
-   
+    <!-- Project Input Box -->
+    <div *ngIf="showCreateProjectBox" class="project-box">
+      <div class="form-row">
+        <label for="projectName">Project Name *</label>
+        <input type="text" id="projectName" placeholder="Project Name" [(ngModel)]="project.projectName" required />
       </div>
 
+      <div class="form-row employees-dropdown-container">
+        <label>Select Employees *</label>
+        <div class="employees-input-container" (click)="$event.stopPropagation(); showEmployeeDropdown = !showEmployeeDropdown">
+          <input 
+            type="text" 
+            placeholder="Search employees..." 
+            [(ngModel)]="employeeSearchText"
+            (click)="$event.stopPropagation(); showEmployeeDropdown = true"
+            readonly
+          />
+          <i class="fa fa-chevron-down"></i>
+        </div>
+        
+        <div class="employees-dropdown" *ngIf="showEmployeeDropdown">
+          <div class="employee-search">
+            <input 
+              type="text" 
+              placeholder="Search employees..." 
+              [(ngModel)]="employeeSearchText"
+              (click)="$event.stopPropagation()"
+            />
+          </div>
+          <div class="employee-list">
+            <div *ngFor="let employee of getFilteredEmployees()" 
+                 class="employee-item" 
+                 (click)="$event.stopPropagation(); toggleEmployeeSelection(employee)"
+                 [class.selected]="isEmployeeSelected(employee)">
+              {{ employee }}
+            </div>
+            <div *ngIf="getFilteredEmployees().length === 0" class="no-employees">
+              No employees found
+            </div>
+          </div>
+        </div>
+        
+        <div class="selected-employees" *ngIf="project.employees.length > 0">
+          <strong>Selected: </strong>{{ getSelectedEmployeesNames() }}
+        </div>
+      </div>
 
+      <div class="form-row">
+        <label for="startDate">Start Date *</label>
+        <input type="date" id="startDate" [(ngModel)]="project.startDate" required />
+      </div>
 
+      <div class="form-row">
+        <label for="expectedEndDate">Expected End Date *</label>
+        <input type="date" id="expectedEndDate" [(ngModel)]="project.expectedEndDate" required />
+      </div>
+
+      <div class="form-buttons">
+        <button (click)="createProject()">Create Project</button>
+        <button class="cancel-button" (click)="cancel()">Cancel</button>
+      </div>
+
+      <!-- Success Message -->
+      <div *ngIf="showSuccessMessage" class="success-message">
+        ✅ Project created successfully
+      </div>
+    </div>
+
+    <!-- Projects List -->
+    <div class="projects-list">
+      <div *ngFor="let project of filteredProjects" class="project-card">
+        <h4>{{ project.projectName }}</h4>
+        <p><strong>Employees:</strong> {{ project.employees.join(', ') }}</p>
+        <p><strong>Start Date:</strong> {{ project.startDate }}</p>
+        <p><strong>Expected End Date:</strong> {{ project.expectedEndDate }}</p>
+        <div class="project-actions">
+          <button (click)="openEditModal(project)">Edit</button>
+          <button (click)="deleteProject(project)" class="delete-btn">Delete</button>
+        </div>
+      </div>
+      <div *ngIf="filteredProjects.length === 0" class="no-projects">
+        No projects found. Create your first project!
+      </div>
+    </div>
+
+    <!-- Edit Project Modal -->
+    <div class="edit-task-modal" *ngIf="isModalOpen">
+      <div class="edit-task-content">
+        <h3>Edit Project</h3>
+        <label>Project Name:</label>
+        <input type="text" [(ngModel)]="selectedProject.projectName" />
+        <div class="edit-task-buttons">
+          <button class="save-btn" (click)="saveEdit()">Save</button>
+          <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
 
 <!-- Profile Edit Modal -->
 <div class="modal" *ngIf="showEditModal">
   <div class="modal-content">
     <h3>Edit Profile</h3>
+    <form class="grid-form">
+      <!-- Combine First + Last Name in one grid cell -->
+      <div class="form-group first-last-combined">
+        <label>First name:</label>
+        <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
+        <label style="margin-top: 30px;">Last name:</label>
+        <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
+      </div>
 
- <form class="grid-form">
-      <!-- Row 1 -->
-<!-- Combine First + Last Name in one grid cell -->
-<div class="form-group first-last-combined">
-  <label>First name:</label>
-  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
-
-  <label style="margin-top: 30px;">Last name:</label>
-  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
-</div>
-
-<!-- Profile remains as-is in the right cell -->
-<div class="form-group">
- <div *ngIf="previewImage" class="profile-preview-wrapper">
-    <img [src]="previewImage" class="profile-preview-img" />
-  </div>
-  <input type="file" (change)="onPhotoSelected($event)" />
-  
-</div>
-
-
- 
+      <!-- Profile remains as-is in the right cell -->
+      <div class="form-group">
+        <div *ngIf="previewImage" class="profile-preview-wrapper">
+          <img [src]="previewImage" class="profile-preview-img" />
+        </div>
+        <input type="file" (change)="onPhotoSelected($event)" />
+      </div>
 
       <!-- Row 3 -->
       <div class="form-group">
@@ -313,9 +275,7 @@
         <button type="button" (click)="closeEditModal()">Cancel</button>
       </div>
     </form>
-
   </div>
 </div>
 
 <app-footer></app-footer>
-
