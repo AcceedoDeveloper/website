@@ -112,6 +112,12 @@ filteredTasks: any[] = [];
     this.showrole=!this.showrole;
   }
 
+
+    isAdmin(): boolean {
+ 
+  const role = sessionStorage.getItem('role') || this.userData?.role || '';
+  return role?.toLowerCase() === 'admin';
+}
   
 
   cancel() {

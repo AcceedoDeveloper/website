@@ -151,7 +151,7 @@ onSubmit(): void {
       if (role === 'admin') {
         this.router.navigate(['/role']);
       } else {
-        this.router.navigate(['/projects']);
+        this.router.navigate(['/creat']);
       }
       
       // Reload the page to update navigation

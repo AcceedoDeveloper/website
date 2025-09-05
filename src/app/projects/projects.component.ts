@@ -131,6 +131,13 @@ filteredTasks: any[] = [];
   }
 }
 
+  isAdmin(): boolean {
+
+  const role = sessionStorage.getItem('role') || this.userData?.role || '';
+  return role?.toLowerCase() === 'admin';
+}
+
+
   fetchTasks() {
     this.afs
       .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
