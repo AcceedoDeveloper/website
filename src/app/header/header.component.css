@@ -2003,3 +2003,34 @@ textarea:focus {
   color: #666;
   font-style: italic;
 }
+/* Header fixed at the top */
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+/* Layout container under the header */
+.layout-container {
+  display: flex;
+  margin-top: 70px; /* height of your header */
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 250px;
+  background: #1e1e2f;
+  color: #fff;
+  min-height: calc(100vh - 70px); /* full height minus header */
+  padding: 10px;
+}
+
+/* Main content */
+.maincontent {
+  flex: 1;
+  padding: 20px;
+  background: #f5f6fa;
+  min-height: calc(100vh - 70px);
+}

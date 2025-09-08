@@ -29,6 +29,27 @@ export class FilterPipe implements PipeTransform {
   styleUrls: ['./createproject.component.css']
 })
 export class CreateprojectComponent implements OnInit {
+onSearch() {
+throw new Error('Method not implemented.');
+}
+getInitials(arg0: any) {
+throw new Error('Method not implemented.');
+}
+openEditProfile() {
+throw new Error('Method not implemented.');
+}
+signOut() {
+throw new Error('Method not implemented.');
+}
+onPhotoSelected($event: Event) {
+throw new Error('Method not implemented.');
+}
+saveProfilePicture() {
+throw new Error('Method not implemented.');
+}
+closeEditModal() {
+throw new Error('Method not implemented.');
+}
   projects: any[] = [];
   employees: any[] = [];
   userData: any = null;
@@ -70,6 +91,27 @@ export class CreateprojectComponent implements OnInit {
     this.fetchProjects();
     this.fetchEmployees();
     this.updateTime();
+    
+    // Add click listener to close dropdown when clicking outside
+    document.addEventListener('click', this.onDocumentClick.bind(this));
+  }
+
+  ngOnDestroy() {
+    // Remove event listener when component is destroyed
+    document.removeEventListener('click', this.onDocumentClick.bind(this));
+  }
+
+  onDocumentClick(event: MouseEvent) {
+    // Close dropdown if clicked outside
+    if (this.showEmployeeDropdown) {
+      const dropdown = document.querySelector('.employees-dropdown');
+      const input = document.querySelector('.employees-input-container');
+      
+      if (dropdown && !dropdown.contains(event.target as Node) && 
+          input && !input.contains(event.target as Node)) {
+        this.showEmployeeDropdown = false;
+      }
+    }
   }
 
   updateTime() {
@@ -98,16 +140,35 @@ export class CreateprojectComponent implements OnInit {
       expectedEndDate: ''
     };
     this.showCreateProjectBox = false;
-  }
-
-  onSearch() {
-    const query = this.searchQuery.toLowerCase();
-    this.filteredProjects = this.projects.filter(project =>
-      project.projectName.toLowerCase().includes(query)
-    );
+    this.showEmployeeDropdown = false;
   }
 
   fetchProjects() {
+    // Get projects from backend API instead of Firestore
+    this.projectService.getProjects().subscribe({
+      next: (response: any) => {
+        console.log('Projects from API:', response);
+        if (Array.isArray(response)) {
+          this.projects = response;
+          this.filteredProjects = response;
+        } else if (response && response.data && Array.isArray(response.data)) {
+          this.projects = response.data;
+          this.filteredProjects = response.data;
+        } else {
+          console.error('Unexpected API response format:', response);
+          // Fallback to Firestore if API fails
+          this.fetchProjectsFromFirestore();
+        }
+      },
+      error: (error: any) => {
+        console.error('Error fetching projects from API:', error);
+        // Fallback to Firestore if API fails
+        this.fetchProjectsFromFirestore();
+      }
+    });
+  }
+
+  fetchProjectsFromFirestore() {
     this.afs
       .collection('projects', (ref) => ref.orderBy('createdAt', 'desc'))
       .valueChanges({ idField: 'id' })
@@ -117,48 +178,71 @@ export class CreateprojectComponent implements OnInit {
       });
   }
 
+  filterProjects() {
+    if (!this.searchQuery) {
+      this.filteredProjects = [...this.projects];
+      return;
+    }
+    
+    const query = this.searchQuery.toLowerCase();
+    this.filteredProjects = this.projects.filter(project => 
+      project.projectName.toLowerCase().includes(query) ||
+      this.getEmployeeNames(project.employees).toLowerCase().includes(query)
+    );
+  }
 
   isAdmin(): boolean {
- 
-  const role = sessionStorage.getItem('role') || this.userData?.role || '';
-  return role?.toLowerCase() === 'admin';
-}
+    const role = sessionStorage.getItem('role') || this.userData?.role || '';
+    return role?.toLowerCase() === 'admin';
+  }
+
   fetchEmployees() {
     this.userService.getuser().subscribe({
       next: (response: any) => {
         console.log('API Response:', response);
         
-        // Extract usernames from the response
+        // Handle different response formats
+        let employeesData = [];
+        
         if (Array.isArray(response)) {
-          this.employees = response
-            .filter(user => user && user.userName) // Filter out undefined/null users
-            .map(user => user.userName);
+          employeesData = response;
         } else if (response && typeof response === 'object') {
-          // Handle object response
           if (response.data && Array.isArray(response.data)) {
-            this.employees = response.data
-              .filter((user: { userName: any; }) => user && user.userName)
-              .map((user: { userName: any; }) => user.userName);
+            employeesData = response.data;
           } else {
-            // Convert object values to array
-            this.employees = Object.values(response)
-              .filter(user => user && (user as any).userName)
-              .map(user => (user as any).userName);
+            employeesData = Object.values(response);
           }
         }
         
+        // Extract employee names and store full objects
+        this.employees = employeesData
+          .filter((user: { userName: any; firstName: any; lastName: any; }) => user && (user.userName || (user.firstName && user.lastName)))
+          .map((user: { id: any; _id: any; userName: any; firstName: any; lastName: any; }) => {
+            return {
+              id: user.id || user._id || Math.random().toString(36).substr(2, 9),
+              name: user.userName || `${user.firstName} ${user.lastName}`,
+              fullData: user
+            };
+          });
+        
         console.log('Processed employees:', this.employees);
         
-        // If still empty, use fallback data
         if (this.employees.length === 0) {
-          this.employees = ['Sabari', 'rushi'];
+          // Fallback data with proper structure
+          this.employees = [
+            { id: '1', name: 'Sabari', fullData: { userName: 'Sabari' } },
+            { id: '2', name: 'rushi', fullData: { userName: 'rushi' } }
+          ];
           console.log('Using fallback employee data:', this.employees);
         }
       },
       error: (error: any) => {
         console.error('Error fetching employees:', error);
-        // Fallback data
-        this.employees = ['Sabari', 'rushi'];
+        // Fallback data with proper structure
+        this.employees = [
+          { id: '1', name: 'Sabari', fullData: { userName: 'Sabari' } },
+          { id: '2', name: 'rushi', fullData: { userName: 'rushi' } }
+        ];
         console.log('Using fallback employee data due to error:', this.employees);
       }
     });
@@ -178,22 +262,28 @@ export class CreateprojectComponent implements OnInit {
     });
   }
 
-  toggleEmployeeSelection(employee: string) {
-    const index = this.project.employees.indexOf(employee);
+  toggleEmployeeSelection(employee: any) {
+    const index = this.project.employees.findIndex((emp: any) => 
+      emp.id === employee.id
+    );
     
     if (index > -1) {
       this.project.employees.splice(index, 1);
     } else {
       this.project.employees.push(employee);
     }
+    
+    // Close dropdown after selection
+    this.showEmployeeDropdown = false;
+    this.employeeSearchText = '';
   }
 
-  isEmployeeSelected(employee: string): boolean {
-    return this.project.employees.includes(employee);
+  isEmployeeSelected(employee: any): boolean {
+    return this.project.employees.some((emp: any) => emp.id === employee.id);
   }
 
   getSelectedEmployeesNames(): string {
-    return this.project.employees.join(', ');
+    return this.project.employees.map((emp: any) => emp.name).join(', ');
   }
 
   getFilteredEmployees() {
@@ -202,7 +292,7 @@ export class CreateprojectComponent implements OnInit {
     }
     
     return this.employees.filter(employee => 
-      employee.toLowerCase().includes(this.employeeSearchText.toLowerCase())
+      employee.name.toLowerCase().includes(this.employeeSearchText.toLowerCase())
     );
   }
 
@@ -217,10 +307,10 @@ export class CreateprojectComponent implements OnInit {
       return;
     }
 
-    // Format dates properly
+    // Format data for API
     const projectData = {
       projectName: this.project.projectName,
-      employees: this.project.employees,
+      employees: this.project.employees.map((emp: any) => emp.name), // Send only names to API
       startDate: new Date(this.project.startDate).toISOString().split('T')[0],
       expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
     };
@@ -231,19 +321,22 @@ export class CreateprojectComponent implements OnInit {
       next: (response: any) => {
         console.log('Project created successfully:', response);
         this.showSuccessMessage = true;
+    
+     const newProject = {
+  ...projectData,
+  _id: response._id || Date.now().toString(),  
+  employees: [...this.project.employees]
+};
+
+        
+        this.projects.unshift(newProject);
+        this.filteredProjects = [...this.projects];
+        
         setTimeout(() => {
           this.showSuccessMessage = false;
           this.showCreateProjectBox = false;
+          this.showEmployeeDropdown = false;
         }, 2000);
-        
-        // Also save to Firestore if needed
-        this.afs.collection('projects').add({
-          ...projectData,
-          createdAt: Timestamp.now(),
-          createdBy: this.userData?.uid || 'admin'
-        }).then(() => {
-          this.fetchProjects();
-        });
       },
       error: (error: { error: { message: any; }; message: any; }) => {
         console.error('Error creating project:', error);
@@ -252,12 +345,31 @@ export class CreateprojectComponent implements OnInit {
       }
     });
   }
+deleteProject(project: any) {
+  if (confirm('Are you sure you want to delete this project?')) {
+    
+    const projectId = project._id || project.id;
 
-  deleteProject(project: any) {
-    if (confirm('Are you sure you want to delete this project?')) {
-      this.afs.collection('projects').doc(project.id).delete();
+    if (!projectId) {
+      console.error('Project ID is missing:', project);
+      alert('Cannot delete project: Missing project ID');
+      return;
     }
+
+    this.projectService.deleteProject(projectId).subscribe({
+      next: (response: any) => {
+        console.log('Project deleted successfully:', response);
+        this.projects = this.projects.filter(p => (p._id || p.id) !== projectId);
+        this.filteredProjects = this.filteredProjects.filter(p => (p._id || p.id) !== projectId);
+      },
+      error: (error: any) => {
+        console.error('Error deleting project:', error);
+        alert('Failed to delete project: ' + (error.error?.message || error.message || 'Unknown error'));
+      }
+    });
   }
+}
+
 
   openEditModal(project: any) {
     this.selectedProject = { ...project };
@@ -267,73 +379,51 @@ export class CreateprojectComponent implements OnInit {
   saveEdit() {
     if (!this.selectedProject) return;
 
-    this.afs
-      .collection('projects')
-      .doc(this.selectedProject.id)
-      .update({
-        projectName: this.selectedProject.projectName
-      })
-      .then(() => {
-        this.isModalOpen = false;
-        this.fetchProjects();
-      });
+    const projectData = {
+      projectName: this.selectedProject.projectName,
+      employees: this.selectedProject.employees.map((emp: any) => emp.name), // Send only names to API
+      startDate: this.selectedProject.startDate,
+      expectedEndDate: this.selectedProject.expectedEndDate
+    };
+
+this.projectService.createProject(projectData).subscribe({
+  next: (response: any) => {
+    console.log('Project created successfully:', response);
+    const newProject = {
+      ...projectData,
+      _id: response._id || Date.now().toString(), 
+      employees: [...this.project.employees]
+    };
+    this.projects.unshift(newProject);
+    this.filteredProjects = [...this.projects];
+    this.showSuccessMessage = true;
+    setTimeout(() => {
+      this.showSuccessMessage = false;
+      this.showCreateProjectBox = false;
+    }, 2000);
+  },
+  error: (error: any) => {
+    console.error('Error creating project:', error);
+    alert('Failed to create project: ' + (error.error?.message || error.message || 'Unknown error'));
+  }
+});
+
   }
 
   closeModal() {
     this.isModalOpen = false;
   }
 
-  // Profile Modal Methods
-  openEditProfile() {
-    this.editUserData = { ...this.userData };
-    this.showEditModal = true;
-  }
-
-  closeEditModal() {
-    this.showEditModal = false;
-  }
-
-  saveProfilePicture() {
-    this.afs
-      .collection('users')
-      .doc(this.userData.uid)
-      .update(this.editUserData)
-      .then(() => {
-        this.showEditModal = false;
-        this.getCurrentUser();
-      });
-  }
-
-  onPhotoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewImage = reader.result;
-        this.editUserData.photoURL = this.previewImage;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  signOut() {
-    this.afAuth.signOut();
-  }
-
-  getInitials(name: string): string {
-    if (!name) return 'U';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.employees-dropdown-container')) {
-      this.showEmployeeDropdown = false;
-    }
+  // Helper function to display employee names in the template
+  getEmployeeNames(employees: any[]): string {
+    if (!employees || !Array.isArray(employees)) return '';
+    
+    return employees.map(emp => {
+      if (typeof emp === 'string') return emp;
+      if (emp && emp.name) return emp.name;
+      if (emp && emp.userName) return emp.userName;
+      if (emp && emp.firstName && emp.lastName) return `${emp.firstName} ${emp.lastName}`;
+      return 'Unknown';
+    }).join(', ');
   }
 }
