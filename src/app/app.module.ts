@@ -77,6 +77,7 @@ import { DepartmentDialogComponent } from './department/department-dialog/depart
 import { RoledialogComponent } from './role/roledialog/roledialog.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistermatComponent } from './register/registermat/registermat.component';
+import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
@@ -127,7 +128,8 @@ import { RegistermatComponent } from './register/registermat/registermat.compone
     DepartmentComponent,
    DepartmentDialogComponent,
    RoledialogComponent,
-   RegistermatComponent
+   RegistermatComponent,
+   HeaderComponent
   ],
 
   imports: [

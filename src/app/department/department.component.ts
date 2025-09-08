@@ -369,10 +369,10 @@ editdepartment(department: any) {
 
   showdepartment() {
     this.dialog.open(DepartmentDialogComponent, {
-  width: '800px',
-  height: '500px',
-  // disableClose: false, 
-  panelClass: 'custom-dialog',
+    width: '80vw',
+      maxHeight: '60vh',
+      panelClass: 'custom-dialog',
+      data: {} 
 
 
 });

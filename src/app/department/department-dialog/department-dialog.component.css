@@ -1,132 +1,161 @@
-/* Old Money & Classy Form Styling */
-.userdata {
-  margin: 10px auto;
-  margin-top: 20px;
-  width: 90%;
-  height:90%;
-  padding: 20px;
-  background: linear-gradient(to right, #f8f5f0, #ece6da);
+/* Container */
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #f9fafb;
+  padding: 40px 20px;
+  min-height: 500vh;
+  box-sizing: border-box;
+}
+
+/* Card style */
+.form-card {
+  background: #fff;
+  padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Georgia', 'Times New Roman', serif; 
-  color: #2e3b2f; 
-}
-
-/* Container for form */
-.createdeptsubdept {
-  max-width: 900px;
-  height: 90%;
-  margin: 0 auto;
-  background: linear-gradient(to right, #f8f5f0, #ece6da);
-  border-radius: 10px;
-  max-height: 300px;
-  overflow: auto;
-  padding: 15px;
-  border: 1px solid #d2c8b6; 
-}
-
-/* Scrollbar styling */
-.createdeptsubdept::-webkit-scrollbar {
-  width: 6px;
-}
-.createdeptsubdept::-webkit-scrollbar-track {
-  background: #f1ece4;
-  border-radius: 10px;
-}
-.createdeptsubdept::-webkit-scrollbar-thumb {
-  background: #b5a58a;
-  border-radius: 10px;
-}
-
-/* Labels */
-.userdata label {
-  display: block;
-  margin: 8px 0 4px;
-  font-weight: 600;
-  font-size: 14px;
-  color: #3e4a3f; 
-}
-
-/* Input field styling */
-.userdata input {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  border: 1px solid #c2b9a7;
-  border-radius: 6px;
-  background-color: #fffdf9;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.userdata input:focus {
-  outline: none;
-  border-color: #4a7856; 
-  box-shadow: 0 0 4px rgba(74, 120, 86, 0.4);
+  max-width: 550px;
 }
 
-/* Subdepartment input row */
-.input-icon-container {
+.form-card h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Input groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+/* Error messages */
+.error {
+  font-size: 13px;
+  color: #dc2626;
+  margin-top: 4px;
+}
+
+/* Subdepartments */
+.subdept-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.subdept-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 10px;
 }
-.subdepartment-input {
+
+.subdept-item input {
   flex: 1;
 }
 
-/* Add icon styling */
-.add-task-icon {
-  cursor: pointer;
-  font-size: 18px;
-  color: #4a7856; 
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-.add-task-icon:hover {
-  color: #2f5a3e;
-  transform: scale(1.1);
-}
-
-/* Buttons container */
-.createdeptsubdeptbutton {
-  margin-top: 20px;
-  text-align: right;
-}
-
-/* Buttons */
-.userdata button {
-  padding: 8px 16px;
-  margin-left: 8px;
+.icon-btn {
+  border: none;
+  background: none;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 600;
-  border: none;
+  padding: 6px 10px;
   border-radius: 6px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.userdata button:hover {
-  transform: translateY(-2px);
+  transition: 0.2s;
 }
 
-/* Save button */
-.userdata button[type="submit"] {
-  background-color: #4a7856; 
-  color: #fff;
-}
-.userdata button[type="submit"]:hover {
-  background-color: #2f5a3e;
-}
-.cover
-{
-    height: 100%;
-    width: 100%;
+.icon-btn.remove {
+  color: #dc2626;
+  background: #fee2e2;
 }
 
-/* Cancel button */
-.userdata button[type="button"] {
-  background-color: #b5a58a; 
-  color: #fff;
+.icon-btn.remove:hover {
+  background: #fca5a5;
+  color: white;
 }
-.userdata button[type="button"]:hover {
-  background-color: #9d8b70;
+
+.icon-btn.add {
+  align-self: flex-start;
+  color: #065f46;
+  background: #d1fae5;
+}
+
+.icon-btn.add:hover {
+  background: #10b981;
+  color: white;
+}
+
+/* Action buttons */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn.primary {
+  background: #2563eb;
+  color: white;
+}
+
+.btn.primary:hover {
+  background: #1d4ed8;
+}
+
+.btn.secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.btn.secondary:hover {
+  background: #d1d5db;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-card {
+    padding: 20px;
+  }
+  .form-group input {
+    font-size: 13px;
+  }
+  .btn {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
 }

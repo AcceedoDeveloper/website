@@ -214,9 +214,8 @@ editrole(role: any) {
       
       
      this.dialog.open(RoledialogComponent, {
-  width: '800px',
-  height: '500px',
-
+  width: '600px',
+  height: '400px',
   panelClass: 'custom-dialog',
 
 

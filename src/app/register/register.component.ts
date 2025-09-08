@@ -100,7 +100,7 @@ openMenu: string | null = null;
     this.userserives.deleteuser(ID).subscribe({
       next: (res) => {
         console.log('✅ User deleted successfully:', res);
-        this.getuserdata(); // Refresh user list after deletion
+        this.getuserdata(); 
       },
       error: (err) => {
         console.error('❌ Error deleting user:', err);
@@ -117,11 +117,11 @@ openMenu: string | null = null;
 
     showcreateuserss()
     {
-       this.dialog.open(RegistermatComponent , {
-        width: '80vw',    // 80% of the viewport width
-    height: '900px',
-        //  disableClose: false, 
-        panelClass: 'custom-dialog',
+         const ref = this.dialog.open(RegistermatComponent, {
+      width: '80vw',
+      maxHeight: '90vh',
+      panelClass: 'custom-dialog',
+      data: {} 
       
       
       });

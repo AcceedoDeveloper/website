@@ -1,42 +1,31 @@
-         
-       
+<div class="form-wrapper">
+  <div class="form-card">
+    <h2>Create Role</h2>
 
-            <!-- showrole -->
-          <!-- <form #roledata="ngForm"  (ngSubmit)="getroledata(roledata.value)" class="main" method="get">
-         <div class="user-role">
-             <label for="role">Role</label>
-             <input type="text" placeholder="Enter the Role" id="role" name="role" ngModel required role="ngModel" >
-             <span *ngIf="roledata.invalid && roledata.touched " style= "display: block; color: red;" >Enter the Role</span>
-           </div>  -->
+    <form class="main" [formGroup]="roleform" (ngSubmit)="saveroledata()">
+      <!-- Role Input -->
+      <div class="form-group">
+        <label for="role">Role</label>
+        <input 
+          type="text" 
+          placeholder="Enter the Role" 
+          id="role" 
+          formControlName="role" 
+        />
+        <span class="error" *ngIf="vrole?.invalid && vrole?.touched">
+          Please enter role
+        </span>
+      </div>
 
-
-           <!-- button -->
-
-          <!-- <div class="buttons">
-              
-          <button type="submit" [disabled]="roledata.invalid">Save</button>
-          <button type="button" (click)="resetForm()">Cancel</button>
-           </div>
-           
-           
-         </form>  -->
-
-
-      <form class="main" [formGroup]="roleform" (ngSubmit)="saveroledata()">
-           <div class="user-role">
-          <label for="role">Role</label>
-
-        <input type="text" placeholder="Enter the Role" id="role" name="role"  formControlName="role"  ><br>
-        <span *ngIf="vrole?.invalid && vrole?.touched" style="color: red;">Please enter role</span>
-
-           </div> 
-
-             <div class="buttons">
-              
-          <button type="submit" [disabled]="roleform.invalid">Save</button>
-          <button type="button" (click)="resetForm()">Cancel</button>
-           </div> 
-          
-
-         </form> 
-       
+      <!-- Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn primary" [disabled]="roleform.invalid">
+          Save
+        </button>
+        <button type="button" class="btn secondary" (click)="resetForm()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

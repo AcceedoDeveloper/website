@@ -1,178 +1,122 @@
-/* General form styling with light blue palette */
-form {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #E6F0FA; /* Light blue background */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+
+.custom-dialog .mat-dialog-container {
+  padding: 0;
+  border-radius: 10px;
 }
 
-/* Label styling */
-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #2C5282; /* Darker blue for text */
-  font-weight: bold;
-  font-size: 14px;
-}
 
-/* Input fields */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"] {
+.dialog-root {
+  padding: 18px;
+  max-height: 85vh;
+  overflow: auto;
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #4A90E2; /* Primary blue border */
-  border-radius: 4px;
-  background-color: #D1E3F6; /* Light blue input background */
-  color: #2C5282;
-  font-size: 14px;
   box-sizing: border-box;
 }
 
-input:focus {
-  outline: none;
-  border-color: #2C5282; /* Darker blue on focus */
-  background-color: #F7FAFC; /* Slightly lighter background on focus */
-  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5); /* Subtle blue glow */
+
+.dialog-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #111827;
 }
 
-/* Datalist input styling */
-input[list] {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #4A90E2;
-  border-radius: 4px;
-  background-color: #D1E3F6;
-  color: #2C5282;
-  font-size: 14px;
-}
 
-input[list]:focus {
-  outline: none;
-  border-color: #2C5282;
-  background-color: #F7FAFC;
-  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
-}
-
-/* Department group styling */
-div[formGroupName="department"] {
-  padding: 15px;
-  background-color: #F7FAFC; /* Slightly lighter blue background for nested group */
-  border: 1px solid #4A90E2;
-  border-radius: 6px;
-  margin-bottom: 15px;
-}
-
-/* SubDepartments FormArray styling */
-div[formArrayName="subDepartments"] {
-  margin-top: 10px;
-}
-
-div[formArrayName="subDepartments"] > div {
-  display: flex;
+.register-form .grid {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 12px 16px;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
 }
 
-div[formArrayName="subDepartments"] label {
-  flex: 0 0 120px;
+
+.register-form .full-width {
+  grid-column: 1 / -1;
+  display: contents; 
 }
 
-/* Buttons */
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
+
+.register-form label {
   font-size: 14px;
+  color: #374151;
+  padding-right: 8px;
+}
+.register-form input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+
+.sub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sub-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.sub-row input { flex: 1; }
+
+
+.mini {
+  border: none;
+  background: transparent;
+  color: #ef4444;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.mini.add {
+  align-self: start;
+  color: #065f46;
+  background: #ecfeff;
+  border: 1px solid #bbf7d0;
 }
 
-button[type="submit"] {
-  background-color: #4A90E2; /* Primary blue */
-  color: white;
-}
 
-button[type="submit"]:hover:not(:disabled) {
-  background-color: #2C5282; /* Darker blue on hover */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
 }
-
-button[type="submit"]:disabled {
-  background-color: #A3BFFA; /* Lighter blue when disabled */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn.cancel {
+  background: #f3f4f6;
+  color: #111827;
+}
+.btn.save {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+.btn.save:disabled {
+  background: #93c5fd;
   cursor: not-allowed;
 }
 
-button[type="button"] {
-  background-color: #E6F0FA; /* Light blue background */
-  color: #2C5282;
-  border: 1px solid #4A90E2;
-}
-
-button[type="button"]:hover {
-  background-color: #D1E3F6; /* Slightly darker blue on hover */
-}
-
-/* Add/Remove SubDepartment buttons */
-button[ng-reflect-type="button"] {
-  padding: 5px 10px;
-  font-size: 12px;
-}
-
-button[ng-reflect-type="button"]:first-of-type {
-  background-color: #E53E3E; /* Red for remove button */
-  color: white;
-}
-
-button[ng-reflect-type="button"]:first-of-type:hover {
-  background-color: #C53030; /* Darker red on hover */
-}
-
-button[ng-reflect-type="button"]:last-of-type {
-  background-color: #38A169; /* Green for add button */
-  color: white;
-}
-
-button[ng-reflect-type="button"]:last-of-type:hover {
-  background-color: #2F855A; /* Darker green on hover */
-}
-
-/* Responsive design */
-@media (max-width: 480px) {
-  form {
-    padding: 15px;
+/* responsive: stack on small screens */
+@media (max-width: 640px) {
+  .register-form .grid {
+    grid-template-columns: 1fr;
   }
-
-  label {
-    font-size: 12px;
-  }
-
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="tel"],
-  input[list] {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  button {
-    font-size: 12px;
-    padding: 8px 16px;
-  }
-
-  div[formArrayName="subDepartments"] > div {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  div[formArrayName="subDepartments"] label {
-    flex: none;
-  }
+  .register-form label { margin-bottom: 6px; }
+  .register-form input { width: 100%; }
 }
