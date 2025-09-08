@@ -1,9 +1,7 @@
-
 .custom-dialog .mat-dialog-container {
   padding: 0;
   border-radius: 10px;
 }
-
 
 .dialog-root {
   padding: 18px;
@@ -13,91 +11,73 @@
   box-sizing: border-box;
 }
 
-
 .dialog-header {
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 .dialog-header h3 {
   margin: 0;
   font-size: 18px;
   color: #111827;
+  font-weight: 600;
 }
 
-
-.register-form .grid {
+/* Two-column layout */
+.two-col-grid {
   display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 12px 16px;
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-
-.register-form .full-width {
-  grid-column: 1 / -1;
-  display: contents; 
+/* Group styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
 }
 
-
-.register-form label {
+.form-group label {
   font-size: 14px;
   color: #374151;
-  padding-right: 8px;
+  margin-bottom: 6px;
 }
-.register-form input {
+
+.form-group input,
+.form-group select {
   padding: 8px 10px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
+  font-size: 14px;
   width: 100%;
   box-sizing: border-box;
-  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-
-.sub-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.sub-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.sub-row input { flex: 1; }
-
-
-.mini {
-  border: none;
-  background: transparent;
-  color: #ef4444;
-  cursor: pointer;
-  padding: 6px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-}
-.mini.add {
-  align-self: start;
-  color: #065f46;
-  background: #ecfeff;
-  border: 1px solid #bbf7d0;
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
 }
 
-
+/* Actions */
 .actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 18px;
+  margin-top: 20px;
 }
+
 .btn {
   padding: 8px 14px;
   border-radius: 8px;
   border: 1px solid transparent;
   cursor: pointer;
   font-weight: 600;
+  font-size: 14px;
 }
+
 .btn.cancel {
   background: #f3f4f6;
   color: #111827;
@@ -112,11 +92,9 @@
   cursor: not-allowed;
 }
 
-/* responsive: stack on small screens */
-@media (max-width: 640px) {
-  .register-form .grid {
+/* Responsive: stack vertically on small screens */
+@media (max-width: 768px) {
+  .two-col-grid {
     grid-template-columns: 1fr;
   }
-  .register-form label { margin-bottom: 6px; }
-  .register-form input { width: 100%; }
 }

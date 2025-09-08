@@ -115,18 +115,17 @@ openMenu: string | null = null;
 
   
 
-    showcreateuserss()
-    {
-         const ref = this.dialog.open(RegistermatComponent, {
-      width: '80vw',
-      maxHeight: '90vh',
-      panelClass: 'custom-dialog',
-      data: {} 
-      
-      
-      });
-    }
-    
+showcreateuserss() {
+  const ref = this.dialog.open(RegistermatComponent, {
+    width: '90vw',        
+    maxWidth: '65vw',   
+    height: '75vh',      
+    maxHeight: '100vh',
+    panelClass: 'custom-dialog',
+    data: {}
+  });
+}
+
 
 
     isNavOpen = false;

@@ -1,62 +1,89 @@
 <div class="dialog-root">
   <div class="dialog-header">
-    <h3>Create / Edit User</h3>
+    <h3>{{ isEdit ? 'Edit User' : 'Create User' }}</h3>
   </div>
 
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-    <div class="grid">
-      <label>User Code</label>
-      <input type="text" formControlName="userCode" placeholder="Enter user code" />
+    <div class="two-col-grid">
+      <!-- LEFT SIDE (5 fields) -->
+      <div class="form-left">
 
-      <label>Name</label>
-      <input type="text" formControlName="name" placeholder="Full name" />
 
-      <label>Username</label>
-      <input type="text" formControlName="userName" placeholder="Username" />
+           <div class="form-group">
+          <label>Name</label>
+          <input type="text" formControlName="name" placeholder="Full name" />
+        </div>
 
-      <label>Email</label>
-      <input type="email" formControlName="emailId" placeholder="Email address" />
+        <div class="form-group">
+          <label>User Code</label>
+          <input type="text" formControlName="userCode" placeholder="Enter user code" />
+        </div>
+      
 
-      <label>Password</label>
-      <input type="password" formControlName="password" placeholder="Password" />
 
-      <label>Phone Number</label>
-      <input type="tel" formControlName="phoneNumber" placeholder="Mobile number" />
-
-      <label>Role</label>
-      <input list="rolesList" formControlName="role" placeholder="Select role" />
-      <datalist id="rolesList">
-        <option *ngFor="let r of roles" [value]="r.role"></option>
-      </datalist>
-
-      <!-- department group -->
-      <div class="form-row full-width" formGroupName="department">
-        <label>Department</label>
-        <div class="dept-right">
-          <input list="departmentsList" formControlName="departmentName" (change)="onDepartmentChange($event)" placeholder="Select department" />
-          <datalist id="departmentsList">
-            <option *ngFor="let d of departments" [value]="d.departmentName"></option>
+          <div class="form-group">
+          <label>Role</label>
+          <input list="rolesList" formControlName="role" placeholder="Select role" />
+          <datalist id="rolesList">
+            <option *ngFor="let r of roles" [value]="r.role"></option>
           </datalist>
         </div>
+
+         <div class="form-group">
+          <label>Department</label>
+          <select formControlName="departmentName" (change)="onDepartmentChange($event)">
+            <option value="">-- Select Department --</option>
+            <option *ngFor="let d of departments" [value]="d.departmentName">
+              {{ d.departmentName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>SubDepartment</label>
+          <select formControlName="subDepartmentName">
+            <option value="">-- Select SubDepartment --</option>
+            <option *ngFor="let sd of subDepartmentsData" [value]="sd.name">
+              {{ sd.name }}
+            </option>
+          </select>
+        </div>
+
+
       </div>
 
-      <!-- sub-departments (one-per-row on right column) -->
-      <div class="form-row full-width">
-        <label>SubDepartments</label>
-        <div class="sub-list" formArrayName="subDepartments">
-          <div *ngFor="let sd of subDepartments.controls; let i = index" [formGroupName]="i" class="sub-row">
-            <input formControlName="name" list="subDepartmentsList" placeholder="Select or type sub-department" />
-            <datalist id="subDepartmentsList">
-              <option *ngFor="let sdData of subDepartmentsData" [value]="sdData.name"></option>
-            </datalist>
-            <button type="button" class="mini" (click)="removeSubDepartment(i)" [disabled]="subDepartments.length <= 1">Remove</button>
-          </div>
+      <!-- RIGHT SIDE (4 fields) -->
+      <div class="form-right">
 
-          <button type="button" class="mini add" (click)="addSubDepartment()">+ Add SubDepartment</button>
+
+               <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="emailId" placeholder="Email address" />
         </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" formControlName="phoneNumber" placeholder="Mobile number" />
+        </div>
+
+         
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" formControlName="userName" placeholder="Username" />
+        </div>
+
+
+         <div class="form-group">
+          <label>Password</label>
+          <input type="password" formControlName="password" placeholder="Password" />
+        </div> 
+
+
+   
       </div>
     </div>
 
+    <!-- Actions -->
     <div class="actions">
       <button type="button" class="btn cancel" (click)="cancel()">Cancel</button>
       <button type="submit" class="btn save" [disabled]="registerForm.invalid">Save</button>
