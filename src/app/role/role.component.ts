@@ -167,7 +167,7 @@ editrole(role: any) {
    
   filteredTasks: any[] = [];
   
-    // Profile Edit Modal
+
     showEditModal = false;
     editUserData: any = {};
     previewImage: string | ArrayBuffer | null = null;
@@ -206,7 +206,7 @@ editrole(role: any) {
       this.dropdownOpen = !this.dropdownOpen;
     }
   
-    //show role
+ 
     getrole()
 
     {
@@ -216,7 +216,7 @@ editrole(role: any) {
      this.dialog.open(RoledialogComponent, {
   width: '800px',
   height: '500px',
-  //  disableClose: false, 
+
   panelClass: 'custom-dialog',
 
 
@@ -363,7 +363,7 @@ editrole(role: any) {
         });
     }
   
-    // Profile Modal Methods
+
     openEditProfile() {
       this.editUserData = { ...this.userData };
       this.showEditModal = true;
@@ -421,7 +421,7 @@ isAdmin(): boolean {
         next: (res: any) => {
           console.log('✅ User created:', res);
 
-          // Save role in sessionStorage for menu access
+     
           sessionStorage.setItem('role', this.user.role);
           sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
           sessionStorage.setItem('email', this.user.email);

@@ -12,6 +12,16 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 })
 export class RegisterComponent {
+userData: any;
+showcreateuserss() {
+throw new Error('Method not implemented.');
+}
+editUser(_t82: any) {
+throw new Error('Method not implemented.');
+}
+deleteUser(arg0: any) {
+throw new Error('Method not implemented.');
+}
   constructor(private firestore: AngularFirestore) {
     // You can now use this.firestore to read/write Firestore data
   }

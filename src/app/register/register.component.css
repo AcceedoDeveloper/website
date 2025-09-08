@@ -2171,3 +2171,125 @@ textarea:focus {
 
 
 
+/* Container */
+.user-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 14px;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.06);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header */
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.user-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.add-user-btn {
+  padding: 8px 14px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.add-user-btn:hover {
+  background: #0056b3;
+}
+
+/* Table */
+.user-table-wrapper {
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.user-table th,
+.user-table td {
+  padding: 14px 18px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.user-table thead {
+  background: #f3f6fa;
+  font-weight: 600;
+  color: #444;
+}
+
+.user-table tr {
+  border-bottom: 1px solid #eee;
+}
+
+.user-table tr:last-child {
+  border-bottom: none;
+}
+
+.user-table tbody tr:hover {
+  background: #f9fbff;
+  transition: 0.2s ease;
+}
+
+/* Action column */
+.action-col {
+  text-align: center;
+  width: 180px;
+}
+
+/* Buttons */
+.pill-btn {
+  padding: 6px 14px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 25px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pill-btn.edit {
+  background: #28a745;
+  color: #fff;
+}
+
+.pill-btn.edit:hover {
+  background: #218838;
+}
+
+.pill-btn.delete {
+  background: #dc3545;
+  color: #fff;
+}
+
+.pill-btn.delete:hover {
+  background: #b02a37;
+}
+
+/* Empty state */
+.empty-state {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}

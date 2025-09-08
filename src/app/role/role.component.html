@@ -207,11 +207,8 @@
        <!-- Assigned Tasks Section -->
        <!-- Assigned Tasks Section -->
        <div class="section-header">
-           <div class="ASSIGNED">
-               <h4>Create Role</h4>
-               <button mat-icon-button (click)="getrole()" >
-               <i  class="fa fa-plus add-task-icon" ></i>
-               </button>
+           <div class="">
+           
             </div>
 
 
@@ -235,32 +232,37 @@
 </div>
 
      </div>
-   
-   
-<div class="mainclass">
-  <table border="1px" class="showtable">
-    <thead >
-      <tr class="tableheader">
-        
-        <th class="tablerole">Role</th>
-        <th class="tableaction">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let itemrole of roledata" class="tabledata">
+   <div class="role-wrapper">
+  <div class="role-header">
+    <h2>Roles</h2>
+    <button class="add-role-btn" (click)="getrole()">+ Add Role</button>
+  </div>
 
-<td class="roltd">{{itemrole.role}}</td>
-<td class="buttoncls" >
-  <button class="deletebuttonforrole" (click)="deleterole(itemrole._id)">
-    Delete
-  </button>
-<button  class="editrole" (click)="editrole(itemrole)">Edit</button></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="role-table-wrapper">
+    <table class="role-flat-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th class="action-col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let itemrole of roledata">
+          <td>{{ itemrole.role }}</td>
+          <td>
+            <button class="pill-btn edit" (click)="editrole(itemrole)">Edit</button>
+            <button class="pill-btn delete" (click)="deleterole(itemrole._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
+    <div *ngIf="roledata.length === 0" class="empty-state">
+      <p>No roles available. Start by adding one.</p>
+    </div>
+  </div>
 </div>
-   
+
     
    
      

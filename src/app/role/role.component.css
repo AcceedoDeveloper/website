@@ -1880,3 +1880,126 @@ textarea:focus {
     font-size: 14px;
   }
 }
+
+
+/* Container */
+.role-wrapper {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 14px;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.06);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header */
+.role-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.role-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.add-role-btn {
+  padding: 8px 14px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.add-role-btn:hover {
+  background: #0056b3;
+}
+
+/* Table */
+.role-table-wrapper {
+  overflow-x: auto;
+}
+
+.role-flat-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.role-flat-table th,
+.role-flat-table td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+.role-flat-table thead {
+  background: #f3f6fa;
+  font-weight: 600;
+  color: #444;
+}
+
+.role-flat-table tr {
+  border-bottom: 1px solid #eee;
+}
+
+.role-flat-table tr:last-child {
+  border-bottom: none;
+}
+
+.role-flat-table tbody tr:hover {
+  background: #f9fbff;
+  transition: 0.2s ease;
+}
+
+/* Action column */
+.action-col {
+  text-align: center;
+  width: 180px;
+}
+
+/* Buttons */
+.pill-btn {
+  padding: 6px 14px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 25px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pill-btn.edit {
+  background: #28a745;
+  color: #fff;
+}
+
+.pill-btn.edit:hover {
+  background: #218838;
+}
+
+.pill-btn.delete {
+  background: #dc3545;
+  color: #fff;
+}
+
+.pill-btn.delete:hover {
+  background: #b02a37;
+}
+
+/* Empty state */
+.empty-state {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}

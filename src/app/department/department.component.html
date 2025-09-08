@@ -155,11 +155,8 @@
 
        <!-- create department and filter -->
      <div class="section-header">
-       <div class="createdept">
-       <h4>Create department</h4>
-<button mat-icon-button  (click)="showdepartment()">
-  <i class="fa fa-plus"></i>
-</button>
+       <div class="">
+
 
      </div>
      <!-- Filter Section -->
@@ -182,38 +179,43 @@
      </div>
    
 
+<div class="department-container">
+  <div class="department-header">
+    <h2>Departments</h2>
+    <button class="add-department-btn"  (click)="showdepartment()">+ Add Department</button>
+  </div>
 
-<div class="dm">
+  <div class="department-table-wrapper">
+    <table class="department-table">
+      <thead>
+        <tr>
+          <th>Department</th>
+          <th>Subdepartments</th>
+          <th class="action-col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of showdm">
+          <td>{{ item.departmentName }}</td>
+          <td>
+            <ul class="sub-list">
+              <li *ngFor="let sub of item.subDepartments">{{ sub.name }}</li>
+            </ul>
+          </td>
+          <td>
+            <button class="pill-btn edit" (click)="editdepartment(item)">Edit</button>
+            <button class="pill-btn delete" (click)="deletedm(item._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-  <table border="2px">
-    <thead>
-      <tr class="tableheader">
-        <th>Department</th>
-        <th>Subdepartment</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-   <tbody >
-  <tr *ngFor="let item of showdm" class="tabledata">
-    <td>{{ item.departmentName }}</td>
-    <td>
-      <ul>
-        <li *ngFor="let sub of item.subDepartments">
-          {{ sub.name }}
-        </li>
-      </ul>
-    </td>
-    <td class="tablebutton">
-      <button  (click)="editdepartment(item)" class="editdm">Edit</button> 
-      <button (click)="deletedm(item._id)">Delete</button>
-    </td>
-  </tr>
-</tbody>
-
-  </table>
-
+    <div *ngIf="showdm.length === 0" class="empty-state">
+      No departments found. Start by adding one.
+    </div>
+  </div>
 </div>
-      
+
       
        <!-- Hidden Checkbox to Control Modal -->
        <input type="checkbox" id="modal-toggle" hidden />

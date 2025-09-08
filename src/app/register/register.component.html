@@ -60,8 +60,8 @@
           Backend <i class="fa fa-chevron-down"></i>
         </label>
         <div class="submenu">
-          <a routerLink="/node">Node.js</a>
-          <a routerLink="/api&database">API & Database</a>
+          <a routerLink="/backend">Node.js</a>
+          <a routerLink="/database">API & Database</a>
         </div>
       </div>
     </li>
@@ -91,12 +91,10 @@
    
    <!-- Assigned Tasks Section -->
      <div class="section-header">
-       <div class="createuser">
-       <h4>create user</h4>
-       <button mat-icon-button (click)="showcreateuserss()">
+       <div class="">
+    >
 
-         <i  class="fa fa-plus add-task-icon" ></i>
-       </button>
+    
     
      </div>
      <!-- Filter Section -->
@@ -117,41 +115,50 @@
 </div>
 
      </div>
- 
-<div class="">
-  <div class="showusers">
-    <table class="usershowtable" role="grid" aria-describedby="user-table-desc">
+ <div class="user-container">
+  <!-- Header -->
+  <div class="user-header">
+    <h2>Registered Users</h2>
+    <button class="add-user-btn" (click)="showcreateuserss()">+ Add User</button>
+  </div>
+
+  <!-- User Table -->
+  <div class="user-table-wrapper">
+    <table class="user-table">
       <thead>
-        <tr class="tableheader">
-          <th scope="col">Username</th>
-          <th scope="col">Department</th>
-          <th scope="col">Sub-Department</th>
-          <th scope="col">Role</th>
-          <th scope="col">Email</th>
-          <th scope="col">Phone Number</th>
-          <th scope="col">Action</th>
+        <tr>
+          <th>Username</th>
+          <th>Department</th>
+          <th>Sub-Department</th>
+          <th>Role</th>
+          <th>Email</th>
+          <th>Phone Number</th>
+          <th class="action-col">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of userdata; let i = index" role="row" class="tabledata">
+        <tr *ngFor="let item of userdata; let i = index">
           <td>{{ item.userName || 'N/A' }}</td>
-        
           <td>{{ item.department?.departmentName || 'N/A' }}</td>
           <td>{{ item.subDepartment || item.department?.subDepartments?.[0]?.name || 'N/A' }}</td>
           <td>{{ item.role?.role || 'N/A' }}</td>
           <td>{{ item.emailId || 'N/A' }}</td>
           <td>{{ item.phoneNumber || 'N/A' }}</td>
-          <td class="buttontable">
-            <button class="action-btn edit-btn" (click)="editUser(item)" >Edit</button>
-            <span class="action-divider">|</span>
-            <button class="action-btn delete-btn" (click)="deleteUser(item._id)">Delete</button>
+          <td>
+            <button class="pill-btn edit" (click)="editUser(item)">Edit</button>
+            <button class="pill-btn delete" (click)="deleteUser(item._id)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Empty State -->
+    <div *ngIf="userdata.length === 0" class="empty-state">
+      No users found. Start by adding one.
+    </div>
   </div>
 </div>
-        
+
          
       
        <!-- Modal Section (Outside of <section>) --> 

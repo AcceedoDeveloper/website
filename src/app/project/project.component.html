@@ -214,10 +214,8 @@
        <!-- Assigned Tasks Section -->
      <!-- Assigned Tasks Section -->
      <div class="section-header">
-       <div class="ASSIGNED">
-       <h4>ASSIGNED TASKS</h4>
-       <i  class="fa fa-plus add-task-icon" (click)="toggleTaskBox()"></i>
-    
+       <div class="">
+     
      </div>
      <!-- Filter Section -->
 <div class="filter-section">
@@ -241,27 +239,7 @@
    
 
    
-         <!-- Task Input Box -->
-        <div *ngIf="showTaskBox" class="task-box">
-     <!-- Assignee with Filter Dropdown -->
-       <div class="assignee-container" #assigneeContainer>
-        <label for="assignedTo" id="to" >Assigned to</label>
-        
-       <input
-         type="text"
-         placeholder="Assigned to"
-         [(ngModel)]="task.assignee"
-         (focus)="showUserDropdown = true"
-         (click)="showUserDropdown = true"
-       />
-       
    
-       <ul *ngIf="showUserDropdown" class="user-dropdown">
-         <li *ngFor="let user of users" (click)="selectAssignee(user)">
-           {{ user.username ? user.username : (user.firstName && user.lastName ? user.firstName + ' ' + user.lastName : user.email) }}
-         </li>
-       </ul>
-     </div>
    
 
           <!-- role -->
@@ -407,7 +385,6 @@
 
 
 
-</div>
 
 
 

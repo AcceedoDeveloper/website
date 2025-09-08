@@ -42,6 +42,7 @@ openMenu: string | null = null;
   userRole: string | null = null;
   showPassword = false;
   showConfirmPassword = false;
+  
   authService: any;
 
   constructor(
@@ -401,8 +402,6 @@ toggleMenu(menu: string) {
       this.afAuth.signOut();
     }
   
-
-    
 
   
     getInitials(name: string): string {
