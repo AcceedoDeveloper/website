@@ -1,78 +1,5 @@
 
-<app-loginheader></app-loginheader>
-
-
-<!-- Profile Edit Modal -->
-<div class="modal" *ngIf="showEditModal">
-  <div class="modal-content">
-    <h3>Edit Profile</h3>
-
-
-  </div>
-</div>
-
-<div class="contains">
-<aside class="sidebar">
-  <h3 class="menu-title">Menu</h3>
-  <ul class="menu-list">
-
-    <!-- Show ONLY for Admin -->
-    <li *ngIf="isAdmin()">
-      <div class="menu-section">
-        <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-        <label for="master-toggle" class="section-title">
-          Master <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/register">User</a>
-          <a routerLink="/department">Department</a>
-          <a routerLink="/role">Role</a>
-          <a routerLink="/create">Create Project</a>
-        </div>
-      </div>
-    </li>
-
-    <!-- Always visible -->
-    <li>
-      <a routerLink="/projects">Projects</a>
-    </li>
-
-    <!-- Frontend -->
-    <li>
-      <div class="menu-section">
-        <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-        <label for="frontend-toggle" class="section-title">
-          Frontend <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/webdev">WebDev</a>
-          <a routerLink="/angulardeveloper">Angular Developer</a>
-          <a routerLink="/ngrx">NGRX</a>
-        </div>
-      </div>
-    </li>
-
-    <!-- Backend -->
-    <li>
-      <div class="menu-section">
-        <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-        <label for="backend-toggle" class="section-title">
-          Backend <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/backend">Node.js</a>
-          <a routerLink="/database">API & Database</a>
-        </div>
-      </div>
-    </li>
-
-    <li>
-      <a href="#">Full Stack</a>
-    </li>
-  </ul>
-</aside>
-
-
+<app-header></app-header>
 
   <!-- Main Content -->
   <div class="maincontent">
@@ -89,22 +16,11 @@
          </div>
        </div>
    
-   <!-- Assigned Tasks Section -->
-     <div class="section-header">
-       <div class="">
-    >
-
-    
-    
-     </div>
-     <!-- Filter Section -->
-
-     </div>
  <div class="user-container">
   <!-- Header -->
   <div class="user-header">
-    <h2>Registered Users</h2>
-    <button class="add-user-btn" (click)="showcreateuserss()">+ Add User</button>
+    <h2>Users</h2>
+    <button class="add-user-btn" (click)="showcreateuserss()">+</button>
   </div>
 
   <!-- User Table -->
@@ -155,8 +71,6 @@
     </div>
   </div>
 </div>
-
-         
       
        <!-- Modal Section (Outside of <section>) --> 
        <!-- Hidden Checkbox to Control Modal -->
@@ -164,42 +78,8 @@
    
        <!-- Modal -->
         <!-- edit user Task Modal -->
- 
- 
 
-     </div>
-   
-      </div>
-
-
+       </div>
 
    <app-footer></app-footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

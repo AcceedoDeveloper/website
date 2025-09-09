@@ -1,169 +1,18 @@
-<app-loginheader></app-loginheader>
+<app-header></app-header>
 
-
-
-<!-- Profile Edit Modal -->
-<div class="modal" *ngIf="showEditModal">
-  <div class="modal-content">
-    <h3>Edit Profile</h3>
-
- <form class="grid-form">
-      <!-- Row 1 -->
-<!-- Combine First + Last Name in one grid cell -->
-<div class="form-group first-last-combined">
-  <label>First name:</label>
-  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
-
-  <label style="margin-top: 30px;">Last name:</label>
-  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
-</div>
-
-<!-- Profile remains as-is in the right cell -->
-<div class="form-group">
- <div *ngIf="previewImage" class="profile-preview-wrapper">
-    <img [src]="previewImage" class="profile-preview-img" />
-  </div>
-  <input type="file" (change)="onPhotoSelected($event)" />
-  
-</div>
-
-
- 
-
-      <!-- Row 3 -->
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" [(ngModel)]="editUserData.email" name="email" />
-      </div>
-      <div class="form-group">
-        <label>User name:</label>
-        <input type="text" [(ngModel)]="editUserData.username" name="username" />
-      </div>
-
-      <!-- Row 4 -->
-      <div class="form-group">
-        <label>Mobile:</label>
-        <input type="text" [(ngModel)]="editUserData.mobile" name="mobile" />
-      </div>
-      <div class="form-group">
-        <label>Password:</label>
-        <input type="password" [(ngModel)]="editUserData.Password" name="Password" />
-      </div>
-
-      <!-- Row 5 -->
-      <div class="form-group">
-        <label>Role:</label>
-        <input type="text" [(ngModel)]="editUserData.role" name="role" />
-      </div>
-      <div></div>
-
-      <!-- Row 6: Buttons centered -->
-      <div class="form-buttons" style="grid-column: span 2;">
-        <button type="button" (click)="saveProfilePicture()">Save</button>
-        <button type="button" (click)="closeEditModal()">Cancel</button>
-      </div>
-    </form>
-
-  </div>
-</div>
-
-<div class="contains">
-
-
-  <aside class="sidebar">
-  <h3 class="menu-title">Menu</h3>
-  <ul class="menu-list">
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-      <label for="master-toggle" class="section-title">Master<i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-     <a routerLink="/register">User</a>
-     <a routerLink="/department">department</a>
-  <a (click)="getrole()" routerLink="/role" >Role</a>
- <a routerLink="/create">create project</a>
-
-      
-      </div>
-    </div>
-    </li>
-   
-    <li>
-     <a routerLink="/projects">Projects</a>
-    </li>
-    
-    <!-- Frontend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-      <label for="frontend-toggle" class="section-title">Frontend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-     <a routerLink="/webdev">webdev</a>
-  <a routerLink="/angulardeveloper">angular developer</a>
-  <a routerLink="/ngrx">NGRX</a>
-      
-      </div>
-    </div>
-    </li>
-    <!-- Backend with subdivisions -->
-     <li>
-    <div class="menu-section">
-      <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-      <label for="backend-toggle" class="section-title">Backend <i class="fa fa-chevron-down"></i></label>
-      <div class="submenu">
-        <a routerLink="/node">node.js</a>
-     <a routerLink="/api&database">API & database</a>
-      </div>
-    </div>
-    </li>
-      <li>
-      <a href="#"> Full satck</a>
-
-    </li>
-  </ul>
-  </aside>
-
-  <!-- Main Content -->
-  <div class="maincontent">
+     <div class="maincontent">
     
        <!-- Welcome Header -->
        <div class="welcome-card">
          <div class="date-time">
            <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
-           <span>{{ dateTime }}</span>
+           <!-- <span>{{ dateTime }}</span> -->
          </div>
          <div class="user-welcome">
            <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
            <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
          </div>
        </div>
-   
-
-       <!-- show role -->
-             <div *ngIf="showrole" class="user-role">
-        <label for="roles" id="rolelabel">Role Name</label>
-        <select name="Roles" id="roles">
-          <option class="rolelabel">Role</option>
-          <option class="rolelabel" value="Manager">Manager</option>
-          <option class="rolelabel" value="Developer">Developer</option>
-          <option class="rolelabel" value="Team Lead">Team Lead</option>
-          <option class="rolelabel" value="Trainee">Trainee</option>
-        </select>
-
-      </div>
-
-       <!-- create department and filter -->
-     <div class="section-header">
-       <div class="">
-
-
-     </div>
-     <!-- Filter Section -->
-
-
-     </div>
-   
 
 <div class="department-container">
   <div class="department-header">
@@ -215,16 +64,7 @@
        <input type="checkbox" id="modal-toggle" hidden />
    
 
-   
-   
-   
-      </div>
-
-
-
 </div>
-
-
 
 
 

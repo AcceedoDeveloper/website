@@ -1,138 +1,6 @@
+<app-header></app-header>
 
-<app-loginheader></app-loginheader>
-
-
-
-<!-- Profile Edit Modal -->
-<div class="modal" *ngIf="showEditModal">
-  <div class="modal-content">
-    <h3>Edit Profile</h3>
-
- <form class="grid-form">
-      <!-- Row 1 -->
-<!-- Combine First + Last Name in one grid cell -->
-<div class="form-group first-last-combined">
-  <label>First name:</label>
-  <input type="text" [(ngModel)]="editUserData.firstName" name="firstName" />
-
-  <label style="margin-top: 30px;">Last name:</label>
-  <input type="text" [(ngModel)]="editUserData.lastName" name="lastName" />
-</div>
-
-<!-- Profile remains as-is in the right cell -->
-<div class="form-group">
- <div *ngIf="previewImage" class="profile-preview-wrapper">
-    <img [src]="previewImage" class="profile-preview-img" />
-  </div>
-  <input type="file" (change)="onPhotoSelected($event)" />
-  
-</div>
-
-
- 
-
-      <!-- Row 3 -->
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" [(ngModel)]="editUserData.email" name="email" />
-      </div>
-      <div class="form-group">
-        <label>User name:</label>
-        <input type="text" [(ngModel)]="editUserData.username" name="username" />
-      </div>
-
-      <!-- Row 4 -->
-      <div class="form-group">
-        <label>Mobile:</label>
-        <input type="text" [(ngModel)]="editUserData.mobile" name="mobile" />
-      </div>
-      <div class="form-group">
-        <label>Password:</label>
-        <input type="password" [(ngModel)]="editUserData.Password" name="Password" />
-      </div>
-
-      <!-- Row 5 -->
-      <div class="form-group">
-        <label>Role:</label>
-        <input type="text" [(ngModel)]="editUserData.role" name="role" />
-      </div>
-      <div></div>
-
-      <!-- Row 6: Buttons centered -->
-      <div class="form-buttons" style="grid-column: span 2;">
-        <button type="button" (click)="saveProfilePicture()">Save</button>
-        <button type="button" (click)="closeEditModal()">Cancel</button>
-      </div>
-    </form>
-
-  </div>
-</div>
-
-<div class="contains">
-
-
-<aside class="sidebar">
-  <h3 class="menu-title">Menu</h3>
-  <ul class="menu-list">
-
-    <!-- Show ONLY for Admin -->
-    <li *ngIf="isAdmin()">
-      <div class="menu-section">
-        <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-        <label for="master-toggle" class="section-title">
-          Master <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/register">User</a>
-          <a routerLink="/department">Department</a>
-          <a routerLink="/role">Role</a>
-          <a routerLink="/create">Create Project</a>
-        </div>
-      </div>
-    </li>
-
-    <!-- Always visible -->
-    <li>
-      <a routerLink="/projects">Projects</a>
-    </li>
-
-    <!-- Frontend -->
-    <li>
-      <div class="menu-section">
-        <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-        <label for="frontend-toggle" class="section-title">
-          Frontend <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/webdev">WebDev</a>
-          <a routerLink="/angulardeveloper">Angular Developer</a>
-          <a routerLink="/ngrx">NGRX</a>
-        </div>
-      </div>
-    </li>
-
-    <!-- Backend -->
-    <li>
-      <div class="menu-section">
-        <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-        <label for="backend-toggle" class="section-title">
-          Backend <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/node">Node.js</a>
-          <a routerLink="/api&database">API & Database</a>
-        </div>
-      </div>
-    </li>
-
-    <li>
-      <a href="#">Full Stack</a>
-    </li>
-  </ul>
-</aside>
-
-
-  <!-- Main Content -->
+<div class="main-content">
   <div class="maincontent">
     
        <!-- Welcome Header -->
@@ -713,17 +581,8 @@
     </section>
 </div>
 </div>
-
-  
-
-
      </div>
-   
-
-   
-      </div>
-
-
+</div>
      <app-footer></app-footer>
 
 

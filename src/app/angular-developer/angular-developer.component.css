@@ -2749,3 +2749,62 @@ button.cancel-btn {
     }
 }
 
+.maincontent{
+
+width: 100%;
+max-width: 2100px;
+height: 100%;
+margin-left: 275px;
+margin-top: -1140px;
+  padding: 0px 20px;
+  flex:1;
+
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
+  color: #333;  /* Dark text for better contrast */
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.date-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.user-welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-welcome span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+.user-icon {
+  width: 120px;         /* You can adjust to 100–150px as needed */
+  height: 150px;
+  object-fit: cover;    /* Ensures the image fills the box properly */
+  border-radius: 4px;   
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: -30px;
+}

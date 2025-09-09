@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
 import { RegistermatComponent } from './registermat/registermat.component';
 import { MatDialog } from '@angular/material/dialog';
-import { LoginheaderComponent } from '../loginheader/loginheader.component';
 import { UserservicesService } from './services/userservices.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
