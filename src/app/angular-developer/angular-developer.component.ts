@@ -1,6 +1,4 @@
 
-
-
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -30,6 +28,9 @@ export class FilterPipe implements PipeTransform {
   styleUrl: './angular-developer.component.css'
 })
 export class AngularDeveloperComponent {
+scrollSlides(arg0: string,_t39: HTMLDivElement) {
+throw new Error('Method not implemented.');
+}
     isNavOpen = false;
     isDropdownOpen=false;
     showrole=false;
