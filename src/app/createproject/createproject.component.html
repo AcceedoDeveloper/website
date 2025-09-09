@@ -213,7 +213,8 @@
                   <span class="employee-checkbox">
                     <i class="fa fa-check" *ngIf="isEmployeeSelected(employee)"></i>
                   </span>
-                  <span class="employee-name">{{ employee.name }}</span>
+                  <!-- Show username (preferred) then fallback to displayName -->
+                  <span class="employee-name">{{ employee.username || employee.displayName }}</span>
                 </div>
 
                 <!-- ✅ Safe check -->

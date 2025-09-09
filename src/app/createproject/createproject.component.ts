@@ -207,58 +207,52 @@ throw new Error('Method not implemented.');
     const role = sessionStorage.getItem('role') || this.userData?.role || '';
     return role?.toLowerCase() === 'admin';
   }
+fetchEmployees() {
+  this.userService.getuser().subscribe({
+    next: (response: any) => {
+      let employeesData: any[] = [];
 
-  fetchEmployees() {
-    this.userService.getuser().subscribe({
-      next: (response: any) => {
-        console.log('API Response:', response);
-        
-        // Handle different response formats
-        let employeesData = [];
-        
-        if (Array.isArray(response)) {
-          employeesData = response;
-        } else if (response && typeof response === 'object') {
-          if (response.data && Array.isArray(response.data)) {
-            employeesData = response.data;
-          } else {
-            employeesData = Object.values(response);
-          }
+      if (Array.isArray(response)) {
+        employeesData = response;
+      } else if (response && typeof response === 'object') {
+        if (response.data && Array.isArray(response.data)) {
+          employeesData = response.data;
+        } else {
+          employeesData = Object.values(response);
         }
-        
-        // Extract employee names and store full objects
-        this.employees = employeesData
-          .filter((user: { userName: any; firstName: any; lastName: any; }) => user && (user.userName || (user.firstName && user.lastName)))
-          .map((user: { id: any; _id: any; userName: any; firstName: any; lastName: any; }) => {
-            return {
-              id: user.id || user._id || Math.random().toString(36).substr(2, 9),
-              name: user.userName || `${user.firstName} ${user.lastName}`,
-              fullData: user
-            };
-          });
-        
-        console.log('Processed employees:', this.employees);
-        
-        if (this.employees.length === 0) {
-          // Fallback data with proper structure
-          this.employees = [
-            { id: '1', name: 'Sabari', fullData: { userName: 'Sabari' } },
-            { id: '2', name: 'rushi', fullData: { userName: 'rushi' } }
-          ];
-          console.log('Using fallback employee data:', this.employees);
-        }
-      },
-      error: (error: any) => {
-        console.error('Error fetching employees:', error);
-        // Fallback data with proper structure
-        this.employees = [
-          { id: '1', name: 'Sabari', fullData: { userName: 'Sabari' } },
-          { id: '2', name: 'rushi', fullData: { userName: 'rushi' } }
-        ];
-        console.log('Using fallback employee data due to error:', this.employees);
       }
-    });
-  }
+
+      this.employees = employeesData
+        .filter((u: any) => u && (u.UserName || u.userName || (u.firstName && u.lastName)))
+        .map((u: any) => {
+          const username = u.UserName || u.userName || '';
+          const displayName = username || `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.UserCode || '';
+          return {
+            id: u.id || u._id || u.UserCode || Math.random().toString(36).substr(2, 9),
+            username,          // canonical username (from DB: UserName or userName)
+            displayName,       // fallback display name
+            fullData: u
+          };
+        });
+
+      // fallback if list empty
+      if (!this.employees || this.employees.length === 0) {
+        this.employees = [
+          { id: '1', username: 'sabari', displayName: 'Sabari', fullData: { UserName: 'sabari' } },
+          { id: '2', username: 'rushi', displayName: 'rushi', fullData: { UserName: 'rushi' } }
+        ];
+      }
+    },
+    error: (err) => {
+      console.error('Error fetching employees:', err);
+      this.employees = [
+        { id: '1', username: 'sabari', displayName: 'Sabari', fullData: { UserName: 'sabari' } },
+        { id: '2', username: 'rushi', displayName: 'rushi', fullData: { UserName: 'rushi' } }
+      ];
+    }
+  });
+}
+
 
   getCurrentUser() {
     this.afAuth.authState.subscribe((user) => {
@@ -275,36 +269,33 @@ throw new Error('Method not implemented.');
   }
 
 toggleEmployeeSelection(employee: any) {
-  const index = this.project.employees.findIndex(
-    (emp: any) => (emp._id || emp.UserName) === (employee._id || employee.UserName)
-  );
-  if (index > -1) {
-    this.project.employees.splice(index, 1);
+  if (this.project.employees.length && this.project.employees[0].id === employee.id) {
+    this.project.employees = [];
   } else {
-    this.project.employees.push(employee);
+    this.project.employees = [employee];
   }
+
+  this.showEmployeeDropdown = false;
+  this.employeeSearchText = '';
 }
 isEmployeeSelected(employee: any): boolean {
   return this.project.employees.length > 0 && this.project.employees[0].id === employee.id;
 }
 
- getSelectedEmployeesNames(): string {
-  return this.project.employees.map((emp: any) => 
-    emp.fullData?.UserName || emp.UserName || emp.userName || emp.name
-  ).join(', ');
+
+getSelectedEmployeesNames(): string {
+  if (!this.project.employees || this.project.employees.length === 0) return '';
+  const emp = this.project.employees[0];
+  return emp?.username || emp?.displayName || '';
 }
 getFilteredEmployees(): any[] {
-  if (!this.employees) return [];  // ✅ if employees not loaded yet
-  if (!this.employeeSearchText) {
-    return this.employees;
-  }
-
-  return this.employees.filter(employee =>
-    employee.name.toLowerCase().includes(this.employeeSearchText.toLowerCase())
+  if (!this.employees) return [];
+  const q = (this.employeeSearchText || '').trim().toLowerCase();
+  if (!q) return this.employees;
+  return this.employees.filter(emp =>
+    (emp.username || emp.displayName || '').toLowerCase().includes(q)
   );
 }
-
-
 createProject() {
   if (!this.project.projectName || this.project.employees.length === 0) {
     alert('Please fill all required fields');
@@ -316,23 +307,24 @@ createProject() {
     return;
   }
 
-  // ✅ Format data for API with UserName
   const projectData = {
     projectName: this.project.projectName,
-    employees: this.project.employees.map((emp: any) => 
-      emp.fullData?.UserName || emp.UserName || emp.userName || emp.name
+    // send the canonical username strings to API
+    employees: this.project.employees.map((emp: any) =>
+      emp.fullData?.UserName || emp.fullData?.userName || emp.username || emp.displayName || ''
     ),
     startDate: new Date(this.project.startDate).toISOString().split('T')[0],
     expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
   };
 
-  console.log('Sending project data:', projectData);
+  console.log('Sending project data (usernames):', projectData);
 
   this.projectService.createProject(projectData).subscribe({
     next: (response: any) => {
-      console.log('Project created successfully:', response);
+      console.log('Project created:', response);
       this.showSuccessMessage = true;
 
+      // keep the UI list as objects (so dropdown still works)
       const newProject = {
         ...projectData,
         _id: response._id || Date.now().toString(),
@@ -348,13 +340,12 @@ createProject() {
         this.showEmployeeDropdown = false;
       }, 2000);
     },
-    error: (error: any) => {
-      console.error('Error creating project:', error);
-      alert('Failed to create project: ' + (error.error?.message || error.message || 'Unknown error'));
+    error: (err: any) => {
+      console.error('Error creating project:', err);
+      alert('Failed to create project: ' + (err.error?.message || err.message || 'Unknown error'));
     }
   });
 }
-
 deleteProject(project: any) {
   if (confirm('Are you sure you want to delete this project?')) {
     
@@ -424,15 +415,17 @@ saveEdit() {
   }
 
   // Helper function to display employee names in the template
-  getEmployeeNames(employees: any[]): string {
-    if (!employees || !Array.isArray(employees)) return '';
-    
-    return employees.map(emp => {
-      if (typeof emp === 'string') return emp;
-      if (emp && emp.name) return emp.name;
-      if (emp && emp.userName) return emp.userName;
-      if (emp && emp.firstName && emp.lastName) return `${emp.firstName} ${emp.lastName}`;
-      return 'Unknown';
-    }).join(', ');
-  }
+getEmployeeNames(employees: any[]): string {
+  if (!employees || !Array.isArray(employees)) return '';
+  return employees.map(emp => {
+    if (typeof emp === 'string') return emp;
+    if (emp?.fullData?.UserName) return emp.fullData.UserName;
+    if (emp?.username) return emp.username;
+    if (emp?.UserName) return emp.UserName;
+    if (emp?.userName) return emp.userName;
+    if (emp?.displayName) return emp.displayName;
+    if (emp?.name) return emp.name;
+    return 'Unknown';
+  }).join(', ');
+}
 }
