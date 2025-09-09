@@ -274,89 +274,87 @@ throw new Error('Method not implemented.');
     });
   }
 
-  toggleEmployeeSelection(employee: any) {
-    const index = this.project.employees.findIndex((emp: any) => 
-      emp.id === employee.id
-    );
-    
-    if (index > -1) {
-      this.project.employees.splice(index, 1);
-    } else {
-      this.project.employees.push(employee);
+toggleEmployeeSelection(employee: any) {
+  const index = this.project.employees.findIndex(
+    (emp: any) => (emp._id || emp.UserName) === (employee._id || employee.UserName)
+  );
+  if (index > -1) {
+    this.project.employees.splice(index, 1);
+  } else {
+    this.project.employees.push(employee);
+  }
+}
+isEmployeeSelected(employee: any): boolean {
+  return this.project.employees.length > 0 && this.project.employees[0].id === employee.id;
+}
+
+ getSelectedEmployeesNames(): string {
+  return this.project.employees.map((emp: any) => 
+    emp.fullData?.UserName || emp.UserName || emp.userName || emp.name
+  ).join(', ');
+}
+getFilteredEmployees(): any[] {
+  if (!this.employees) return [];  // ✅ if employees not loaded yet
+  if (!this.employeeSearchText) {
+    return this.employees;
+  }
+
+  return this.employees.filter(employee =>
+    employee.name.toLowerCase().includes(this.employeeSearchText.toLowerCase())
+  );
+}
+
+
+createProject() {
+  if (!this.project.projectName || this.project.employees.length === 0) {
+    alert('Please fill all required fields');
+    return;
+  }
+
+  if (!this.project.startDate || !this.project.expectedEndDate) {
+    alert('Please select both start and end dates');
+    return;
+  }
+
+  // ✅ Format data for API with UserName
+  const projectData = {
+    projectName: this.project.projectName,
+    employees: this.project.employees.map((emp: any) => 
+      emp.fullData?.UserName || emp.UserName || emp.userName || emp.name
+    ),
+    startDate: new Date(this.project.startDate).toISOString().split('T')[0],
+    expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
+  };
+
+  console.log('Sending project data:', projectData);
+
+  this.projectService.createProject(projectData).subscribe({
+    next: (response: any) => {
+      console.log('Project created successfully:', response);
+      this.showSuccessMessage = true;
+
+      const newProject = {
+        ...projectData,
+        _id: response._id || Date.now().toString(),
+        employees: [...this.project.employees]
+      };
+
+      this.projects.unshift(newProject);
+      this.filteredProjects = [...this.projects];
+
+      setTimeout(() => {
+        this.showSuccessMessage = false;
+        this.showCreateProjectBox = false;
+        this.showEmployeeDropdown = false;
+      }, 2000);
+    },
+    error: (error: any) => {
+      console.error('Error creating project:', error);
+      alert('Failed to create project: ' + (error.error?.message || error.message || 'Unknown error'));
     }
-    
-    // Close dropdown after selection
-    this.showEmployeeDropdown = false;
-    this.employeeSearchText = '';
-  }
+  });
+}
 
-  isEmployeeSelected(employee: any): boolean {
-    return this.project.employees.some((emp: any) => emp.id === employee.id);
-  }
-
-  getSelectedEmployeesNames(): string {
-    return this.project.employees.map((emp: any) => emp.name).join(', ');
-  }
-
-  getFilteredEmployees() {
-    if (!this.employeeSearchText) {
-      return this.employees;
-    }
-    
-    return this.employees.filter(employee => 
-      employee.name.toLowerCase().includes(this.employeeSearchText.toLowerCase())
-    );
-  }
-
-  createProject() {
-    if (!this.project.projectName || this.project.employees.length === 0) {
-      alert('Please fill all required fields');
-      return;
-    }
-
-    if (!this.project.startDate || !this.project.expectedEndDate) {
-      alert('Please select both start and end dates');
-      return;
-    }
-
-    // Format data for API
-    const projectData = {
-      projectName: this.project.projectName,
-      employees: this.project.employees.map((emp: any) => emp.name), // Send only names to API
-      startDate: new Date(this.project.startDate).toISOString().split('T')[0],
-      expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
-    };
-
-    console.log('Sending project data:', projectData);
-
-    this.projectService.createProject(projectData).subscribe({
-      next: (response: any) => {
-        console.log('Project created successfully:', response);
-        this.showSuccessMessage = true;
-    
-     const newProject = {
-  ...projectData,
-  _id: response._id || Date.now().toString(),  
-  employees: [...this.project.employees]
-};
-
-        
-        this.projects.unshift(newProject);
-        this.filteredProjects = [...this.projects];
-        
-        setTimeout(() => {
-          this.showSuccessMessage = false;
-          this.showCreateProjectBox = false;
-          this.showEmployeeDropdown = false;
-        }, 2000);
-      },
-      error: (error: { error: { message: any; }; message: any; }) => {
-        console.error('Error creating project:', error);
-        console.error('Error details:', error.error);
-        alert('Failed to create project: ' + (error.error?.message || error.message || 'Unknown error'));
-      }
-    });
-  }
 deleteProject(project: any) {
   if (confirm('Are you sure you want to delete this project?')) {
     
@@ -387,40 +385,39 @@ deleteProject(project: any) {
     this.selectedProject = { ...project };
     this.isModalOpen = true;
   }
+saveEdit() {
+  if (!this.selectedProject) return;
 
-  saveEdit() {
-    if (!this.selectedProject) return;
+  const projectData = {
+    projectName: this.selectedProject.projectName,
+    employees: this.selectedProject.employees.map((emp: any) => 
+      emp.fullData?.UserName || emp.UserName || emp.userName || emp.name
+    ),
+    startDate: this.selectedProject.startDate,
+    expectedEndDate: this.selectedProject.expectedEndDate
+  };
 
-    const projectData = {
-      projectName: this.selectedProject.projectName,
-      employees: this.selectedProject.employees.map((emp: any) => emp.name), // Send only names to API
-      startDate: this.selectedProject.startDate,
-      expectedEndDate: this.selectedProject.expectedEndDate
-    };
+  this.projectService.updateProject(this.selectedProject._id, projectData).subscribe({
+    next: (response: any) => {
+      console.log('Project updated successfully:', response);
+      const index = this.projects.findIndex(p => p._id === this.selectedProject._id);
+      if (index > -1) {
+        this.projects[index] = { ...this.projects[index], ...projectData };
+      }
+      this.filteredProjects = [...this.projects];
+      this.showSuccessMessage = true;
+      setTimeout(() => {
+        this.showSuccessMessage = false;
+        this.isModalOpen = false;
+      }, 2000);
+    },
+    error: (error: any) => {
+      console.error('Error updating project:', error);
+      alert('Failed to update project: ' + (error.error?.message || error.message || 'Unknown error'));
+    }
+  });
+}
 
-this.projectService.createProject(projectData).subscribe({
-  next: (response: any) => {
-    console.log('Project created successfully:', response);
-    const newProject = {
-      ...projectData,
-      _id: response._id || Date.now().toString(), 
-      employees: [...this.project.employees]
-    };
-    this.projects.unshift(newProject);
-    this.filteredProjects = [...this.projects];
-    this.showSuccessMessage = true;
-    setTimeout(() => {
-      this.showSuccessMessage = false;
-      this.showCreateProjectBox = false;
-    }, 2000);
-  },
-  error: (error: any) => {
-    console.error('Error creating project:', error);
-    alert('Failed to create project: ' + (error.error?.message || error.message || 'Unknown error'));
-  }
-});
-
-  }
 
   closeModal() {
     this.isModalOpen = false;
