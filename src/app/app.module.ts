@@ -78,6 +78,7 @@ import { RoledialogComponent } from './role/roledialog/roledialog.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistermatComponent } from './register/registermat/registermat.component';
 import { HeaderComponent } from './header/header.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 
 @NgModule({
@@ -137,10 +138,10 @@ import { HeaderComponent } from './header/header.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     RouterModule,
-    FormsModule,            // ✅ Required for ngModel
-    ReactiveFormsModule,    // ✅ For reactive forms (if needed)
+    FormsModule,           
+    ReactiveFormsModule,    
     MatIconModule,
-    MatDialogModule, // ✅ Added for dialog directives
+    MatDialogModule, 
     MatInputModule,
     MatCardModule,
     MatGridListModule,
@@ -157,7 +158,9 @@ import { HeaderComponent } from './header/header.component';
     AngularFireAuthModule,
     AngularFirestoreModule
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent],
 
   

@@ -2001,3 +2001,11 @@ textarea:focus {
   color: #666;
   font-style: italic;
 }
+.black-btn {
+  color: black;           /* icon color */
+  background-color: white; /* optional: button background */
+}
+
+.black-btn:hover {
+  background-color: #f0f0f0; /* subtle hover effect */
+}

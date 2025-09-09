@@ -249,10 +249,19 @@
       <tbody>
         <tr *ngFor="let itemrole of roledata">
           <td>{{ itemrole.role }}</td>
-          <td>
-            <button class="pill-btn edit" (click)="editrole(itemrole)">Edit</button>
-            <button class="pill-btn delete" (click)="deleterole(itemrole._id)">Delete</button>
-          </td>
+<td>
+  <button mat-icon-button class="black-btn" (click)="editrole(itemrole)">
+    <mat-icon>edit</mat-icon>
+  </button>
+
+  <button mat-icon-button class="black-btn" (click)="deleterole(itemrole._id)">
+    <mat-icon>delete</mat-icon>
+  </button>
+</td>
+
+
+
+
         </tr>
       </tbody>
     </table>

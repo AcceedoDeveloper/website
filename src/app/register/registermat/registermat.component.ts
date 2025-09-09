@@ -48,24 +48,28 @@ export class RegistermatComponent implements OnInit {
     }
   }
 
-  patchForm(item: any) {
-    this.registerForm.patchValue({
-      userCode: item.userCode,
-      name: item.name,
-      userName: item.userName,
-      password: item.password,
-      emailId: item.emailId,
-      phoneNumber: item.phoneNumber,
-      role: item.role?.role,
-      departmentName: item.department?.departmentName,
-      subDepartmentName: item.subDepartment || ''
-    });
+patchForm(item: any) {
+  this.registerForm.patchValue({
+    userCode: item.userCode || item.UserCode || '',  
+    name: item.name || item.Name || '',               
+    userName: item.userName || item.UserName || '',
+    emailId: item.emailId || item.Email || '',
+    phoneNumber: item.phoneNumber || item.Phone || '',
+    role: item.role?.role || item.role || '',
+    departmentName: item.department?.departmentName || item.departmentName || '',
+    subDepartmentName: item.subDepartment || ''
+  });
 
-    // Preload department subDepartments options
-    if (item.department) {
-      this.subDepartmentsData = item.department.subDepartments || [];
-    }
+
+  if (item.department && item.department.subDepartments) {
+    this.subDepartmentsData = item.department.subDepartments;
+  } else {
+    this.subDepartmentsData = [];
   }
+
+
+  this.registerForm.get('password')?.reset('');
+}
 
   loadRoles() {
     this.httprole.Loadrole().subscribe({
@@ -97,37 +101,41 @@ export class RegistermatComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      return;
-    }
-
-    const formValue = this.registerForm.value;
-    const payload = {
-      userCode: formValue.userCode,
-      name: formValue.name,
-      userName: formValue.userName,
-      emailId: formValue.emailId,
-      password: formValue.password || undefined,
-      phoneNumber: formValue.phoneNumber,
-      role: formValue.role,
-      department: formValue.departmentName,
-      subDepartment: formValue.subDepartmentName
-    };
-
-    if (this.isEdit) {
-      this.userservice.edituser(this.data.item._id, payload).subscribe({
-        next: () => this.dialogRef.close(true),
-        error: (err) => console.error('Error updating user:', err)
-      });
-    } else {
-      this.userservice.saveuser(payload).subscribe({
-        next: () => {
-          this.registerForm.reset();
-          this.dialogRef.close(true);
-        },
-        error: (err) => console.error('Error saving user:', err)
-      });
-    }
+  if (this.registerForm.invalid) {
+    this.registerForm.markAllAsTouched();
+    return;
   }
+
+  const formValue = this.registerForm.value;
+  const payload: any = {
+    userCode: formValue.userCode,
+    name: formValue.name,
+    userName: formValue.userName,
+    emailId: formValue.emailId,
+    phoneNumber: formValue.phoneNumber,
+    role: formValue.role,
+    department: formValue.departmentName,
+    subDepartment: formValue.subDepartmentName
+  };
+
+  if (formValue.password) {
+    payload.password = formValue.password; 
+  }
+
+  if (this.isEdit) {
+    this.userservice.edituser(this.data.item._id, payload).subscribe({
+      next: () => this.dialogRef.close(true),
+      error: (err) => console.error('Error updating user:', err)
+    });
+  } else {
+    this.userservice.saveuser(payload).subscribe({
+      next: () => {
+        this.registerForm.reset();
+        this.dialogRef.close(true);
+      },
+      error: (err) => console.error('Error saving user:', err)
+    });
+  }
+}
+
 }

@@ -35,13 +35,13 @@
              "src/assets"
             ],
            "styles": [
-                   "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                   "@angular/material/prebuilt-themes/azure-blue.css",
-                   "node_modules/font-awesome/css/font-awesome.min.css",
-                   "src/styles.css",
-                   "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
-                   "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css"
-                  ],
+            "@angular/material/prebuilt-themes/magenta-violet.css",
+            "node_modules/bootstrap/dist/css/bootstrap.min.css",
+            "node_modules/font-awesome/css/font-awesome.min.css",
+            "src/styles.css",
+            "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
+            "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css"
+          ],
             "scripts": [
                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
                "node_modules/jquery/dist/jquery.min.js"
@@ -107,7 +107,7 @@
               }
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
+              "@angular/material/prebuilt-themes/magenta-violet.css",
               "src/styles.css"
             ],
             "scripts": []

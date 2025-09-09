@@ -9,6 +9,8 @@ import { LoginheaderComponent } from '../loginheader/loginheader.component';
 import { UserservicesService } from './services/userservices.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../service/auth.service.service'; // ✅ correct path
 
 // import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -16,7 +18,9 @@ import { AuthService } from '../service/auth.service.service'; // ✅ correct pa
 
 
 @Component({
+   
   selector: 'app-register',
+
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })

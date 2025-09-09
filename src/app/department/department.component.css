@@ -1694,3 +1694,13 @@ button.cancel-btn {
     font-size: 0.75rem;
   }
 }
+
+.black-btn {
+  color: black;            /* icon color */
+  border-radius: 4px;      /* slightly rounded */
+  transition: background 0.3s;
+}
+
+.black-btn:hover {
+  background-color: #f0f0f0; /* subtle hover effect */
+}

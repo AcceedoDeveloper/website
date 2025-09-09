@@ -129,10 +129,22 @@
           <td>{{ item.role?.role || 'N/A' }}</td>
           <td>{{ item.emailId || 'N/A' }}</td>
           <td>{{ item.phoneNumber || 'N/A' }}</td>
-          <td>
-            <button class="pill-btn edit" (click)="editUser(item)">Edit</button>
-            <button class="pill-btn delete" (click)="deleteUser(item._id)">Delete</button>
-          </td>
+<td>
+  <!-- Edit User -->
+  <button mat-icon-button class="black-btn" (click)="editUser(item)">
+    <mat-icon>edit</mat-icon>
+  </button>
+
+  <!-- Delete User -->
+  <button mat-icon-button class="black-btn" (click)="deleteUser(item._id)">
+    <mat-icon>delete</mat-icon>
+  </button>
+</td>
+
+
+
+
+
         </tr>
       </tbody>
     </table>
