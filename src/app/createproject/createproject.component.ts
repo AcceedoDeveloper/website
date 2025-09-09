@@ -15,6 +15,8 @@ export class FilterPipe implements PipeTransform {
 
     const lower = searchText.toLowerCase();
 
+
+    
     return items.filter(item =>
       Object.values(item).some(val =>
         String(val).toLowerCase().includes(lower)
@@ -29,6 +31,16 @@ export class FilterPipe implements PipeTransform {
   styleUrls: ['./createproject.component.css']
 })
 export class CreateprojectComponent implements OnInit {
+[x: string]: any;
+getActiveProjects() {
+throw new Error('Method not implemented.');
+}
+getProjectProgress(_t240: any) {
+throw new Error('Method not implemented.');
+}
+getProjectStatus(_t240: any) {
+throw new Error('Method not implemented.');
+}
 onSearch() {
 throw new Error('Method not implemented.');
 }

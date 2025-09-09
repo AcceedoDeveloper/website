@@ -147,132 +147,195 @@
       </div>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
 <div class="section-header">
   <div class="ASSIGNED">
-    <h4>Create project</h4>
+    <h4>Create Project</h4>
     <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
   </div>
-
-  
-  
-
 </div>
 
-<!-- Project Input Box -->
-<div *ngIf="showCreateProjectBox" class="project-box">
-  <div class="form-row">
-    <label for="projectName">Project Name *</label>
-    <input type="text" id="projectName" placeholder="Project Name" [(ngModel)]="project.projectName" required />
-  </div>
-
-  <div class="form-row employees-dropdown-container">
-    <label>Select Employees *</label>
-    <div class="employees-input-container" (click)="$event.stopPropagation(); showEmployeeDropdown = !showEmployeeDropdown">
-      <input 
-        type="text" 
-        placeholder="Search employees..." 
-        [value]="getSelectedEmployeesNames()"
-        (click)="$event.stopPropagation(); showEmployeeDropdown = true"
-        readonly
-      />
-      <i class="fa fa-chevron-down"></i>
+<!-- Add Project Modal -->
+<div class="modal" *ngIf="showCreateProjectBox">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Add Project</h3>
+      <span class="close-modal" (click)="cancel()">&times;</span>
     </div>
     
-    <div class="employees-dropdown" *ngIf="showEmployeeDropdown">
-      <div class="employee-search">
-        <input 
-          type="text" 
-          placeholder="Search employees..." 
-          [(ngModel)]="employeeSearchText"
-          (click)="$event.stopPropagation()"
-        />
+    <div class="form-body">
+      <div class="form-row">
+        <label for="projectName">Project Name *</label>
+        <input type="text" id="projectName" placeholder="Project Name" [(ngModel)]="project.projectName" required />
       </div>
-      <div class="employee-list">
-        <div *ngFor="let employee of getFilteredEmployees()" 
-              class="employee-item" 
-              (click)="toggleEmployeeSelection(employee)"
-              [class.selected]="isEmployeeSelected(employee)">
-          {{ employee.name }}
+
+      <div class="form-row employees-dropdown-container">
+        <label>Select Employees *</label>
+        <div class="employees-input-container" (click)="$event.stopPropagation(); showEmployeeDropdown = !showEmployeeDropdown">
+          <input 
+            type="text" 
+            placeholder="Search employees..." 
+            [value]="getSelectedEmployeesNames()"
+            (click)="$event.stopPropagation(); showEmployeeDropdown = true"
+            readonly
+          />
+          <i class="fa fa-chevron-down"></i>
         </div>
-        <div *ngIf="getFilteredEmployees().length === 0" class="no-employees">
-          No employees found
+        
+        <div class="employees-dropdown" *ngIf="showEmployeeDropdown">
+          <div class="employee-search">
+            <input 
+              type="text" 
+              placeholder="Search employees..." 
+              [(ngModel)]="employeeSearchText"
+              (click)="$event.stopPropagation()"
+            />
+          </div>
+          <div class="employee-list">
+            <div *ngFor="let employee of getFilteredEmployees()" 
+                  class="employee-item" 
+                  (click)="toggleEmployeeSelection(employee)"
+                  [class.selected]="isEmployeeSelected(employee)">
+              <span class="employee-checkbox">
+                <i class="fa fa-check" *ngIf="isEmployeeSelected(employee)"></i>
+              </span>
+              <span class="employee-name">{{ employee.name }}</span>
+            </div>
+            <div *ngIf="getFilteredEmployees().length === 0" class="no-employees">
+              No employees found
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row date-row">
+        <div class="date-input">
+          <label for="startDate">Start Date *</label>
+          <input type="date" id="startDate" [(ngModel)]="project.startDate" required />
+        </div>
+        <div class="date-input">
+          <label for="expectedEndDate">Expected End Date *</label>
+          <input type="date" id="expectedEndDate" [(ngModel)]="project.expectedEndDate" required />
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="form-row">
-    <label for="startDate">Start Date *</label>
-    <input type="date" id="startDate" [(ngModel)]="project.startDate" required />
-  </div>
+    <div class="form-buttons">
+      <button class="create-button" (click)="createProject()">
+        <i class="fa fa-plus"></i> Create Project
+      </button>
+      <button class="cancel-button" (click)="cancel()">Cancel</button>
+    </div>
 
-  <div class="form-row">
-    <label for="expectedEndDate">Expected End Date *</label>
-    <input type="date" id="expectedEndDate" [(ngModel)]="project.expectedEndDate" required />
-  </div>
-
-  <div class="form-buttons">
-    <button (click)="createProject()">Create Project</button>
-    <button class="cancel-button" (click)="cancel()">Cancel</button>
-  </div>
-
-  <!-- Success Message -->
-  <div *ngIf="showSuccessMessage" class="success-message">
-    ✅ Project created successfully
+    <div *ngIf="showSuccessMessage" class="success-message">
+      <i class="fa fa-check-circle"></i> Project created successfully
+    </div>
   </div>
 </div>
 
 <!-- Projects List -->
 <div class="projects-list">
   <div *ngFor="let project of filteredProjects" class="project-card">
-    <h4>{{ project.projectName }}</h4>
-    <p><strong>Employees:</strong> {{ getEmployeeNames(project.employees) }}</p>
-    <p><strong>Start Date:</strong> {{ project.startDate }}</p>
-    <p><strong>Expected End Date:</strong> {{ project.expectedEndDate }}</p>
+    <div class="project-header">
+      <h4>{{ project.projectName }}</h4>
+      <span class="project-status">Active</span>
+    </div>
+    <div class="project-details">
+      <div class="detail-item">
+        <i class="fa fa-users"></i>
+        <span>{{ getEmployeeNames(project.employees) }}</span>
+      </div>
+      <div class="detail-item">
+        <i class="fa fa-calendar-start"></i>
+        <span>{{ project.startDate | date:'mediumDate' }}</span>
+      </div>
+      <div class="detail-item">
+        <i class="fa fa-calendar-end"></i>
+        <span>{{ project.expectedEndDate | date:'mediumDate' }}</span>
+      </div>
+    </div>
     <div class="project-actions">
-      <button (click)="openEditModal(project)">Edit</button>
-      <button (click)="deleteProject(project)" class="delete-btn">Delete</button>
+      <button class="edit-btn" (click)="openEditModal(project)">
+        <i class="fa fa-edit"></i> Edit
+      </button>
+      <button class="delete-btn" (click)="deleteProject(project)">
+        <i class="fa fa-trash"></i> Delete
+      </button>
     </div>
   </div>
   <div *ngIf="filteredProjects.length === 0" class="no-projects">
-    No projects found. Create your first project!
+    <i class="fa fa-folder-open"></i>
+    <p>No projects found. Create your first project!</p>
   </div>
 </div>
 
 <!-- Edit Project Modal -->
-<div class="edit-task-modal" *ngIf="isModalOpen">
-  <div class="edit-task-content">
-    <h3>Edit Project</h3>
-    
-    <div class="form-row">
-      <label>Project Name:</label>
-      <input type="text" [(ngModel)]="selectedProject.projectName" />
+<div class="modal" *ngIf="isModalOpen">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Edit Project</h3>
+      <span class="close-modal" (click)="closeModal()">&times;</span>
     </div>
     
-    <div class="form-row">
-      <label>Employees:</label>
-      <input type="text" [value]="getEmployeeNames(selectedProject.employees)" readonly />
+    <div class="form-body">
+      <div class="form-row">
+        <label>Project Name:</label>
+        <input type="text" [(ngModel)]="selectedProject.projectName" />
+      </div>
+
+      <div class="form-row">
+        <label>Employees:</label>
+        <input type="text" [value]="getEmployeeNames(selectedProject.employees)" readonly />
+      </div>
+
+      <div class="form-row date-row">
+        <div class="date-input">
+          <label>Start Date:</label>
+          <input type="text" [value]="selectedProject.startDate | date:'mediumDate'" readonly />
+        </div>
+        <div class="date-input">
+          <label>Expected End Date:</label>
+          <input type="text" [value]="selectedProject.expectedEndDate | date:'mediumDate'" readonly />
+        </div>
+      </div>
     </div>
-    
-    <div class="form-row">
-      <label>Start Date:</label>
-      <input type="text" [value]="selectedProject.startDate" readonly />
-    </div>
-    
-    <div class="form-row">
-      <label>Expected End Date:</label>
-      <input type="text" [value]="selectedProject.expectedEndDate" readonly />
-    </div>
-    
-    <div class="edit-task-buttons">
-      <button class="save-btn" (click)="saveEdit()">Save</button>
-      <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+
+    <div class="form-buttons">
+      <button class="save-btn" (click)="saveEdit()">
+        <i class="fa fa-save"></i> Save Changes
+      </button>
+      <button class="cancel-button" (click)="closeModal()">Cancel</button>
     </div>
   </div>
 </div>
-</div>
-</div>
-
 
 
 
