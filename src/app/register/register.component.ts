@@ -119,8 +119,8 @@ showcreateuserss() {
   const ref = this.dialog.open(RegistermatComponent, {
     width: '90vw',        
     maxWidth: '65vw',   
-    height: '75vh',      
-    maxHeight: '100vh',
+    height: '90vh',      
+    maxHeight: '90vh',
     panelClass: 'custom-dialog',
     data: {}
   });
