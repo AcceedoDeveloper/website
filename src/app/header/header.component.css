@@ -22,7 +22,7 @@ max-height: 80px;
   position: relative;
   z-index: 100;
 
-  border-bottom: 2px solid #89bcf6; /* bottom border */
+  border: 2px solid #fae293;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* soft shadow */
 }
 
@@ -47,7 +47,7 @@ max-height: 80px;
   align-items: center;
   background-color: white;
   border-radius: 20px;
-  border: 2px solid #0054b3;
+  border: 2px solid #fae293;
   padding: 5px 30px;
   margin: 0 20px;
   width: 50%;

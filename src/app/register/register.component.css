@@ -197,6 +197,18 @@ margin-top: -1140px;
   background: #174a6b; /* darker navy on hover */
 }
 
+@media (max-width: 2200px) {
+  
+.maincontent{
 
+width: 100%;
+max-width: 1285px;
+height: 100%;
+margin-left: 275px;
+margin-top: -670px;
+  padding: 0px 20px;
+  flex:1;
 
+}
 
+}

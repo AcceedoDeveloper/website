@@ -57,3 +57,19 @@ margin-top: -1140px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   margin-top: -30px;
 }
+
+@media (max-width: 2200px) {
+  
+.maincontent{
+
+width: 100%;
+max-width: 1285px;
+height: 100%;
+margin-left: 275px;
+margin-top: -670px;
+  padding: 0px 20px;
+  flex:1;
+
+}
+
+}
