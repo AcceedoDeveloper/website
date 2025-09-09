@@ -717,19 +717,26 @@ button:hover {
   font-style: italic;
 }
 
-.ASSIGNED
-{
+.section-header{
 display: flex;
 justify-content: flex-start;
 align-items: center;
-    background: #1f5f8b;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 padding: 15px ;
- border-radius: 12px;
-   margin: 11px 0;
+width: 100%;
+max-width: 160px;
+height: 100%;
+max-height: 45px;
+background-color: #1f3c88;
+border-radius: 12px;
+margin: 11px 0;
+color: #ffffff;
+font-size: 14px;
+}
 
-   color: whitesmoke;
-   font-size: medium;
+.section-header h4{
+
+font-size: 18px;
+font-weight: bold;
 }
 
 

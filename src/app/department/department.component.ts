@@ -370,7 +370,7 @@ editdepartment(department: any) {
   showdepartment() {
     this.dialog.open(DepartmentDialogComponent, {
     width: '80vw',
-      maxHeight: '60vh',
+      // maxHeight: '60vh',
       panelClass: 'custom-dialog',
       data: {} 
 

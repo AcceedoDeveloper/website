@@ -2754,7 +2754,7 @@ button.cancel-btn {
 width: 100%;
 max-width: 2100px;
 height: 100%;
-margin-left: 275px;
+margin-left: 245px;
 margin-top: -1140px;
   padding: 0px 20px;
   flex:1;
@@ -2870,7 +2870,7 @@ margin-top: -620px;
 }
 
 .maincontent::-webkit-scrollbar-track {
-  background: #f1f1f1;
+
   border-radius: 10px;
 }
 

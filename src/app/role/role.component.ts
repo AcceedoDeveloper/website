@@ -82,7 +82,7 @@ editroles:any;
 editrole(role: any) {
   console.log(role);  // you should see role object here with _id and role name
   this.dialog.open(RoledialogComponent, {
-    width: '80vw',
+    width: '400px',
     height: 'auto',
     maxHeight: '90vh',
     panelClass: 'custom-dialog',
@@ -214,8 +214,8 @@ editrole(role: any) {
       
       
      this.dialog.open(RoledialogComponent, {
-  width: '600px',
-  height: '400px',
+  width: '400px',
+  // height: '100%',
   panelClass: 'custom-dialog',
 
 
