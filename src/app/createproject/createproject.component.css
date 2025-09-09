@@ -1,5 +1,4 @@
 body {
-  
   font-family: 'Segoe UI', sans-serif;
   background-color: #f7f8fa;
 }
@@ -382,7 +381,6 @@ box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 padding: 15px ;
  border-radius: 12px;
    margin: 11px 0;
-
    color: whitesmoke;
    font-size: medium;
 
@@ -2008,10 +2006,10 @@ body {
 }
 
 .modal-content {
-  background: #fff;
+  background: #ffffff;
   border-radius: 16px;
-  width: 480px;
-  max-width: 95%;
+  width: 980px;
+  max-width: 100%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   animation: scaleUp 0.25s ease;
   overflow: hidden;
