@@ -125,42 +125,44 @@ onSubmit() {
   }
 
   const formValue = this.registerForm.value;
-  const payload: any = {
-    userCode: formValue.userCode,
-    name: formValue.name,
-    userName: formValue.userName,
-    emailId: formValue.emailId,
-    phoneNumber: formValue.phoneNumber,
-    role: formValue.role,
-    department: formValue.departmentName,
-    subDepartment: formValue.subDepartmentName
-  };
-
-  if (formValue.password) payload.password = formValue.password;
-
   const formData = new FormData();
-  Object.keys(payload).forEach(key => formData.append(key, payload[key]));
 
-  // Only append the file if it exists
-  if (this.selectedFile) {
-    formData.append('profileImage', this.selectedFile); // must match multer field
+  formData.append('userCode', formValue.userCode);
+  formData.append('name', formValue.name);
+  formData.append('userName', formValue.userName);
+  formData.append('emailId', formValue.emailId);
+  formData.append('phoneNumber', formValue.phoneNumber);
+  formData.append('role', formValue.role);
+  formData.append('department', formValue.departmentName);
+  formData.append('subDepartment', formValue.subDepartmentName);
+
+  if (formValue.password) {
+    formData.append('password', formValue.password);
   }
+
+  if (this.selectedFile) {
+    formData.append('photo', this.selectedFile); // ✅ must match backend multer config
+  }
+
+  // Debug
+  formData.forEach((value, key) => console.log(`${key}:`, value));
 
   if (this.isEdit) {
     this.userservice.edituser(this.data.item._id, formData).subscribe({
       next: () => this.dialogRef.close(true),
-      error: err => console.error('Error updating user:', err)
+      error: (err) => console.error('Error updating user:', err)
     });
- } else {
-    this.userservice.saveuser(payload).subscribe({
+  } else {
+    this.userservice.saveuser(formData).subscribe({
       next: () => {
         this.registerForm.reset();
         this.previewImage = null;
+        this.selectedFile = null;
         this.dialogRef.close(true);
       },
-    error: (err) => console.error('Error saving user:', err)
+      error: (err) => console.error('Error saving user:', err)
     });
-  } 
-
+  }
 }
+
 }
