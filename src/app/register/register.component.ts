@@ -2,15 +2,12 @@ import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { Timestamp } from 'firebase/firestore';
 import { RegistermatComponent } from './registermat/registermat.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserservicesService } from './services/userservices.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../service/auth.service.service'; // ✅ correct path
+
 
 // import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
@@ -344,29 +341,7 @@ toggleMenu(menu: string) {
       this.showUserDropdown = !this.showUserDropdown;
     }
   
-    addTask() {
-      if (!this.task.description || !this.task.assignee) return;
-  
-      const newTask = {
-        ...this.task,
-        createdAt: Timestamp.now(),
-        assignedBy: this.userData?.uid || 'admin'
-      };
-  
-      this.afs.collection('tasks').add(newTask).then(() => {
-        this.showSuccessMessage = true;
-        setTimeout(() => (this.showSuccessMessage = false), 2000);
-        this.fetchTasks();
-        this.cancel();
-      });
-    }
-  
-    deleteTask(task: any) {
-      if (confirm('Are you sure you want to delete this task?')) {
-        this.afs.collection('tasks').doc(task.id).delete();
-      }
-    }
-  
+
     openEditModal(task: any) {
       this.selectedTask = { ...task };
       this.editComment = task.description;

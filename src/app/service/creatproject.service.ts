@@ -19,10 +19,10 @@ export class CreatprojectService {
   }
 
   updateProject(id: string, projectData: any): Observable<any> {
-    return this.http.put(`${this.baseApi}/updateProduct/${id}`, projectData);
+    return this.http.put(`${this.baseApi}/updateproduct/${id}`, projectData);
   }
 
   deleteProject(id: string): Observable<any> {
-    return this.http.delete(`${this.baseApi}/deleteProduct/${id}`);
+    return this.http.delete(`${this.baseApi}/deleteProject/${id}`);
   }
 }

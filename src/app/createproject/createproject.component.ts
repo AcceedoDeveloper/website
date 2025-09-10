@@ -1,29 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from 'firebase/firestore';
-import { Pipe, PipeTransform } from '@angular/core';
 import { CreatprojectService } from '../service/creatproject.service';
 import { UserservicesService } from '../register/services/userservices.service';
-
-@Pipe({
-  name: 'filter'
-})
-export class FilterPipe implements PipeTransform {
-  transform(items: any[], searchText: string): any[] {
-    if (!items || !searchText) return items;
-
-    const lower = searchText.toLowerCase();
-
-
-    
-    return items.filter(item =>
-      Object.values(item).some(val =>
-        String(val).toLowerCase().includes(lower)
-      )
-    );
-  }
-}
 
 @Component({
   selector: 'app-createproject',
@@ -31,37 +10,6 @@ export class FilterPipe implements PipeTransform {
   styleUrls: ['./createproject.component.css']
 })
 export class CreateprojectComponent implements OnInit {
-[x: string]: any;
-getActiveProjects() {
-throw new Error('Method not implemented.');
-}
-getProjectProgress(_t240: any) {
-throw new Error('Method not implemented.');
-}
-getProjectStatus(_t240: any) {
-throw new Error('Method not implemented.');
-}
-onSearch() {
-throw new Error('Method not implemented.');
-}
-getInitials(arg0: any) {
-throw new Error('Method not implemented.');
-}
-openEditProfile() {
-throw new Error('Method not implemented.');
-}
-signOut() {
-throw new Error('Method not implemented.');
-}
-onPhotoSelected($event: Event) {
-throw new Error('Method not implemented.');
-}
-saveProfilePicture() {
-throw new Error('Method not implemented.');
-}
-closeEditModal() {
-throw new Error('Method not implemented.');
-}
   projects: any[] = [];
   employees: any[] = [];
   userData: any = null;
@@ -81,15 +29,10 @@ throw new Error('Method not implemented.');
   filteredProjects: any[] = [];
   showEmployeeDropdown = false;
   employeeSearchText = '';
+  showEditEmployeeDropdown = false;
+  editEmployeeSearchText = '';
 
-  // Profile Edit Modal
-  showEditModal = false;
-  editUserData: any = {};
-  previewImage: string | ArrayBuffer | null = null;
-
-  currentDateTime: string = '';
   dateTime: string = '';
-  hasNotification = false;
 
   constructor(
     private afs: AngularFirestore, 
@@ -104,17 +47,14 @@ throw new Error('Method not implemented.');
     this.fetchEmployees();
     this.updateTime();
     
-    // Add click listener to close dropdown when clicking outside
     document.addEventListener('click', this.onDocumentClick.bind(this));
   }
 
   ngOnDestroy() {
-    // Remove event listener when component is destroyed
     document.removeEventListener('click', this.onDocumentClick.bind(this));
   }
 
   onDocumentClick(event: MouseEvent) {
-    // Close dropdown if clicked outside
     if (this.showEmployeeDropdown) {
       const dropdown = document.querySelector('.employees-dropdown');
       const input = document.querySelector('.employees-input-container');
@@ -124,12 +64,21 @@ throw new Error('Method not implemented.');
         this.showEmployeeDropdown = false;
       }
     }
+    
+    if (this.showEditEmployeeDropdown) {
+      const dropdown = document.querySelector('.edit-employees-dropdown');
+      const input = document.querySelector('.edit-employees-input-container');
+      
+      if (dropdown && !dropdown.contains(event.target as Node) && 
+          input && !input.contains(event.target as Node)) {
+        this.showEditEmployeeDropdown = false;
+      }
+    }
   }
 
   updateTime() {
     const now = new Date();
     this.dateTime = now.toLocaleString();
-    this.currentDateTime = now.toDateString() + ' ' + now.toLocaleTimeString();
   }
 
   toggleCreateProjectBox() {
@@ -156,10 +105,8 @@ throw new Error('Method not implemented.');
   }
 
   fetchProjects() {
-    // Get projects from backend API instead of Firestore
     this.projectService.getProjects().subscribe({
       next: (response: any) => {
-        console.log('Projects from API:', response);
         if (Array.isArray(response)) {
           this.projects = response;
           this.filteredProjects = response;
@@ -168,13 +115,11 @@ throw new Error('Method not implemented.');
           this.filteredProjects = response.data;
         } else {
           console.error('Unexpected API response format:', response);
-          // Fallback to Firestore if API fails
           this.fetchProjectsFromFirestore();
         }
       },
       error: (error: any) => {
         console.error('Error fetching projects from API:', error);
-        // Fallback to Firestore if API fails
         this.fetchProjectsFromFirestore();
       }
     });
@@ -203,56 +148,50 @@ throw new Error('Method not implemented.');
     );
   }
 
-  isAdmin(): boolean {
-    const role = sessionStorage.getItem('role') || this.userData?.role || '';
-    return role?.toLowerCase() === 'admin';
-  }
-fetchEmployees() {
-  this.userService.getuser().subscribe({
-    next: (response: any) => {
-      let employeesData: any[] = [];
+  fetchEmployees() {
+    this.userService.getuser().subscribe({
+      next: (response: any) => {
+        let employeesData: any[] = [];
 
-      if (Array.isArray(response)) {
-        employeesData = response;
-      } else if (response && typeof response === 'object') {
-        if (response.data && Array.isArray(response.data)) {
-          employeesData = response.data;
-        } else {
-          employeesData = Object.values(response);
+        if (Array.isArray(response)) {
+          employeesData = response;
+        } else if (response && typeof response === 'object') {
+          if (response.data && Array.isArray(response.data)) {
+            employeesData = response.data;
+          } else {
+            employeesData = Object.values(response);
+          }
         }
-      }
 
-      this.employees = employeesData
-        .filter((u: any) => u && (u.UserName || u.userName || (u.firstName && u.lastName)))
-        .map((u: any) => {
-          const username = u.UserName || u.userName || '';
-          const displayName = username || `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.UserCode || '';
-          return {
-            id: u.id || u._id || u.UserCode || Math.random().toString(36).substr(2, 9),
-            username,          // canonical username (from DB: UserName or userName)
-            displayName,       // fallback display name
-            fullData: u
-          };
-        });
+        this.employees = employeesData
+          .filter((u: any) => u && (u.UserName || u.userName || (u.firstName && u.lastName)))
+          .map((u: any) => {
+            const username = u.UserName || u.userName || '';
+            const displayName = username || `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.UserCode || '';
+            return {
+              id: u.id || u._id || u.UserCode || Math.random().toString(36).substr(2, 9),
+              username,
+              displayName,
+              fullData: u
+            };
+          });
 
-      // fallback if list empty
-      if (!this.employees || this.employees.length === 0) {
+        if (!this.employees || this.employees.length === 0) {
+          this.employees = [
+            { id: '1', username: 'sabari', displayName: 'Sabari', fullData: { UserName: 'sabari' } },
+            { id: '2', username: 'rushi', displayName: 'rushi', fullData: { UserName: 'rushi' } }
+          ];
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching employees:', err);
         this.employees = [
           { id: '1', username: 'sabari', displayName: 'Sabari', fullData: { UserName: 'sabari' } },
           { id: '2', username: 'rushi', displayName: 'rushi', fullData: { UserName: 'rushi' } }
         ];
       }
-    },
-    error: (err) => {
-      console.error('Error fetching employees:', err);
-      this.employees = [
-        { id: '1', username: 'sabari', displayName: 'Sabari', fullData: { UserName: 'sabari' } },
-        { id: '2', username: 'rushi', displayName: 'rushi', fullData: { UserName: 'rushi' } }
-      ];
-    }
-  });
-}
-
+    });
+  }
 
   getCurrentUser() {
     this.afAuth.authState.subscribe((user) => {
@@ -268,164 +207,223 @@ fetchEmployees() {
     });
   }
 
-toggleEmployeeSelection(employee: any) {
-  if (this.project.employees.length && this.project.employees[0].id === employee.id) {
-    this.project.employees = [];
-  } else {
-    this.project.employees = [employee];
-  }
-
-  this.showEmployeeDropdown = false;
-  this.employeeSearchText = '';
-}
-isEmployeeSelected(employee: any): boolean {
-  return this.project.employees.length > 0 && this.project.employees[0].id === employee.id;
-}
-
-
-getSelectedEmployeesNames(): string {
-  if (!this.project.employees || this.project.employees.length === 0) return '';
-  const emp = this.project.employees[0];
-  return emp?.username || emp?.displayName || '';
-}
-getFilteredEmployees(): any[] {
-  if (!this.employees) return [];
-  const q = (this.employeeSearchText || '').trim().toLowerCase();
-  if (!q) return this.employees;
-  return this.employees.filter(emp =>
-    (emp.username || emp.displayName || '').toLowerCase().includes(q)
-  );
-}
-createProject() {
-  if (!this.project.projectName || this.project.employees.length === 0) {
-    alert('Please fill all required fields');
-    return;
-  }
-
-  if (!this.project.startDate || !this.project.expectedEndDate) {
-    alert('Please select both start and end dates');
-    return;
-  }
-
-  const projectData = {
-    projectName: this.project.projectName,
-    // send the canonical username strings to API
-    employees: this.project.employees.map((emp: any) =>
-      emp.fullData?.UserName || emp.fullData?.userName || emp.username || emp.displayName || ''
-    ),
-    startDate: new Date(this.project.startDate).toISOString().split('T')[0],
-    expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
-  };
-
-  console.log('Sending project data (usernames):', projectData);
-
-  this.projectService.createProject(projectData).subscribe({
-    next: (response: any) => {
-      console.log('Project created:', response);
-      this.showSuccessMessage = true;
-
-      // keep the UI list as objects (so dropdown still works)
-      const newProject = {
-        ...projectData,
-        _id: response._id || Date.now().toString(),
-        employees: [...this.project.employees]
-      };
-
-      this.projects.unshift(newProject);
-      this.filteredProjects = [...this.projects];
-
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-        this.showCreateProjectBox = false;
-        this.showEmployeeDropdown = false;
-      }, 2000);
-    },
-    error: (err: any) => {
-      console.error('Error creating project:', err);
-      alert('Failed to create project: ' + (err.error?.message || err.message || 'Unknown error'));
-    }
-  });
-}
-deleteProject(project: any) {
-  if (confirm('Are you sure you want to delete this project?')) {
+  toggleEmployeeSelection(employee: any) {
+    const index = this.project.employees.findIndex((emp: any) => emp.id === employee.id);
     
-    const projectId = project._id || project.id;
+    if (index > -1) {
+      this.project.employees.splice(index, 1);
+    } else {
+      this.project.employees.push(employee);
+    }
+  }
 
-    if (!projectId) {
-      console.error('Project ID is missing:', project);
-      alert('Cannot delete project: Missing project ID');
+  isEmployeeSelected(employee: any): boolean {
+    return this.project.employees.some((emp: any) => emp.id === employee.id);
+  }
+
+  toggleEditEmployeeSelection(employee: any) {
+    const index = this.selectedProject.employees.findIndex((emp: any) => emp.id === employee.id);
+    
+    if (index > -1) {
+      this.selectedProject.employees.splice(index, 1);
+    } else {
+      this.selectedProject.employees.push(employee);
+    }
+  }
+
+  isEditEmployeeSelected(employee: any): boolean {
+    return this.selectedProject.employees.some((emp: any) => emp.id === employee.id);
+  }
+
+  getSelectedEmployeesNames(): string {
+    if (!this.project.employees || this.project.employees.length === 0) return '';
+    return this.project.employees.map((emp: any) => 
+      emp?.username || emp?.displayName || ''
+    ).join(', ');
+  }
+
+  getEditSelectedEmployeesNames(): string {
+    if (!this.selectedProject.employees || this.selectedProject.employees.length === 0) return '';
+    return this.selectedProject.employees.map((emp: any) => 
+      emp?.username || emp?.displayName || ''
+    ).join(', ');
+  }
+
+  getFilteredEmployees(): any[] {
+    if (!this.employees) return [];
+    const q = (this.employeeSearchText || '').trim().toLowerCase();
+    if (!q) return this.employees;
+    return this.employees.filter(emp =>
+      (emp.username || emp.displayName || '').toLowerCase().includes(q)
+    );
+  }
+
+  getEditFilteredEmployees(): any[] {
+    if (!this.employees) return [];
+    const q = (this.editEmployeeSearchText || '').trim().toLowerCase();
+    if (!q) return this.employees;
+    return this.employees.filter(emp =>
+      (emp.username || emp.displayName || '').toLowerCase().includes(q)
+    );
+  }
+
+  createProject() {
+    if (!this.project.projectName || this.project.employees.length === 0) {
+      alert('Please fill all required fields');
       return;
     }
 
-    this.projectService.deleteProject(projectId).subscribe({
+    if (!this.project.startDate || !this.project.expectedEndDate) {
+      alert('Please select both start and end dates');
+      return;
+    }
+
+    const projectData = {
+      projectName: this.project.projectName,
+      employees: this.project.employees.map((emp: any) =>
+        emp.fullData?.UserName || emp.fullData?.userName || emp.username || emp.displayName || ''
+      ),
+      startDate: new Date(this.project.startDate).toISOString().split('T')[0],
+      expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
+    };
+
+    this.projectService.createProject(projectData).subscribe({
       next: (response: any) => {
-        console.log('Project deleted successfully:', response);
-        this.projects = this.projects.filter(p => (p._id || p.id) !== projectId);
-        this.filteredProjects = this.filteredProjects.filter(p => (p._id || p.id) !== projectId);
+        console.log('Project created:', response);
+        this.showSuccessMessage = true;
+
+        const newProject = {
+          ...projectData,
+          _id: response._id || Date.now().toString(),
+          employees: [...this.project.employees]
+        };
+
+        this.projects.unshift(newProject);
+        this.filteredProjects = [...this.projects];
+
+        setTimeout(() => {
+          this.showSuccessMessage = false;
+          this.showCreateProjectBox = false;
+          this.showEmployeeDropdown = false;
+        }, 2000);
       },
-      error: (error: any) => {
-        console.error('Error deleting project:', error);
-        alert('Failed to delete project: ' + (error.error?.message || error.message || 'Unknown error'));
+      error: (err: any) => {
+        console.error('Error creating project:', err);
+        alert('Failed to create project: ' + (err.error?.message || err.message || 'Unknown error'));
       }
     });
   }
-}
 
+  deleteProject(project: any) {
+    if (confirm('Are you sure you want to delete this project?')) {
+      
+      const projectId = project._id || project.id;
+
+      if (!projectId) {
+        console.error('Project ID is missing:', project);
+        alert('Cannot delete project: Missing project ID');
+        return;
+      }
+
+      this.projectService.deleteProject(projectId).subscribe({
+        next: (response: any) => {
+          console.log('Project deleted successfully:', response);
+          this.projects = this.projects.filter(p => (p._id || p.id) !== projectId);
+          this.filteredProjects = this.filteredProjects.filter(p => (p._id || p.id) !== projectId);
+        },
+        error: (error: any) => {
+          console.error('Error deleting project:', error);
+          alert('Failed to delete project: ' + (error.error?.message || error.message || 'Unknown error'));
+        }
+      });
+    }
+  }
 
   openEditModal(project: any) {
-    this.selectedProject = { ...project };
+    this.selectedProject = JSON.parse(JSON.stringify(project));
+    
+
+    if (Array.isArray(this.selectedProject.employees) && this.selectedProject.employees.length > 0) {
+      if (typeof this.selectedProject.employees[0] === 'string') {
+        this.selectedProject.employees = this.selectedProject.employees.map((empName: string) => {
+          const foundEmployee = this.employees.find(emp => 
+            emp.username === empName || 
+            emp.displayName === empName ||
+            (emp.fullData && (emp.fullData.UserName === empName || emp.fullData.userName === empName))
+          );
+          return foundEmployee || { username: empName, displayName: empName, id: empName };
+        });
+      }
+    }
+    
     this.isModalOpen = true;
   }
-saveEdit() {
-  if (!this.selectedProject) return;
 
-  const projectData = {
-    projectName: this.selectedProject.projectName,
-    employees: this.selectedProject.employees.map((emp: any) => 
-      emp.fullData?.UserName || emp.UserName || emp.userName || emp.name
-    ),
-    startDate: this.selectedProject.startDate,
-    expectedEndDate: this.selectedProject.expectedEndDate
-  };
+  saveEdit() {
+    if (!this.selectedProject) return;
 
-  this.projectService.updateProject(this.selectedProject._id, projectData).subscribe({
-    next: (response: any) => {
-      console.log('Project updated successfully:', response);
-      const index = this.projects.findIndex(p => p._id === this.selectedProject._id);
-      if (index > -1) {
-        this.projects[index] = { ...this.projects[index], ...projectData };
-      }
-      this.filteredProjects = [...this.projects];
-      this.showSuccessMessage = true;
-      setTimeout(() => {
-        this.showSuccessMessage = false;
-        this.isModalOpen = false;
-      }, 2000);
-    },
-    error: (error: any) => {
-      console.error('Error updating project:', error);
-      alert('Failed to update project: ' + (error.error?.message || error.message || 'Unknown error'));
+    const projectId = this.selectedProject._id || this.selectedProject.id;
+    if (!projectId) {
+      console.error('Project ID is missing');
+      alert('Cannot update project: Missing project ID');
+      return;
     }
-  });
-}
 
+    const projectData = {
+      projectName: this.selectedProject.projectName,
+      employees: this.selectedProject.employees.map((emp: any) => 
+        typeof emp === 'string' ? emp : (emp.username || emp.displayName)
+      ),
+      startDate: this.selectedProject.startDate,
+      expectedEndDate: this.selectedProject.expectedEndDate
+    };
+
+    this.projectService.updateProject(projectId, projectData).subscribe({
+      next: (response: any) => {
+        console.log('Project updated successfully:', response);
+        const index = this.projects.findIndex(p => (p._id || p.id) === projectId);
+        if (index > -1) {
+          this.projects[index] = { ...this.projects[index], ...projectData };
+        }
+        this.filteredProjects = [...this.projects];
+        this.showSuccessMessage = true;
+        setTimeout(() => {
+          this.showSuccessMessage = false;
+          this.isModalOpen = false;
+        }, 2000);
+      },
+      error: (error: any) => {
+        console.error('Error updating project:', error);
+        
+        let errorMsg = 'Failed to update project: ';
+        if (error.status === 0) {
+          errorMsg += 'Cannot connect to server. Please make sure the backend is running.';
+        } else if (error.error?.message) {
+          errorMsg += error.error.message;
+        } else {
+          errorMsg += 'Unknown error occurred';
+        }
+        
+        alert(errorMsg);
+      }
+    });
+  }
 
   closeModal() {
     this.isModalOpen = false;
   }
 
-  // Helper function to display employee names in the template
-getEmployeeNames(employees: any[]): string {
-  if (!employees || !Array.isArray(employees)) return '';
-  return employees.map(emp => {
-    if (typeof emp === 'string') return emp;
-    if (emp?.fullData?.UserName) return emp.fullData.UserName;
-    if (emp?.username) return emp.username;
-    if (emp?.UserName) return emp.UserName;
-    if (emp?.userName) return emp.userName;
-    if (emp?.displayName) return emp.displayName;
-    if (emp?.name) return emp.name;
-    return 'Unknown';
-  }).join(', ');
-}
+  getEmployeeNames(employees: any[]): string {
+    if (!employees || !Array.isArray(employees)) return '';
+    return employees.map(emp => {
+      if (typeof emp === 'string') return emp;
+      if (emp?.fullData?.UserName) return emp.fullData.UserName;
+      if (emp?.username) return emp.username;
+      if (emp?.UserName) return emp.UserName;
+      if (emp?.userName) return emp.userName;
+      if (emp?.displayName) return emp.displayName;
+      if (emp?.name) return emp.name;
+      return 'Unknown';
+    }).join(', ');
+  }
 }

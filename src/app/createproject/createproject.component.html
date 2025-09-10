@@ -1,175 +1,193 @@
 <app-header></app-header>
 
-  <div class="maincontent">
-    <!-- Welcome Header -->
-    <div class="welcome-card">
-      <div class="date-time">
-        <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon"
-          class="calendar-icon" />
-        <span>{{ dateTime }}</span>
-      </div>
-      <div class="user-welcome">
-        <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
-        <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
-      </div>
+<div class="maincontent">
+  <!-- Welcome Header -->
+  <div class="welcome-card">
+    <div class="date-time">
+      <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon"
+        class="calendar-icon" />
+      <span>{{ dateTime }}</span>
     </div>
-
-    <div class="section-header">
-
-        <h4>Create Project</h4>
-        <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
-
+    <div class="user-welcome">
+      <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+      <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
     </div>
+  </div>
 
-    <!-- Add Project Modal -->
-    <div class="modal" *ngIf="showCreateProjectBox">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Add Project</h3>
-          <span class="close-modal" (click)="cancel()">&times;</span>
+  <div class="section-header">
+    <h4>Create Project</h4>
+    <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
+  </div>
+
+  <!-- Add Project Modal -->
+  <div class="modal" *ngIf="showCreateProjectBox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add Project</h3>
+        <span class="close-modal" (click)="cancel()">&times;</span>
+      </div>
+
+      <div class="form-body">
+        <div class="form-row">
+          <label for="projectName">Project Name *</label>
+          <input type="text" id="projectName" placeholder="Project Name" [(ngModel)]="project.projectName" required />
         </div>
 
-        <div class="form-body">
-          <div class="form-row">
-            <label for="projectName">Project Name *</label>
-            <input type="text" id="projectName" placeholder="Project Name" [(ngModel)]="project.projectName" required />
+        <div class="form-row employees-dropdown-container">
+          <label>Select Employees *</label>
+          <div class="employees-input-container"
+            (click)="$event.stopPropagation(); showEmployeeDropdown = !showEmployeeDropdown">
+            <input type="text" placeholder="Search employees..." [value]="getSelectedEmployeesNames()"
+              (click)="$event.stopPropagation(); showEmployeeDropdown = true" readonly />
+            <i class="fa fa-chevron-down"></i>
           </div>
 
-          <div class="form-row employees-dropdown-container">
-            <label>Select Employees *</label>
-            <div class="employees-input-container"
-              (click)="$event.stopPropagation(); showEmployeeDropdown = !showEmployeeDropdown">
-              <input type="text" placeholder="Search employees..." [value]="getSelectedEmployeesNames()"
-                (click)="$event.stopPropagation(); showEmployeeDropdown = true" readonly />
-              <i class="fa fa-chevron-down"></i>
+          <div class="employees-dropdown" *ngIf="showEmployeeDropdown">
+            <div class="employee-search">
+              <input type="text" placeholder="Search employees..." [(ngModel)]="employeeSearchText"
+                (click)="$event.stopPropagation()" />
             </div>
-
-            <div class="employees-dropdown" *ngIf="showEmployeeDropdown">
-              <div class="employee-search">
-                <input type="text" placeholder="Search employees..." [(ngModel)]="employeeSearchText"
-                  (click)="$event.stopPropagation()" />
-              </div>
-              <div class="employee-list">
-                <div *ngFor="let employee of getFilteredEmployees()" class="employee-item"
-                  (click)="toggleEmployeeSelection(employee)" [class.selected]="isEmployeeSelected(employee)">
-                  <span class="employee-checkbox">
-                    <i class="fa fa-check" *ngIf="isEmployeeSelected(employee)"></i>
-                  </span>
-                  <!-- Show username (preferred) then fallback to displayName -->
-                  <span class="employee-name">{{ employee.username || employee.displayName }}</span>
-                </div>
-
-                <!-- ✅ Safe check -->
-                <div *ngIf="getFilteredEmployees()?.length === 0" class="no-employees">
-                  No employees found
-                </div>
+            <div class="employee-list">
+              <div *ngFor="let employee of getFilteredEmployees()" class="employee-item"
+                (click)="toggleEmployeeSelection(employee)" [class.selected]="isEmployeeSelected(employee)">
+                <span class="employee-checkbox">
+                  <i class="fa fa-check" *ngIf="isEmployeeSelected(employee)"></i>
+                </span>
+                <span class="employee-name">{{ employee.username || employee.displayName }}</span>
               </div>
 
-            </div>
-          </div>
-
-          <div class="form-row date-row">
-            <div class="date-input">
-              <label for="startDate">Start Date *</label>
-              <input type="date" id="startDate" [(ngModel)]="project.startDate" required />
-            </div>
-            <div class="date-input">
-              <label for="expectedEndDate">Expected End Date *</label>
-              <input type="date" id="expectedEndDate" [(ngModel)]="project.expectedEndDate" required />
+              <div *ngIf="getFilteredEmployees()?.length === 0" class="no-employees">
+                No employees found
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="form-buttons">
-          <button class="create-button" (click)="createProject()">
-            <i class="fa fa-plus"></i> Create Project
-          </button>
-          <button class="cancel-button" (click)="cancel()">Cancel</button>
-        </div>
-
-        <div *ngIf="showSuccessMessage" class="success-message">
-          <i class="fa fa-check-circle"></i> Project created successfully
+        <div class="form-row date-row">
+          <div class="date-input">
+            <label for="startDate">Start Date *</label>
+            <input type="date" id="startDate" [(ngModel)]="project.startDate" required />
+          </div>
+          <div class="date-input">
+            <label for="expectedEndDate">Expected End Date *</label>
+            <input type="date" id="expectedEndDate" [(ngModel)]="project.expectedEndDate" required />
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Projects List -->
-    <div class="projects-list">
-      <div *ngFor="let project of filteredProjects" class="project-card">
-        <div class="project-header">
-          <h4>{{ project.projectName }}</h4>
-          <span class="project-status">Active</span>
-        </div>
-        <div class="project-details">
-          <div class="detail-item">
-            <i class="fa fa-users"></i>
-            <span>{{ getEmployeeNames(project.employees) }}</span>
-          </div>
-          <div class="detail-item">
-            <i class="fa fa-calendar-start"></i>
-            <span>{{ project.startDate | date:'mediumDate' }}</span>
-          </div>
-          <div class="detail-item">
-            <i class="fa fa-calendar-end"></i>
-            <span>{{ project.expectedEndDate | date:'mediumDate' }}</span>
-          </div>
-        </div>
-        <div class="project-actions">
-          <button class="edit-btn" (click)="openEditModal(project)">
-            <i class="fa fa-edit"></i> Edit
-          </button>
-          <button class="delete-btn" (click)="deleteProject(project)">
-            <i class="fa fa-trash"></i> Delete
-          </button>
-        </div>
+      <div class="form-buttons">
+        <button class="create-button" (click)="createProject()">
+          <i class="fa fa-plus"></i> Create Project
+        </button>
+        <button class="cancel-button" (click)="cancel()">Cancel</button>
       </div>
-      <div *ngIf="filteredProjects.length === 0" class="no-projects">
-        <i class="fa fa-folder-open"></i>
-        <p>No projects found. Create your first project!</p>
-      </div>
-    </div>
 
-    <!-- Edit Project Modal -->
-    <div class="modal" *ngIf="isModalOpen">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Edit Project</h3>
-          <span class="close-modal" (click)="closeModal()">&times;</span>
-        </div>
-
-        <div class="form-body">
-          <div class="form-row">
-            <label>Project Name:</label>
-            <input type="text" [(ngModel)]="selectedProject.projectName" />
-          </div>
-
-          <div class="form-row">
-            <label>Employees:</label>
-            <input type="text" [value]="getEmployeeNames(selectedProject.employees)" readonly />
-          </div>
-
-          <div class="form-row date-row">
-            <div class="date-input">
-              <label>Start Date:</label>
-              <input type="text" [value]="selectedProject.startDate | date:'mediumDate'" readonly />
-            </div>
-            <div class="date-input">
-              <label>Expected End Date:</label>
-              <input type="text" [value]="selectedProject.expectedEndDate | date:'mediumDate'" readonly />
-            </div>
-          </div>
-        </div>
-
-        <div class="form-buttons">
-          <button class="save-btn" (click)="saveEdit()">
-            <i class="fa fa-save"></i> Save Changes
-          </button>
-          <button class="cancel-button" (click)="closeModal()">Cancel</button>
-        </div>
+      <div *ngIf="showSuccessMessage" class="success-message">
+        <i class="fa fa-check-circle"></i> Project created successfully
       </div>
     </div>
   </div>
 
+  <!-- Projects List -->
+  <div class="projects-list">
+    <div *ngFor="let project of filteredProjects" class="project-card">
+      <div class="project-header">
+        <h4>{{ project.projectName }}</h4>
+        <span class="project-status">Active</span>
+      </div>
+      <div class="project-details">
+        <div class="detail-item">
+          <i class="fa fa-users"></i>
+          <span>{{ getEmployeeNames(project.employees) }}</span>
+        </div>
+        <div class="detail-item">
+          <i class="fa fa-calendar-start"></i>
+          <span>{{ project.startDate | date:'mediumDate' }}</span>
+        </div>
+        <div class="detail-item">
+          <i class="fa fa-calendar-end"></i>
+          <span>{{ project.expectedEndDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      <div class="project-actions">
+        <button class="edit-btn" (click)="openEditModal(project)">
+          <i class="fa fa-edit"></i> Edit
+        </button>
+        <button class="delete-btn" (click)="deleteProject(project)">
+          <i class="fa fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+    <div *ngIf="filteredProjects.length === 0" class="no-projects">
+      <i class="fa fa-folder-open"></i>
+      <p>No projects found. Create your first project!</p>
+    </div>
+  </div>
 
+  <!-- Edit Project Modal -->
+  <div class="modal" *ngIf="isModalOpen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Project</h3>
+        <span class="close-modal" (click)="closeModal()">&times;</span>
+      </div>
 
-    <app-footer></app-footer>
+      <div class="form-body">
+        <div class="form-row">
+          <label>Project Name *</label>
+          <input type="text" [(ngModel)]="selectedProject.projectName" required />
+        </div>
+
+        <div class="form-row employees-dropdown-container">
+          <label>Select Employees *</label>
+          <div class="edit-employees-input-container"
+            (click)="$event.stopPropagation(); showEditEmployeeDropdown = !showEditEmployeeDropdown">
+            <input type="text" placeholder="Search employees..." [value]="getEditSelectedEmployeesNames()"
+              (click)="$event.stopPropagation(); showEditEmployeeDropdown = true" readonly />
+            <i class="fa fa-chevron-down"></i>
+          </div>
+
+          <div class="edit-employees-dropdown" *ngIf="showEditEmployeeDropdown">
+            <div class="employee-search">
+              <input type="text" placeholder="Search employees..." [(ngModel)]="editEmployeeSearchText"
+                (click)="$event.stopPropagation()" />
+            </div>
+            <div class="employee-list">
+              <div *ngFor="let employee of getEditFilteredEmployees()" class="employee-item"
+                (click)="toggleEditEmployeeSelection(employee)" [class.selected]="isEditEmployeeSelected(employee)">
+                <span class="employee-checkbox">
+                  <i class="fa fa-check" *ngIf="isEditEmployeeSelected(employee)"></i>
+                </span>
+                <span class="employee-name">{{ employee.username || employee.displayName }}</span>
+              </div>
+
+              <div *ngIf="getEditFilteredEmployees()?.length === 0" class="no-employees">
+                No employees found
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row date-row">
+          <div class="date-input">
+            <label>Start Date *</label>
+            <input type="date" [(ngModel)]="selectedProject.startDate" required />
+          </div>
+          <div class="date-input">
+            <label>Expected End Date *</label>
+            <input type="date" [(ngModel)]="selectedProject.expectedEndDate" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-buttons">
+        <button class="save-btn" (click)="saveEdit()">
+          <i class="fa fa-save"></i> Save Changes
+        </button>
+        <button class="cancel-button" (click)="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

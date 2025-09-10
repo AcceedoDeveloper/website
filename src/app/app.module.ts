@@ -79,6 +79,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { RegistermatComponent } from './register/registermat/registermat.component';
 import { HeaderComponent } from './header/header.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 
 @NgModule({
@@ -150,13 +153,18 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     MatButtonModule,
     MatListModule,
     CarouselModule,
+    
  MatIconModule,
  FormsModule,
  HttpClientModule,
+ MatPaginator,
+
+ 
     // ✅ Firebase Initialization
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    
   ],
   providers: [
     provideAnimationsAsync()
