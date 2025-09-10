@@ -2,21 +2,18 @@ import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { Timestamp } from 'firebase/firestore';
 import { RegistermatComponent } from './registermat/registermat.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserservicesService } from './services/userservices.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-
-// import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../service/auth.service.service';
 
 @Component({
-   
   selector: 'app-register',
-
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -38,102 +35,220 @@ export class RegisterComponent {
   confirmPassword = '';
   formSubmitted = false;
   selectedFile: File | null = null;
-showcreateuser=false;
-showuser=true;
-openMenu: string | null = null;
+  showcreateuser = false;
+  showuser = true;
+  openMenu: string | null = null;
   userRole: string | null = null;
   showPassword = false;
   showConfirmPassword = false;
- 
   authService: any;
+
+  // Pagination properties
+  currentPage = 1;
+  itemsPerPage = 10;
+  totalPages = 1;
+  paginatedUsers: any[] = [];
+  filteredUsers: any[] = [];
+  searchQuery = '';
+  showEllipsis = false;
 
   constructor(
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
     private afs: AngularFirestore, 
     private router: Router,
-    private dialog:MatDialog,
-    private userserives:UserservicesService,
-      private route:ActivatedRoute,
-  
-    
+    private dialog: MatDialog,
+    private userserives: UserservicesService,
+    private route: ActivatedRoute,
   ) {
-
-    //get data
-
     this.getuserdata();
   }
 
+  userdata: any;
 
+  isNavOpen = false;
+  isDropdownOpen = false;
+  showrole = false;
+  tasks: any[] = [];
+  users: any[] = [];
+  userData: any = null;
 
-  //get data
-  userdata:any;
-  
+  // Pagination methods
+  get startIndex(): number {
+    return (this.currentPage - 1) * this.itemsPerPage;
+  }
 
+  get endIndex(): number {
+    return Math.min(this.startIndex + this.itemsPerPage, this.filteredUsers.length);
+  }
 
-  
+  get totalItems(): number {
+    return this.filteredUsers.length;
+  }
 
-
-
-    isNavOpen = false;
-      isDropdownOpen=false;
-      showrole=false;
-    tasks: any[] = [];
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
     
-    users: any[] = [];
-    userData: any = null;
-      onNavCheckChange(event: Event) {
-      const target = event.target as HTMLInputElement;
-      this.isNavOpen = target.checked;
-      console.log('Hamburger menu toggled, nav open:', this.isNavOpen);
-      if (!this.isNavOpen) {
-        this.isDropdownOpen = false; 
-        console.log('Dropdown closed due to hamburger menu closing');
-      }
+    // Ensure current page is within valid range
+    if (this.currentPage > this.totalPages && this.totalPages > 0) {
+      this.currentPage = this.totalPages;
+    } else if (this.totalPages === 0) {
+      this.currentPage = 1;
     }
-  
-    task: any = {
-      assignee: '',
-      description: '',
-      priority: '',
-      status: 'todo',
-      createdAt: null,
-      dueDate: null,
-      timeEstimate: '',
-      attachment: '',
-      fileName: ''
-    };
-  
-    editComment: string = '';
-    showTaskBox =false;
-    showSuccessMessage = false;
-    showUserDropdown = false;
-    searchQuery: string = '';
-    dropdownOpen = false;
-   
-    isModalOpen = false;
-    selectedTask: any = null;
-   
-  filteredTasks: any[] = [];
-  
+    
+    this.paginatedUsers = this.filteredUsers.slice(this.startIndex, this.endIndex);
+  }
 
-    showEditModal = false;
-    editUserData: any = {};
-    previewImage: string | ArrayBuffer | null = null;
-  
-    currentDateTime: string = '';
-    dateTime: string = '';
-    hasNotification = false;
-  
-  
-   
+  onItemsPerPageChange() {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  goToFirstPage() {
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  goToLastPage() {
+    this.currentPage = this.totalPages;
+    this.updatePagination();
+  }
+
+  getPageNumbers(): number[] {
+    const maxVisiblePages = 5;
+    const pages: number[] = [];
+    
+    if (this.totalPages <= maxVisiblePages) {
+      // Show all pages if total pages is less than max visible
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+      this.showEllipsis = false;
+    } else {
+      // Always show first page
+      pages.push(1);
+      
+      // Calculate start and end of page range
+      let startPage = Math.max(2, this.currentPage - 1);
+      let endPage = Math.min(this.totalPages - 1, this.currentPage + 1);
+      
+      // Adjust if we're at the beginning
+      if (this.currentPage <= 3) {
+        endPage = 4;
+      }
+      
+      // Adjust if we're at the end
+      if (this.currentPage >= this.totalPages - 2) {
+        startPage = this.totalPages - 3;
+      }
+      
+      // Add ellipsis after first page if needed
+      if (startPage > 2) {
+        this.showEllipsis = true;
+      } else {
+        this.showEllipsis = false;
+      }
+      
+      // Add middle pages
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      
+      // Add ellipsis before last page if needed
+      if (endPage < this.totalPages - 1) {
+        this.showEllipsis = true;
+      }
+      
+      // Always show last page
+      pages.push(this.totalPages);
+    }
+    
+    return pages;
+  }
+
+  filterUsers() {
+    if (!this.searchQuery) {
+      this.filteredUsers = [...this.userdata];
+    } else {
+      const query = this.searchQuery.toLowerCase();
+      this.filteredUsers = this.userdata.filter((user: any) => 
+        (user.UserName && user.UserName.toLowerCase().includes(query)) ||
+        (user.emailId && user.emailId.toLowerCase().includes(query)) ||
+        (user.role?.role && user.role.role.toLowerCase().includes(query)) ||
+        (user.department?.departmentName && user.department.departmentName.toLowerCase().includes(query)) ||
+        (user.subDepartment && user.subDepartment.toLowerCase().includes(query)) ||
+        (user.phoneNumber && user.phoneNumber.includes(query))
+      );
+    }
+    
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  // Rest of your existing methods remain the same...
+  onNavCheckChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isNavOpen = target.checked;
+    console.log('Hamburger menu toggled, nav open:', this.isNavOpen);
+    if (!this.isNavOpen) {
+      this.isDropdownOpen = false; 
+      console.log('Dropdown closed due to hamburger menu closing');
+    }
+  }
+
+  task: any = {
+    assignee: '',
+    description: '',
+    priority: '',
+    status: 'todo',
+    createdAt: null,
+    dueDate: null,
+    timeEstimate: '',
+    attachment: '',
+    fileName: ''
+  };
+
+  editComment: string = '';
+  showTaskBox = false;
+  showSuccessMessage = false;
+  showUserDropdown = false;
+  dropdownOpen = false;
+  isModalOpen = false;
+  selectedTask: any = null;
+  filteredTasks: any[] = [];
+  showEditModal = false;
+  editUserData: any = {};
+  previewImage: string | ArrayBuffer | null = null;
+  currentDateTime: string = '';
+  dateTime: string = '';
+  hasNotification = false;
 
   ngOnInit(): void {
     this.updateTime();
     this.getCurrentUser();
     this.getuserdata();
     
-    // Update time every minute
     setInterval(() => {
       this.updateTime();
     }, 60000);
@@ -149,7 +264,6 @@ openMenu: string | null = null;
     if (userStr) {
       this.userData = JSON.parse(userStr);
       
-      // Process user image URL
       if (this.userData.photo) {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
@@ -167,16 +281,22 @@ openMenu: string | null = null;
       next: (data: any) => {
         if (Array.isArray(data)) {
           this.userdata = data.map((user: any) => this.processUserImage(user));
+          this.filteredUsers = [...this.userdata];
         } else if (data && typeof data === 'object') {
           this.userdata = [this.processUserImage(data)];
+          this.filteredUsers = [...this.userdata];
         } else {
           console.warn('Unexpected response format:', data);
           this.userdata = [];
+          this.filteredUsers = [];
         }
+        this.updatePagination();
       },
       error: (err) => {
         console.error('Error fetching users:', err);
         this.userdata = [];
+        this.filteredUsers = [];
+        this.updatePagination();
       }
     });
   }
@@ -206,7 +326,7 @@ openMenu: string | null = null;
       data: { item }
     }).afterClosed().subscribe(result => {
       if (result) {
-        this.getuserdata(); // Refresh the user list
+        this.getuserdata();
       }
     });
   }
@@ -216,7 +336,7 @@ openMenu: string | null = null;
       this.userserives.deleteuser(ID).subscribe({
         next: (res) => {
           console.log('User deleted successfully:', res);
-          this.getuserdata(); // Refresh the user list
+          this.getuserdata();
         },
         error: (err) => {
           console.error('Error deleting user:', err);
@@ -236,7 +356,7 @@ openMenu: string | null = null;
       data: {}
     }).afterClosed().subscribe(result => {
       if (result) {
-        this.getuserdata(); // Refresh the user list
+        this.getuserdata();
       }
     });
   }
@@ -246,249 +366,5 @@ openMenu: string | null = null;
     return role?.toLowerCase() === 'admin';
   }
 
-
-    
-  
-  
-  
-    toggleTaskBox() {
-      this.showTaskBox = !this.showTaskBox;
-    }
-  
-  
-    toggleDropdown() {
-      this.dropdownOpen = !this.dropdownOpen;
-    }
-  
-    //show role
-    getrole()
-    {
-      this.showrole=!this.showrole;
-    }
-  
-
-  
-    cancel() {
-      this.task = {
-        assignee: '',
-        description: '',
-        status: 'todo',
-        createdAt: null,
-        dueDate: null,
-        timeEstimate: '',
-        attachment: ''
-      };
-      this.showTaskBox = false;
-    }
-  
-   onSearch() {
-    const query = this.searchQuery.toLowerCase();
-    this.filteredTasks = this.tasks.filter(task =>
-      task.description.toLowerCase().includes(query)
-    );
-  }
-  
-    handleFileUpload(event: any) {
-      const file = event.target.files[0];
-      if (file) {
-        this.task.attachment = file.name;
-      }
-    }
-
-    
-toggleMenu(menu: string) {
-  this.openMenu = this.openMenu === menu ? null : menu;
+  // ... rest of your existing methods
 }
-  
-    onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.task.attachment = file;
-      this.task.fileName = file.name;
-    }
-  }
-  
-    fetchTasks() {
-      this.afs
-        .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-        .valueChanges({ idField: 'id' })
-        .subscribe((data) => {
-          this.tasks = data;
-        });
-    }
-  
-  
-    fetchUsers() {
-      this.afs
-        .collection('users')
-        .valueChanges({ idField: 'id' })
-        .subscribe((users) => {
-          this.users = users;
-        });
-    }
-  
-
-  
-    selectAssignee(user: any) {
-      this.task.assignee =
-        user.username ||
-        `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-        user.email;
-      this.showUserDropdown = false;
-    }
-  
-    toggleUserDropdown() {
-      this.showUserDropdown = !this.showUserDropdown;
-    }
-  
-
-    openEditModal(task: any) {
-      this.selectedTask = { ...task };
-      this.editComment = task.description;
-      this.isModalOpen = true;
-    }
-  
-    saveEdit() {
-      if (!this.selectedTask || !this.editComment) return;
-  
-      this.afs
-        .collection('tasks')
-        .doc(this.selectedTask.id)
-        .update({
-          description: this.editComment
-        })
-        .then(() => {
-          this.isModalOpen = false;
-          this.fetchTasks();
-        });
-    }
-  
-    closeModal() {
-      this.isModalOpen = false;
-    }
-  
-    markAsCompleted(task: any) {
-      this.afs
-        .collection('tasks')
-        .doc(task.id)
-        .update({ status: 'done' })
-        .then(() => {
-          this.fetchTasks();
-        });
-    }
-  
-    // Profile Modal Methods
-    openEditProfile() {
-      this.editUserData = { ...this.userData };
-      this.showEditModal = true;
-    }
-  
-    closeEditModal() {
-      this.showEditModal = false;
-    }
- saveProfilePicture() {
-  if (!this.selectedFile) return;
-
-  const filePath = `profileImages/${this.userData.uid}_${Date.now()}_${this.selectedFile.name}`;
-  const fileRef = this['storage'].ref(filePath);
-  const task = this['storage'].upload(filePath, this.selectedFile);
-
-  task.snapshotChanges().pipe(
-    finalize(() => {
-      fileRef.getDownloadURL().subscribe((url: any) => {
-        this.editUserData.photoURL = url; 
-
-        
-        this.afs.collection('users').doc(this.userData.uid)
-          .update({ photoURL: url })
-          .then(() => {
-            console.log('✅ Profile image updated');
-            this.userData.photoURL = url; 
-            this.showEditModal = false;
-          })
-          .catch(err => console.error('❌ Firestore update error', err));
-      });
-    })
-  ).subscribe();
-}
-
-  
-
-onPhotoSelected(event: any) {
-  const file = event.target.files[0];
-  if (file) {
-    this.selectedFile = file;
-
-    // Show preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.previewImage = reader.result;
-      this.editUserData.photoURL = this.previewImage; 
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-  
-    signOut() {
-      this.afAuth.signOut();
-    }
-  
-
-  
-    getInitials(name: string): string {
-      return name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase();
-    }
-  
-  onSubmit(form: any) {
-    if (form.valid && this.user.password === this.confirmPassword) {
-      this.afAuth.createUserWithEmailAndPassword(this.user.email, this.user.password)
-      
-        .then((userCredential) => {
-          const uid = userCredential.user?.uid;
-          if (uid) {
-            const userData = {
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              email: this.user.email,
-              mobile: this.user.mobile,
-              role: this.user.role,
-              username: this.user.username,
-              password: this.user.password
-            };
-
-            
-
-            this.firestore.collection('users').doc(uid).set(userData).then(() => {
-              console.log('User data saved to Firestore!');
-
-              sessionStorage.setItem('uid', uid);
-              sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
-              sessionStorage.setItem('email', this.user.email);
-              sessionStorage.setItem('role', this.user.role);
-
-              this.formSubmitted = true;
-              setTimeout(() => {
-                this.router.navigate(['/register']);
-              }, 1000);
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error during Firebase Auth or Firestore:', error);
-        });
-    } else {
-      console.log('Form not valid or passwords do not match.');
-    }
-  }
-}
-
-
-function finalize(arg0: () => void): any {
-  throw new Error('Function not implemented.');
-}
-
