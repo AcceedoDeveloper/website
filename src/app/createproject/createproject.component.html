@@ -1,23 +1,37 @@
 <app-header></app-header>
 
-<div class="maincontent">
-  <!-- Welcome Header -->
-  <div class="welcome-card">
-    <div class="date-time">
-      <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon"
-        class="calendar-icon" />
-      <span>{{ dateTime }}</span>
-    </div>
-    <div class="user-welcome">
-      <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
-      <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
-    </div>
-  </div>
+  <div class="maincontent">
+    
+       <!-- Welcome Header -->
+       <div class="welcome-card">
+         <div class="date-time">
+           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+           <span>{{ dateTime }}</span>
+         </div>
+         <div class="user-welcome">
+           <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
 
-  <div class="section-header">
-    <h4>Create Project</h4>
-    <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
-  </div>
+         </div>
+       </div>
+       <div>
+        <svg width="0" height="0">
+  <defs>
+    <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
+      <circle cx="0.5" cy="0.5" r="0.5" />
+    </clipPath>
+  </defs>
+</svg>
+
+<img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" 
+     style="clip-path: url(#circle-shape);" />
+       </div>
+
+    <div class="section-header">
+
+        <h4>Create Project</h4>
+        <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
+
+    </div>
 
   <!-- Add Project Modal -->
   <div class="modal" *ngIf="showCreateProjectBox">
@@ -75,12 +89,12 @@
         </div>
       </div>
 
-      <div class="form-buttons">
-        <button class="create-button" (click)="createProject()">
-          <i class="fa fa-plus"></i> Create Project
-        </button>
-        <button class="cancel-button" (click)="cancel()">Cancel</button>
-      </div>
+        <div class="form-buttons">
+          <button class="create-button" (click)="createProject()">
+            <i class="fa fa-plus"></i> Create Project
+          </button>
+          <button class="cancel-button" (click)="cancel()">Cancel</button>
+        </div>
 
       <div *ngIf="showSuccessMessage" class="success-message">
         <i class="fa fa-check-circle"></i> Project created successfully

@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import{RoledialogComponent} from './roledialog/roledialog.component';
-import{RoleserviceService} from '../service/roleservice.service'
+import{RoleserviceService} from '../service/roleservice.service';
+import { UserservicesService } from '../register/services/userservices.service';
 import { Injectable } from '@angular/core';
 // for edit --> get id
 import { ActivatedRoute } from '@angular/router';
@@ -46,6 +47,7 @@ roleid:any;
     private router: Router,
     private dialog: MatDialog,
     private roleservices:RoleserviceService,
+    private userserives:UserservicesService,
      private route:ActivatedRoute,
      private snackBar: MatSnackBar
      
@@ -119,7 +121,7 @@ editrole(role: any) {
 
 
 
-
+  userdata:any;
 
 
   //role 
@@ -180,10 +182,9 @@ editrole(role: any) {
    
     ngOnInit(): void {
       this.getCurrentUser();
-      this.fetchTasks();
+      this.getCurrentUser();
       this.fetchUsers();
       this.updateTime();
-       this.fetchTasks();
 
        
   console.log('🔎 Role from Firestore/UserData:', this.userData?.role);
@@ -257,15 +258,6 @@ editrole(role: any) {
       this.task.attachment = file;
       this.task.fileName = file.name;
     }
-  }
-  
-    fetchTasks() {
-      this.afs
-        .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-        .valueChanges({ idField: 'id' })
-        .subscribe((data) => {
-          this.tasks = data;
-        });
     }
   
   
@@ -278,90 +270,59 @@ editrole(role: any) {
         });
     }
   
-    getCurrentUser() {
-      this.afAuth.authState.subscribe((user) => {
-        if (user) {
-          this.afs
-            .collection('users')
-            .doc(user.uid)
-            .valueChanges()
-            .subscribe((data) => {
-              this.userData = data;
-            });
+  getCurrentUser() {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      this.userData = JSON.parse(userStr);
+      
+      // Process user image URL
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
         }
-      });
-    }
-  
-    selectAssignee(user: any) {
-      this.task.assignee =
-        user.username ||
-        `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-        user.email;
-      this.showUserDropdown = false;
-    }
-  
-    toggleUserDropdown() {
-      this.showUserDropdown = !this.showUserDropdown;
-    }
-  
-    addTask() {
-      if (!this.task.description || !this.task.assignee) return;
-  
-      const newTask = {
-        ...this.task,
-        createdAt: Timestamp.now(),
-        assignedBy: this.userData?.uid || 'admin'
-      };
-  
-      this.afs.collection('tasks').add(newTask).then(() => {
-        this.showSuccessMessage = true;
-        setTimeout(() => (this.showSuccessMessage = false), 2000);
-        this.fetchTasks();
-        this.cancel();
-      });
-    }
-  
-    deleteTask(task: any) {
-      if (confirm('Are you sure you want to delete this task?')) {
-        this.afs.collection('tasks').doc(task.id).delete();
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
       }
     }
-  
-    openEditModal(task: any) {
-      this.selectedTask = { ...task };
-      this.editComment = task.description;
-      this.isModalOpen = true;
+  }
+
+  getuserdata() {
+    this.userserives.getuser().subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.userdata = data.map((user: any) => this.processUserImage(user));
+        } else if (data && typeof data === 'object') {
+          this.userdata = [this.processUserImage(data)];
+        } else {
+          console.warn('Unexpected response format:', data);
+          this.userdata = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+        this.userdata = [];
+      }
+    });
+  }
+
+  private processUserImage(user: any): any {
+    const processedUser = { ...user };
+    
+    if (processedUser.photo) {
+      if (processedUser.photo.startsWith('http')) {
+        processedUser.photoURL = processedUser.photo;
+      } else {
+        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+      }
+    } else {
+      processedUser.photoURL = 'assets/default-avatar.png';
     }
-  
-    saveEdit() {
-      if (!this.selectedTask || !this.editComment) return;
-  
-      this.afs
-        .collection('tasks')
-        .doc(this.selectedTask.id)
-        .update({
-          description: this.editComment
-        })
-        .then(() => {
-          this.isModalOpen = false;
-          this.fetchTasks();
-        });
-    }
-  
-    closeModal() {
-      this.isModalOpen = false;
-    }
-  
-    markAsCompleted(task: any) {
-      this.afs
-        .collection('tasks')
-        .doc(task.id)
-        .update({ status: 'done' })
-        .then(() => {
-          this.fetchTasks();
-        });
-    }
-  
+    
+    return processedUser;
+  }
+
 
     openEditProfile() {
       this.editUserData = { ...this.userData };

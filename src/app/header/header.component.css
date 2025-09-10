@@ -375,7 +375,7 @@ max-height: 80px;
 .sidebar {
    width: 250px;
    height: 100%;
-   margin-top: 20px;
+   margin-top: 30px;
    border-top-right-radius: 25px;
    background: #ffffff; /* clean white background */
    color: #1f3c88;     /* light navy blue */

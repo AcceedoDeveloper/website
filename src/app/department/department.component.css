@@ -19,12 +19,16 @@ margin-top: -1140px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
+  height: 15%;
 }
 
 
 .date-time {
   display: flex;
-  align-items: center;
+  align-items: end;
+  text-align: end;
+  margin-left: 1700px;
   gap: 8px;
   font-size: 15px;
   font-weight: 500;
@@ -34,6 +38,7 @@ margin-top: -1140px;
 .calendar-icon {
   width: 20px;
   height: 20px;
+  margin-left: 100px;
 }
 
 .user-welcome {
@@ -43,19 +48,21 @@ margin-top: -1140px;
 }
 
 .user-welcome span {
-  font-size: 18px;
+  font-size: 32px;
   font-weight: 600;
-  color: #222;
+  margin-top: -20px;
+  color:aliceblue;
 }
 
 .user-icon {
-  width: 120px;         /* You can adjust to 100–150px as needed */
-  height: 150px;
-  object-fit: cover;    /* Ensures the image fills the box properly */
-  border-radius: 4px;   
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-top: -30px;
+  width: 130px;
+  height: 130px;
+  margin-top: -40px;
+  margin-left: 30px;
+  object-fit: cover;
+  border-radius: 50%;   /* makes it a circle */
+  border: 3px solid #FFD54F;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .department-container {
@@ -76,11 +83,11 @@ margin-top: -1140px;
 .department-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #1f5f8b;
 }
 
 .add-department-btn {
-  background: #1e90ff;
+  background: #1f5f8b;
   color: white;
   padding: 0.5rem 1rem;
   border: none;
@@ -224,5 +231,20 @@ margin-top: -670px;
   flex:1;
 
 }
+
+.welcome-card {
+  height: 20%;
+  margin-top: 0px;
+}
+
+.date-time {
+  margin-left: 900px;
+}
+
+.user-welcome span {
+  margin-top: -35px;
+
+}
+
 
 }

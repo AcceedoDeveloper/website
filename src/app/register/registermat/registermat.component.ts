@@ -54,7 +54,7 @@ previewImage: string | ArrayBuffer | null = null;
 patchForm(item: any) {
   this.registerForm.patchValue({
     userCode: item.userCode || item.UserCode || '',  
-    name: item.Username || item.UserName || '',               
+    name: item.name || item.UserName || '',               
     userName: item.userName || item.userName || '',
     emailId: item.emailId || item.Email || '',
     phoneNumber: item.phoneNumber || item.Phone || '',

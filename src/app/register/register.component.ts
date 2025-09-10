@@ -6,6 +6,7 @@ import { Timestamp } from 'firebase/firestore';
 import { RegistermatComponent } from './registermat/registermat.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserservicesService } from './services/userservices.service';
+
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,9 +18,7 @@ import { AuthService } from '../service/auth.service.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-@Injectable({
-  providedIn: 'root'
-})
+
 export class RegisterComponent {
   [x: string]: any;
   user = {
@@ -256,6 +255,7 @@ export class RegisterComponent {
 
   updateTime() {
     const now = new Date();
+    this.dateTime = now.toLocaleString();
     this.currentDateTime = now.toLocaleString();
   }
 
@@ -366,5 +366,185 @@ export class RegisterComponent {
     return role?.toLowerCase() === 'admin';
   }
 
-  // ... rest of your existing methods
+    toggleTaskBox() {
+      this.showTaskBox = !this.showTaskBox;
+    }
+  
+  
+    toggleDropdown() {
+      this.dropdownOpen = !this.dropdownOpen;
+    }
+  
+    //show role
+    getrole()
+    {
+      this.showrole=!this.showrole;
+    }
+  
+
+  
+    cancel() {
+      this.task = {
+        assignee: '',
+        description: '',
+        status: 'todo',
+        createdAt: null,
+        dueDate: null,
+        timeEstimate: '',
+        attachment: ''
+      };
+      this.showTaskBox = false;
+    }
+  
+   onSearch() {
+    const query = this.searchQuery.toLowerCase();
+    this.filteredTasks = this.tasks.filter(task =>
+      task.description.toLowerCase().includes(query)
+    );
+  }
+  
+    handleFileUpload(event: any) {
+      const file = event.target.files[0];
+      if (file) {
+        this.task.attachment = file.name;
+      }
+    }
+  
+  
+    fetchUsers() {
+      this.afs
+        .collection('users')
+        .valueChanges({ idField: 'id' })
+        .subscribe((users) => {
+          this.users = users;
+        });
+    }
+  
+
+
+  
+    openEditModal(task: any) {
+      this.selectedTask = { ...task };
+      this.editComment = task.description;
+      this.isModalOpen = true;
+    }
+  
+    closeModal() {
+      this.isModalOpen = false;
+    }
+  
+    // Profile Modal Methods
+    openEditProfile() {
+      this.editUserData = { ...this.userData };
+      this.showEditModal = true;
+    }
+  
+    closeEditModal() {
+      this.showEditModal = false;
+    }
+ saveProfilePicture() {
+  if (!this.selectedFile) return;
+
+  const filePath = `profileImages/${this.userData.uid}_${Date.now()}_${this.selectedFile.name}`;
+  const fileRef = this['storage'].ref(filePath);
+  const task = this['storage'].upload(filePath, this.selectedFile);
+
+  task.snapshotChanges().pipe(
+    finalize(() => {
+      fileRef.getDownloadURL().subscribe((url: any) => {
+        this.editUserData.photoURL = url; 
+
+        
+        this.afs.collection('users').doc(this.userData.uid)
+          .update({ photoURL: url })
+          .then(() => {
+            console.log('✅ Profile image updated');
+            this.userData.photoURL = url; 
+            this.showEditModal = false;
+          })
+          .catch(err => console.error('❌ Firestore update error', err));
+      });
+    })
+  ).subscribe();
 }
+
+  
+
+onPhotoSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedFile = file;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result;
+      this.editUserData.photoURL = this.previewImage; 
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+  
+    signOut() {
+      this.afAuth.signOut();
+    }
+  
+
+  
+    getInitials(name: string): string {
+      return name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase();
+    }
+  
+  onSubmit(form: any) {
+    if (form.valid && this.user.password === this.confirmPassword) {
+      this.afAuth.createUserWithEmailAndPassword(this.user.email, this.user.password)
+      
+        .then((userCredential) => {
+          const uid = userCredential.user?.uid;
+          if (uid) {
+            const userData = {
+              firstName: this.user.firstName,
+              lastName: this.user.lastName,
+              email: this.user.email,
+              mobile: this.user.mobile,
+              role: this.user.role,
+              username: this.user.username,
+              password: this.user.password
+            };
+
+            
+
+            this.firestore.collection('users').doc(uid).set(userData).then(() => {
+              console.log('User data saved to Firestore!');
+
+              sessionStorage.setItem('uid', uid);
+              sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
+              sessionStorage.setItem('email', this.user.email);
+              sessionStorage.setItem('role', this.user.role);
+
+              this.formSubmitted = true;
+              setTimeout(() => {
+                this.router.navigate(['/register']);
+              }, 1000);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error during Firebase Auth or Firestore:', error);
+        });
+    } else {
+      console.log('Form not valid or passwords do not match.');
+    }
+  }
+}
+
+
+function finalize(arg0: () => void): any {
+  throw new Error('Function not implemented.');
+}
+
