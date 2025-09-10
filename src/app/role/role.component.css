@@ -78,24 +78,23 @@ margin-top: -1140px;
   margin: 0;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: #1f3c88;
 }
 
 .add-role-btn {
-  padding: 8px 14px;
-  background: #007bff;
+  padding: 6px 11px;
+  background: #1f3c88;
   color: #fff;
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 24px;
   transition: 0.3s;
 }
 
 .add-role-btn:hover {
   background: #0056b3;
 }
-
 
 .role-table-wrapper {
   overflow-x: auto;
@@ -116,9 +115,9 @@ margin-top: -1140px;
 }
 
 .role-flat-table thead {
-  background: #f3f6fa;
+  background: #cbcdcd ;
   font-weight: 600;
-  color: #444;
+  color: black;
 }
 
 .role-flat-table tr {

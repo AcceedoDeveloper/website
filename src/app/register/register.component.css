@@ -78,17 +78,17 @@ margin-top: -1140px;
 .user-header h2 {
   font-size: 1.8rem;
   font-weight: 600;
-  color: #1f5f8b;
+  color: #1f3c88;
   padding: 0.5rem 0;
 }
 
 .add-user-btn {
-  background: #1f5f8b;
+  background: #1f3c88;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 0.9rem;
   border-radius: 32px;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 100;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -145,8 +145,8 @@ margin-top: -1140px;
 
 /* Table Head */
 .user-table th {
-  background: #1f5f8b;
-  color: #ffffff;
+  background: #cbcdcd ;
+  color: black;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.85rem;
