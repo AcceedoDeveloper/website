@@ -273,3 +273,11 @@
 }
 
 
+.preview-img {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 5px;
+}
