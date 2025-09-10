@@ -117,40 +117,50 @@ onFileSelected(event: any) {
   }
 
 
-}onSubmit() {
+}
+onSubmit() {
   if (this.registerForm.invalid) {
     this.registerForm.markAllAsTouched();
     return;
   }
 
   const formValue = this.registerForm.value;
+  const payload: any = {
+    userCode: formValue.userCode,
+    name: formValue.name,
+    userName: formValue.userName,
+    emailId: formValue.emailId,
+    phoneNumber: formValue.phoneNumber,
+    role: formValue.role,
+    department: formValue.departmentName,
+    subDepartment: formValue.subDepartmentName
+  };
+
+  if (formValue.password) payload.password = formValue.password;
+
   const formData = new FormData();
+  Object.keys(payload).forEach(key => formData.append(key, payload[key]));
 
-  // Append all form values
-  Object.keys(formValue).forEach(key => {
-    if (formValue[key]) {
-      formData.append(key, formValue[key]);
-    }
-  });
-
-  // Append the image file if selected
+  // Only append the file if it exists
   if (this.selectedFile) {
-    formData.append('profileImage', this.selectedFile);
+    formData.append('profileImage', this.selectedFile); // must match multer field
   }
 
   if (this.isEdit) {
     this.userservice.edituser(this.data.item._id, formData).subscribe({
       next: () => this.dialogRef.close(true),
-      error: (err: any) => console.error('Error updating user:', err)
+      error: err => console.error('Error updating user:', err)
     });
-  } else {
-    this.userservice.saveuser(formData).subscribe({
+ } else {
+    this.userservice.saveuser(payload).subscribe({
       next: () => {
         this.registerForm.reset();
+        this.previewImage = null;
         this.dialogRef.close(true);
       },
-      error: (err: any) => console.error('Error saving user:', err)
+    error: (err) => console.error('Error saving user:', err)
     });
-  }
+  } 
+
 }
 }

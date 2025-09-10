@@ -98,7 +98,7 @@ openMenu: string | null = null;
     task: any = {
       assignee: '',
       description: '',
-        priority: '',
+      priority: '',
       status: 'todo',
       createdAt: null,
       dueDate: null,
@@ -472,6 +472,7 @@ onPhotoSelected(event: any) {
   onSubmit(form: any) {
     if (form.valid && this.user.password === this.confirmPassword) {
       this.afAuth.createUserWithEmailAndPassword(this.user.email, this.user.password)
+      
         .then((userCredential) => {
           const uid = userCredential.user?.uid;
           if (uid) {
@@ -484,6 +485,8 @@ onPhotoSelected(event: any) {
               username: this.user.username,
               password: this.user.password
             };
+
+            
 
             this.firestore.collection('users').doc(uid).set(userData).then(() => {
               console.log('User data saved to Firestore!');
