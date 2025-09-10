@@ -11,12 +11,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./registermat.component.css']
 })
 export class RegistermatComponent implements OnInit {
+[x: string]: any;
   registerForm: FormGroup;
   roles: any[] = [];
   departments: any[] = [];
   subDepartmentsData: any[] = [];
   isEdit = false;
 selectedFile: File | null = null;
+selectedFileName: string = '';
 previewImage: string | ArrayBuffer | null = null;
   constructor(
     private fb: FormBuilder,
@@ -52,8 +54,8 @@ previewImage: string | ArrayBuffer | null = null;
 patchForm(item: any) {
   this.registerForm.patchValue({
     userCode: item.userCode || item.UserCode || '',  
-    name: item.name || item.Name || '',               
-    userName: item.userName || item.UserName || '',
+    name: item.Username || item.UserName || '',               
+    userName: item.userName || item.userName || '',
     emailId: item.emailId || item.Email || '',
     phoneNumber: item.phoneNumber || item.Phone || '',
     role: item.role?.role || item.role || '',
