@@ -27,6 +27,7 @@ import { AuthService } from '../service/auth.service.service'; // ✅ correct pa
   providedIn: 'root'
 })
 export class RegisterComponent {
+  [x: string]: any;
   user = {
     firstName: '',
     lastName: '',
@@ -39,13 +40,14 @@ export class RegisterComponent {
 
   confirmPassword = '';
   formSubmitted = false;
+  selectedFile: File | null = null;
 showcreateuser=false;
 showuser=true;
 openMenu: string | null = null;
   userRole: string | null = null;
   showPassword = false;
   showConfirmPassword = false;
-  
+ 
   authService: any;
 
   constructor(
@@ -70,70 +72,17 @@ openMenu: string | null = null;
   //get data
   userdata:any;
   
-  getuserdata()
-  {
-    this.userserives. getuser().subscribe(data=>
-    {
- this.userdata=data;
-    }
-    )
-  }
+
 
   
 
-  editUser(item : any) {
-    console.log('data', item);
-    
-   this.dialog.open(RegistermatComponent, {
-      width: '80vw',
-      height: 'auto',
-      maxHeight: '90vh',
-      panelClass: 'custom-dialog',
-      data: { item }
-    });
-
-  }
-
-  
-
-  //delete user
-
-  deleteUser(ID: any) {
-  if (confirm('Are you sure you want to delete this user?')) {
-    this.userserives.deleteuser(ID).subscribe({
-      next: (res) => {
-        console.log('✅ User deleted successfully:', res);
-        this.getuserdata(); 
-      },
-      error: (err) => {
-        console.error('❌ Error deleting user:', err);
-        if (err.error) {
-          console.error('🔎 Server error details:', JSON.stringify(err.error, null, 2));
-        }
-        alert('Failed to delete user. Please try again.');
-      }
-    });
-  }
-}
-
-  
-
-showcreateuserss() {
-  const ref = this.dialog.open(RegistermatComponent, {
-    width: '90vw',        
-    maxWidth: '65vw',   
-    height: '90vh',      
-    maxHeight: '90vh',
-    panelClass: 'custom-dialog',
-    data: {}
-  });
-}
 
 
     isNavOpen = false;
       isDropdownOpen=false;
       showrole=false;
     tasks: any[] = [];
+    
     users: any[] = [];
     userData: any = null;
       onNavCheckChange(event: Event) {
@@ -181,30 +130,129 @@ showcreateuserss() {
   
   
    
-    ngOnInit(): void {
-      this.getCurrentUser();
-      this.fetchTasks();
-      this.fetchUsers();
-      this.updateTime();
-       this.fetchTasks();
 
-         this.userRole = this.authService.getUserRole();
-    console.log('🔎 Current Role:', this.userRole);
+  ngOnInit(): void {
+    this.updateTime();
+    this.getCurrentUser();
+    this.getuserdata();
+    
+    // Update time every minute
+    setInterval(() => {
+      this.updateTime();
+    }, 60000);
   }
-isAdmin(): boolean {
-  const role = sessionStorage.getItem('role') || this.userData?.role || '';
-  return role?.toLowerCase() === 'admin';
-}
+
+  updateTime() {
+    const now = new Date();
+    this.currentDateTime = now.toLocaleString();
+  }
+
+  getCurrentUser() {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      this.userData = JSON.parse(userStr);
+      
+      // Process user image URL
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+        }
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
+      }
+    }
+  }
+
+  getuserdata() {
+    this.userserives.getuser().subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.userdata = data.map((user: any) => this.processUserImage(user));
+        } else if (data && typeof data === 'object') {
+          this.userdata = [this.processUserImage(data)];
+        } else {
+          console.warn('Unexpected response format:', data);
+          this.userdata = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+        this.userdata = [];
+      }
+    });
+  }
+
+  private processUserImage(user: any): any {
+    const processedUser = { ...user };
+    
+    if (processedUser.photo) {
+      if (processedUser.photo.startsWith('http')) {
+        processedUser.photoURL = processedUser.photo;
+      } else {
+        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+      }
+    } else {
+      processedUser.photoURL = 'assets/default-avatar.png';
+    }
+    
+    return processedUser;
+  }
+
+  editUser(item: any) {
+    this.dialog.open(RegistermatComponent, {
+      width: '80vw',
+      height: 'auto',
+      maxHeight: '90vh',
+      panelClass: 'custom-dialog',
+      data: { item }
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.getuserdata(); // Refresh the user list
+      }
+    });
+  }
+
+  deleteUser(ID: any) {
+    if (confirm('Are you sure you want to delete this user?')) {
+      this.userserives.deleteuser(ID).subscribe({
+        next: (res) => {
+          console.log('User deleted successfully:', res);
+          this.getuserdata(); // Refresh the user list
+        },
+        error: (err) => {
+          console.error('Error deleting user:', err);
+          alert('Failed to delete user. Please try again.');
+        }
+      });
+    }
+  }
+
+  showcreateuserss() {
+    this.dialog.open(RegistermatComponent, {
+      width: '90vw',
+      maxWidth: '65vw',
+      height: '90vh',
+      maxHeight: '90vh',
+      panelClass: 'custom-dialog',
+      data: {}
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        this.getuserdata(); // Refresh the user list
+      }
+    });
+  }
+
+  isAdmin(): boolean {
+    const role = sessionStorage.getItem('role') || this.userData?.role || '';
+    return role?.toLowerCase() === 'admin';
+  }
 
 
     
   
   
-    updateTime() {
-      const now = new Date();
-      this.dateTime = now.toLocaleString();
-      this.currentDateTime = now.toDateString() + ' ' + now.toLocaleTimeString();
-    }
   
     toggleTaskBox() {
       this.showTaskBox = !this.showTaskBox;
@@ -282,19 +330,7 @@ toggleMenu(menu: string) {
         });
     }
   
-    getCurrentUser() {
-      this.afAuth.authState.subscribe((user) => {
-        if (user) {
-          this.afs
-            .collection('users')
-            .doc(user.uid)
-            .valueChanges()
-            .subscribe((data) => {
-              this.userData = data;
-            });
-        }
-      });
-    }
+
   
     selectAssignee(user: any) {
       this.task.assignee =
@@ -375,29 +411,49 @@ toggleMenu(menu: string) {
     closeEditModal() {
       this.showEditModal = false;
     }
+ saveProfilePicture() {
+  if (!this.selectedFile) return;
+
+  const filePath = `profileImages/${this.userData.uid}_${Date.now()}_${this.selectedFile.name}`;
+  const fileRef = this['storage'].ref(filePath);
+  const task = this['storage'].upload(filePath, this.selectedFile);
+
+  task.snapshotChanges().pipe(
+    finalize(() => {
+      fileRef.getDownloadURL().subscribe((url: any) => {
+        this.editUserData.photoURL = url; 
+
+        
+        this.afs.collection('users').doc(this.userData.uid)
+          .update({ photoURL: url })
+          .then(() => {
+            console.log('✅ Profile image updated');
+            this.userData.photoURL = url; 
+            this.showEditModal = false;
+          })
+          .catch(err => console.error('❌ Firestore update error', err));
+      });
+    })
+  ).subscribe();
+}
+
   
-    saveProfilePicture() {
-      this.afs
-        .collection('users')
-        .doc(this.userData.uid)
-        .update(this.editUserData)
-        .then(() => {
-          this.showEditModal = false;
-          this.getCurrentUser();
-        });
-    }
-  
-    onPhotoSelected(event: any) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.previewImage = reader.result;
-          this.editUserData.photoURL = this.previewImage;
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+
+onPhotoSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedFile = file;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result;
+      this.editUserData.photoURL = this.previewImage; 
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
   
     signOut() {
       this.afAuth.signOut();
@@ -453,4 +509,8 @@ toggleMenu(menu: string) {
   }
 }
 
+
+function finalize(arg0: () => void): any {
+  throw new Error('Function not implemented.');
+}
 

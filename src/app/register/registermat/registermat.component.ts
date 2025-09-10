@@ -16,7 +16,8 @@ export class RegistermatComponent implements OnInit {
   departments: any[] = [];
   subDepartmentsData: any[] = [];
   isEdit = false;
-
+selectedFile: File | null = null;
+previewImage: string | ArrayBuffer | null = null;
   constructor(
     private fb: FormBuilder,
     private userservice: UserservicesService,
@@ -100,42 +101,56 @@ patchForm(item: any) {
     this.dialogRef.close(true);
   }
 
-  onSubmit() {
+
+
+onFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.selectedFile = file;
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImage = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+
+}onSubmit() {
   if (this.registerForm.invalid) {
     this.registerForm.markAllAsTouched();
     return;
   }
 
   const formValue = this.registerForm.value;
-  const payload: any = {
-    userCode: formValue.userCode,
-    name: formValue.name,
-    userName: formValue.userName,
-    emailId: formValue.emailId,
-    phoneNumber: formValue.phoneNumber,
-    role: formValue.role,
-    department: formValue.departmentName,
-    subDepartment: formValue.subDepartmentName
-  };
+  const formData = new FormData();
 
-  if (formValue.password) {
-    payload.password = formValue.password; 
+  // Append all form values
+  Object.keys(formValue).forEach(key => {
+    if (formValue[key]) {
+      formData.append(key, formValue[key]);
+    }
+  });
+
+  // Append the image file if selected
+  if (this.selectedFile) {
+    formData.append('profileImage', this.selectedFile);
   }
 
   if (this.isEdit) {
-    this.userservice.edituser(this.data.item._id, payload).subscribe({
+    this.userservice.edituser(this.data.item._id, formData).subscribe({
       next: () => this.dialogRef.close(true),
-      error: (err) => console.error('Error updating user:', err)
+      error: (err: any) => console.error('Error updating user:', err)
     });
   } else {
-    this.userservice.saveuser(payload).subscribe({
+    this.userservice.saveuser(formData).subscribe({
       next: () => {
         this.registerForm.reset();
         this.dialogRef.close(true);
       },
-      error: (err) => console.error('Error saving user:', err)
+      error: (err: any) => console.error('Error saving user:', err)
     });
   }
 }
-
 }
