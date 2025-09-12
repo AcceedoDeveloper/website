@@ -1,288 +1,134 @@
-
-
-
+// src/app/projects/projects.component.ts
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from 'firebase/firestore';
-import { Pipe, PipeTransform } from '@angular/core';
-
-
-@Pipe({
-  name: 'filter'
-})
-export class FilterPipe implements PipeTransform {
-  transform(items: any[], searchText: string): any[] {
-    if (!items || !searchText) return items;
-
-    const lower = searchText.toLowerCase();
-
-    return items.filter(item =>
-      Object.values(item).some(val =>
-        String(val).toLowerCase().includes(lower)
-      )
-    );
-  }
-}
-
+import { CreatprojectService } from '../service/creatproject.service';
 
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
-  styleUrl: './projects.component.css'
+  styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
-  tasks: any[] = [];
-  users: any[] = [];
   userData: any = null;
+  displayName = 'User';
+  username = '';
+  projects: any[] = [];
+  filteredProjects: any[] = [];
+  searchQuery = '';
+  loading = false;
+  error = '';
+dateTime: any;
 
-  task: any = {
-    assignee: '',
-    description: '',
-      priority: '',
-    status: 'todo',
-    createdAt: null,
-    dueDate: null,
-    timeEstimate: '',
-    attachment: '',
-    fileName: ''
-  };
-
-  editComment: string = '';
-  showTaskBox = false;
-  showSuccessMessage = false;
-  showUserDropdown = false;
-  searchQuery: string = '';
-  dropdownOpen = false;
-  isModalOpen = false;
-  selectedTask: any = null;
- 
-filteredTasks: any[] = [];
-
-  // Profile Edit Modal
-  showEditModal = false;
-  editUserData: any = {};
-  previewImage: string | ArrayBuffer | null = null;
-
-  currentDateTime: string = '';
-  dateTime: string = '';
-  hasNotification = false;
-
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) {}
+  constructor(private projectService: CreatprojectService) { }
 
   ngOnInit(): void {
-    this.getCurrentUser();
-    this.fetchTasks();
-    this.fetchUsers();
-    this.updateTime();
-     this.fetchTasks();
+    this.loadUserFromSession();
   }
 
+  private loadUserFromSession() {
+    // Try to read JSON user object saved in sessionStorage under 'user'
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        this.userData = JSON.parse(userStr);
+      } catch {
+        // If stored as plain string, use it as displayName
+        this.userData = { UserName: userStr };
+      }
+    } else {
+      // fallback to 'username' key if your login uses it
+      const usernameOnly = sessionStorage.getItem('username');
+      if (usernameOnly) this.userData = { UserName: usernameOnly };
+    }
 
-  updateTime() {
-    const now = new Date();
-    this.dateTime = now.toLocaleString();
-    this.currentDateTime = now.toDateString() + ' ' + now.toLocaleTimeString();
+    // Determine display name & username to call backend
+    this.displayName =
+      this.userData?.UserName ||
+      this.userData?.username ||
+      this.userData?.userName ||
+      this.userData?.name ||
+      'User';
+
+    this.username = this.displayName;
+
+    if (this.username) {
+      this.fetchProjectsByEmployee(this.username);
+    } else {
+      this.error = 'No logged-in user found in sessionStorage.';
+    }
   }
-
-  toggleTaskBox() {
-    this.showTaskBox = !this.showTaskBox;
-  }
-
-
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  
-
-  cancel() {
-    this.task = {
-      assignee: '',
-      description: '',
-      status: 'todo',
-      createdAt: null,
-      dueDate: null,
-      timeEstimate: '',
-      attachment: ''
-    };
-    this.showTaskBox = false;
-  }
-
- onSearch() {
-  const query = this.searchQuery.toLowerCase();
-  this.filteredTasks = this.tasks.filter(task =>
-    task.description.toLowerCase().includes(query)
-  );
-}
-
-  handleFileUpload(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.task.attachment = file.name;
+  getCurrentUser() {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      this.userData = JSON.parse(userStr);
+      
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+        }
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
+      }
     }
   }
 
-  onFileSelected(event: Event): void {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    this.task.attachment = file;
-    this.task.fileName = file.name;
-  }
-}
+  fetchProjectsByEmployee(userName: string) {
+    this.loading = true;
+    this.error = '';
+    this.projectService.getProjectsByEmployee(userName).subscribe({
+      next: (res: any) => {
+        this.loading = false;
 
-  isAdmin(): boolean {
+        // handle a few common response shapes
+        if (Array.isArray(res)) {
+          this.projects = res;
+        } else if (res?.data && Array.isArray(res.data)) {
+          this.projects = res.data;
+        } else if (res?.projects && Array.isArray(res.projects)) {
+          this.projects = res.projects;
+        } else if (res?.result && Array.isArray(res.result)) {
+          this.projects = res.result;
+        } else if (res && typeof res === 'object' && Object.keys(res).length === 0) {
+          this.projects = [];
+        } else {
+          // Last resort: wrap single object into array if it looks like a project
+          if (res && (res.projectName || res.name)) {
+            this.projects = [res];
+          } else {
+            this.projects = [];
+          }
+        }
 
-  const role = sessionStorage.getItem('role') || this.userData?.role || '';
-  return role?.toLowerCase() === 'admin';
-}
-
-
-  fetchTasks() {
-    this.afs
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' })
-      .subscribe((data) => {
-        this.tasks = data;
-      });
-  }
-
-
-  fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
-  }
-
-  getCurrentUser() {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.afs
-          .collection('users')
-          .doc(user.uid)
-          .valueChanges()
-          .subscribe((data) => {
-            this.userData = data;
-          });
+        this.filteredProjects = [...this.projects];
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Error loading projects by employee:', err);
+        this.error = 'Failed to load projects — check console and backend API.';
+        this.projects = [];
+        this.filteredProjects = [];
       }
     });
   }
 
-  selectAssignee(user: any) {
-    this.task.assignee =
-      user.username ||
-      `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-      user.email;
-    this.showUserDropdown = false;
-  }
-
-  toggleUserDropdown() {
-    this.showUserDropdown = !this.showUserDropdown;
-  }
-
-  addTask() {
-    if (!this.task.description || !this.task.assignee) return;
-
-    const newTask = {
-      ...this.task,
-      createdAt: Timestamp.now(),
-      assignedBy: this.userData?.uid || 'admin'
-    };
-
-    this.afs.collection('tasks').add(newTask).then(() => {
-      this.showSuccessMessage = true;
-      setTimeout(() => (this.showSuccessMessage = false), 2000);
-      this.fetchTasks();
-      this.cancel();
-    });
-  }
-
-  deleteTask(task: any) {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.afs.collection('tasks').doc(task.id).delete();
+  filterProjects() {
+    const q = (this.searchQuery || '').trim().toLowerCase();
+    if (!q) {
+      this.filteredProjects = [...this.projects];
+      return;
     }
+    this.filteredProjects = this.projects.filter(p =>
+      (p.projectName || p.name || '').toString().toLowerCase().includes(q) ||
+      (p._id || p.id || '').toString().toLowerCase().includes(q)
+    );
   }
 
-  openEditModal(task: any) {
-    this.selectedTask = { ...task };
-    this.editComment = task.description;
-    this.isModalOpen = true;
-  }
-
-  saveEdit() {
-    if (!this.selectedTask || !this.editComment) return;
-
-    this.afs
-      .collection('tasks')
-      .doc(this.selectedTask.id)
-      .update({
-        description: this.editComment
-      })
-      .then(() => {
-        this.isModalOpen = false;
-        this.fetchTasks();
-      });
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
-  }
-
-  markAsCompleted(task: any) {
-    this.afs
-      .collection('tasks')
-      .doc(task.id)
-      .update({ status: 'done' })
-      .then(() => {
-        this.fetchTasks();
-      });
-  }
-
-  // Profile Modal Methods
-  openEditProfile() {
-    this.editUserData = { ...this.userData };
-    this.showEditModal = true;
-  }
-
-  closeEditModal() {
-    this.showEditModal = false;
-  }
-
-  saveProfilePicture() {
-    this.afs
-      .collection('users')
-      .doc(this.userData.uid)
-      .update(this.editUserData)
-      .then(() => {
-        this.showEditModal = false;
-        this.getCurrentUser();
-      });
-  }
-
-  onPhotoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewImage = reader.result;
-        this.editUserData.photoURL = this.previewImage;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  signOut() {
-    this.afAuth.signOut();
-  }
-
-  getInitials(name: string): string {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
+  formatDate(d: any) {
+    if (!d) return '';
+    // Accept either ISO strings or Date objects
+    const dt = typeof d === 'string' ? new Date(d) : d;
+    if (isNaN(dt.getTime && dt.getTime())) return d;
+    return dt.toLocaleDateString();
   }
 }

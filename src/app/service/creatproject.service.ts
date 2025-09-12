@@ -8,18 +8,24 @@ import { Observable } from 'rxjs';
 export class CreatprojectService {
   private baseApi = 'http://localhost:3008';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
+
+  // Get all projects
+  getProjects(): Observable<any> {
+    return this.http.get(`${this.baseApi}/getProjects`);
+  }
+
+  // Get projects by employee username
+  getProjectsByEmployee(userName: string): Observable<any> {
+    return this.http.get(`${this.baseApi}/by-employee/${userName}`);
+  }
 
   createProject(projectData: any): Observable<any> {
     return this.http.post(`${this.baseApi}/createProject`, projectData);
   }
 
-  getProjects(): Observable<any> {
-    return this.http.get(`${this.baseApi}/getProjects`);
-  }
-
   updateProject(id: string, projectData: any): Observable<any> {
-    return this.http.put(`${this.baseApi}/updateproduct/${id}`, projectData);
+    return this.http.put(`${this.baseApi}/updateProject/${id}`, projectData);
   }
 
   deleteProject(id: string): Observable<any> {

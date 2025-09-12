@@ -95,3 +95,64 @@ margin-top: -670px;
 
 
 }
+/* src/app/projects/projects.component.css */
+.projects-container {
+  max-width: 980px;
+  margin: 18px auto;
+  padding: 12px;
+  font-family: Arial, sans-serif;
+}
+
+.welcome-row h2 {
+  margin: 0 0 12px 0;
+}
+
+.search-row {
+  margin-bottom: 12px;
+}
+
+.search-row input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+.list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 8px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  width: 100px;
+  background: #fff;
+}
+
+.project-item h3 {
+  margin: 0 0 6px 0;
+}
+
+.meta {
+  color: #666;
+  font-size: 13px;
+}
+
+.employees {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #444;
+}
+
+.loading, .error, .no-projects {
+  margin-top: 12px;
+  color: #666;
+}
+.error { color: #b00020; }

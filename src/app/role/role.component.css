@@ -11,7 +11,7 @@ margin-top: -1140px;
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
+  background: linear-gradient(135deg, #ff4f4f, #FFCA28, #FFC107);
   color: #333;  /* Dark text for better contrast */
   padding: 16px 20px;
   border-radius: 12px;

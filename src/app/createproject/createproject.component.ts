@@ -4,7 +4,6 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { CreatprojectService } from '../service/creatproject.service';
 import { UserservicesService } from '../register/services/userservices.service';
 
-
 @Component({
   selector: 'app-createproject',
   templateUrl: './createproject.component.html',
@@ -39,13 +38,14 @@ export class CreateprojectComponent implements OnInit {
     private afs: AngularFirestore, 
     private afAuth: AngularFireAuth,
     private projectService: CreatprojectService,
-    private userserives:UserservicesService,
+    private userserives: UserservicesService,
   ) {}
 
   ngOnInit(): void {
     this.getCurrentUser();
     this.fetchProjects();
     this.updateTime();
+    this.getuserdata(); // Added to fetch employees
     
     document.addEventListener('click', this.onDocumentClick.bind(this));
   }
@@ -160,16 +160,20 @@ export class CreateprojectComponent implements OnInit {
       next: (data: any) => {
         if (Array.isArray(data)) {
           this.userdata = data.map((user: any) => this.processUserImage(user));
+          this.employees = this.userdata; // Set employees data
         } else if (data && typeof data === 'object') {
           this.userdata = [this.processUserImage(data)];
+          this.employees = this.userdata; // Set employees data
         } else {
           console.warn('Unexpected response format:', data);
           this.userdata = [];
+          this.employees = [];
         }
       },
       error: (err) => {
         console.error('Error fetching users:', err);
         this.userdata = [];
+        this.employees = [];
       }
     });
   }
@@ -190,9 +194,17 @@ export class CreateprojectComponent implements OnInit {
     return processedUser;
   }
 
-
+  // Improved employee selection with better ID comparison
   toggleEmployeeSelection(employee: any) {
-    const index = this.project.employees.findIndex((emp: any) => emp.id === employee.id);
+    // Create a consistent ID for comparison
+    const employeeId = employee.id || employee._id || 
+                      (employee.username || employee.displayName || employee.UserName || employee.userName);
+    
+    const index = this.project.employees.findIndex((emp: any) => {
+      const empId = emp.id || emp._id || 
+                   (emp.username || emp.displayName || emp.UserName || emp.userName);
+      return empId === employeeId;
+    });
     
     if (index > -1) {
       this.project.employees.splice(index, 1);
@@ -202,11 +214,25 @@ export class CreateprojectComponent implements OnInit {
   }
 
   isEmployeeSelected(employee: any): boolean {
-    return this.project.employees.some((emp: any) => emp.id === employee.id);
+    const employeeId = employee.id || employee._id || 
+                      (employee.username || employee.displayName || employee.UserName || employee.userName);
+    
+    return this.project.employees.some((emp: any) => {
+      const empId = emp.id || emp._id || 
+                   (emp.username || emp.displayName || emp.UserName || emp.userName);
+      return empId === employeeId;
+    });
   }
 
   toggleEditEmployeeSelection(employee: any) {
-    const index = this.selectedProject.employees.findIndex((emp: any) => emp.id === employee.id);
+    const employeeId = employee.id || employee._id || 
+                      (employee.username || employee.displayName || employee.UserName || employee.userName);
+    
+    const index = this.selectedProject.employees.findIndex((emp: any) => {
+      const empId = emp.id || emp._id || 
+                   (emp.username || emp.displayName || emp.UserName || emp.userName);
+      return empId === employeeId;
+    });
     
     if (index > -1) {
       this.selectedProject.employees.splice(index, 1);
@@ -216,20 +242,27 @@ export class CreateprojectComponent implements OnInit {
   }
 
   isEditEmployeeSelected(employee: any): boolean {
-    return this.selectedProject.employees.some((emp: any) => emp.id === employee.id);
+    const employeeId = employee.id || employee._id || 
+                      (employee.username || employee.displayName || employee.UserName || employee.userName);
+    
+    return this.selectedProject.employees.some((emp: any) => {
+      const empId = emp.id || emp._id || 
+                   (emp.username || emp.displayName || emp.UserName || emp.userName);
+      return empId === employeeId;
+    });
   }
 
   getSelectedEmployeesNames(): string {
     if (!this.project.employees || this.project.employees.length === 0) return '';
     return this.project.employees.map((emp: any) => 
-      emp?.username || emp?.displayName || ''
+      emp.username || emp.displayName || emp.UserName || emp.userName || 'Unknown'
     ).join(', ');
   }
 
   getEditSelectedEmployeesNames(): string {
     if (!this.selectedProject.employees || this.selectedProject.employees.length === 0) return '';
     return this.selectedProject.employees.map((emp: any) => 
-      emp?.username || emp?.displayName || ''
+      emp.username || emp.displayName || emp.UserName || emp.userName || 'Unknown'
     ).join(', ');
   }
 
@@ -238,7 +271,7 @@ export class CreateprojectComponent implements OnInit {
     const q = (this.employeeSearchText || '').trim().toLowerCase();
     if (!q) return this.employees;
     return this.employees.filter(emp =>
-      (emp.username || emp.displayName || '').toLowerCase().includes(q)
+      (emp.username || emp.displayName || emp.UserName || emp.userName || '').toLowerCase().includes(q)
     );
   }
 
@@ -247,7 +280,7 @@ export class CreateprojectComponent implements OnInit {
     const q = (this.editEmployeeSearchText || '').trim().toLowerCase();
     if (!q) return this.employees;
     return this.employees.filter(emp =>
-      (emp.username || emp.displayName || '').toLowerCase().includes(q)
+      (emp.username || emp.displayName || emp.UserName || emp.userName || '').toLowerCase().includes(q)
     );
   }
 
@@ -264,8 +297,8 @@ export class CreateprojectComponent implements OnInit {
 
     const projectData = {
       projectName: this.project.projectName,
-      employees: this.project.employees.map((emp: any) =>
-        emp.fullData?.UserName || emp.fullData?.userName || emp.username || emp.displayName || ''
+      employees: this.project.employees.map((emp: any) => 
+        emp.username || emp.displayName || emp.UserName || emp.userName
       ),
       startDate: new Date(this.project.startDate).toISOString().split('T')[0],
       expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
@@ -326,72 +359,83 @@ export class CreateprojectComponent implements OnInit {
   openEditModal(project: any) {
     this.selectedProject = JSON.parse(JSON.stringify(project));
     
-
-    if (Array.isArray(this.selectedProject.employees) && this.selectedProject.employees.length > 0) {
-      if (typeof this.selectedProject.employees[0] === 'string') {
-        this.selectedProject.employees = this.selectedProject.employees.map((empName: string) => {
-          const foundEmployee = this.employees.find(emp => 
-            emp.username === empName || 
-            emp.displayName === empName ||
-            (emp.fullData && (emp.fullData.UserName === empName || emp.fullData.userName === empName))
-          );
-          return foundEmployee || { username: empName, displayName: empName, id: empName };
+   
+    if (!Array.isArray(this.selectedProject.employees)) {
+      this.selectedProject.employees = [];
+    }
+    
+   
+    if (this.selectedProject.employees.length > 0 && typeof this.selectedProject.employees[0] === 'string') {
+      this.selectedProject.employees = this.selectedProject.employees.map((empName: string) => {
+        const foundEmployee = this.employees.find(emp => {
+          const empIdentifier = emp.username || emp.displayName || emp.UserName || emp.userName;
+          return empIdentifier === empName;
         });
-      }
+        return foundEmployee || { username: empName, displayName: empName, id: empName };
+      });
     }
     
     this.isModalOpen = true;
   }
 
-  saveEdit() {
-    if (!this.selectedProject) return;
+saveEdit() {
+  if (!this.selectedProject) return;
 
-    const projectId = this.selectedProject._id || this.selectedProject.id;
-    if (!projectId) {
-      console.error('Project ID is missing');
-      alert('Cannot update project: Missing project ID');
-      return;
-    }
-
-    const projectData = {
-      projectName: this.selectedProject.projectName,
-      employees: this.selectedProject.employees.map((emp: any) => 
-        typeof emp === 'string' ? emp : (emp.username || emp.displayName)
-      ),
-      startDate: this.selectedProject.startDate,
-      expectedEndDate: this.selectedProject.expectedEndDate
-    };
-
-    this.projectService.updateProject(projectId, projectData).subscribe({
-      next: (response: any) => {
-        console.log('Project updated successfully:', response);
-        const index = this.projects.findIndex(p => (p._id || p.id) === projectId);
-        if (index > -1) {
-          this.projects[index] = { ...this.projects[index], ...projectData };
-        }
-        this.filteredProjects = [...this.projects];
-        this.showSuccessMessage = true;
-        setTimeout(() => {
-          this.showSuccessMessage = false;
-          this.isModalOpen = false;
-        }, 2000);
-      },
-      error: (error: any) => {
-        console.error('Error updating project:', error);
-        
-        let errorMsg = 'Failed to update project: ';
-        if (error.status === 0) {
-          errorMsg += 'Cannot connect to server. Please make sure the backend is running.';
-        } else if (error.error?.message) {
-          errorMsg += error.error.message;
-        } else {
-          errorMsg += 'Unknown error occurred';
-        }
-        
-        alert(errorMsg);
-      }
-    });
+  const projectId = this.selectedProject._id || this.selectedProject.id;
+  if (!projectId) {
+    alert('Cannot update project: Missing project ID');
+    return;
   }
+
+
+  const formatDate = (date: any) => {
+    if (!date) return '';
+    if (typeof date === 'string') {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+      const parsed = new Date(date);
+      return isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0];
+    }
+    return date.toISOString().split('T')[0];
+  };
+
+
+  const projectData = {
+    projectName: this.selectedProject.projectName,
+    employees: this.selectedProject.employees.map((emp: any) =>
+      typeof emp === 'string'
+        ? emp
+        : emp.userName || emp.username || emp.displayName || emp.UserName
+    ),
+    startDate: formatDate(this.selectedProject.startDate),
+    expectedEndDate: formatDate(this.selectedProject.expectedEndDate)
+  };
+
+ 
+  this.projectService.updateProject(projectId, projectData).subscribe({
+    next: (res: any) => {
+      console.log('Project updated successfully:', res);
+
+   
+      const index = this.projects.findIndex(p => (p._id || p.id) === projectId);
+      if (index > -1) {
+        this.projects[index] = {
+          ...this.projects[index],
+          ...projectData,
+          employees: [...this.selectedProject.employees]
+        };
+      }
+
+      this.filteredProjects = [...this.projects]; 
+      this.isModalOpen = false;
+    },
+    error: (err: any) => {
+      console.error('Error updating project:', err);
+      alert('Failed to update project. Please check backend.');
+    }
+  });
+}
+
+
 
   closeModal() {
     this.isModalOpen = false;
@@ -411,4 +455,3 @@ export class CreateprojectComponent implements OnInit {
     }).join(', ');
   }
 }
-

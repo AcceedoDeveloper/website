@@ -459,9 +459,6 @@ body {
   transition: color 0.3s ease;
 }
 
-.nav-links ul li a:hover {
-  color: #007bff;
-}
 
 /* Icon next to support */
 .nav-icon {
@@ -547,9 +544,7 @@ body {
   font-weight: 600;
 }
 
-.login-menu a:active .underline {
-  color:#007bff; /* Hover color for Register */
-}
+
 nav-links {
   width: 100%;
 }
@@ -638,12 +633,11 @@ nav-links {
   color: #333; /* Optional: set your color */
 }
 
-.login-menu a:hover {
-  background-color: #f2f2f2;
-}
+
 
 .login-dropdown:hover .login-menu {
   display: block;
+  position: absolute;
   width: 180px;
 }
 /* Optional: hover effect for the circle */
