@@ -4,6 +4,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { CreatprojectService } from '../service/creatproject.service';
 import { UserservicesService } from '../register/services/userservices.service';
 
+
 @Component({
   selector: 'app-createproject',
   templateUrl: './createproject.component.html',
@@ -38,13 +39,12 @@ export class CreateprojectComponent implements OnInit {
     private afs: AngularFirestore, 
     private afAuth: AngularFireAuth,
     private projectService: CreatprojectService,
-    private userService: UserservicesService
+    private userserives:UserservicesService,
   ) {}
 
   ngOnInit(): void {
     this.getCurrentUser();
     this.fetchProjects();
-    this.fetchEmployees();
     this.updateTime();
     
     document.addEventListener('click', this.onDocumentClick.bind(this));
@@ -125,6 +125,8 @@ export class CreateprojectComponent implements OnInit {
     });
   }
 
+  userdata: any;
+
   fetchProjectsFromFirestore() {
     this.afs
       .collection('projects', (ref) => ref.orderBy('createdAt', 'desc'))
@@ -135,77 +137,59 @@ export class CreateprojectComponent implements OnInit {
       });
   }
 
-  filterProjects() {
-    if (!this.searchQuery) {
-      this.filteredProjects = [...this.projects];
-      return;
+  getCurrentUser() {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      this.userData = JSON.parse(userStr);
+      
+      // Process user image URL
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+        }
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
+      }
     }
-    
-    const query = this.searchQuery.toLowerCase();
-    this.filteredProjects = this.projects.filter(project => 
-      project.projectName.toLowerCase().includes(query) ||
-      this.getEmployeeNames(project.employees).toLowerCase().includes(query)
-    );
   }
 
-  fetchEmployees() {
-    this.userService.getuser().subscribe({
-      next: (response: any) => {
-        let employeesData: any[] = [];
-
-        if (Array.isArray(response)) {
-          employeesData = response;
-        } else if (response && typeof response === 'object') {
-          if (response.data && Array.isArray(response.data)) {
-            employeesData = response.data;
-          } else {
-            employeesData = Object.values(response);
-          }
-        }
-
-        this.employees = employeesData
-          .filter((u: any) => u && (u.UserName || u.userName || (u.firstName && u.lastName)))
-          .map((u: any) => {
-            const username = u.UserName || u.userName || '';
-            const displayName = username || `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.UserCode || '';
-            return {
-              id: u.id || u._id || u.UserCode || Math.random().toString(36).substr(2, 9),
-              username,
-              displayName,
-              fullData: u
-            };
-          });
-
-        if (!this.employees || this.employees.length === 0) {
-          this.employees = [
-            { id: '1', username: 'sabari', displayName: 'Sabari', fullData: { UserName: 'sabari' } },
-            { id: '2', username: 'rushi', displayName: 'rushi', fullData: { UserName: 'rushi' } }
-          ];
+  getuserdata() {
+    this.userserives.getuser().subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.userdata = data.map((user: any) => this.processUserImage(user));
+        } else if (data && typeof data === 'object') {
+          this.userdata = [this.processUserImage(data)];
+        } else {
+          console.warn('Unexpected response format:', data);
+          this.userdata = [];
         }
       },
       error: (err) => {
-        console.error('Error fetching employees:', err);
-        this.employees = [
-          { id: '1', username: 'sabari', displayName: 'Sabari', fullData: { UserName: 'sabari' } },
-          { id: '2', username: 'rushi', displayName: 'rushi', fullData: { UserName: 'rushi' } }
-        ];
+        console.error('Error fetching users:', err);
+        this.userdata = [];
       }
     });
   }
 
-  getCurrentUser() {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.afs
-          .collection('users')
-          .doc(user.uid)
-          .valueChanges()
-          .subscribe((data) => {
-            this.userData = data;
-          });
+  private processUserImage(user: any): any {
+    const processedUser = { ...user };
+    
+    if (processedUser.photo) {
+      if (processedUser.photo.startsWith('http')) {
+        processedUser.photoURL = processedUser.photo;
+      } else {
+        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
       }
-    });
+    } else {
+      processedUser.photoURL = 'assets/default-avatar.png';
+    }
+    
+    return processedUser;
   }
+
 
   toggleEmployeeSelection(employee: any) {
     const index = this.project.employees.findIndex((emp: any) => emp.id === employee.id);
@@ -427,3 +411,4 @@ export class CreateprojectComponent implements OnInit {
     }).join(', ');
   }
 }
+

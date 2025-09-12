@@ -9,7 +9,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DepartmentDialogComponent } from './department-dialog/department-dialog.component';
-
+import { UserservicesService } from '../register/services/userservices.service';
 //import service
 import { DepartmentserviceService } from './service/departmentservice.service';
 import { Injectable } from '@angular/core';
@@ -94,6 +94,7 @@ subdepartments: string[] = [''];
 
   constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth,private dialog: MatDialog,
     private departmentservices:DepartmentserviceService,
+    private userserives:UserservicesService,
     private route:ActivatedRoute
   ) {
 
@@ -114,6 +115,7 @@ subdepartments: string[] = [''];
     )
   }
 
+    userdata:any;
   dmformdata:any;
 
   // edit
@@ -149,10 +151,8 @@ editdepartment(department: any) {
 
   ngOnInit(): void {
     this.getCurrentUser();
-    this.fetchTasks();
     this.fetchUsers();
     this.updateTime();
-     this.fetchTasks();
   }
 
 
@@ -233,19 +233,6 @@ editdepartment(department: any) {
       });
   }
 
-  getCurrentUser() {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.afs
-          .collection('users')
-          .doc(user.uid)
-          .valueChanges()
-          .subscribe((data) => {
-            this.userData = data;
-          });
-      }
-    });
-  }
 
   selectAssignee(user: any) {
     this.task.assignee =
@@ -379,6 +366,58 @@ editdepartment(department: any) {
 
   }
 
+  getCurrentUser() {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      this.userData = JSON.parse(userStr);
+      
+      // Process user image URL
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+        }
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
+      }
+    }
+  }
+
+  getuserdata() {
+    this.userserives.getuser().subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.userdata = data.map((user: any) => this.processUserImage(user));
+        } else if (data && typeof data === 'object') {
+          this.userdata = [this.processUserImage(data)];
+        } else {
+          console.warn('Unexpected response format:', data);
+          this.userdata = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+        this.userdata = [];
+      }
+    });
+  }
+
+  private processUserImage(user: any): any {
+    const processedUser = { ...user };
+    
+    if (processedUser.photo) {
+      if (processedUser.photo.startsWith('http')) {
+        processedUser.photoURL = processedUser.photo;
+      } else {
+        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+      }
+    } else {
+      processedUser.photoURL = 'assets/default-avatar.png';
+    }
+    
+    return processedUser;
+  }
 
 
 
@@ -399,7 +438,7 @@ editdepartment(department: any) {
 
 
   createcancel(){
-    alert('You don’t create department');
+    alert('You dont create department');
   }
 
   getdepartment()
