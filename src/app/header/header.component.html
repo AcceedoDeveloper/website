@@ -28,14 +28,12 @@
           <img [src]="userData.photoURL" alt="User Avatar" class="avatar" />
         </ng-container>
         <ng-template #initialsIcon>
-          <div class="user-initial">
-            {{ getInitials(userData?.UserName || userData?.email || '') }}
-          </div>
+          <div class="user-initial">{{ getInitials(userData?.username || userData?.email || '') }}</div>
         </ng-template>
       </label>
 
-      <div class="login-menu">
-        <p><strong>{{ userData?.UserName || 'Username' }}</strong></p>
+      <div class="login-menu" [class.show]="showDropdown">
+        <p><strong>{{ userData?.username || 'Username' }}</strong></p>
         <p>{{ userData?.role || 'Role' }}</p>
         <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
         <a href="#" (click)="signOut()">Sign Out</a>
