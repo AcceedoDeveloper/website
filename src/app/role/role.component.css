@@ -11,7 +11,7 @@ margin-top: -1140px;
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, #ff4f4f, #FFCA28, #FFC107);
+  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
   color: #333;  /* Dark text for better contrast */
   padding: 16px 20px;
   border-radius: 12px;
@@ -32,7 +32,7 @@ margin-top: -1140px;
   gap: 8px;
   font-size: 15px;
   font-weight: 500;
-  color: #fff;
+  color: black;
 }
 
 .calendar-icon {
@@ -51,13 +51,13 @@ margin-top: -1140px;
   font-size: 32px;
   font-weight: 600;
   margin-top: -20px;
-  color:aliceblue;
+  color:Black;
 }
 
 .user-icon {
-  width: 130px;
-  height: 130px;
-  margin-top: -40px;
+  width: 150px;
+  height: 150px;
+  margin-top: -70px;
   margin-left: 30px;
   object-fit: cover;
   border-radius: 50%;   /* makes it a circle */

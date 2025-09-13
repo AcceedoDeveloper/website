@@ -41,13 +41,13 @@
         </ng-container>
         <ng-template #initialsIcon>
           <div class="user-initial">
-            {{ getInitials(userData?.username || userData?.email || '') }}
+            {{ getInitials(userData?.UserName || userData?.email || '') }}
           </div>
         </ng-template>
       </label>
 
       <div class="login-menu">
-        <p><strong>{{ userData?.username || 'Username' }}</strong></p>
+        <p><strong>{{ userData?.UserName || 'Username' }}</strong></p>
         <p>{{ userData?.role || 'Role' }}</p>
         <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
         <a href="#" (click)="signOut()">Sign Out</a>

@@ -1,11 +1,9 @@
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Timestamp } from 'firebase/firestore';
 import { Pipe, PipeTransform } from '@angular/core';
+import { UserservicesService } from '../register/services/userservices.service';
 
 
 @Pipe({
@@ -65,7 +63,7 @@ export class NgrxComponent {
   showUserDropdown = false;
   searchQuery: string = '';
   dropdownOpen = false;
-  
+  userdata:any;
   isModalOpen = false;
   selectedTask: any = null;
  
@@ -80,14 +78,13 @@ filteredTasks: any[] = [];
   dateTime: string = '';
   hasNotification = false;
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) {}
+  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth,
+    private userserives:UserservicesService,
+  ) {}
 
   ngOnInit(): void {
     this.getCurrentUser();
-    this.fetchTasks();
-    this.fetchUsers();
     this.updateTime();
-     this.fetchTasks();
   }
 
 
@@ -96,205 +93,60 @@ filteredTasks: any[] = [];
     this.dateTime = now.toLocaleString();
     this.currentDateTime = now.toDateString() + ' ' + now.toLocaleTimeString();
   }
-
-  toggleTaskBox() {
-    this.showTaskBox = !this.showTaskBox;
-  }
   
-
-  isAdmin(): boolean {
-  // Always read from sessionStorage first
-  const role = sessionStorage.getItem('role') || this.userData?.role || '';
-  return role?.toLowerCase() === 'admin';
-}
-
-
-  toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
-  }
-
-  //show role
-  getrole()
-  {
-    this.showrole=!this.showrole;
-  }
-
-  
-
-  cancel() {
-    this.task = {
-      assignee: '',
-      description: '',
-      status: 'todo',
-      createdAt: null,
-      dueDate: null,
-      timeEstimate: '',
-      attachment: ''
-    };
-    this.showTaskBox = false;
-  }
-
- onSearch() {
-  const query = this.searchQuery.toLowerCase();
-  this.filteredTasks = this.tasks.filter(task =>
-    task.description.toLowerCase().includes(query)
-  );
-}
-
-  handleFileUpload(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.task.attachment = file.name;
+    getCurrentUser() {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      this.userData = JSON.parse(userStr);
+      
+      // Process user image URL
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+        }
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
+      }
     }
   }
 
-  onFileSelected(event: Event): void {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    this.task.attachment = file;
-    this.task.fileName = file.name;
-  }
-}
-
-  fetchTasks() {
-    this.afs
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' })
-      .subscribe((data) => {
-        this.tasks = data;
-      });
-  }
-
-
-  fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
-  }
-
-  getCurrentUser() {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.afs
-          .collection('users')
-          .doc(user.uid)
-          .valueChanges()
-          .subscribe((data) => {
-            this.userData = data;
-          });
+  getuserdata() {
+    this.userserives.getuser().subscribe({
+      next: (data: any) => {
+        if (Array.isArray(data)) {
+          this.userdata = data.map((user: any) => this.processUserImage(user));
+        } else if (data && typeof data === 'object') {
+          this.userdata = [this.processUserImage(data)];
+        } else {
+          console.warn('Unexpected response format:', data);
+          this.userdata = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+        this.userdata = [];
       }
     });
   }
 
-  selectAssignee(user: any) {
-    this.task.assignee =
-      user.username ||
-      `${user.firstName || ''} ${user.lastName || ''}`.trim() ||
-      user.email;
-    this.showUserDropdown = false;
-  }
-
-  toggleUserDropdown() {
-    this.showUserDropdown = !this.showUserDropdown;
-  }
-
-  addTask() {
-    if (!this.task.description || !this.task.assignee) return;
-
-    const newTask = {
-      ...this.task,
-      createdAt: Timestamp.now(),
-      assignedBy: this.userData?.uid || 'admin'
-    };
-
-    this.afs.collection('tasks').add(newTask).then(() => {
-      this.showSuccessMessage = true;
-      setTimeout(() => (this.showSuccessMessage = false), 2000);
-      this.fetchTasks();
-      this.cancel();
-    });
-  }
-
-  deleteTask(task: any) {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.afs.collection('tasks').doc(task.id).delete();
+  private processUserImage(user: any): any {
+    const processedUser = { ...user };
+    
+    if (processedUser.photo) {
+      if (processedUser.photo.startsWith('http')) {
+        processedUser.photoURL = processedUser.photo;
+      } else {
+        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+      }
+    } else {
+      processedUser.photoURL = 'assets/default-avatar.png';
     }
+    
+    return processedUser;
   }
-
-  openEditModal(task: any) {
-    this.selectedTask = { ...task };
-    this.editComment = task.description;
-    this.isModalOpen = true;
-  }
-
-  saveEdit() {
-    if (!this.selectedTask || !this.editComment) return;
-
-    this.afs
-      .collection('tasks')
-      .doc(this.selectedTask.id)
-      .update({
-        description: this.editComment
-      })
-      .then(() => {
-        this.isModalOpen = false;
-        this.fetchTasks();
-      });
-  }
-
-  closeModal() {
-    this.isModalOpen = false;
-  }
-
-  markAsCompleted(task: any) {
-    this.afs
-      .collection('tasks')
-      .doc(task.id)
-      .update({ status: 'done' })
-      .then(() => {
-        this.fetchTasks();
-      });
-  }
-
-  // Profile Modal Methods
-  openEditProfile() {
-    this.editUserData = { ...this.userData };
-    this.showEditModal = true;
-  }
-
-  closeEditModal() {
-    this.showEditModal = false;
-  }
-
-  saveProfilePicture() {
-    this.afs
-      .collection('users')
-      .doc(this.userData.uid)
-      .update(this.editUserData)
-      .then(() => {
-        this.showEditModal = false;
-        this.getCurrentUser();
-      });
-  }
-
-  onPhotoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewImage = reader.result;
-        this.editUserData.photoURL = this.previewImage;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  signOut() {
-    this.afAuth.signOut();
-  }
+  
 
   getInitials(name: string): string {
     return name
