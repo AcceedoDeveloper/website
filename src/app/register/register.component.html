@@ -1,31 +1,30 @@
 <app-header></app-header>
 
-  <!-- Main Content -->
-  <div class="maincontent">
-    
-       <!-- Welcome Header -->
-       <div class="welcome-card"> 
-         <div class="date-time">
-           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
-           <span>{{ dateTime }}</span>
-         </div>
-         <div class="user-welcome">
-           <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
+<div class="maincontent">
+  
+  <!-- Welcome Header -->
+  <div class="welcome-card"> 
+    <div class="date-time">
+      <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+      <span>{{ dateTime }}</span>
+    </div>
+    <div class="user-welcome">
+      <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
+    </div>
+  </div>
 
-         </div>
-       </div>
-       <div>
-        <svg width="0" height="0">
-  <defs>
-    <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
-      <circle cx="0.5" cy="0.5" r="0.5" />
-    </clipPath>
-  </defs>
-</svg>
+  <div>
+    <svg width="0" height="0">
+      <defs>
+        <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
+          <circle cx="0.5" cy="0.5" r="0.5" />
+        </clipPath>
+      </defs>
+    </svg>
 
-<img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" 
-     style="clip-path: url(#circle-shape);" />
-       </div>
+    <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" 
+         style="clip-path: url(#circle-shape);" />
+  </div>
 
   <div class="user-container">
     <!-- Header -->
@@ -40,8 +39,8 @@
       <i class="fa fa-search"></i>
     </div>
 
-    <!-- User Table -->
-    <div class="user-table-wrapper">
+    <!-- Scrollable User Table -->
+    <div class="user-table-wrapper scrollable">
       <table class="user-table">
         <thead>
           <tr>
@@ -63,12 +62,9 @@
             <td>{{ item.emailId || 'N/A' }}</td>
             <td>{{ item.phoneNumber || 'N/A' }}</td>
             <td>
-              <!-- Edit User -->
               <button mat-icon-button class="black-btn" (click)="editUser(item)">
                 <mat-icon>edit</mat-icon>
               </button>
-
-              <!-- Delete User -->
               <button mat-icon-button class="black-btn" (click)="deleteUser(item._id)">
                 <mat-icon>delete</mat-icon>
               </button>
@@ -77,7 +73,6 @@
         </tbody>
       </table>
 
-      <!-- Empty State -->
       <div *ngIf="filteredUsers.length === 0" class="empty-state">
         No users found. Start by adding one.
       </div>
@@ -88,7 +83,6 @@
       <div class="pagination-info">
         Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ filteredUsers.length }} entries
       </div>
-      
       <div class="pagination-buttons">
         <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
           <option value="5">5</option>
@@ -97,24 +91,18 @@
           <option value="20">20</option>
           <option value="50">50</option>
         </select>
-        
         <button (click)="goToFirstPage()" [disabled]="currentPage === 1">
           <i class="fa fa-angle-double-left"></i>
         </button>
         <button (click)="previousPage()" [disabled]="currentPage === 1">
           <i class="fa fa-angle-left"></i>
         </button>
-        
         <span class="page-numbers">
-          <button 
-            *ngFor="let page of getPageNumbers()" 
-            (click)="goToPage(page)"
-            [class.active]="page === currentPage">
+          <button *ngFor="let page of getPageNumbers()" (click)="goToPage(page)" [class.active]="page === currentPage">
             {{ page }}
           </button>
           <span *ngIf="showEllipsis">...</span>
         </span>
-        
         <button (click)="nextPage()" [disabled]="currentPage === totalPages">
           <i class="fa fa-angle-right"></i>
         </button>

@@ -686,3 +686,43 @@ max-height: 80px;
   .profile-section { width:100%; margin-bottom:10px; }
   .top-row, .middle-row, .bottom-row { flex-direction:column; }
 }
+.login-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  padding: 15px;
+  width: 200px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 100;
+}
+
+.login-menu.show {
+  display: flex;
+}
+
+.login-dropdown .login-icon {
+  cursor: pointer;
+}
+
+.login-dropdown .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.user-initial {
+  width: 40px;
+  height: 40px;
+  background: #1f3c88;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
