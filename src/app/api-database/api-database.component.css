@@ -480,3 +480,34 @@ margin-top: -670px;
   scrollbar-width: thin;
   scrollbar-color:#888#f1f1f1;
 }
+
+@media (max-width: 2200px) {
+  
+.maincontent{
+
+width: 100%;
+max-width: 1285px;
+height: 100%;
+margin-left: 275px;
+margin-top: -670px;
+  padding: 0px 20px;
+  flex:1;
+
+}
+
+.welcome-card {
+  height: 20%;
+  margin-top: 0px;
+}
+
+.date-time {
+  margin-left: 900px;
+}
+
+.user-welcome span {
+  margin-top: -82px;
+}
+
+
+
+}

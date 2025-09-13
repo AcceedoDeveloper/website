@@ -648,7 +648,6 @@ margin-top: -1140px;
 
 
 @media (max-width: 2200px) {
-  
 .maincontent{
 
 width: 100%;
@@ -659,6 +658,19 @@ margin-top: -670px;
   padding: 0px 20px;
   flex:1;
 
+}
+
+.welcome-card {
+  height: 20%;
+  margin-top: 0px;
+}
+
+.date-time {
+  margin-left: 900px;
+}
+
+.user-welcome span {
+  margin-top: -82px;
 }
 
 }
@@ -715,4 +727,80 @@ margin-top: -670px;
 .day-container::-webkit-scrollbar-thumb {
   background: #4a90e2;
   border-radius: 4px;
+}
+
+.ngrx-store-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: block;
+            margin: 1.5rem auto;
+        }
+
+        .ngrx-store-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+.component-features {
+            margin: 1.5rem 0;
+        }
+
+        .component-features ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .component-features li {
+            padding: 0.8rem;
+            background: rgba(245, 245, 245, 0.7);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #4a5568;
+            position: relative;
+            padding-left: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .component-features li:hover {
+            transform: translateX(5px);
+            background: rgba(245, 245, 245, 0.9);
+        }
+
+        .component-features li::before {
+            content: '→';
+            position: absolute;
+            left: 0.8rem;
+            font-weight: bold;
+        }
+
+       .html-section .component-features li::before { color: #E34F26; } /* --html-color */
+.css-section .component-features li::before { color: #264DE4; } /* --css-color */
+.js-section .component-features li::before { color: #F7DF1E; } /* --js-color */
+.ts-section .component-features li::before { color: #4ed839; } /* --ts-color */
+.browser-section .component-features li::before { color: #b013e9; } /* --browser-color */
+
+@media (max-width: 480px) {
+    .ngrx-section {
+        margin: 0 10px;
+        padding: 1rem 10px;
+    }
+    
+    .ngrx-section .component-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .ngrx-section .component-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    .ngrx-image-container {
+        padding: 0 5px;
+    }
 }

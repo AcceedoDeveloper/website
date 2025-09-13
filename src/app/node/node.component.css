@@ -833,6 +833,19 @@ margin-top: -670px;
 
 }
 
+.welcome-card {
+  height: 20%;
+  margin-top: 0px;
+}
+
+.date-time {
+  margin-left: 900px;
+}
+
+.user-welcome span {
+  margin-top: -82px;
+}
+
 }
 
 .maincontent {
