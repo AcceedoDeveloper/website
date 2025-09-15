@@ -55,8 +55,8 @@ margin-top: -1140px;
 }
 
 .user-icon {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   margin-top: -70px;
   margin-left: 30px;
   object-fit: cover;
@@ -212,35 +212,36 @@ margin-top: -1140px;
   color: #222;
 }
 
-@media (max-width: 2200px) {
-  
-.maincontent{
-
-width: 100%;
-max-width: 1285px;
-height: 100%;
-margin-left: 275px;
-margin-top: -670px;
-  padding: 0px 20px;
-  flex:1;
-
+.maincontent {
+  max-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
-.welcome-card {
-  height: 20%;
-  margin-top: 0px;
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.maincontent::-webkit-scrollbar {
+  width: 12px;
 }
 
-.date-time {
-  margin-left: 900px;
+.maincontent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
 }
 
-.user-welcome span {
-  margin-top: -35px;
-
+.maincontent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
 }
 
+.maincontent::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 
+/* Custom scrollbar for Firefox */
+.maincontent {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }
 
 /* Pagination Styles */
@@ -308,10 +309,9 @@ margin-top: -670px;
 
 .search-container {
   position: relative;
-  margin-bottom: 20px;
   width: 100%;
-  max-width: 450px;
-  
+  max-width: 400px;
+  margin-left: 700px;
 }
 
 .search-container input {
@@ -369,4 +369,38 @@ margin-top: -670px;
 
 .user-table-wrapper.scrollable::-webkit-scrollbar-track {
   background: transparent;
+}
+
+
+@media (max-width: 2200px) {
+  
+.maincontent{
+
+width: 100%;
+max-width: 1285px;
+height: 100%;
+margin-left: 275px;
+margin-top: -670px;
+  padding: 0px 20px;
+  flex:1;
+}
+
+.welcome-card {
+  height: 20%;
+  margin-top: 0px;
+}
+
+.date-time {
+  margin-left: 895px;
+}
+
+.user-welcome span {
+  margin-top: -35px;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 300px;
+  margin-left: 650px;
+}
 }

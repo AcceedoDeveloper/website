@@ -55,14 +55,46 @@ margin-top: -1140px;
 }
 
 .user-icon {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   margin-top: -70px;
   margin-left: 30px;
   object-fit: cover;
   border-radius: 50%;   /* makes it a circle */
   border: 3px solid #FFD54F;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.maincontent {
+  max-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.maincontent::-webkit-scrollbar {
+  width: 12px;
+}
+
+.maincontent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.maincontent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.maincontent::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Custom scrollbar for Firefox */
+.maincontent {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }
 
 .role-wrapper {

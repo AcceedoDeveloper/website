@@ -57,8 +57,8 @@ body {
 }
 
 .user-icon {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   margin-top: -70px;
   margin-left: 30px;
   object-fit: cover;
@@ -775,50 +775,6 @@ icon {
 
 }
 
-.maincontent{
-
-width: 100%;
-max-width: 2100px;
-height: 100%;
-margin-left: 275px;
-margin-top: -1140px;
-  padding: 0px 20px;
-  flex:1;
-
-}
-
-.welcome-card {
-  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
-  color: #333; 
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-
-.date-time {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #fff;
-}
-
-.calendar-icon {
-  width: 20px;
-  height: 20px;
-}
-
-.user-welcome {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 @media (max-width: 2200px) {
   
 .maincontent{
@@ -839,7 +795,7 @@ margin-top: -670px;
 }
 
 .date-time {
-  margin-left: 900px;
+  margin-left: 895px;
 }
 
 .user-welcome span {

@@ -138,7 +138,6 @@
     <div *ngFor="let project of filteredProjects" class="project-card">
       <div class="project-header">
         <h4>{{ project.projectName }}</h4>
-        <span class="project-status">Active</span>
       </div>
       <div class="project-details">
         <div class="detail-item">
@@ -158,14 +157,20 @@
           <span>{{ project.expectedEndDate | date:'mediumDate' }}</span>
         </div>
       </div>
-      <div class="project-actions">
-        <button class="edit-btn" (click)="openEditModal(project)">
-          <i class="fa fa-edit"></i> Edit
-        </button>
-        <button class="delete-btn" (click)="deleteProject(project)">
-          <i class="fa fa-trash"></i> Delete
-        </button>
-      </div>
+   <div class="project-actions">
+  <!-- Edit Button -->
+  <button mat-raised-button color="primary" (click)="openEditModal(project)">
+    <mat-icon>edit</mat-icon>
+    Edit
+  </button>
+
+  <!-- Delete Button -->
+  <button mat-raised-button style="color: rgb(247, 240, 240);" (click)="deleteProject(project)">
+    <mat-icon>delete</mat-icon>
+    Delete
+  </button>
+</div>
+
     </div>
     <div *ngIf="filteredProjects.length === 0" class="no-projects">
       <i class="fa fa-folder-open"></i>
