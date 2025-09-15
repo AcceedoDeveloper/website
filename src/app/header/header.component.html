@@ -42,80 +42,98 @@
   </div>
 </header>
 
-<!-- Profile Edit Modal -->
-<div class="modal" *ngIf="showEditModal">
-  <div class="modal-content">
-    <h3>Edit Profile Picture</h3>
-    <div class="profile-edit-wrapper">
-      <div *ngIf="previewImage" class="profile-preview-wrapper">
-        <img [src]="previewImage" class="profile-preview-img" />
-      </div>
-      <input type="file" (change)="onPhotoSelected($event)" />
+<!-- Profile Edit Modal  -->
+<div class="overlay" *ngIf="showEditModal">
+  <div class="popup-card">
+    <!-- Header -->
+    <div class="popup-header">
+      <h2>Edit Profile</h2>
+      <button class="close-btn" (click)="closeEditModal()">&times;</button>
     </div>
-    
-        <!-- RIGHT: User Info -->
-        <div class="info-section">
-          <div class="top-row">
-            <div class="form-group">
-              <label>Name</label>
-              <input type="text" formControlName="name" placeholder="Full name" />
-            </div>
-            <div class="form-group">
-              <label>Username</label>
-              <input type="text" formControlName="userName" placeholder="Username" />
-            </div>
+
+    <!-- Body -->
+    <div class="popup-body">
+      <!-- LEFT: Profile Image -->
+      <div class="profile-section">
+        <label>Profile Image</label>
+        <div class="profile-img-wrapper">
+          <img *ngIf="previewImage; else placeholder" [src]="previewImage" alt="profile" class="profile-img" />
+          <ng-template #placeholder>
+            <div class="profile-placeholder">No Image</div>
+          </ng-template>
+        </div>
+
+        <div class="file-upload-wrapper">
+          <input type="file" id="profileUpload" accept="image/*" (change)="onPhotoSelected($event)" />
+          <label for="profileUpload" class="file-upload-label">Choose File</label>
+        </div>
+      </div>
+
+      <!-- RIGHT: Basic Info  -->
+      <div class="info-section">
+        <div class="top-row">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" [(ngModel)]="editUserData.name" placeholder="Full name" />
           </div>
-
-          <div class="middle-row">
-            <div class="form-group">
-              <label>User Code</label>
-              <input type="text" formControlName="userCode" placeholder="User Code" />
-            </div>
-            <div class="form-group">
-  <label>Role</label>
-  <select formControlName="role">
-    <option value="">-- Select Role --</option>
-    <option *ngFor="let r of roles" [value]="r.role">{{ r.role }}</option>
-  </select>
-</div>
-
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" formControlName="emailId" placeholder="Email address" />
-            </div>
-            <div class="form-group">
-              <label>Phone</label>
-              <input type="tel" formControlName="phoneNumber" placeholder="Phone number" />
-            </div>
-          </div>
-
-          <div class="bottom-row">
-            <div class="form-group">
-              <label>Department</label>
-              <select formControlName="departmentName" (change)="onDepartmentChange($event)">
-                <option value="">-- Select Department --</option>
-                <option *ngFor="let d of departments" [value]="d.departmentName">{{ d.departmentName }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>SubDepartment</label>
-              <select formControlName="subDepartmentName">
-                <option value="">-- Select SubDepartment --</option>
-                <option *ngFor="let sd of subDepartmentsData" [value]="sd.name">{{ sd.name }}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Password</label>
-              <input type="password" formControlName="password" placeholder="Password" />
-            </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" [(ngModel)]="editUserData.userName" placeholder="Username" />
           </div>
         </div>
-           <div class="form-buttons">
-      <button type="button" (click)="saveProfilePicture()">Save</button>
-      <button type="button" (click)="closeEditModal()">Cancel</button>
+
+        <div class="middle-row">
+          <div class="form-group">
+            <label>User Code</label>
+            <input type="text" [(ngModel)]="editUserData.userCode" placeholder="User Code" />
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select [(ngModel)]="editUserData.role">
+              <option value="">-- Select Role --</option>
+              <option *ngFor="let r of roles" [value]="r.role">{{ r.role }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="editUserData.emailId" placeholder="Email address" />
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" [(ngModel)]="editUserData.phoneNumber" placeholder="Phone number" />
+          </div>
+        </div>
+
+        <div class="bottom-row">
+          <div class="form-group">
+            <label>Department</label>
+            <select [(ngModel)]="editUserData.departmentName" (change)="onDepartmentChange($event)">
+              <option value="">-- Select Department --</option>
+              <option *ngFor="let d of departments" [value]="d.departmentName">{{ d.departmentName }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>SubDepartment</label>
+            <select [(ngModel)]="editUserData.subDepartmentName">
+              <option value="">-- Select SubDepartment --</option>
+              <option *ngFor="let sd of subDepartmentsData" [value]="sd.name">{{ sd.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" [(ngModel)]="editUserData.password" placeholder="Password" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="popup-actions">
+      <button type="button" class="btn cancel" (click)="closeEditModal()">Cancel</button>
+      <button type="button" class="btn save" (click)="saveProfilePicture()">Save</button>
     </div>
   </div>
-      </div>
+</div>
 
 
    

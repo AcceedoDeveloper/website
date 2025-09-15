@@ -9,12 +9,8 @@ import { UserservicesService } from '../register/services/userservices.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-onSearch() {
-throw new Error('Method not implemented.');
-}
-onDepartmentChange($event: Event) {
-throw new Error('Method not implemented.');
-}
+onSearch() {}
+onDepartmentChange($event: Event) {}
   @ViewChild('loginDropdown') loginDropdown!: ElementRef;
 
   userData: any = null;
@@ -26,9 +22,9 @@ throw new Error('Method not implemented.');
   searchQuery = '';
   hasNotification = false;
   dateTime = '';
-  roles: any;
-  departments: any;
-  subDepartmentsData: any;
+  roles: any[] = [];
+  departments: any[] = [];
+  subDepartmentsData: any[] = [];
   showDropdown = false; 
 dropdownOpen: any;
 
