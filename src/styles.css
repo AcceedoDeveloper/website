@@ -19,3 +19,13 @@ html, body {
   
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Make Angular Material dialog surface and backdrop transparent */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.cdk-overlay-backdrop,
+.cdk-overlay-dark-backdrop {
+  background: transparent !important;
+}
