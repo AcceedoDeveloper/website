@@ -10,12 +10,12 @@ export class CreatprojectService {
 
   constructor(private http: HttpClient) {}
 
-  // Get all projects
+  
   getProjects(): Observable<any> {
     return this.http.get(`${this.baseApi}/getProjects`);
   }
 
-  // Get projects by employee username
+
   getProjectsByEmployee(userName: string): Observable<any> {
     return this.http.get(`${this.baseApi}/by-employee/${userName}`);
   }
@@ -25,10 +25,10 @@ export class CreatprojectService {
   }
 
   updateProject(id: string, projectData: any): Observable<any> {
-    return this.http.put(`${this.baseApi}/updateProject/${id}`, projectData);
+    return this.http.put(`${this.baseApi}/updateProduct/${id}`, projectData);
   }
 
   deleteProject(id: string): Observable<any> {
-    return this.http.delete(`${this.baseApi}/deleteProject/${id}`);
+    return this.http.delete(`${this.baseApi}/deleteProduct/${id}`);
   }
 }

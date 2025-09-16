@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { CreatprojectService } from '../service/creatproject.service';
@@ -9,7 +9,7 @@ import { UserservicesService } from '../register/services/userservices.service';
   templateUrl: './createproject.component.html',
   styleUrls: ['./createproject.component.css']
 })
-export class CreateprojectComponent implements OnInit {
+export class CreateprojectComponent implements OnInit, OnDestroy {
   projects: any[] = [];
   employees: any[] = [];
   userData: any = null;
@@ -29,13 +29,11 @@ export class CreateprojectComponent implements OnInit {
   selectedProject: any = null;
   filteredProjects: any[] = [];
   
-  // Team leads dropdown variables
   showTeamLeadsDropdown = false;
   teamLeadsSearchText = '';
   showEditTeamLeadsDropdown = false;
   editTeamLeadsSearchText = '';
   
-  // Employees dropdown variables
   showEmployeeDropdown = false;
   employeeSearchText = '';
   showEditEmployeeDropdown = false;
@@ -43,24 +41,30 @@ export class CreateprojectComponent implements OnInit {
 
   dateTime: string = '';
 
+
+  private documentClickListener: (event: MouseEvent) => void;
+
   constructor(
     private afs: AngularFirestore, 
     private afAuth: AngularFireAuth,
     private projectService: CreatprojectService,
     private userserives: UserservicesService,
-  ) {}
+  ) {
+    // Bind the method with the correct signature
+    this.documentClickListener = this.onDocumentClick.bind(this);
+  }
 
   ngOnInit(): void {
     this.getCurrentUser();
     this.fetchProjects();
     this.updateTime();
-    this.getuserdata(); // Added to fetch employees
+    this.getuserdata(); 
     
-    document.addEventListener('click', this.onDocumentClick.bind(this));
+    document.addEventListener('click', this.documentClickListener);
   }
 
   ngOnDestroy() {
-    document.removeEventListener('click', this.onDocumentClick.bind(this));
+    document.removeEventListener('click', this.documentClickListener);
   }
 
   onDocumentClick(event: MouseEvent) {
@@ -109,6 +113,7 @@ export class CreateprojectComponent implements OnInit {
     }
   }
 
+  // Rest of the code remains unchanged
   updateTime() {
     const now = new Date();
     this.dateTime = now.toLocaleString();
@@ -141,14 +146,16 @@ export class CreateprojectComponent implements OnInit {
   }
 
   fetchProjects() {
+    console.log('Fetching projects...');
     this.projectService.getProjects().subscribe({
       next: (response: any) => {
+        console.log('API Response for projects:', response);
         if (Array.isArray(response)) {
           this.projects = response;
-          this.filteredProjects = response;
+          this.filteredProjects = [...response];
         } else if (response && response.data && Array.isArray(response.data)) {
           this.projects = response.data;
-          this.filteredProjects = response.data;
+          this.filteredProjects = [...response.data];
         } else {
           console.error('Unexpected API response format:', response);
           this.fetchProjectsFromFirestore();
@@ -156,6 +163,7 @@ export class CreateprojectComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error fetching projects from API:', error);
+        alert(error.message || 'Failed to fetch projects from API. Falling back to Firestore.');
         this.fetchProjectsFromFirestore();
       }
     });
@@ -164,12 +172,14 @@ export class CreateprojectComponent implements OnInit {
   userdata: any;
 
   fetchProjectsFromFirestore() {
+    console.log('Fetching projects from Firestore (fallback)...');
     this.afs
       .collection('projects', (ref) => ref.orderBy('createdAt', 'desc'))
       .valueChanges({ idField: 'id' })
       .subscribe((data) => {
+        console.log('Firestore projects:', data);
         this.projects = data;
-        this.filteredProjects = data;
+        this.filteredProjects = [...data];
       });
   }
 
@@ -178,7 +188,6 @@ export class CreateprojectComponent implements OnInit {
     if (userStr) {
       this.userData = JSON.parse(userStr);
       
-      // Process user image URL
       if (this.userData.photo) {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
@@ -194,17 +203,19 @@ export class CreateprojectComponent implements OnInit {
   getuserdata() {
     this.userserives.getuser().subscribe({
       next: (data: any) => {
+        console.log('Users API response:', data);
         if (Array.isArray(data)) {
           this.userdata = data.map((user: any) => this.processUserImage(user));
-          this.employees = this.userdata; // Set employees data
+          this.employees = [...this.userdata];
         } else if (data && typeof data === 'object') {
           this.userdata = [this.processUserImage(data)];
-          this.employees = this.userdata; // Set employees data
+          this.employees = [...this.userdata];
         } else {
           console.warn('Unexpected response format:', data);
           this.userdata = [];
           this.employees = [];
         }
+        console.log('Processed employees:', this.employees);
       },
       error: (err) => {
         console.error('Error fetching users:', err);
@@ -230,7 +241,6 @@ export class CreateprojectComponent implements OnInit {
     return processedUser;
   }
 
-  // Team Leads Functions
   toggleTeamLeadSelection(employee: any) {
     const employeeId = employee.id || employee._id || 
                       (employee.username || employee.displayName || employee.UserName || employee.userName);
@@ -270,7 +280,6 @@ export class CreateprojectComponent implements OnInit {
     if (!this.employees) return [];
     const q = (this.teamLeadsSearchText || '').trim().toLowerCase();
     
-    // Filter employees and exclude those already selected as regular employees
     const filtered = this.employees.filter(emp => {
       const isSelectedAsEmployee = this.isEmployeeSelected(emp);
       const matchesSearch = !q || (emp.username || emp.displayName || emp.UserName || emp.userName || '')
@@ -282,7 +291,6 @@ export class CreateprojectComponent implements OnInit {
     return filtered;
   }
 
-  // Employees Functions (excluding team leads)
   toggleEmployeeSelection(employee: any) {
     const employeeId = employee.id || employee._id || 
                       (employee.username || employee.displayName || employee.UserName || employee.userName);
@@ -322,7 +330,6 @@ export class CreateprojectComponent implements OnInit {
     if (!this.employees) return [];
     const q = (this.employeeSearchText || '').trim().toLowerCase();
     
-    // Filter employees and exclude those already selected as team leads
     const filtered = this.employees.filter(emp => {
       const isSelectedAsTeamLead = this.isTeamLeadSelected(emp);
       const matchesSearch = !q || (emp.username || emp.displayName || emp.UserName || emp.userName || '')
@@ -334,7 +341,6 @@ export class CreateprojectComponent implements OnInit {
     return filtered;
   }
 
-  // Edit Modal Functions for Team Leads
   toggleEditTeamLeadSelection(employee: any) {
     const employeeId = employee.id || employee._id || 
                       (employee.username || employee.displayName || employee.UserName || employee.userName);
@@ -374,7 +380,6 @@ export class CreateprojectComponent implements OnInit {
     if (!this.employees) return [];
     const q = (this.editTeamLeadsSearchText || '').trim().toLowerCase();
     
-    // Filter employees and exclude those already selected as regular employees in edit
     const filtered = this.employees.filter(emp => {
       const isSelectedAsEmployee = this.isEditEmployeeSelected(emp);
       const matchesSearch = !q || (emp.username || emp.displayName || emp.UserName || emp.userName || '')
@@ -386,7 +391,6 @@ export class CreateprojectComponent implements OnInit {
     return filtered;
   }
 
-  // Edit Modal Functions for Employees
   toggleEditEmployeeSelection(employee: any) {
     const employeeId = employee.id || employee._id || 
                       (employee.username || employee.displayName || employee.UserName || employee.userName);
@@ -426,7 +430,6 @@ export class CreateprojectComponent implements OnInit {
     if (!this.employees) return [];
     const q = (this.editEmployeeSearchText || '').trim().toLowerCase();
     
-    // Filter employees and exclude those already selected as team leads in edit
     const filtered = this.employees.filter(emp => {
       const isSelectedAsTeamLead = this.isEditTeamLeadSelected(emp);
       const matchesSearch = !q || (emp.username || emp.displayName || emp.UserName || emp.userName || '')
@@ -440,12 +443,12 @@ export class CreateprojectComponent implements OnInit {
 
   createProject() {
     if (!this.project.projectName || this.project.teamLeads.length === 0 || this.project.employees.length === 0) {
-      alert('Please fill all required fields');
+      alert('Please fill all required fields: Project Name, Team Leads, and Employees.');
       return;
     }
 
     if (!this.project.startDate || !this.project.expectedEndDate) {
-      alert('Please select both start and end dates');
+      alert('Please select both start and end dates.');
       return;
     }
 
@@ -461,14 +464,16 @@ export class CreateprojectComponent implements OnInit {
       expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
     };
 
+    console.log('Creating project with payload:', projectData);
+
     this.projectService.createProject(projectData).subscribe({
       next: (response: any) => {
-        console.log('Project created:', response);
+        console.log('Project created successfully:', response);
         this.showSuccessMessage = true;
 
         const newProject = {
           ...projectData,
-          _id: response._id || Date.now().toString(),
+          _id: response._id || response.id || Date.now().toString(),
           teamLeads: [...this.project.teamLeads],
           employees: [...this.project.employees]
         };
@@ -481,44 +486,55 @@ export class CreateprojectComponent implements OnInit {
           this.showCreateProjectBox = false;
           this.showTeamLeadsDropdown = false;
           this.showEmployeeDropdown = false;
+          this.resetCreateForm();
         }, 2000);
       },
       error: (err: any) => {
         console.error('Error creating project:', err);
-        alert('Failed to create project: ' + (err.error?.message || err.message || 'Unknown error'));
+        alert('Failed to create project: ' + (err.message || 'Unknown error. Check console.'));
       }
     });
   }
 
-  deleteProject(project: any) {
-    if (confirm('Are you sure you want to delete this project?')) {
-      
-      const projectId = project._id || project.id;
-
-      if (!projectId) {
-        console.error('Project ID is missing:', project);
-        alert('Cannot delete project: Missing project ID');
-        return;
-      }
-
-      this.projectService.deleteProject(projectId).subscribe({
-        next: (response: any) => {
-          console.log('Project deleted successfully:', response);
-          this.projects = this.projects.filter(p => (p._id || p.id) !== projectId);
-          this.filteredProjects = this.filteredProjects.filter(p => (p._id || p.id) !== projectId);
-        },
-        error: (error: any) => {
-          console.error('Error deleting project:', error);
-          alert('Failed to delete project: ' + (error.error?.message || error.message || 'Unknown error'));
-        }
-      });
-    }
+  private resetCreateForm() {
+    this.project = {
+      projectName: '',
+      teamLeads: [],
+      employees: [],
+      startDate: '',
+      expectedEndDate: ''
+    };
   }
 
+deleteProject(project: any) {
+  const projectId = project?._id || project?.id;
+
+  if (!projectId) {
+    alert('Invalid project ID');
+    return;
+  }
+
+  if (confirm('Are you sure you want to delete this project?')) {
+    this.projectService.deleteProject(projectId).subscribe({
+      next: () => {
+        this.projects = this.projects.filter(p => (p._id || p.id) !== projectId);
+        this.filteredProjects = [...this.projects];
+        alert('Project deleted successfully!');
+      },
+      error: (err) => {
+        console.error('Error deleting project:', err);
+        alert('Failed to delete project. Please try again.');
+      }
+    });
+  }
+}
+
+
+
   openEditModal(project: any) {
+    console.log('Opening edit modal for project:', project);
     this.selectedProject = JSON.parse(JSON.stringify(project));
     
-    // Initialize teamLeads and employees arrays if they don't exist
     if (!Array.isArray(this.selectedProject.teamLeads)) {
       this.selectedProject.teamLeads = [];
     }
@@ -527,7 +543,6 @@ export class CreateprojectComponent implements OnInit {
       this.selectedProject.employees = [];
     }
     
-    // Convert string arrays to employee objects for teamLeads
     if (this.selectedProject.teamLeads.length > 0 && typeof this.selectedProject.teamLeads[0] === 'string') {
       this.selectedProject.teamLeads = this.selectedProject.teamLeads.map((empName: string) => {
         const foundEmployee = this.employees.find(emp => {
@@ -538,7 +553,6 @@ export class CreateprojectComponent implements OnInit {
       });
     }
     
-    // Convert string arrays to employee objects for employees
     if (this.selectedProject.employees.length > 0 && typeof this.selectedProject.employees[0] === 'string') {
       this.selectedProject.employees = this.selectedProject.employees.map((empName: string) => {
         const foundEmployee = this.employees.find(emp => {
@@ -549,70 +563,76 @@ export class CreateprojectComponent implements OnInit {
       });
     }
     
+    console.log('Prepared edit project data:', this.selectedProject);
     this.isModalOpen = true;
   }
 
-  saveEdit() {
-    if (!this.selectedProject) return;
 
-    const projectId = this.selectedProject._id || this.selectedProject.id;
-    if (!projectId) {
-      alert('Cannot update project: Missing project ID');
-      return;
-    }
 
-    const formatDate = (date: any) => {
-      if (!date) return '';
-      if (typeof date === 'string') {
-        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
-        const parsed = new Date(date);
-        return isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0];
-      }
-      return date.toISOString().split('T')[0];
-    };
+saveEdit() {
+  if (!this.selectedProject) return;
 
-    const projectData = {
-      projectName: this.selectedProject.projectName,
-      teamLeads: this.selectedProject.teamLeads.map((emp: any) =>
-        typeof emp === 'string'
-          ? emp
-          : emp.userName || emp.username || emp.displayName || emp.UserName
-      ),
-      employees: this.selectedProject.employees.map((emp: any) =>
-        typeof emp === 'string'
-          ? emp
-          : emp.userName || emp.username || emp.displayName || emp.UserName
-      ),
-      startDate: formatDate(this.selectedProject.startDate),
-      expectedEndDate: formatDate(this.selectedProject.expectedEndDate)
-    };
-
-    this.projectService.updateProject(projectId, projectData).subscribe({
-      next: (res: any) => {
-        console.log('Project updated successfully:', res);
-
-        const index = this.projects.findIndex(p => (p._id || p.id) === projectId);
-        if (index > -1) {
-          this.projects[index] = {
-            ...this.projects[index],
-            ...projectData,
-            teamLeads: [...this.selectedProject.teamLeads],
-            employees: [...this.selectedProject.employees]
-          };
-        }
-
-        this.filteredProjects = [...this.projects]; 
-        this.isModalOpen = false;
-      },
-      error: (err: any) => {
-        console.error('Error updating project:', err);
-        alert('Failed to update project. Please check backend.');
-      }
-    });
+  const projectId = this.selectedProject._id || this.selectedProject.id;
+  if (!projectId) {
+    alert('Cannot update project: Missing project ID');
+    return;
   }
+
+  // Format date helper
+  const formatDate = (date: any) => {
+    if (!date) return '';
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+    const parsed = new Date(date);
+    return isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0];
+  };
+
+  const projectData = {
+    projectName: this.selectedProject.projectName,
+    teamLeads: (this.selectedProject.teamLeads || []).map((emp: any) =>
+      typeof emp === 'string'
+        ? emp
+        : (emp.username || emp.UserName || emp.userName || emp.displayName)
+    ),
+    employees: (this.selectedProject.employees || []).map((emp: any) =>
+      typeof emp === 'string'
+        ? emp
+        : (emp.username || emp.UserName || emp.userName || emp.displayName)
+    ),
+    startDate: formatDate(this.selectedProject.startDate),
+    expectedEndDate: formatDate(this.selectedProject.expectedEndDate),
+  };
+
+  console.log('Sending update payload:', projectData);
+
+  this.projectService.updateProject(projectId, projectData).subscribe({
+    next: (res: any) => {
+      console.log('Project updated successfully:', res);
+
+      const index = this.projects.findIndex(p => (p._id || p.id) === projectId);
+      if (index > -1) {
+        this.projects[index] = {
+          ...this.projects[index],
+          ...projectData,
+          teamLeads: [...this.selectedProject.teamLeads],
+          employees: [...this.selectedProject.employees]
+        };
+      }
+
+      this.filteredProjects = [...this.projects];
+      this.isModalOpen = false;
+    },
+    error: (err: any) => {
+      console.error('Error updating project:', err);
+      alert('Failed to update project: ' + (err.error?.message || err.message || 'Unknown error'));
+    }
+  });
+}
+
+
 
   closeModal() {
     this.isModalOpen = false;
+    this.selectedProject = null;
   }
 
   getTeamLeadsNames(teamLeads: any[]): string {

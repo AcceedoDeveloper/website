@@ -82,7 +82,12 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -145,6 +150,7 @@ import { MatTableDataSource } from '@angular/material/table';
     ReactiveFormsModule,    
     MatIconModule,
     MatDialogModule, 
+     MatFormFieldModule,
     MatInputModule,
     MatCardModule,
     MatGridListModule,
@@ -153,11 +159,15 @@ import { MatTableDataSource } from '@angular/material/table';
     MatButtonModule,
     MatListModule,
     CarouselModule,
-    
+    DragDropModule,
+ 
+    MatSelectModule,
+     MatNativeDateModule ,
  MatIconModule,
  FormsModule,
  HttpClientModule,
  MatPaginator,
+ MatDatepickerModule,
 
  
     // ✅ Firebase Initialization

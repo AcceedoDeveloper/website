@@ -13,29 +13,199 @@
     </div>
   </div>
 
-  <!-- User Avatar -->
-  <div>
-    <svg width="0" height="0">
-      <defs>
-        <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
-          <circle cx="0.5" cy="0.5" r="0.5" />
-        </clipPath>
-      </defs>
-    </svg>
-
-    <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" 
-         style="clip-path: url(#circle-shape);" />
-  </div>
-
-  <!-- Project list -->
-  <div class="projects-list" style="margin-top: 20px;">
-    <ul>
-      <li *ngFor="let project of filteredProjects" class="project-item">
+  <!-- Project Dropdown -->
+  <div class="project-controls">
+    <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
+      <option value="">-- Select Project --</option>
+      <option *ngFor="let project of projects" [value]="project._id || project.id">
         {{ project.projectName || project.name || 'Untitled Project' }}
-      </li>
-    </ul>
+      </option>
+    </select>
   </div>
 
+  <!-- Create Assignment Button -->
+  <div style="margin-top:10px;">
+    <button mat-raised-button color="primary" (click)="openAssignmentDialog()">+ Add Task</button>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="success-message">
+    <mat-icon>check_circle</mat-icon>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <!-- Kanban Board -->
+  <div class="kanban-board" *ngIf="!loading && !error" cdkDropListGroup>
+
+    <!-- To Do -->
+    <div class="kanban-column"
+         cdkDropList
+         [cdkDropListData]="todoAssignments"
+         (cdkDropListDropped)="drop($event, 'ToDo')"
+         id="todo-list">
+      <h3>To Do <span class="task-count">({{ todoAssignments.length }})</span></h3>
+
+      <div *ngFor="let task of todoAssignments"
+           class="kanban-card"
+           cdkDrag
+           [cdkDragData]="task">
+        <div class="task-content">
+          <strong>{{ task.description }}</strong><br>
+          <small>Assigned To: {{ task.assignedTo }}</small><br>
+          <small>Assignee: {{ task.assignee }}</small><br>
+          <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+        </div>
+        <div class="actions">
+          <button mat-icon-button color="accent"
+                  (click)="openAssignmentDialog(task); $event.stopPropagation()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn"
+                  (click)="deleteAssignment(task._id); $event.stopPropagation()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="todoAssignments.length === 0" class="empty-state">
+        No tasks in To Do
+      </div>
+    </div>
+
+    <!-- In Progress -->
+    <div class="kanban-column"
+         cdkDropList
+         [cdkDropListData]="inProgressAssignments"
+         (cdkDropListDropped)="drop($event, 'InProgress')"
+         id="progress-list">
+      <h3>In Progress <span class="task-count">({{ inProgressAssignments.length }})</span></h3>
+
+      <div *ngFor="let task of inProgressAssignments"
+           class="kanban-card"
+           cdkDrag
+           [cdkDragData]="task">
+        <div class="task-content">
+          <strong>{{ task.description }}</strong><br>
+          <small>Assigned To: {{ task.assignedTo }}</small><br>
+          <small>Assignee: {{ task.assignee }}</small><br>
+          <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+        </div>
+        <div class="actions">
+          <button mat-icon-button color="accent"
+                  (click)="openAssignmentDialog(task); $event.stopPropagation()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn"
+                  (click)="deleteAssignment(task._id); $event.stopPropagation()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="inProgressAssignments.length === 0" class="empty-state">
+        No tasks in Progress
+      </div>
+    </div>
+
+    <!-- Done -->
+    <div class="kanban-column"
+         cdkDropList
+         [cdkDropListData]="doneAssignments"
+         (cdkDropListDropped)="drop($event, 'Done')"
+         id="done-list">
+      <h3>Done <span class="task-count">({{ doneAssignments.length }})</span></h3>
+
+      <div *ngFor="let task of doneAssignments"
+           class="kanban-card"
+           cdkDrag
+           [cdkDragData]="task">
+        <div class="task-content">
+          <strong>{{ task.description }}</strong><br>
+          <small>Assigned To: {{ task.assignedTo }}</small><br>
+          <small>Assignee: {{ task.assignee }}</small><br>
+          <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+        </div>
+        <div class="actions">
+          <button mat-icon-button color="accent"
+                  (click)="openAssignmentDialog(task); $event.stopPropagation()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn"
+                  (click)="deleteAssignment(task._id); $event.stopPropagation()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="doneAssignments.length === 0" class="empty-state">
+        No tasks completed
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <app-footer></app-footer>
+
+<!-- Assignment Popup -->
+<ng-template #assignmentDialog>
+  <h2 mat-dialog-title>{{ editingTask ? 'Edit Task' : 'Add Task' }}</h2>
+  <mat-dialog-content>
+    <form [formGroup]="assignmentForm">
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" required>
+        <mat-error *ngIf="assignmentForm.get('description')?.hasError('required')">
+          Description is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Assigned To (always current logged in user) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Assigned To</mat-label>
+        <input matInput [value]="username" readonly>
+        <input type="hidden" formControlName="assignedTo" [value]="username">
+      </mat-form-field>
+
+      <!-- Assignee Dropdown -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Assignee</mat-label>
+        <mat-select formControlName="assignee" required>
+          <mat-option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+            {{ getEmployeeDisplay(emp) }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="assignmentForm.get('assignee')?.hasError('required')">
+          Assignee is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Due Date -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Due Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dueDate" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="assignmentForm.get('dueDate')?.hasError('required')">
+          Due date is required
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary"
+            (click)="saveAssignment()"
+            [disabled]="assignmentForm.invalid">
+      {{ editingTask ? 'Update' : 'Save' }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>

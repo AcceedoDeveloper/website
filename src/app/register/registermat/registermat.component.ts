@@ -14,9 +14,9 @@ export class RegistermatComponent implements OnInit {
 [x: string]: any;
   registerForm: FormGroup;
   roles: any[] = [];
-  departments: any[] = [];
-  subDepartmentsData: any[] = [];
-  isEdit = false;
+departments: any[] = [];
+subDepartmentsData: any[] = [];
+isEdit = false;
 selectedFile: File | null = null;
 selectedFileName: string = '';
 previewImage: string | ArrayBuffer | null = null;
@@ -33,7 +33,7 @@ previewImage: string | ArrayBuffer | null = null;
       name: ['', Validators.required],
       userName: ['', Validators.required],
       emailId: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(6)]],
+      password: ['', [Validators.minLength(5)]],
       phoneNumber: ['', [Validators.required]],
       role: ['', Validators.required],
       departmentName: ['', Validators.required],
