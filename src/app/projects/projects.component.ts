@@ -207,34 +207,36 @@ export class ProjectsComponent implements OnInit {
     this.doneAssignments = [];
   }
 
-  openAssignmentDialog(task?: AssignWork) {
-    this.editingTask = task || null;
-    const formData = task
-      ? { 
-          ...task, 
-          dueDate: new Date(task.dueDate),
-          Status: task.Status || 'ToDo'
-        }
-      : {
-          description: '',
-          assignedTo: this.username,
-          assignee: '',
-          dueDate: new Date(),
-          Status: 'ToDo'
-        };
-        
-    this.assignmentForm.reset(formData);
+openAssignmentDialog(task?: AssignWork) {
+  this.editingTask = task || null;
+  
+  const formData = task
+    ? { 
+        ...task, 
+        dueDate: new Date(task.dueDate)
+      }
+    : {
+        description: '',
+        assignedTo: this.username,
+        assignee: '',
+        dueDate: new Date()
+      };
+      
+  this.assignmentForm.reset(formData);
 
-    const dialogRef = this.dialog.open(this.assignmentDialog, { width: '500px' });
-    dialogRef.afterClosed().subscribe(() => {
-      this.assignmentForm.reset({ 
-        assignedTo: this.username, 
-        Status: 'ToDo' 
-      });
-      this.editingTask = null;
+  const dialogRef = this.dialog.open(this.assignmentDialog, { 
+    width: '800px',
+    maxWidth: '90vw',
+    maxHeight: '90vh'
+  });
+  
+  dialogRef.afterClosed().subscribe(() => {
+    this.assignmentForm.reset({ 
+      assignedTo: this.username
     });
-  }
-
+    this.editingTask = null;
+  });
+}
   saveAssignment() {
     if (this.assignmentForm.invalid) {
       console.log('Form is invalid');
