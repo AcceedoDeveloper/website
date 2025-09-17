@@ -41,8 +41,8 @@ export class ProjectsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadUserFromSession();
     this.initForm();
+    this.loadUserFromSession();
     this.loadEmployees();
     this.updateDateTime();
   }
@@ -59,7 +59,7 @@ export class ProjectsComponent implements OnInit {
       assignedTo: [this.username, Validators.required],
       assignee: ['', Validators.required],
       dueDate: ['', Validators.required],
-       Status: ['ToDo']    // ✅ lowercase
+      Status: ['ToDo']
     });
   }
 
@@ -149,43 +149,54 @@ export class ProjectsComponent implements OnInit {
         this.loading = false;
         let assignments: AssignWork[] = [];
 
+     
         if (Array.isArray(res)) {
           assignments = res;
         } else if (res?.data && Array.isArray(res.data)) {
           assignments = res.data;
         } else if (res?.assignments && Array.isArray(res.assignments)) {
           assignments = res.assignments;
+        } else if (res?.works && Array.isArray(res.works)) {
+          assignments = res.works;
         }
 
+        console.log('All assignments from API:', assignments);
+
+        
         const userAssignments = assignments.filter(
           a => (a.assignedTo === this.username || a.assignee === this.username) &&
                (!this.selectedProjectId || a.projectId === this.selectedProjectId)
         );
 
+        console.log('Filtered assignments for user:', userAssignments);
+
+   
         this.todoAssignments = [];
         this.inProgressAssignments = [];
         this.doneAssignments = [];
 
+  
         userAssignments.forEach(assignment => {
-          switch (assignment.Status) { // ✅ lowercase
-            case 'InProgress':
-            case 'inprogress':
-            case 'in progress':
-              this.inProgressAssignments.push(assignment);
-              break;
-            case 'Done':
-            case 'done':
-            case 'completed':
-              this.doneAssignments.push(assignment);
-              break;
-            default:
-              assignment.Status = 'ToDo';
-              this.todoAssignments.push(assignment);
+          const status = (assignment.Status || 'ToDo').toLowerCase().trim();
+          
+          if (status.includes('progress')) {
+            this.inProgressAssignments.push(assignment);
+          } else if (status.includes('done') || status.includes('complete')) {
+            this.doneAssignments.push(assignment);
+          } else {
+         
+            this.todoAssignments.push(assignment);
           }
         });
+
+        console.log('Todo tasks:', this.todoAssignments);
+        console.log('In Progress tasks:', this.inProgressAssignments);
+        console.log('Done tasks:', this.doneAssignments);
       },
-      error: () => {
+      error: (error) => {
         this.loading = false;
+        console.error('Error loading assignments:', error);
+        this.error = 'Failed to load assignments';
         this.clearAssignments();
       }
     });
@@ -200,108 +211,134 @@ export class ProjectsComponent implements OnInit {
   openAssignmentDialog(task?: AssignWork) {
     this.editingTask = task || null;
     const formData = task
-      ? { ...task, dueDate: new Date(task.dueDate) }
+      ? { 
+          ...task, 
+          dueDate: new Date(task.dueDate),
+          Status: task.Status || 'ToDo'
+        }
       : {
           description: '',
           assignedTo: this.username,
           assignee: '',
           dueDate: new Date(),
-          Status: 'ToDo'   // ✅ lowercase
+          Status: 'ToDo'
         };
+        
     this.assignmentForm.reset(formData);
 
     const dialogRef = this.dialog.open(this.assignmentDialog, { width: '500px' });
     dialogRef.afterClosed().subscribe(() => {
-      this.assignmentForm.reset({ assignedTo: this.username, Status: 'ToDo' });
+      this.assignmentForm.reset({ 
+        assignedTo: this.username, 
+        Status: 'ToDo' 
+      });
       this.editingTask = null;
     });
   }
 
-saveAssignment() {
-  if (this.assignmentForm.invalid) return;
+  saveAssignment() {
+    if (this.assignmentForm.invalid) {
+      console.log('Form is invalid');
+      return;
+    }
 
-  const formValue = this.assignmentForm.value;
-  const payload: any = {
-    description: formValue.description,
-    assignedTo: this.username,
-    assignee: formValue.assignee,
-    dueDate: new Date(formValue.dueDate).toISOString().split('T')[0], 
-    Status: this.editingTask ? formValue.status || 'ToDo' : 'ToDo',  // ✅ Send capital S
-    projectId: this.selectedProjectId || ''
-  };
+    const formValue = this.assignmentForm.value;
+    const payload: any = {
+      description: formValue.description,
+      assignedTo: this.username,
+      assignee: formValue.assignee,
+      dueDate: new Date(formValue.dueDate).toISOString().split('T')[0],
+      Status: formValue.Status || 'ToDo',
+      projectId: this.selectedProjectId || ''
+    };
 
-  if (this.editingTask && this.editingTask._id) {
-    this.assignworkService.updateAssignment(this.editingTask._id, payload).subscribe({
-      next: () => {
-        this.getAssignments();
-        this.dialog.closeAll();
-      },
-      error: (err) => {
-        console.error('Update error:', err);
-        alert('Failed to update assignment');
-      }
-    });
-  } else {
-    this.assignworkService.createAssignment(payload).subscribe({
-      next: (res) => {
-        const newTask: any = { ...payload, _id: res.work?._id || Date.now().toString() };
-        this.todoAssignments.unshift(newTask);
-        this.dialog.closeAll();
-      },
-      error: (err) => {
-        console.error('Create error:', err);
-        alert('Failed to create assignment');
-      }
-    });
+    console.log('Saving assignment with payload:', payload);
+
+    if (this.editingTask && this.editingTask._id) {
+      this.assignworkService.updateAssignment(this.editingTask._id, payload).subscribe({
+        next: () => {
+          this.successMessage = 'Task updated successfully';
+          this.getAssignments();
+          this.dialog.closeAll();
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: (err) => {
+          console.error('Update error:', err);
+          this.error = 'Failed to update task';
+          setTimeout(() => this.error = '', 3000);
+        }
+      });
+    } else {
+      this.assignworkService.createAssignment(payload).subscribe({
+        next: () => {
+          this.successMessage = 'Task created successfully';
+          this.getAssignments();
+          this.dialog.closeAll();
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: (err) => {
+          console.error('Create error:', err);
+          this.error = 'Failed to create task';
+          setTimeout(() => this.error = '', 3000);
+        }
+      });
+    }
   }
-}
-
 
   deleteAssignment(id: string | undefined) {
     if (!id) return;
     if (!confirm('Are you sure you want to delete this assignment?')) return;
 
     this.assignworkService.deleteAssignment(id).subscribe({
-      next: () => this.getAssignments(),
+      next: () => {
+        this.successMessage = 'Task deleted successfully';
+        this.getAssignments();
+        setTimeout(() => this.successMessage = '', 3000);
+      },
       error: (err) => {
         console.error('Delete error:', err);
-        alert('Failed to delete assignment');
+        this.error = 'Failed to delete task';
+        setTimeout(() => this.error = '', 3000);
       }
     });
   }
 
+  drop(event: CdkDragDrop<AssignWork[]>, newStatus: string) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      const movedTask = event.previousContainer.data[event.previousIndex];
+      
+     
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
 
-drop(event: CdkDragDrop<AssignWork[]>, newStatus: string) {
-  if (event.previousContainer === event.container) {
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-  } else {
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
+      if (movedTask && movedTask._id) {
+        const updatePayload = { Status: newStatus };
 
-    const movedTask = event.container.data[event.currentIndex];
-
-    if (movedTask && movedTask._id) {
-      // ✅ Send with capital S
-      const updatePayload = { Status: newStatus }; 
-
-      console.log('Updating task with payload:', updatePayload);
-
-      this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
-        next: (res) => {
-          console.log('Update success:', res);
-          this.getAssignments();
-        },
-        error: (err) => {
-          console.error('Update error:', err);
-          alert('Failed to update task status. Check backend logs.');
-        }
-      });
+        this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
+          next: () => {
+    
+            movedTask.Status = newStatus;
+          },
+          error: (err) => {
+            console.error('Update error:', err);
+          
+            transferArrayItem(
+              event.container.data,
+              event.previousContainer.data,
+              event.currentIndex,
+              event.previousIndex
+            );
+            this.error = 'Failed to update task status';
+            setTimeout(() => this.error = '', 3000);
+          }
+        });
+      }
     }
   }
-
-}
 }
