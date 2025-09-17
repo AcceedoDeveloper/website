@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface AssignWork {
+  startDate: any;
+  title: string;
   _id?: string;
   description: string;
   assignedTo: string;

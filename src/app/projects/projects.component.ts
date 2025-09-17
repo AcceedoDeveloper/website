@@ -55,9 +55,12 @@ export class ProjectsComponent implements OnInit {
 
   private initForm() {
     this.assignmentForm = this.fb.group({
-      description: ['', Validators.required],
+      title: ['', Validators.required],
+      description: [''],
+      comments: [''],
       assignedTo: [this.username, Validators.required],
       assignee: ['', Validators.required],
+      startDate: [''],
       dueDate: ['', Validators.required],
       Status: ['ToDo']
     });
@@ -138,10 +141,8 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-
   onProjectSelect() {
-    console.log('Project selected:', this.selectedProjectId);
-    
+    this.getAssignments();
   }
 
   getAssignments() {
@@ -161,24 +162,16 @@ export class ProjectsComponent implements OnInit {
           assignments = res.works;
         }
 
-        console.log('All assignments from API:', assignments);
-
-        // ✅ Filter only by current user (ignore project selection)
         const userAssignments = assignments.filter(
           a => a.assignedTo === this.username || a.assignee === this.username
         );
 
-        console.log('Filtered assignments for user:', userAssignments);
-
-        // Reset lists
         this.todoAssignments = [];
         this.inProgressAssignments = [];
         this.doneAssignments = [];
 
-        // Categorize by status
         userAssignments.forEach(assignment => {
           const status = (assignment.Status || 'ToDo').toLowerCase().trim();
-
           if (status.includes('progress')) {
             this.inProgressAssignments.push(assignment);
           } else if (status.includes('done') || status.includes('complete')) {
@@ -187,15 +180,9 @@ export class ProjectsComponent implements OnInit {
             this.todoAssignments.push(assignment);
           }
         });
-
-        console.log('Todo tasks:', this.todoAssignments);
-        console.log('In Progress tasks:', this.inProgressAssignments);
-        console.log('Done tasks:', this.doneAssignments);
       },
-      error: (error) => {
+      error: () => {
         this.loading = false;
-        console.error('Error loading assignments:', error);
-        this.error = 'Failed to load assignments';
         this.clearAssignments();
       }
     });
@@ -207,53 +194,65 @@ export class ProjectsComponent implements OnInit {
     this.doneAssignments = [];
   }
 
-openAssignmentDialog(task?: AssignWork) {
-  this.editingTask = task || null;
-  
-  const formData = task
-    ? { 
-        ...task, 
-        dueDate: new Date(task.dueDate)
-      }
-    : {
-        description: '',
-        assignedTo: this.username,
-        assignee: '',
-        dueDate: new Date()
-      };
-      
-  this.assignmentForm.reset(formData);
+  openAssignmentDialog(task?: AssignWork) {
+    this.editingTask = task || null;
+    
+    const formData = task
+      ? { 
+          title: task.title || '',
+          description: task.description || '',
+          comments: (task as any).comments || '',
+          assignedTo: task.assignedTo,
+          assignee: task.assignee,
+          startDate: task.startDate ? new Date(task.startDate) : '',
+          dueDate: new Date(task.dueDate),
+          Status: task.Status || 'ToDo'
+        }
+      : {
+          title: '',
+          description: '',
+          comments: '',
+          assignedTo: this.username,
+          assignee: '',
+          startDate: new Date(),
+          dueDate: new Date(),
+          Status: 'ToDo'
+        };
+        
+    this.assignmentForm.reset(formData);
 
-  const dialogRef = this.dialog.open(this.assignmentDialog, { 
-    width: '800px',
-    maxWidth: '90vw',
-    maxHeight: '90vh'
-  });
-  
-  dialogRef.afterClosed().subscribe(() => {
-    this.assignmentForm.reset({ 
-      assignedTo: this.username
+    const dialogRef = this.dialog.open(this.assignmentDialog, { 
+      width: '900px',
+      maxWidth: '95vw',
+      maxHeight: '90vh'
     });
-    this.editingTask = null;
-  });
-}
+    
+    dialogRef.afterClosed().subscribe(() => {
+      this.assignmentForm.reset({ 
+        assignedTo: this.username,
+        Status: 'ToDo'
+      });
+      this.editingTask = null;
+    });
+  }
+
   saveAssignment() {
     if (this.assignmentForm.invalid) {
-      console.log('Form is invalid');
       return;
     }
 
     const formValue = this.assignmentForm.value;
     const payload: any = {
+      title: formValue.title,
       description: formValue.description,
+      comments: formValue.comments,
       assignedTo: this.username,
       assignee: formValue.assignee,
+      startDate: formValue.startDate ? new Date(formValue.startDate).toISOString().split('T')[0] : '',
       dueDate: new Date(formValue.dueDate).toISOString().split('T')[0],
-      Status: formValue.Status || 'ToDo',
+      Status: this.editingTask ? this.editingTask.Status : 'ToDo',
       projectId: this.selectedProjectId || ''
     };
-
-    console.log('Saving assignment with payload:', payload);
 
     if (this.editingTask && this.editingTask._id) {
       this.assignworkService.updateAssignment(this.editingTask._id, payload).subscribe({
@@ -263,8 +262,7 @@ openAssignmentDialog(task?: AssignWork) {
           this.dialog.closeAll();
           setTimeout(() => this.successMessage = '', 3000);
         },
-        error: (err) => {
-          console.error('Update error:', err);
+        error: () => {
           this.error = 'Failed to update task';
           setTimeout(() => this.error = '', 3000);
         }
@@ -277,8 +275,7 @@ openAssignmentDialog(task?: AssignWork) {
           this.dialog.closeAll();
           setTimeout(() => this.successMessage = '', 3000);
         },
-        error: (err) => {
-          console.error('Create error:', err);
+        error: () => {
           this.error = 'Failed to create task';
           setTimeout(() => this.error = '', 3000);
         }
@@ -296,8 +293,7 @@ openAssignmentDialog(task?: AssignWork) {
         this.getAssignments();
         setTimeout(() => this.successMessage = '', 3000);
       },
-      error: (err) => {
-        console.error('Delete error:', err);
+      error: () => {
         this.error = 'Failed to delete task';
         setTimeout(() => this.error = '', 3000);
       }
@@ -324,9 +320,7 @@ openAssignmentDialog(task?: AssignWork) {
           next: () => {
             movedTask.Status = newStatus;
           },
-          error: (err) => {
-            console.error('Update error:', err);
-
+          error: () => {
             transferArrayItem(
               event.container.data,
               event.previousContainer.data,

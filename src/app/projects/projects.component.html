@@ -153,60 +153,101 @@
 
 <app-footer></app-footer>
 
+
 <ng-template #assignmentDialog>
   <div class="dialog-container">
     <h2 mat-dialog-title>{{ editingTask ? 'Edit Task' : 'Add Task' }}</h2>
     <mat-dialog-content>
       <form [formGroup]="assignmentForm" class="dialog-form">
         <div class="form-columns">
-          <!-- Left Column - Description -->
+          <!-- Left Column - Title, Description, Comments -->
           <div class="left-column">
+            <!-- Title -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Task Title</mat-label>
+              <input 
+                matInput 
+                formControlName="title" 
+                required
+                placeholder="Enter task title...">
+              <mat-error *ngIf="assignmentForm.get('title')?.hasError('required')">
+                Title is required
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Description -->
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Task Description</mat-label>
               <textarea 
                 matInput 
                 formControlName="description" 
-                required
-                rows="8"
-                placeholder="Enter detailed task description here...">
+                rows="4"
+                placeholder="Enter detailed task description...">
               </textarea>
-              <mat-error *ngIf="assignmentForm.get('description')?.hasError('required')">
-                Description is required
-              </mat-error>
+            </mat-form-field>
+
+            <!-- Comments -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Comments</mat-label>
+              <textarea 
+                matInput 
+                formControlName="comments" 
+                rows="3"
+                placeholder="Add comments here...">
+              </textarea>
             </mat-form-field>
           </div>
 
-          <!-- Right Column - Other Details -->
+          <!-- Right Column - Read-only Details -->
           <div class="right-column">
-            <!-- Assigned To (always current logged in user) -->
+            <!-- Assigned To -->
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Assigned To</mat-label>
               <input matInput [value]="username" readonly>
               <input type="hidden" formControlName="assignedTo" [value]="username">
             </mat-form-field>
 
-            <!-- Assignee Dropdown -->
+            <!-- Assignee -->
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Assignee</mat-label>
-              <mat-select formControlName="assignee" required>
-                <mat-option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
-                  {{ getEmployeeDisplay(emp) }}
-                </mat-option>
-              </mat-select>
+           <mat-select formControlName="assignee" [disabled]="!!editingTask">
+  <mat-option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+    {{ getEmployeeDisplay(emp) }}
+  </mat-option>
+</mat-select>
               <mat-error *ngIf="assignmentForm.get('assignee')?.hasError('required')">
                 Assignee is required
               </mat-error>
             </mat-form-field>
 
+            <!-- Start Date -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Start Date</mat-label>
+           <input matInput 
+       [matDatepicker]="startPicker" 
+       formControlName="startDate" 
+       [readonly]="!!editingTask">
+              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+              <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+
             <!-- Due Date -->
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Due Date</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="dueDate" required>
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <input matInput 
+                     [matDatepicker]="duePicker" 
+                     formControlName="dueDate">
+              <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
+              <mat-datepicker #duePicker></mat-datepicker>
               <mat-error *ngIf="assignmentForm.get('dueDate')?.hasError('required')">
                 Due date is required
               </mat-error>
+            </mat-form-field>
+
+            <!-- Status (Read-only) -->
+            <mat-form-field appearance="outline" class="full-width" *ngIf="editingTask">
+              <mat-label>Status</mat-label>
+              <input matInput [value]="assignmentForm.get('Status')?.value" readonly>
             </mat-form-field>
           </div>
         </div>
@@ -223,3 +264,5 @@
     </mat-dialog-actions>
   </div>
 </ng-template>
+
+
