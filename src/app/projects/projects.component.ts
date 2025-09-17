@@ -17,7 +17,7 @@ export class ProjectsComponent implements OnInit {
   displayName = 'User';
   dateTime: string = new Date().toLocaleString();
   projects: any[] = [];
-  selectedProjectId = '';
+  selectedProjectId = '';   
 
   todoAssignments: AssignWork[] = [];
   inProgressAssignments: AssignWork[] = [];
@@ -138,8 +138,10 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+
   onProjectSelect() {
-    this.getAssignments();
+    console.log('Project selected:', this.selectedProjectId);
+    
   }
 
   getAssignments() {
@@ -149,7 +151,6 @@ export class ProjectsComponent implements OnInit {
         this.loading = false;
         let assignments: AssignWork[] = [];
 
-     
         if (Array.isArray(res)) {
           assignments = res;
         } else if (res?.data && Array.isArray(res.data)) {
@@ -162,29 +163,27 @@ export class ProjectsComponent implements OnInit {
 
         console.log('All assignments from API:', assignments);
 
-        
+        // ✅ Filter only by current user (ignore project selection)
         const userAssignments = assignments.filter(
-          a => (a.assignedTo === this.username || a.assignee === this.username) &&
-               (!this.selectedProjectId || a.projectId === this.selectedProjectId)
+          a => a.assignedTo === this.username || a.assignee === this.username
         );
 
         console.log('Filtered assignments for user:', userAssignments);
 
-   
+        // Reset lists
         this.todoAssignments = [];
         this.inProgressAssignments = [];
         this.doneAssignments = [];
 
-  
+        // Categorize by status
         userAssignments.forEach(assignment => {
           const status = (assignment.Status || 'ToDo').toLowerCase().trim();
-          
+
           if (status.includes('progress')) {
             this.inProgressAssignments.push(assignment);
           } else if (status.includes('done') || status.includes('complete')) {
             this.doneAssignments.push(assignment);
           } else {
-         
             this.todoAssignments.push(assignment);
           }
         });
@@ -308,8 +307,7 @@ export class ProjectsComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const movedTask = event.previousContainer.data[event.previousIndex];
-      
-     
+
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -322,12 +320,11 @@ export class ProjectsComponent implements OnInit {
 
         this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
           next: () => {
-    
             movedTask.Status = newStatus;
           },
           error: (err) => {
             console.error('Update error:', err);
-          
+
             transferArrayItem(
               event.container.data,
               event.previousContainer.data,
