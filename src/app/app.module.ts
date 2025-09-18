@@ -15,6 +15,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 // Owl Carousel
@@ -170,6 +171,7 @@ import { MatNativeDateModule } from '@angular/material/core';
  HttpClientModule,
  MatPaginator,
  MatDatepickerModule,
+ MatProgressSpinnerModule,
  MatChipsModule,
 
  
