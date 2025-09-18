@@ -3,15 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface AssignWork {
-  startDate: any;
-  title: string;
   _id?: string;
+  projectName: string;
+  title: string;
   description: string;
+  comment: Comment[];
   assignedTo: string;
   assignee: string;
+  startDate: any;
   dueDate: string;
   Status: string;    
   projectId: string;
+}
+
+export interface Comment {
+timestamp: string|number|Date;
+  user: string;
+  message: string;
 }
 
 @Injectable({
@@ -30,13 +38,11 @@ export class AssignWorkService {
     return this.http.get<AssignWork[]>(`${this.baseUrl}/GetAssignWork`);
   }
 
-  
-updateAssignment(id: string, task: any): Observable<any> {
-  return this.http.put(`${this.baseUrl}/UpdateAssignWork/${id}`, task, {
-    headers: { 'Content-Type': 'application/json' }
-  });
-}
-
+  updateAssignment(id: string, task: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/UpdateAssignWork/${id}`, task, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 
   deleteAssignment(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/DeleteAssignWork/${id}`);

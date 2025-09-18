@@ -14,6 +14,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
+
 
 // Owl Carousel
 import { CarouselModule } from 'ngx-owl-carousel-o';
@@ -168,6 +170,7 @@ import { MatNativeDateModule } from '@angular/material/core';
  HttpClientModule,
  MatPaginator,
  MatDatepickerModule,
+ MatChipsModule,
 
  
     // ✅ Firebase Initialization

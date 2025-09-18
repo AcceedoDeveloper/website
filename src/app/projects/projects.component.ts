@@ -18,14 +18,19 @@ export class ProjectsComponent implements OnInit {
   dateTime: string = new Date().toLocaleString();
   projects: any[] = [];
   selectedProjectId = '';   
+  selectedProjectName = '';
 
+  allAssignments: AssignWork[] = [];
   todoAssignments: AssignWork[] = [];
   inProgressAssignments: AssignWork[] = [];
   doneAssignments: AssignWork[] = [];
 
   assignmentForm!: FormGroup;
+  commentForm!: FormGroup;
   editingTask: AssignWork | null = null;
+  selectedTask: AssignWork | null = null;
   @ViewChild('assignmentDialog') assignmentDialog!: TemplateRef<any>;
+  @ViewChild('commentDialog') commentDialog!: TemplateRef<any>;
 
   employees: any[] = [];
   loading = false;
@@ -42,6 +47,7 @@ export class ProjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.initCommentForm();
     this.loadUserFromSession();
     this.loadEmployees();
     this.updateDateTime();
@@ -57,12 +63,17 @@ export class ProjectsComponent implements OnInit {
     this.assignmentForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
-      comments: [''],
       assignedTo: [this.username, Validators.required],
       assignee: ['', Validators.required],
       startDate: [''],
       dueDate: ['', Validators.required],
       Status: ['ToDo']
+    });
+  }
+
+  private initCommentForm() {
+    this.commentForm = this.fb.group({
+      message: ['', Validators.required]
     });
   }
 
@@ -142,7 +153,9 @@ export class ProjectsComponent implements OnInit {
   }
 
   onProjectSelect() {
-    this.getAssignments();
+    const selectedProject = this.projects.find(p => p._id === this.selectedProjectId || p.id === this.selectedProjectId);
+    this.selectedProjectName = selectedProject?.projectName || selectedProject?.name || '';
+    this.filterAssignmentsByProject();
   }
 
   getAssignments() {
@@ -150,36 +163,18 @@ export class ProjectsComponent implements OnInit {
     this.assignworkService.getAssignments().subscribe({
       next: (res: any) => {
         this.loading = false;
-        let assignments: AssignWork[] = [];
-
         if (Array.isArray(res)) {
-          assignments = res;
+          this.allAssignments = res;
         } else if (res?.data && Array.isArray(res.data)) {
-          assignments = res.data;
+          this.allAssignments = res.data;
         } else if (res?.assignments && Array.isArray(res.assignments)) {
-          assignments = res.assignments;
+          this.allAssignments = res.assignments;
         } else if (res?.works && Array.isArray(res.works)) {
-          assignments = res.works;
+          this.allAssignments = res.works;
+        } else {
+          this.allAssignments = [];
         }
-
-        const userAssignments = assignments.filter(
-          a => a.assignedTo === this.username || a.assignee === this.username
-        );
-
-        this.todoAssignments = [];
-        this.inProgressAssignments = [];
-        this.doneAssignments = [];
-
-        userAssignments.forEach(assignment => {
-          const status = (assignment.Status || 'ToDo').toLowerCase().trim();
-          if (status.includes('progress')) {
-            this.inProgressAssignments.push(assignment);
-          } else if (status.includes('done') || status.includes('complete')) {
-            this.doneAssignments.push(assignment);
-          } else {
-            this.todoAssignments.push(assignment);
-          }
-        });
+        this.filterAssignmentsByProject();
       },
       error: () => {
         this.loading = false;
@@ -188,7 +183,39 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  private filterAssignmentsByProject() {
+    let filteredAssignments: AssignWork[] = [];
+    
+    if (this.selectedProjectId) {
+      // Filter by selected project
+      filteredAssignments = this.allAssignments.filter(a => a.projectId === this.selectedProjectId);
+    } else {
+      // If no project selected, show all tasks for current user
+      filteredAssignments = this.allAssignments.filter(
+        a => a.assignedTo === this.username || a.assignee === this.username
+      );
+    }
+
+    // Reset
+    this.todoAssignments = [];
+    this.inProgressAssignments = [];
+    this.doneAssignments = [];
+
+    // Categorize
+    filteredAssignments.forEach(assignment => {
+      const status = (assignment.Status || 'ToDo').toLowerCase().trim();
+      if (status.includes('progress')) {
+        this.inProgressAssignments.push(assignment);
+      } else if (status.includes('done') || status.includes('complete')) {
+        this.doneAssignments.push(assignment);
+      } else {
+        this.todoAssignments.push(assignment);
+      }
+    });
+  }
+
   private clearAssignments() {
+    this.allAssignments = [];
     this.todoAssignments = [];
     this.inProgressAssignments = [];
     this.doneAssignments = [];
@@ -197,11 +224,18 @@ export class ProjectsComponent implements OnInit {
   openAssignmentDialog(task?: AssignWork) {
     this.editingTask = task || null;
     
+    let title = '';
+    let description = '';
+
+    if (task) {
+      title = task.title || '';
+      description = task.description || '';
+    }
+
     const formData = task
       ? { 
-          title: task.title || '',
-          description: task.description || '',
-          comments: (task as any).comments || '',
+          title: title,
+          description: description,
           assignedTo: task.assignedTo,
           assignee: task.assignee,
           startDate: task.startDate ? new Date(task.startDate) : '',
@@ -211,10 +245,9 @@ export class ProjectsComponent implements OnInit {
       : {
           title: '',
           description: '',
-          comments: '',
           assignedTo: this.username,
           assignee: '',
-          startDate: new Date(),
+          startDate: '',
           dueDate: new Date(),
           Status: 'ToDo'
         };
@@ -236,6 +269,55 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
+  openCommentDialog(task: AssignWork) {
+    this.selectedTask = task;
+    this.commentForm.reset();
+    
+    const dialogRef = this.dialog.open(this.commentDialog, {
+      width: '600px',
+      maxWidth: '95vw'
+    });
+    
+    dialogRef.afterClosed().subscribe(() => {
+      this.selectedTask = null;
+    });
+  }
+
+  addComment() {
+    if (this.commentForm.invalid || !this.selectedTask) return;
+
+    const message = this.commentForm.get('message')?.value;
+    const newComment = {
+      user: this.username,
+      message: message,
+      timestamp: new Date()
+    };
+
+    // Create a copy of the comments array or initialize if it doesn't exist
+    const comments = this.selectedTask.comment ? [...this.selectedTask.comment] : [];
+    comments.push(newComment);
+
+    const updatePayload = {
+      ...this.selectedTask,
+      comment: comments
+    };
+
+    if (this.selectedTask._id) {
+      this.assignworkService.updateAssignment(this.selectedTask._id, updatePayload).subscribe({
+        next: () => {
+          this.successMessage = 'Comment added successfully';
+          this.getAssignments();
+          this.dialog.closeAll();
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: () => {
+          this.error = 'Failed to add comment';
+          setTimeout(() => this.error = '', 3000);
+        }
+      });
+    }
+  }
+
   saveAssignment() {
     if (this.assignmentForm.invalid) {
       return;
@@ -243,9 +325,10 @@ export class ProjectsComponent implements OnInit {
 
     const formValue = this.assignmentForm.value;
     const payload: any = {
+      projectName: this.selectedProjectName,
       title: formValue.title,
       description: formValue.description,
-      comments: formValue.comments,
+      comment: [],
       assignedTo: this.username,
       assignee: formValue.assignee,
       startDate: formValue.startDate ? new Date(formValue.startDate).toISOString().split('T')[0] : '',
@@ -255,6 +338,9 @@ export class ProjectsComponent implements OnInit {
     };
 
     if (this.editingTask && this.editingTask._id) {
+      // Preserve existing comments when editing
+      payload.comment = this.editingTask.comment || [];
+      
       this.assignworkService.updateAssignment(this.editingTask._id, payload).subscribe({
         next: () => {
           this.successMessage = 'Task updated successfully';
@@ -314,11 +400,15 @@ export class ProjectsComponent implements OnInit {
       );
 
       if (movedTask && movedTask._id) {
-        const updatePayload = { Status: newStatus };
+        const updatePayload = { 
+          ...movedTask,
+          Status: newStatus 
+        };
 
         this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
           next: () => {
             movedTask.Status = newStatus;
+            this.getAssignments(); // Refresh to ensure proper filtering
           },
           error: () => {
             transferArrayItem(

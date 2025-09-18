@@ -16,16 +16,24 @@
   <!-- Project Dropdown -->
   <div class="project-controls">
     <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
-      <option value="">-- Select Project --</option>
+      <option value="">-- All Projects --</option>
       <option *ngFor="let project of projects" [value]="project._id || project.id">
         {{ project.projectName || project.name || 'Untitled Project' }}
       </option>
     </select>
+    
+    <div *ngIf="selectedProjectId" class="selected-project">
+      Showing tasks for: <strong>{{ selectedProjectName }}</strong>
+    </div>
   </div>
 
   <!-- Create Assignment Button -->
   <div style="margin-top:10px;">
-    <button mat-raised-button color="primary" (click)="openAssignmentDialog()">+ Add Task</button>
+    <button mat-raised-button color="primary" (click)="openAssignmentDialog()" 
+            [disabled]="!selectedProjectId">
+      + Add Task
+    </button>
+    <span *ngIf="!selectedProjectId" class="hint-text">(Select a project to add tasks)</span>
   </div>
 
   <!-- Error State -->
@@ -39,6 +47,7 @@
     <mat-icon>check_circle</mat-icon>
     <span>{{ successMessage }}</span>
   </div>
+
 
   <!-- Kanban Board -->
   <div class="kanban-board" *ngIf="!loading && !error" cdkDropListGroup>
@@ -56,12 +65,20 @@
            cdkDrag
            [cdkDragData]="task">
         <div class="task-content">
-          <strong>{{ task.description }}</strong><br>
-          <small>Assigned To: {{ task.assignedTo }}</small><br>
-          <small>Assignee: {{ task.assignee }}</small><br>
+          <strong>{{ task.title }}</strong><br>
+          <small *ngIf="task.description">{{ task.description }}</small><br>
+          <small>Assigned To: {{ task.assignee }}</small><br>
+          <small>Assignee: {{ task.assignedTo }}</small><br>
           <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+          <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+            <small><strong>Comments: {{ task.comment.length }}</strong></small>
+          </div>
         </div>
         <div class="actions">
+          <button mat-icon-button color="primary"
+                  (click)="openCommentDialog(task); $event.stopPropagation()">
+            <mat-icon>comment</mat-icon>
+          </button>
           <button mat-icon-button color="accent"
                   (click)="openAssignmentDialog(task); $event.stopPropagation()">
             <mat-icon>edit</mat-icon>
@@ -91,12 +108,20 @@
            cdkDrag
            [cdkDragData]="task">
         <div class="task-content">
-          <strong>{{ task.description }}</strong><br>
-          <small>Assigned To: {{ task.assignedTo }}</small><br>
-          <small>Assignee: {{ task.assignee }}</small><br>
+          <strong>{{ task.title }}</strong><br>
+          <small *ngIf="task.description">{{ task.description }}</small><br>
+          <small>Assigned To: {{ task.assignee }}</small><br>
+          <small>Assignee: {{ task.assignedTo }}</small><br>
           <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+          <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+            <small><strong>Comments: {{ task.comment.length }}</strong></small>
+          </div>
         </div>
         <div class="actions">
+          <button mat-icon-button color="primary"
+                  (click)="openCommentDialog(task); $event.stopPropagation()">
+            <mat-icon>comment</mat-icon>
+          </button>
           <button mat-icon-button color="accent"
                   (click)="openAssignmentDialog(task); $event.stopPropagation()">
             <mat-icon>edit</mat-icon>
@@ -126,12 +151,20 @@
            cdkDrag
            [cdkDragData]="task">
         <div class="task-content">
-          <strong>{{ task.description }}</strong><br>
-          <small>Assigned To: {{ task.assignedTo }}</small><br>
-          <small>Assignee: {{ task.assignee }}</small><br>
+          <strong>{{ task.title }}</strong><br>
+          <small *ngIf="task.description">{{ task.description }}</small><br>
+          <small>Assigned To: {{ task.assignee }}</small><br>
+          <small>Assignee: {{ task.assignedTo }}</small><br>
           <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+          <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+            <small><strong>Comments: {{ task.comment.length }}</strong></small>
+          </div>
         </div>
         <div class="actions">
+          <button mat-icon-button color="primary"
+                  (click)="openCommentDialog(task); $event.stopPropagation()">
+            <mat-icon>comment</mat-icon>
+          </button>
           <button mat-icon-button color="accent"
                   (click)="openAssignmentDialog(task); $event.stopPropagation()">
             <mat-icon>edit</mat-icon>
@@ -153,68 +186,72 @@
 
 <app-footer></app-footer>
 
-
+<!-- Assignment Dialog -->
 <ng-template #assignmentDialog>
   <div class="dialog-container">
     <h2 mat-dialog-title>{{ editingTask ? 'Edit Task' : 'Add Task' }}</h2>
+
     <mat-dialog-content>
       <form [formGroup]="assignmentForm" class="dialog-form">
         <div class="form-columns">
-          <!-- Left Column - Title, Description, Comments -->
-          <div class="left-column">
+          
+          <!-- Left Column - Scrollable -->
+          <div class="left-column scrollable-section">
+            
             <!-- Title -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Task Title</mat-label>
-              <input 
-                matInput 
-                formControlName="title" 
-                required
-                placeholder="Enter task title...">
-              <mat-error *ngIf="assignmentForm.get('title')?.hasError('required')">
-                Title is required
-              </mat-error>
-            </mat-form-field>
+            <div class="section-block">
+              <h3 class="section-title">• Task Title</h3>
+              <mat-form-field appearance="outline" class="full-width">
+                <input 
+                  matInput 
+                  formControlName="title" 
+                  required
+                  placeholder="Enter task title...">
+                <mat-error *ngIf="assignmentForm.get('title')?.hasError('required')">
+                  Title is required
+                </mat-error>
+              </mat-form-field>
+            </div>
 
             <!-- Description -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Task Description</mat-label>
-              <textarea 
-                matInput 
-                formControlName="description" 
-                rows="4"
-                placeholder="Enter detailed task description...">
-              </textarea>
-            </mat-form-field>
+            <div class="section-block">
+              <h3 class="section-title">• Task Description</h3>
+              <mat-form-field appearance="outline" class="full-width">
+                <textarea 
+                  matInput 
+                  formControlName="description" 
+                  rows="4"
+                  placeholder="Enter detailed task description...">
+                </textarea>
+              </mat-form-field>
+            </div>
 
-            <!-- Comments -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Comments</mat-label>
-              <textarea 
-                matInput 
-                formControlName="comments" 
-                rows="3"
-                placeholder="Add comments here...">
-              </textarea>
-            </mat-form-field>
           </div>
 
           <!-- Right Column - Read-only Details -->
           <div class="right-column">
+            
+            <!-- Project Name (Read-only) -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Project</mat-label>
+              <input matInput [value]="selectedProjectName" readonly>
+            </mat-form-field>
+            
             <!-- Assigned To -->
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Assigned To</mat-label>
+              <mat-label>Assignee</mat-label>
               <input matInput [value]="username" readonly>
               <input type="hidden" formControlName="assignedTo" [value]="username">
             </mat-form-field>
 
             <!-- Assignee -->
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Assignee</mat-label>
-           <mat-select formControlName="assignee" [disabled]="!!editingTask">
-  <mat-option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
-    {{ getEmployeeDisplay(emp) }}
-  </mat-option>
-</mat-select>
+              <mat-label>Assigned To</mat-label>
+              <mat-select formControlName="assignee" [disabled]="!!editingTask">
+                <mat-option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+                  {{ getEmployeeDisplay(emp) }}
+                </mat-option>
+              </mat-select>
               <mat-error *ngIf="assignmentForm.get('assignee')?.hasError('required')">
                 Assignee is required
               </mat-error>
@@ -223,10 +260,10 @@
             <!-- Start Date -->
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Start Date</mat-label>
-           <input matInput 
-       [matDatepicker]="startPicker" 
-       formControlName="startDate" 
-       [readonly]="!!editingTask">
+              <input matInput 
+                     [matDatepicker]="startPicker" 
+                     formControlName="startDate" 
+                     [readonly]="!!editingTask">
               <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
               <mat-datepicker #startPicker></mat-datepicker>
             </mat-form-field>
@@ -244,7 +281,7 @@
               </mat-error>
             </mat-form-field>
 
-            <!-- Status (Read-only) -->
+            <!-- Status (Read-only in Edit Mode) -->
             <mat-form-field appearance="outline" class="full-width" *ngIf="editingTask">
               <mat-label>Status</mat-label>
               <input matInput [value]="assignmentForm.get('Status')?.value" readonly>
@@ -265,4 +302,47 @@
   </div>
 </ng-template>
 
+<!-- Comment Dialog -->
+<ng-template #commentDialog>
+  <div class="dialog-container">
+    <h2 mat-dialog-title>Add Comment</h2>
 
+    <mat-dialog-content>
+      <div *ngIf="selectedTask">
+        <h3>Task: {{ selectedTask.title }}</h3>
+        
+        <!-- Display existing comments -->
+        <div *ngIf="selectedTask.comment && selectedTask.comment.length > 0" class="comments-section">
+          <h4>Previous Comments:</h4>
+          <div *ngFor="let comment of selectedTask.comment" class="comment-item">
+            <strong>{{ comment.user }}:</strong> {{ comment.message }}
+          </div>
+        </div>
+        
+        <!-- Add new comment -->
+        <form [formGroup]="commentForm" class="comment-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <textarea 
+              matInput 
+              formControlName="message" 
+              rows="3"
+              placeholder="Add your comment...">
+            </textarea>
+            <mat-error *ngIf="commentForm.get('message')?.hasError('required')">
+              Comment is required
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="dialog-actions">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button color="primary"
+              (click)="addComment()"
+              [disabled]="commentForm.invalid">
+        Add Comment
+      </button>
+    </mat-dialog-actions>
+  </div>
+</ng-template>
