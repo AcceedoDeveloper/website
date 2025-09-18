@@ -21,9 +21,6 @@
       </option>
     </select>
     
-    <div *ngIf="selectedProjectId" class="selected-project">
-      Showing tasks for: <strong>{{ selectedProjectName }}</strong>
-    </div>
   </div>
 
 
@@ -69,8 +66,8 @@
            cdkDrag
            [cdkDragData]="task">
         <div class="task-content">
-          <strong>{{ task.title }}</strong><br>
-          <small *ngIf="task.description">{{ task.description }}</small><br>
+          <strong>Task Title:{{ task.title }}</strong><br>
+          <small *ngIf="task.description">Description:{{ task.description }}</small><br>
           <small>Assigned To: {{ task.assignee }}</small><br>
           <small>Assignee: {{ task.assignedTo }}</small><br>
           <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
@@ -108,8 +105,8 @@
            cdkDrag
            [cdkDragData]="task">
         <div class="task-content">
-          <strong>{{ task.title }}</strong><br>
-          <small *ngIf="task.description">{{ task.description }}</small><br>
+          <strong>Task Title:{{ task.title }}</strong><br>
+          <small *ngIf="task.description">Description:{{ task.description }}</small><br>
           <small>Assigned To: {{ task.assignee }}</small><br>
           <small>Assignee: {{ task.assignedTo }}</small><br>
           <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
@@ -147,8 +144,8 @@
            cdkDrag
            [cdkDragData]="task">
         <div class="task-content">
-          <strong>{{ task.title }}</strong><br>
-          <small *ngIf="task.description">{{ task.description }}</small><br>
+          <strong>Task Title:{{ task.title }}</strong><br>
+          <small *ngIf="task.description">Description:{{ task.description }}</small><br>
           <small>Assigned To: {{ task.assignee }}</small><br>
           <small>Assignee: {{ task.assignedTo }}</small><br>
           <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>

@@ -553,7 +553,7 @@ textarea {
   }
 }
 
-/* Enhance the appearance of form fields */
+
 .mat-form-field {
   margin-bottom: 12px;
 }
@@ -602,8 +602,8 @@ textarea {
   flex: 1.2;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-height: 400px;   /* Scrollable height */
+  gap: 10px;
+  max-height: 600px;   /* Scrollable height */
   overflow-y: auto;
   padding-right: 10px;
   border-right: 2px solid #eee;
@@ -613,14 +613,14 @@ textarea {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 5px;
   padding-left: 10px;
 }
 
 .section-block {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 2px;
 }
 
 .section-title {
