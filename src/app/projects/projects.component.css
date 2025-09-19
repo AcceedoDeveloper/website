@@ -66,17 +66,14 @@ margin-top: -1140px;
 }
 
 @media (max-width: 2200px) {
-  
-.maincontent{
-
-width: 100%;
-max-width: 1285px;
-height: 100%;
-margin-left: 275px;
-margin-top: -800px;
+.maincontent {
+  width: 100%;
+  max-width: 1285px;
+  height: 100%;
+  margin-left: 275px;
+  margin-top: -800px;
   padding: 0px 20px;
-  flex:1;
-
+  flex: 1;
 }
 
 .welcome-card {
@@ -90,7 +87,91 @@ margin-top: -800px;
 
 .user-welcome span {
   margin-top: -35px;
+}
 
+/* ---------------- MEDIA QUERIES ---------------- */
+
+/* ✅ Large Desktop (above 1200px) */
+@media (min-width: 1200px) {
+  .maincontent {
+    margin-left: 275px;
+    margin-top: -800px;
+  }
+
+  .date-time {
+    margin-left: 895px;
+  }
+}
+
+/* ✅ Medium Screens / Tablets (992px - 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+  .maincontent {
+    margin-left: 200px;
+    margin-top: -500px;
+    max-width: 1000px;
+  }
+
+  .date-time {
+    margin-left: 650px;
+  }
+}
+
+/* ✅ Small Tablets (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+  .maincontent {
+    margin-left: 150px;
+    margin-top: -400px;
+    max-width: 90%;
+  }
+
+  .date-time {
+    margin-left: 450px;
+  }
+
+  .user-welcome span {
+    margin-top: -20px;
+  }
+}
+
+/* ✅ Mobile (576px - 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+  .maincontent {
+    margin-left: 0;
+    margin-top: -200px;
+    max-width: 95%;
+  }
+
+  .date-time {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .user-welcome span {
+    margin-top: -10px;
+    display: block;
+  }
+}
+
+/* ✅ Extra Small Mobile (up to 575px) */
+@media (max-width: 575px) {
+  .maincontent {
+    margin-left: 0;
+    margin-top: -100px;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .date-time {
+    margin-left: 0;
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .user-welcome span {
+    margin-top: 0;
+    text-align: center;
+    display: block;
+  }
 }
 
 
@@ -561,6 +642,7 @@ textarea {
 /* Style for the dialog title */
 .mat-dialog-title {
   background-color: #3f51b5;
+ position: relative;
   color: white;
   padding: 16px 24px;
   margin: 0;
@@ -746,21 +828,38 @@ textarea {
 
 .kanban-card {
   background: white;
-  border-radius: 4px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  cursor: move;
-}
-
-.kanban-card .task-content {
+  border-radius: 3px;
+  padding: 8px;
   margin-bottom: 10px;
+  font-size: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  cursor: move;
+  max-width: 900px;
+  min-height: 50px;
+  max-height: 250px;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  position: relative; /* allow absolute positioning inside */
 }
 
-.kanban-card .actions {
+.task-content {
+  margin-top: 28px; /* push content below the buttons */
+}
+
+.actions {
+  position: absolute;
+  top: 5px;
+  right: 5px;
   display: flex;
-  justify-content: flex-end;
-  gap: 8px;
+  gap: 4px;
+}
+
+.actions button {
+  width: 37px;
+  top: 150PX;
+  height: 28px;
 }
 
 .empty-state {
@@ -868,4 +967,50 @@ textarea {
   .kanban-column {
     min-width: auto;
   }
+}
+
+.task-controls {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+  bottom: 50px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.pill-dropdown select {
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 50px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pill-dropdown select:focus {
+  border-color: #1976d2;
+  background: #fff;
+}
+
+.pill-btn {
+  padding: 8px 20px;
+  border-radius: 50px;
+  border: none;
+  background-color: #1976d2;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.pill-btn:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.pill-btn:hover:not(:disabled) {
+  background-color: #125aa0;
 }

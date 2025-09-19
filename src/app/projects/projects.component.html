@@ -13,24 +13,24 @@
     </div>
   </div>
 
-  <div class="project-controls">
-    <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()" class="project-select">
-      <option value="">-- All Projects --</option>
+<div class="task-controls">
+  <!-- Project Dropdown -->
+  <div class="pill-dropdown">
+    <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
+      <option value="">All Projects</option>
       <option *ngFor="let project of projects" [value]="project._id || project.id">
         {{ project.projectName || project.name || 'Untitled Project' }}
       </option>
     </select>
-    
   </div>
 
+  <!-- Add Task Button -->
+  <button class="pill-btn" (click)="openAssignmentDialog()" [disabled]="!selectedProjectId">
+    + Add Task
+  </button>
+</div>
 
-  <div class="add-task-container">
-    <button mat-raised-button color="primary" (click)="openAssignmentDialog()" 
-            [disabled]="!selectedProjectId" class="add-task-btn">
-      + Add Task
-    </button>
-    <span *ngIf="!selectedProjectId" class="hint-text">(Select a project to add tasks)</span>
-  </div>
+
 
  
   <div *ngIf="error" class="error-state">
@@ -67,10 +67,10 @@
            [cdkDragData]="task">
         <div class="task-content">
           <strong>Task Title:{{ task.title }}</strong><br>
-          <small *ngIf="task.description">Description:{{ task.description }}</small><br>
+         
           <small>Assigned To: {{ task.assignee }}</small><br>
           <small>Assignee: {{ task.assignedTo }}</small><br>
-          <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+         
           <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
             <small><strong>Comments: {{ task.comment.length }}</strong></small>
           </div>
@@ -106,10 +106,8 @@
            [cdkDragData]="task">
         <div class="task-content">
           <strong>Task Title:{{ task.title }}</strong><br>
-          <small *ngIf="task.description">Description:{{ task.description }}</small><br>
           <small>Assigned To: {{ task.assignee }}</small><br>
-          <small>Assignee: {{ task.assignedTo }}</small><br>
-          <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
+          <small>Assignee: {{ task.assignedTo }}</small><br>        
           <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
             <small><strong>Comments: {{ task.comment.length }}</strong></small>
           </div>
@@ -145,10 +143,8 @@
            [cdkDragData]="task">
         <div class="task-content">
           <strong>Task Title:{{ task.title }}</strong><br>
-          <small *ngIf="task.description">Description:{{ task.description }}</small><br>
           <small>Assigned To: {{ task.assignee }}</small><br>
           <small>Assignee: {{ task.assignedTo }}</small><br>
-          <small>Due: {{ task.dueDate | date:'mediumDate' }}</small>
           <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
             <small><strong>Comments: {{ task.comment.length }}</strong></small>
           </div>
@@ -224,7 +220,6 @@
   <div *ngFor="let comment of selectedTask?.comment || []" class="comment-item">
     <strong>{{ comment.user }}:</strong> {{ comment.message }}
     <br>
-    <small class="comment-time">{{ comment.timestamp | date:'medium' }}</small>
   </div>
 </div>
   

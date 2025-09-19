@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Subscription } from 'rxjs';
 import { CreatprojectService } from '../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
@@ -11,13 +13,13 @@ import { UserservicesService } from '../register/services/userservices.service';
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent implements OnInit, OnDestroy {
   userData: any = null;
   username = '';
   displayName = 'User';
   dateTime: string = new Date().toLocaleString();
   projects: any[] = [];
-  selectedProjectId = '';   
+  selectedProjectId = '';
   selectedProjectName = '';
 
   allAssignments: AssignWork[] = [];
@@ -27,7 +29,7 @@ export class ProjectsComponent implements OnInit {
 
   assignmentForm!: FormGroup;
   commentForm!: FormGroup;
-  
+
   editingTask: AssignWork | null = null;
   selectedTask: AssignWork | null = null;
   @ViewChild('assignmentDialog') assignmentDialog!: TemplateRef<any>;
@@ -37,12 +39,17 @@ export class ProjectsComponent implements OnInit {
   error = '';
   successMessage = '';
 
+  private subs = new Subscription();
+  private dateIntervalId: any = null;
+searchQuery: any;
+
   constructor(
     private projectService: CreatprojectService,
     private assignworkService: AssignWorkService,
     private userService: UserservicesService,
     private fb: FormBuilder,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -53,20 +60,29 @@ export class ProjectsComponent implements OnInit {
     this.updateDateTime();
   }
 
+  ngOnDestroy(): void {
+    if (this.dateIntervalId) {
+      clearInterval(this.dateIntervalId);
+      this.dateIntervalId = null;
+    }
+    this.subs.unsubscribe();
+  }
+
   private updateDateTime() {
-    setInterval(() => {
+    this.dateIntervalId = setInterval(() => {
       this.dateTime = new Date().toLocaleString();
     }, 1000);
   }
 
   private initForm() {
+  
     this.assignmentForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
-      assignedTo: [this.username, Validators.required],
+      assignedTo: ['', Validators.required],
       assignee: ['', Validators.required],
       startDate: [''],
-      dueDate: ['', Validators.required],
+      dueDate: [new Date(), Validators.required],
       Status: ['ToDo']
     });
   }
@@ -104,7 +120,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   private loadEmployees() {
-    this.userService.getuser().subscribe({
+    const s = this.userService.getuser().subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
           this.employees = res;
@@ -123,6 +139,7 @@ export class ProjectsComponent implements OnInit {
         this.employees = ['Sabari', 'Ramesh', 'Anitha', 'Vijay'];
       }
     });
+    this.subs.add(s);
   }
 
   getEmployeeValue(emp: any): string {
@@ -134,7 +151,7 @@ export class ProjectsComponent implements OnInit {
   }
 
   fetchProjectsByEmployee(userName: string) {
-    this.projectService.getProjectsByEmployee(userName).subscribe({
+    const s = this.projectService.getProjectsByEmployee(userName).subscribe({
       next: (res: any) => {
         if (Array.isArray(res)) {
           this.projects = res;
@@ -150,17 +167,28 @@ export class ProjectsComponent implements OnInit {
         this.projects = [];
       }
     });
+    this.subs.add(s);
   }
 
   onProjectSelect() {
-    const selectedProject = this.projects.find(p => p._id === this.selectedProjectId || p.id === this.selectedProjectId);
-    this.selectedProjectName = selectedProject?.projectName || selectedProject?.name || '';
+    const selectedProject = this.projects.find(p =>
+      String(p._id) === String(this.selectedProjectId) ||
+      String(p.id) === String(this.selectedProjectId)
+    );
+
+    if (!selectedProject && this.selectedProjectId) {
+      console.warn('Selected projectId not found in loaded projects:', this.selectedProjectId);
+      this.selectedProjectName = '';
+    } else {
+      this.selectedProjectName = selectedProject?.projectName || selectedProject?.name || '';
+    }
+
     this.filterAssignmentsByProject();
   }
 
   getAssignments() {
     this.loading = true;
-    this.assignworkService.getAssignments().subscribe({
+    const s = this.assignworkService.getAssignments().subscribe({
       next: (res: any) => {
         this.loading = false;
         if (Array.isArray(res)) {
@@ -181,29 +209,27 @@ export class ProjectsComponent implements OnInit {
         this.clearAssignments();
       }
     });
+    this.subs.add(s);
   }
 
   private filterAssignmentsByProject() {
     let filteredAssignments: AssignWork[] = [];
-    
-    if (this.selectedProjectId) {
 
-      filteredAssignments = this.allAssignments.filter(a => 
-        a.projectId === this.selectedProjectId || 
-        a.projectName === this.selectedProjectName
+    if (this.selectedProjectId) {
+      filteredAssignments = this.allAssignments.filter(a =>
+        String(a.projectId) === String(this.selectedProjectId) ||
+        String(a.projectId || '') === String(this.selectedProjectId) ||
+        String(a.projectName || '').toLowerCase() === String(this.selectedProjectName || '').toLowerCase()
       );
     } else {
-   
       filteredAssignments = this.allAssignments.filter(
-        a => a.assignedTo === this.username || a.assignee === this.username
+        a => String(a.assignedTo) === String(this.username) || String(a.assignee) === String(this.username)
       );
     }
-
 
     this.todoAssignments = [];
     this.inProgressAssignments = [];
     this.doneAssignments = [];
-
 
     filteredAssignments.forEach(assignment => {
       const status = (assignment.Status || 'ToDo').toLowerCase().trim();
@@ -225,32 +251,24 @@ export class ProjectsComponent implements OnInit {
   }
 
   openAssignmentDialog(task?: AssignWork) {
-
     if (!this.selectedProjectId && !task) {
       this.error = "Please select a project first to add tasks";
-      setTimeout(() => this.error = '', 3000);
+      this.snackBar.open(this.error, 'Close', { duration: 3000 });
+      this.error = '';
       return;
     }
 
     this.editingTask = task || null;
     this.selectedTask = task || null;
-    
-    let title = '';
-    let description = '';
-
-    if (task) {
-      title = task.title || '';
-      description = task.description || '';
-    }
 
     const formData = task
-      ? { 
-          title: title,
-          description: description,
-          assignedTo: task.assignedTo,
-          assignee: task.assignee,
+      ? {
+          title: task.title || '',
+          description: task.description || '',
+          assignedTo: task.assignedTo || this.username,
+          assignee: task.assignee || '',
           startDate: task.startDate ? new Date(task.startDate) : '',
-          dueDate: new Date(task.dueDate),
+          dueDate: task.dueDate ? new Date(task.dueDate) : new Date(),
           Status: task.Status || 'ToDo'
         }
       : {
@@ -262,25 +280,29 @@ export class ProjectsComponent implements OnInit {
           dueDate: new Date(),
           Status: 'ToDo'
         };
-        
+
     this.assignmentForm.reset(formData);
     this.commentForm.reset();
 
-    const dialogRef = this.dialog.open(this.assignmentDialog, { 
+    const dialogRef = this.dialog.open(this.assignmentDialog, {
       width: '1000px',
       maxWidth: '95vw',
       maxHeight: '90vh'
     });
-    
-    dialogRef.afterClosed().subscribe(() => {
-      this.assignmentForm.reset({ 
+
+    const afterSub = dialogRef.afterClosed().subscribe(() => {
+      this.assignmentForm.reset({
         assignedTo: this.username,
         Status: 'ToDo'
       });
       this.commentForm.reset();
       this.editingTask = null;
       this.selectedTask = null;
+      afterSub.unsubscribe();
     });
+
+
+    this.subs.add(afterSub);
   }
 
   addComment() {
@@ -293,62 +315,76 @@ export class ProjectsComponent implements OnInit {
       timestamp: new Date()
     };
 
-    
     const comments = this.selectedTask.comment ? [...this.selectedTask.comment] : [];
     comments.push(newComment);
-
-
     this.selectedTask.comment = comments;
-    
-  
-    this.commentForm.reset();
+
+    if (this.selectedTask._id) {
+      const payload = { ...this.selectedTask, comment: comments };
+      const s = this.assignworkService.updateAssignment(this.selectedTask._id, payload).subscribe({
+        next: () => {
+          this.snackBar.open('Comment added', 'Close', { duration: 2000 });
+          this.commentForm.reset();
+          this.getAssignments();
+        },
+        error: () => {
+          this.snackBar.open('Failed to add comment', 'Close', { duration: 3000 });
+          const arr = this.selectedTask?.comment || [];
+          arr.pop();
+          this.selectedTask!.comment = arr;
+        }
+      });
+      this.subs.add(s);
+    } else {
+      this.snackBar.open('Comment added locally (save task to persist)', 'Close', { duration: 3000 });
+      this.commentForm.reset();
+    }
   }
 
   saveAssignment() {
     if (this.assignmentForm.invalid) {
+      this.snackBar.open('Please fill required fields', 'Close', { duration: 2500 });
       return;
     }
 
     const formValue = this.assignmentForm.value;
     const payload: any = {
-      projectName: this.selectedProjectName,
+      projectName: this.selectedProjectName || (this.editingTask?.projectName || ''),
       title: formValue.title,
       description: formValue.description,
       comment: this.editingTask?.comment || [],
-      assignedTo: this.username,
+      assignedTo: formValue.assignedTo || this.username,
       assignee: formValue.assignee,
       startDate: formValue.startDate ? new Date(formValue.startDate).toISOString().split('T')[0] : '',
-      dueDate: new Date(formValue.dueDate).toISOString().split('T')[0],
-      Status: this.editingTask ? this.editingTask.Status : 'ToDo',
-      projectId: this.selectedProjectId || ''
+      dueDate: formValue.dueDate ? new Date(formValue.dueDate).toISOString().split('T')[0] : '',
+      Status: formValue.Status || (this.editingTask ? this.editingTask.Status : 'ToDo'),
+      projectId: this.selectedProjectId || (this.editingTask?.projectId || '')
     };
 
     if (this.editingTask && this.editingTask._id) {
-      this.assignworkService.updateAssignment(this.editingTask._id, payload).subscribe({
+      const s = this.assignworkService.updateAssignment(this.editingTask._id, payload).subscribe({
         next: () => {
-          this.successMessage = 'Task updated successfully';
+          this.snackBar.open('Task updated successfully', 'Close', { duration: 2500 });
           this.getAssignments();
           this.dialog.closeAll();
-          setTimeout(() => this.successMessage = '', 3000);
         },
         error: () => {
-          this.error = 'Failed to update task';
-          setTimeout(() => this.error = '', 3000);
+          this.snackBar.open('Failed to update task', 'Close', { duration: 3000 });
         }
       });
+      this.subs.add(s);
     } else {
-      this.assignworkService.createAssignment(payload).subscribe({
+      const s = this.assignworkService.createAssignment(payload).subscribe({
         next: () => {
-          this.successMessage = 'Task created successfully';
+          this.snackBar.open('Task created successfully', 'Close', { duration: 2500 });
           this.getAssignments();
           this.dialog.closeAll();
-          setTimeout(() => this.successMessage = '', 3000);
         },
         error: () => {
-          this.error = 'Failed to create task';
-          setTimeout(() => this.error = '', 3000);
+          this.snackBar.open('Failed to create task', 'Close', { duration: 3000 });
         }
       });
+      this.subs.add(s);
     }
   }
 
@@ -356,55 +392,74 @@ export class ProjectsComponent implements OnInit {
     if (!id) return;
     if (!confirm('Are you sure you want to delete this assignment?')) return;
 
-    this.assignworkService.deleteAssignment(id).subscribe({
+    const s = this.assignworkService.deleteAssignment(id).subscribe({
       next: () => {
-        this.successMessage = 'Task deleted successfully';
-        this.getAssignments();
-        setTimeout(() => this.successMessage = '', 3000);
+        this.snackBar.open('Task deleted successfully', 'Close', { duration: 2500 });
+        this.removeAssignmentFromLocal(id);
       },
       error: () => {
-        this.error = 'Failed to delete task';
-        setTimeout(() => this.error = '', 3000);
+        this.snackBar.open('Failed to delete task', 'Close', { duration: 3000 });
       }
     });
+    this.subs.add(s);
+  }
+
+  private removeAssignmentFromLocal(id: string) {
+    const removeFrom = (arr: AssignWork[]) => {
+      const idx = arr.findIndex(a => String(a._id) === String(id));
+      if (idx > -1) arr.splice(idx, 1);
+    };
+    removeFrom(this.allAssignments);
+    removeFrom(this.todoAssignments);
+    removeFrom(this.inProgressAssignments);
+    removeFrom(this.doneAssignments);
   }
 
   drop(event: CdkDragDrop<AssignWork[]>, newStatus: string) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      return;
+    }
+
+    const movedTask = event.previousContainer.data[event.previousIndex];
+    if (!movedTask) return;
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+
+    const previousStatus = movedTask.Status;
+    movedTask.Status = newStatus;
+
+    if (movedTask._id) {
+      const updatePayload = { ...movedTask, Status: newStatus };
+      const s = this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
+        next: () => {
+  
+          this.getAssignments();
+        },
+        error: () => {
+          transferArrayItem(
+            event.container.data,
+            event.previousContainer.data,
+            event.currentIndex,
+            event.previousIndex
+          );
+          movedTask.Status = previousStatus;
+          this.snackBar.open('Failed to update task status', 'Close', { duration: 3000 });
+        }
+      });
+      this.subs.add(s);
     } else {
-      const movedTask = event.previousContainer.data[event.previousIndex];
-
       transferArrayItem(
-        event.previousContainer.data,
         event.container.data,
-        event.previousIndex,
-        event.currentIndex
+        event.previousContainer.data,
+        event.currentIndex,
+        event.previousIndex
       );
-
-      if (movedTask && movedTask._id) {
-        const updatePayload = { 
-          ...movedTask,
-          Status: newStatus 
-        };
-
-        this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
-          next: () => {
-            movedTask.Status = newStatus;
-            this.getAssignments(); 
-          },
-          error: () => {
-            transferArrayItem(
-              event.container.data,
-              event.previousContainer.data,
-              event.currentIndex,
-              event.previousIndex
-            );
-            this.error = 'Failed to update task status';
-            setTimeout(() => this.error = '', 3000);
-          }
-        });
-      }
+      this.snackBar.open('Cannot change status for unsaved task', 'Close', { duration: 3000 });
     }
   }
 }
