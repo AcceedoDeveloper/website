@@ -76,14 +76,15 @@
        cdkDrag
        [cdkDragData]="task">
        
-    <div class="task-header">
-       <div class="task-title">
-        <strong> Task:{{ task.title }}</strong>
-      </div>
-         <div class="assigned-to">
-        <strong>Assigned To: {{ task.assignee }}</strong>
-      </div>
-    </div>
+  <div class="task-header-clean">
+  <div class="task-info-clean">
+    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
+  </div>
+  <div class="task-info-clean">
+    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
+  </div>
+</div>
+
 
     <div class="task-footer">
       <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
@@ -118,14 +119,14 @@
            class="kanban-card"
            cdkDrag
            [cdkDragData]="task">
-     <div class="task-header">
-      <div class="task-title">
-        <strong> Task:{{ task.title }}</strong>
-      </div>
-         <div class="assigned-to">
-        <strong>Assigned To: {{ task.assignee }}</strong>
-      </div>
-    </div>
+<div class="task-header-clean">
+  <div class="task-info-clean">
+    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
+  </div>
+  <div class="task-info-clean">
+    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
+  </div>
+</div>
 
     <div class="task-footer">
       <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
@@ -161,14 +162,15 @@
            class="kanban-card"
            cdkDrag
            [cdkDragData]="task">
-      <div class="task-header">
-   <div class="task-title">
-        <strong> Task:{{ task.title }}</strong>
-      </div>
-         <div class="assigned-to">
-        <strong>Assigned To: {{ task.assignee }}</strong>
-      </div>
-    </div>
+<div class="task-header-clean">
+  <div class="task-info-clean">
+    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
+  </div>
+  <div class="task-info-clean">
+    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
+  </div>
+</div>
+
 
     <div class="task-footer">
       <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">

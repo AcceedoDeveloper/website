@@ -55,10 +55,10 @@
           </div>
 
           <div class="employees-dropdown" *ngIf="showTeamLeadsDropdown">
-            <div class="employee-search">
+            <!-- <div class="employee-search">
               <input type="text" placeholder="Search team leads..." [(ngModel)]="teamLeadsSearchText"
                 (click)="$event.stopPropagation()" />
-            </div>
+            </div> -->
             <div class="employee-list">
               <div *ngFor="let employee of getFilteredTeamLeads()" class="employee-item"
                 (click)="$event.stopPropagation(); toggleTeamLeadSelection(employee)" 
@@ -81,16 +81,16 @@
           <label>Select Employees *</label>
           <div class="employees-input-container"
             (click)="$event.stopPropagation(); showEmployeeDropdown = !showEmployeeDropdown">
-            <input type="text" placeholder="Search employees..." [value]="getSelectedEmployeesNames()"
+            <input type="text" placeholder="" [value]="getSelectedEmployeesNames()"
               (click)="$event.stopPropagation(); showEmployeeDropdown = true" readonly />
             <i class="fa fa-chevron-down"></i>
           </div>
 
           <div class="employees-dropdown" *ngIf="showEmployeeDropdown">
-            <div class="employee-search">
+            <!-- <div class="employee-search">
               <input type="text" placeholder="Search employees..." [(ngModel)]="employeeSearchText"
                 (click)="$event.stopPropagation()" />
-            </div>
+            </div> -->
             <div class="employee-list">
               <div *ngFor="let employee of getFilteredEmployees()" class="employee-item"
                 (click)="$event.stopPropagation(); toggleEmployeeSelection(employee)" 
@@ -236,10 +236,10 @@
           </div>
 
           <div class="edit-employees-dropdown" *ngIf="showEditEmployeeDropdown">
-            <div class="employee-search">
+            <!-- <div class="employee-search">
               <input type="text" placeholder="Search employees..." [(ngModel)]="editEmployeeSearchText"
                 (click)="$event.stopPropagation()" />
-            </div>
+            </div> -->
             <div class="employee-list">
               <div *ngFor="let employee of getEditFilteredEmployees()" class="employee-item"
                 (click)="$event.stopPropagation(); toggleEditEmployeeSelection(employee)" 

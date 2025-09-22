@@ -1081,3 +1081,54 @@ textarea {
   font-size: 14px;
   margin-top: 10px;
 }
+.task-header-clean {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-info-clean {
+  font-size: 15px;
+}
+
+.heading-clean {
+  color: #1976d2; 
+}
+
+.point-clean {
+  color: #e53935; 
+}
+
+.task-header-clean {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.task-info-clean {
+  font-size: 14px;
+}
+
+
+#todo-list .heading-clean {
+  color: #1e88e5; 
+}
+#todo-list .point-clean {
+  color: #000000; 
+}
+
+
+#progress-list .heading-clean {
+  color: #f9a825; 
+}
+#progress-list .point-clean {
+  color: #000000; 
+}
+
+#done-list .heading-clean {
+  color: #43a047; 
+}
+#done-list .point-clean {
+  color: #000000; 
+}

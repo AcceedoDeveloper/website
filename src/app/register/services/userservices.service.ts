@@ -14,7 +14,6 @@ interface User {
   subDepartmentName?: string;
   photo?: string;
   photoURL?: string;
-  // Add other user properties as needed
 }
 
 @Injectable({ providedIn: 'root' })
@@ -35,9 +34,8 @@ export class UserservicesService {
   }
 
   edituser(_id: any, formData: FormData): Observable<any> {
-  return this.httpuser.put(`${this.edituserapi}/${_id}`, formData);
-}
-
+    return this.httpuser.put(`${this.edituserapi}/${_id}`, formData);
+  }
 
   deleteuser(_id: any): Observable<any> {
     return this.httpuser.delete(`${this.deleteuserapi}/${_id}`);

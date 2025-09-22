@@ -11,15 +11,17 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./registermat.component.css']
 })
 export class RegistermatComponent implements OnInit {
-[x: string]: any;
   registerForm: FormGroup;
   roles: any[] = [];
-departments: any[] = [];
-subDepartmentsData: any[] = [];
-isEdit = false;
-selectedFile: File | null = null;
-selectedFileName: string = '';
-previewImage: string | ArrayBuffer | null = null;
+  departments: any[] = [];
+  subDepartmentsData: any[] = [];
+  isEdit = false;
+  selectedFile: File | null = null;
+  selectedFileName: string = '';
+  previewImage: string | ArrayBuffer | null = null;
+  existingImageUrl: string | null = null;
+  existingPhotoField: string | null = null;
+
   constructor(
     private fb: FormBuilder,
     private userservice: UserservicesService,
@@ -51,28 +53,43 @@ previewImage: string | ArrayBuffer | null = null;
     }
   }
 
-patchForm(item: any) {
-  this.registerForm.patchValue({
-    userCode: item.userCode || item.UserCode || '',  
-    name: item.name || item.UserName || '',               
-    userName: item.userName || item.userName || '',
-    emailId: item.emailId || item.Email || '',
-    phoneNumber: item.phoneNumber || item.Phone || '',
-    role: item.role?.role || item.role || '',
-    departmentName: item.department?.departmentName || item.departmentName || '',
-    subDepartmentName: item.subDepartment || ''
-  });
+  patchForm(item: any) {
+    this.registerForm.patchValue({
+      userCode: item.userCode || item.UserCode || '',  
+      name: item.name || item.UserName || '',               
+      userName: item.userName || item.userName || '',
+      emailId: item.emailId || item.Email || '',
+      phoneNumber: item.phoneNumber || item.Phone || '',
+      role: item.role?.role || item.role || '',
+      departmentName: item.department?.departmentName || item.departmentName || '',
+      subDepartmentName: item.subDepartment || ''
+    });
 
+    this.existingPhotoField = item.photo || null;
+    
 
-  if (item.department && item.department.subDepartments) {
-    this.subDepartmentsData = item.department.subDepartments;
-  } else {
-    this.subDepartmentsData = [];
+    if (item.photoURL) {
+      this.existingImageUrl = item.photoURL;
+      this.previewImage = item.photoURL;
+    } else if (item.photo) {
+
+      if (item.photo.startsWith('http')) {
+        this.existingImageUrl = item.photo;
+        this.previewImage = item.photo;
+      } else {
+        this.existingImageUrl = `http://localhost:3008/uploads/${item.photo}`;
+        this.previewImage = this.existingImageUrl;
+      }
+    }
+
+    if (item.department && item.department.subDepartments) {
+      this.subDepartmentsData = item.department.subDepartments;
+    } else {
+      this.subDepartmentsData = [];
+    }
+
+    this.registerForm.get('password')?.reset('');
   }
-
-
-  this.registerForm.get('password')?.reset('');
-}
 
   loadRoles() {
     this.httprole.Loadrole().subscribe({
@@ -96,75 +113,81 @@ patchForm(item: any) {
     const deptName = event.target.value;
     const dept = this.departments.find(d => d.departmentName === deptName);
     this.subDepartmentsData = dept ? dept.subDepartments : [];
-    this.registerForm.patchValue({ subDepartmentName: '' }); // reset subDept
+    this.registerForm.patchValue({ subDepartmentName: '' });
   }
 
   cancel() {
-    this.dialogRef.close(true);
+    this.dialogRef.close(false);
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
 
-
-onFileSelected(event: any) {
-  const file = event.target.files[0];
-  if (file) {
-    this.selectedFile = file;
-
-    // Show preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.previewImage = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewImage = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
+  onSubmit() {
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
 
-}
-onSubmit() {
-  if (this.registerForm.invalid) {
-    this.registerForm.markAllAsTouched();
-    return;
+    const formValue = this.registerForm.value;
+    const formData = new FormData();
+
+    formData.append('userCode', formValue.userCode);
+    formData.append('name', formValue.name);
+    formData.append('userName', formValue.userName);
+    formData.append('emailId', formValue.emailId);
+    formData.append('phoneNumber', formValue.phoneNumber);
+    formData.append('role', formValue.role);
+    formData.append('department', formValue.departmentName);
+    formData.append('subDepartment', formValue.subDepartmentName);
+
+    if (formValue.password) {
+      formData.append('password', formValue.password);
+    }
+
+    if (this.selectedFile) {
+      formData.append('photo', this.selectedFile);
+    } else if (this.existingPhotoField && !this.selectedFile) {
+      formData.append('keepExistingImage', 'true');
+    }
+
+    if (this.isEdit) {
+      this.userservice.edituser(this.data.item._id, formData).subscribe({
+        next: (response: any) => {
+          const updatedUser = {
+            ...this.data.item,
+            ...response,
+            photoURL: response.photoURL || this.existingImageUrl,
+            photo: response.photo || this.existingPhotoField
+          };
+          this.dialogRef.close(updatedUser);
+        },
+        error: (err) => {
+          console.error('Error updating user:', err);
+          alert('Failed to update user. Please try again.');
+        }
+      });
+    } else {
+      this.userservice.saveuser(formData).subscribe({
+        next: (response: any) => {
+          this.registerForm.reset();
+          this.previewImage = null;
+          this.selectedFile = null;
+          this.dialogRef.close(response);
+        },
+        error: (err) => console.error('Error saving user:', err)
+      });
+    }
   }
-
-  const formValue = this.registerForm.value;
-  const formData = new FormData();
-
-  formData.append('userCode', formValue.userCode);
-  formData.append('name', formValue.name);
-  formData.append('userName', formValue.userName);
-  formData.append('emailId', formValue.emailId);
-  formData.append('phoneNumber', formValue.phoneNumber);
-  formData.append('role', formValue.role);
-  formData.append('department', formValue.departmentName);
-  formData.append('subDepartment', formValue.subDepartmentName);
-
-  if (formValue.password) {
-    formData.append('password', formValue.password);
-  }
-
-  if (this.selectedFile) {
-    formData.append('photo', this.selectedFile); // ✅ must match backend multer config
-  }
-
-  // Debug
-  formData.forEach((value, key) => console.log(`${key}:`, value));
-
-  if (this.isEdit) {
-    this.userservice.edituser(this.data.item._id, formData).subscribe({
-      next: () => this.dialogRef.close(true),
-      error: (err) => console.error('Error updating user:', err)
-    });
-  } else {
-    this.userservice.saveuser(formData).subscribe({
-      next: () => {
-        this.registerForm.reset();
-        this.previewImage = null;
-        this.selectedFile = null;
-        this.dialogRef.close(true);
-      },
-      error: (err) => console.error('Error saving user:', err)
-    });
-  }
-}
-
 }

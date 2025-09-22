@@ -21,7 +21,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   projects: any[] = [];
   selectedProjectId = '';
   selectedProjectName = '';
-  getcurrentUserData: any;
+  selectedProjectTeamLeads: string[] = [];
 
   allAssignments: AssignWork[] = [];
   todoAssignments: AssignWork[] = [];
@@ -42,7 +42,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   private subs = new Subscription();
   private dateIntervalId: any = null;
-  searchQuery: any;
 
   constructor(
     private projectService: CreatprojectService,
@@ -77,7 +76,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
 
   private initForm() {
-  
     this.assignmentForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
@@ -133,12 +131,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         } else {
           this.employees = [];
         }
-        if (this.employees.length === 0) {
-          this.employees = ['Sabari', 'Ramesh', 'Anitha', 'Vijay'];
-        }
       },
       error: () => {
-        this.employees = ['Sabari', 'Ramesh', 'Anitha', 'Vijay'];
+        this.employees = [];
       }
     });
     this.subs.add(s);
@@ -196,33 +191,26 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     );
 
     if (!selectedProject && this.selectedProjectId) {
-      console.warn('Selected projectId not found in loaded projects:', this.selectedProjectId);
       this.selectedProjectName = '';
+      this.selectedProjectTeamLeads = [];
     } else {
       this.selectedProjectName = selectedProject?.projectName || selectedProject?.name || '';
+      this.selectedProjectTeamLeads = selectedProject?.teamLeads || [];
     }
 
     this.filterAssignmentsByProject();
   }
 
-
-  private processUserImage(user: any): any {
-    const processedUser = { ...user };
+  isCurrentUserTeamLead(): boolean {
+    if (!this.selectedProjectTeamLeads.length) return false;
     
-    if (processedUser.photo) {
-      if (processedUser.photo.startsWith('http')) {
-        processedUser.photoURL = processedUser.photo;
-      } else {
-        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
-      }
-    } else {
-      processedUser.photoURL = 'assets/default-avatar.png';
-    }
     
-    return processedUser;
+    return this.selectedProjectTeamLeads.some(lead => 
+      lead === this.username || 
+      lead === this.userData?.UserName || 
+      lead === this.userData?.username
+    );
   }
-
-
 
   getAssignments() {
     this.loading = true;
@@ -296,6 +284,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Check if current user is a team lead for the selected project
+    if (!this.isCurrentUserTeamLead() && !task) {
+      this.error = "Only team leads can assign tasks to this project";
+      this.snackBar.open(this.error, 'Close', { duration: 3000 });
+      this.error = '';
+      return;
+    }
+
     this.editingTask = task || null;
     this.selectedTask = task || null;
 
@@ -338,7 +334,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       this.selectedTask = null;
       afterSub.unsubscribe();
     });
-
 
     this.subs.add(afterSub);
   }
@@ -475,7 +470,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       const updatePayload = { ...movedTask, Status: newStatus };
       const s = this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
         next: () => {
-  
           this.getAssignments();
         },
         error: () => {

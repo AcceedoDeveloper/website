@@ -42,7 +42,6 @@ export class RegisterComponent {
   showConfirmPassword = false;
   authService: any;
 
-  // Pagination properties
   currentPage = 1;
   itemsPerPage = 10;
   totalPages = 1;
@@ -72,7 +71,6 @@ export class RegisterComponent {
   users: any[] = [];
   userData: any = null;
 
-  // Pagination methods
   get startIndex(): number {
     return (this.currentPage - 1) * this.itemsPerPage;
   }
@@ -88,7 +86,7 @@ export class RegisterComponent {
   updatePagination() {
     this.totalPages = Math.ceil(this.filteredUsers.length / this.itemsPerPage);
     
-    // Ensure current page is within valid range
+
     if (this.currentPage > this.totalPages && this.totalPages > 0) {
       this.currentPage = this.totalPages;
     } else if (this.totalPages === 0) {
@@ -139,47 +137,47 @@ export class RegisterComponent {
     const pages: number[] = [];
     
     if (this.totalPages <= maxVisiblePages) {
-      // Show all pages if total pages is less than max visible
+
       for (let i = 1; i <= this.totalPages; i++) {
         pages.push(i);
       }
       this.showEllipsis = false;
     } else {
-      // Always show first page
+
       pages.push(1);
       
-      // Calculate start and end of page range
+
       let startPage = Math.max(2, this.currentPage - 1);
       let endPage = Math.min(this.totalPages - 1, this.currentPage + 1);
       
-      // Adjust if we're at the beginning
+
       if (this.currentPage <= 3) {
         endPage = 4;
       }
       
-      // Adjust if we're at the end
+     
       if (this.currentPage >= this.totalPages - 2) {
         startPage = this.totalPages - 3;
       }
       
-      // Add ellipsis after first page if needed
+
       if (startPage > 2) {
         this.showEllipsis = true;
       } else {
         this.showEllipsis = false;
       }
       
-      // Add middle pages
+ 
       for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
       
-      // Add ellipsis before last page if needed
+
       if (endPage < this.totalPages - 1) {
         this.showEllipsis = true;
       }
       
-      // Always show last page
+
       pages.push(this.totalPages);
     }
     
@@ -205,7 +203,7 @@ export class RegisterComponent {
     this.updatePagination();
   }
 
-  // Rest of your existing methods remain the same...
+
   onNavCheckChange(event: Event) {
     const target = event.target as HTMLInputElement;
     this.isNavOpen = target.checked;
@@ -301,35 +299,88 @@ export class RegisterComponent {
     });
   }
 
-  private processUserImage(user: any): any {
-    const processedUser = { ...user };
-    
-    if (processedUser.photo) {
-      if (processedUser.photo.startsWith('http')) {
-        processedUser.photoURL = processedUser.photo;
-      } else {
-        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
-      }
-    } else {
-      processedUser.photoURL = 'assets/default-avatar.png';
-    }
-    
-    return processedUser;
-  }
 
-  editUser(item: any) {
-    this.dialog.open(RegistermatComponent, {
-      width: '80vw',
-      height: 'auto',
-      maxHeight: '90vh',
-      panelClass: 'custom-dialog',
-      data: { item }
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        this.getuserdata();
+editUser(item: any) {
+  const dialogRef = this.dialog.open(RegistermatComponent, {
+    width: '80vw',
+    height: 'auto',
+    maxHeight: '90vh',
+    panelClass: 'custom-dialog',
+    data: { item }
+  });
+  
+  dialogRef.afterClosed().subscribe((updatedUser: any) => {
+    if (updatedUser) {
+
+      const index = this.userdata.findIndex((u: any) => u._id === updatedUser._id);
+      if (index !== -1) {
+
+        const processedUser = this.processUserImage(updatedUser);
+        this.userdata[index] = processedUser;
+        
+
+        const filteredIndex = this.filteredUsers.findIndex((u: any) => u._id === updatedUser._id);
+        if (filteredIndex !== -1) {
+          this.filteredUsers[filteredIndex] = processedUser;
+        }
+        
+
+        this.updatePagination();
       }
-    });
+      
+
+      if (this.userData && this.userData._id === item._id) {
+        this.updateCurrentUserData(updatedUser);
+      }
+    }
+  });
+}
+
+
+private updateCurrentUserData(updatedUser: any): void {
+
+  const userStr = sessionStorage.getItem('user');
+  if (userStr) {
+    const userData = JSON.parse(userStr);
+    const updatedUserData = {
+      ...userData,
+      photoURL: updatedUser.photoURL || userData.photoURL,
+      photo: updatedUser.photo || userData.photo
+    };
+    sessionStorage.setItem('user', JSON.stringify(updatedUserData));
+    
+
+    this.userData = updatedUserData;
   }
+}
+
+private processUserImage(user: any): any {
+  const processedUser = { ...user };
+  
+
+  if (processedUser.photoURL) {
+
+    if (processedUser.photoURL.startsWith('http')) {
+      processedUser.photoURL = processedUser.photoURL;
+    } else {
+
+      processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photoURL}`;
+    }
+  } 
+
+  else if (processedUser.photo) {
+    if (processedUser.photo.startsWith('http')) {
+      processedUser.photoURL = processedUser.photo;
+    } else {
+      processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+    }
+  } 
+  else {
+    processedUser.photoURL = 'assets/default-avatar.png';
+  }
+  
+  return processedUser;
+}
 
   deleteUser(ID: any) {
     if (confirm('Are you sure you want to delete this user?')) {
@@ -346,20 +397,28 @@ export class RegisterComponent {
     }
   }
 
-  showcreateuserss() {
-    this.dialog.open(RegistermatComponent, {
-      width: '90vw',
-      maxWidth: '65vw',
-      height: '90vh',
-      maxHeight: '90vh',
-      panelClass: 'custom-dialog',
-      data: {}
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        this.getuserdata();
-      }
-    });
-  }
+showcreateuserss() {
+  const dialogRef = this.dialog.open(RegistermatComponent, {
+    width: '90vw',
+    maxWidth: '65vw',
+    height: '90vh',
+    maxHeight: '90vh',
+    panelClass: 'custom-dialog',
+    data: {}
+  });
+  
+  dialogRef.afterClosed().subscribe((newUser: any) => {
+    if (newUser) {
+      const processedUser = this.processUserImage(newUser);
+      this.userdata.unshift(processedUser);
+      this.filteredUsers.unshift(processedUser);
+      
+
+      this.updatePagination();
+    }
+  });
+}
+
 
   isAdmin(): boolean {
     const role = sessionStorage.getItem('role') || this.userData?.role || '';
@@ -375,7 +434,7 @@ export class RegisterComponent {
       this.dropdownOpen = !this.dropdownOpen;
     }
   
-    //show role
+
     getrole()
     {
       this.showrole=!this.showrole;
@@ -433,7 +492,6 @@ export class RegisterComponent {
       this.isModalOpen = false;
     }
   
-    // Profile Modal Methods
     openEditProfile() {
       this.editUserData = { ...this.userData };
       this.showEditModal = true;
@@ -442,7 +500,7 @@ export class RegisterComponent {
     closeEditModal() {
       this.showEditModal = false;
     }
- saveProfilePicture() {
+saveProfilePicture() {
   if (!this.selectedFile) return;
 
   const filePath = `profileImages/${this.userData.uid}_${Date.now()}_${this.selectedFile.name}`;
@@ -451,22 +509,34 @@ export class RegisterComponent {
 
   task.snapshotChanges().pipe(
     finalize(() => {
-      fileRef.getDownloadURL().subscribe((url: any) => {
-        this.editUserData.photoURL = url; 
+      fileRef.getDownloadURL().subscribe((url: string) => {
 
-        
         this.afs.collection('users').doc(this.userData.uid)
           .update({ photoURL: url })
           .then(() => {
-            console.log('✅ Profile image updated');
-            this.userData.photoURL = url; 
+            console.log('✅ Profile image updated in Firestore');
+            this.userData = {
+              ...this.userData,
+              photoURL: url
+            };
+
+            this.editUserData = {
+              ...this.editUserData,
+              photoURL: url
+            };
+
+            sessionStorage.setItem('user', JSON.stringify(this.userData));
+
+            this.selectedFile = null;
             this.showEditModal = false;
+
           })
           .catch(err => console.error('❌ Firestore update error', err));
       });
     })
   ).subscribe();
 }
+
 
   
 
@@ -475,15 +545,22 @@ onPhotoSelected(event: any) {
   if (file) {
     this.selectedFile = file;
 
-    // Show preview
     const reader = new FileReader();
     reader.onload = () => {
       this.previewImage = reader.result;
-      this.editUserData.photoURL = this.previewImage; 
+      this.editUserData = {
+        ...this.editUserData,
+        photoURL: this.previewImage
+      };
+      this.userData = {
+        ...this.userData,
+        photoURL: this.previewImage
+      };
     };
     reader.readAsDataURL(file);
   }
 }
+
 
   
     signOut() {

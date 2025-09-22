@@ -578,7 +578,7 @@ saveEdit() {
     return;
   }
 
-  // Format date helper
+
   const formatDate = (date: any) => {
     if (!date) return '';
     if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
