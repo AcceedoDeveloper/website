@@ -14,7 +14,36 @@ import { MatIconModule } from "@angular/material/icon";
 
 })
 export class RegisterComponent {
+filterUsers() {
+throw new Error('Method not implemented.');
+}
+onItemsPerPageChange() {
+throw new Error('Method not implemented.');
+}
+goToFirstPage() {
+throw new Error('Method not implemented.');
+}
+previousPage() {
+throw new Error('Method not implemented.');
+}
+goToPage(_t67: any) {
+throw new Error('Method not implemented.');
+}
+nextPage() {
+throw new Error('Method not implemented.');
+}
+goToLastPage() {
+throw new Error('Method not implemented.');
+}
 userData: any;
+dateTime: any;
+searchQuery: any;
+startIndex: any;
+endIndex: any;
+filteredUsers: any;
+itemsPerPage: any;
+currentPage: any;
+totalPages: any;
 showcreateuserss() {
 throw new Error('Method not implemented.');
 }

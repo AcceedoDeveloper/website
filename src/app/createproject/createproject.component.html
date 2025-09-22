@@ -149,12 +149,13 @@
           <span>Employees: {{ getEmployeeNames(project.employees) }}</span>
         </div>
         <div class="detail-item">
-          <i class="fa fa-calendar-start"></i>
-          <span>{{ project.startDate | date:'mediumDate' }}</span>
+          <i class="fa fa-calendar-check start-icon"></i>
+          <span> startDate: {{ project.startDate | date:'mediumDate' }}</span>
         </div>
         <div class="detail-item">
-          <i class="fa fa-calendar-end"></i>
-          <span>{{ project.expectedEndDate | date:'mediumDate' }}</span>
+          <i class="fa fa-calendar-times end-icon"></i>
+          <span>EndDate:
+            {{ project.expectedEndDate | date:'mediumDate' }}</span>
         </div>
       </div>
    <div class="project-actions">
@@ -165,7 +166,7 @@
   </button>
 
   <!-- Delete Button -->
-  <button mat-raised-button style="color: rgb(247, 240, 240);" (click)="deleteProject(project)">
+  <button mat-raised-button style="color: rgb(10, 10, 10);" (click)="deleteProject(project)">
     <mat-icon>delete</mat-icon>
     Delete
   </button>

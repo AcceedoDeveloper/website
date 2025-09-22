@@ -150,7 +150,7 @@ margin-top: -1140px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* Table Head */
+
 .user-table th {
   background: #cbcdcd ;
   color: black;
@@ -162,7 +162,7 @@ margin-top: -1140px;
   text-align: left;
 }
 
-/* Table Body */
+
 .user-table td {
   padding: 1rem;
   font-size: 0.95rem;
@@ -170,12 +170,12 @@ margin-top: -1140px;
   border-bottom: 1px solid #e5e7eb;
 }
 
-/* Last Row Fix */
+
 .user-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* Row Hover Effect */
+
 .user-table tbody tr {
   transition: all 0.3s ease;
 }
@@ -185,13 +185,13 @@ margin-top: -1140px;
   transform: translateX(4px);
 }
 
-/* Action Column */
+
 .user-table .action-col {
   text-align: center;
   white-space: nowrap;
 }
 
-/* Action Buttons inside table */
+
 .user-table .action-btn {
   background: #1f5f8b;
   color: #fff;
@@ -205,46 +205,15 @@ margin-top: -1140px;
 }
 
 .user-table .action-btn:hover {
-  background: #174a6b; /* darker navy on hover */
+  background: #174a6b; 
 }
 
 .black-btn{
   color: #222;
 }
 
-.maincontent {
-  max-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
 
-/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
-.maincontent::-webkit-scrollbar {
-  width: 12px;
-}
 
-.maincontent::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.maincontent::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-  border: 2px solid #f1f1f1;
-}
-
-.maincontent::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Custom scrollbar for Firefox */
-.maincontent {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
-
-/* Pagination Styles */
 .pagination-controls {
   display: flex;
   justify-content: space-between;
@@ -332,14 +301,14 @@ margin-top: -1140px;
 }
 
 .user-table-wrapper.scrollable {
-  max-height: 450px;   /* adjust height */
+  max-height: 450px;  
   overflow-y: auto;
   overflow-x: auto;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 }
 
-/* Sticky header */
+
 .user-table-wrapper.scrollable table thead th {
   position: sticky;
   top: 0;
@@ -347,7 +316,7 @@ margin-top: -1140px;
   z-index: 10;
 }
 
-/* Optional: zebra striping */
+
 .user-table tbody tr:nth-child(even) {
   background: #f9fafb;
 }
@@ -357,7 +326,7 @@ margin-top: -1140px;
   transform: translateX(0);
 }
 
-/* Scrollbar styling */
+
 .user-table-wrapper.scrollable::-webkit-scrollbar {
   width: 8px;
 }

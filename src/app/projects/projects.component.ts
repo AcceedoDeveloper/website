@@ -21,6 +21,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   projects: any[] = [];
   selectedProjectId = '';
   selectedProjectName = '';
+  getcurrentUserData: any;
 
   allAssignments: AssignWork[] = [];
   todoAssignments: AssignWork[] = [];
@@ -41,7 +42,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   private subs = new Subscription();
   private dateIntervalId: any = null;
-searchQuery: any;
+  searchQuery: any;
 
   constructor(
     private projectService: CreatprojectService,
@@ -55,6 +56,7 @@ searchQuery: any;
   ngOnInit(): void {
     this.initForm();
     this.initCommentForm();
+    this.getCurrentUser();
     this.loadUserFromSession();
     this.loadEmployees();
     this.updateDateTime();
@@ -142,6 +144,23 @@ searchQuery: any;
     this.subs.add(s);
   }
 
+  getCurrentUser() {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      this.userData = JSON.parse(userStr);
+      
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+        }
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
+      }
+    }
+  }
+
   getEmployeeValue(emp: any): string {
     return typeof emp === 'string' ? emp : emp.username || emp.UserName || emp.name || '';
   }
@@ -185,6 +204,25 @@ searchQuery: any;
 
     this.filterAssignmentsByProject();
   }
+
+
+  private processUserImage(user: any): any {
+    const processedUser = { ...user };
+    
+    if (processedUser.photo) {
+      if (processedUser.photo.startsWith('http')) {
+        processedUser.photoURL = processedUser.photo;
+      } else {
+        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+      }
+    } else {
+      processedUser.photoURL = 'assets/default-avatar.png';
+    }
+    
+    return processedUser;
+  }
+
+
 
   getAssignments() {
     this.loading = true;

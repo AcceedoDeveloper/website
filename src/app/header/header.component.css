@@ -22,7 +22,7 @@ max-height: 80px;
   position: relative;
   z-index: 100;
 
-  border: 2px solid #fae293;
+  border: 2px solid #0d0d06;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* soft shadow */
 }
 
@@ -353,7 +353,7 @@ max-height: 80px;
    color: #1f3c88;     /* light navy blue */
    padding: 30px 20px;
    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05); /* subtle shadow */
-   border: 2px solid #fae293;
+   border: 2px solid #1f1909;
 }
 
 .sidebar-header {
