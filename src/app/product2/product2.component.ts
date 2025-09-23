@@ -16,7 +16,7 @@ export class Product2Component implements OnInit {
   benefits = [
     {
       title: 'Accurate Time and Attendance Tracking',
-      description: 'Eliminate manual errors with automated employee check-ins via fingerprint, card, or mobile app scanning. Ensure precise clocking in and out, including late arrivals and early departures.'
+      description: 'Eliminate manual errors in attendance with automated employee check-ins using fingerprint, card, or mobile app scanning. '
     },
     {
       title: 'Streamlined Payroll & Leave Management',
