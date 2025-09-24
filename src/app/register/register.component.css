@@ -344,7 +344,8 @@ margin-top: -1140px;
 @media (max-width: 2200px) {
   
 .maincontent{
-
+ /*  sout() 
+  */
 width: 100%;
 max-width: 1285px;
 height: 100%;
