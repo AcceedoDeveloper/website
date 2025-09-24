@@ -238,7 +238,17 @@ export class RegisterComponent implements OnInit {
     const userStr = sessionStorage.getItem('user');
     if (userStr) {
       this.userData = JSON.parse(userStr);
-      this.processUserImage(this.userData, true);
+      
+      // Process user image URL
+      if (this.userData.photo) {
+        if (this.userData.photo.startsWith('http')) {
+          this.userData.photoURL = this.userData.photo;
+        } else {
+          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+        }
+      } else {
+        this.userData.photoURL = 'assets/default-avatar.png';
+      }
     }
   }
 
@@ -518,4 +528,4 @@ export class RegisterComponent implements OnInit {
       console.log('Form not valid or passwords do not match.');
     }
   }
-}
+} 

@@ -25,7 +25,7 @@
     <div class="login-dropdown">
       <label class="login-icon" (click)="toggleDropdown()">
         <ng-container *ngIf="userData?.photoURL && userData.photoURL !== 'assets/default-avatar.png'; else initialsIcon">
-          <img [src]="userData.photoURL" alt="User Avatar" class="avatar" />
+          <img [src]="userData.photoURL" alt="" class="avatar" />
         </ng-container>
         <ng-template #initialsIcon>
           <div class="user-initial">{{ getInitials(userData?.username || userData?.email || '') }}</div>

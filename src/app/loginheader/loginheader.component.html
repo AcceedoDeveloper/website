@@ -32,7 +32,7 @@
       <input type="checkbox" id="toggle-login" hidden />
       <label for="toggle-login" class="login-icon">
         <ng-container *ngIf="userData?.photoURL && userData.photoURL !== 'assets/default-avatar.png'; else initialsIcon">
-          <img [src]="userData.photoURL" alt="User Avatar" class="avatar" />
+          <img [src]="userData.photoURL" alt="" class="avatar" />
         </ng-container>
         <ng-template #initialsIcon>
           <div class="user-initial">
@@ -66,7 +66,7 @@
            </div>
            <div class="user-welcome">
              <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
-             <img class="user-icon" [src]="userData?.photoURL || ''" alt="User Avatar" />
+             <img class="user-icon" [src]="userData?.photoURL || ''" alt="" />
            </div>
          </div> -->
 

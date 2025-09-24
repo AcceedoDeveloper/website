@@ -352,13 +352,15 @@ background: #ffffff;
 }
 
 .user-icon {
-  width: 140px;         /* You can adjust to 100–150px as needed */
+  width: 140px;
   height: 140px;
-  object-fit: cover;    /* Ensures the image fills the box properly */
-  border-radius: 4px;   
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-top: -30px;
+  margin-top: -70px;
+  margin-left: 30px;
+  object-fit: cover;
+  border-radius: 50%;   /* makes it a circle */
+  border: 3px solid #FFD54F;
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 /* Helpful Links */
 .section-header {
