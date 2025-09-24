@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import {CardsComponent} from '../cards/cards.component';
 
 @Component({
   selector: 'app-carousel',
@@ -10,7 +11,7 @@ export class CarouselComponent {
     {
       image: '/assets/freepik__candid-image-photography-natural-textures-highly-r__28920.jpeg',
       title: 'COMPREHENSIVE SOLUTIONS',
-      description: 'Providing an all-in-one platform that streamlines planning, scheduling, machine production, rejection management, operator tracking, downtime analysis, detailed reporting.',
+      description: 'An all-in-one platform for planning, scheduling, machine monitoring, rejection control, operator tracking, downtime analysis, and detailed reporting.',
       buttonText: 'Comprehensive Solutions',
       contentClass: ''
     },

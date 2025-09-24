@@ -26,7 +26,8 @@ export class UserservicesService {
   private deleteuserapi = 'http://localhost:3008/deleteUser';
 
   getuser(): Observable<User[]> {
-    return this.httpuser.get<User[]>(this.getuserapi);
+    const timestamp = new Date().getTime();
+    return this.httpuser.get<User[]>(`${this.getuserapi}?t=${timestamp}`);
   }
 
   saveuser(formData: FormData): Observable<any> {

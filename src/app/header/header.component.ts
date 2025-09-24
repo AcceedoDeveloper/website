@@ -29,6 +29,7 @@ export class HeaderComponent implements OnInit {
   subDepartmentsData: any[] = [];
   showDropdown = false; 
   dropdownOpen: any;
+  isLoading = false;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -52,7 +53,6 @@ export class HeaderComponent implements OnInit {
     const userStr = sessionStorage.getItem('user');
     if (userStr) {
       this.userData = JSON.parse(userStr);
-
       this.processUserImage(this.userData);
 
       if (typeof this.userData.role === 'object' && this.userData.role?.role) {
@@ -62,25 +62,31 @@ export class HeaderComponent implements OnInit {
   }
 
   private processUserImage(user: any): void {
+
+    const timestamp = new Date().getTime();
+    
     if (user.photoURL) {
-
       if (user.photoURL.startsWith('http')) {
-        user.photoURL = user.photoURL;
+        user.photoURL = this.addCacheBuster(user.photoURL, timestamp);
       } else {
-
-        user.photoURL = `http://localhost:3008/uploads/${user.photoURL}`;
+        user.photoURL = this.addCacheBuster(`http://localhost:3008/uploads/${user.photoURL}`, timestamp);
       }
     } else if (user.photo) {
-
       if (user.photo.startsWith('http')) {
-        user.photoURL = user.photo;
+        user.photoURL = this.addCacheBuster(user.photo, timestamp);
       } else {
-        user.photoURL = `http://localhost:3008/uploads/${user.photo}`;
+        user.photoURL = this.addCacheBuster(`http://localhost:3008/uploads/${user.photo}`, timestamp);
       }
     } else {
-
       user.photoURL = 'assets/default-avatar.png';
     }
+  }
+
+  private addCacheBuster(url: string, timestamp: number): string {
+    if (url.includes('assets/default-avatar.png')) {
+      return url;
+    }
+    return url + (url.includes('?') ? '&' : '?') + `t=${timestamp}`;
   }
 
   toggleDropdown() {
@@ -100,10 +106,25 @@ export class HeaderComponent implements OnInit {
 
   openEditProfile() {
     this.editUserData = { ...this.userData };
-    this.previewImage = this.userData?.photoURL || null;
+
+    this.previewImage = this.getCleanImageUrl(this.userData);
     this.selectedFile = null;
     this.selectedFileName = '';
     this.showEditModal = true;
+  }
+
+  private getCleanImageUrl(user: any): string {
+    if (user.photoURL) {
+      return user.photoURL.split('?')[0]; 
+    } else if (user.photo) {
+      if (user.photo.startsWith('http')) {
+        return user.photo;
+      } else {
+        return `http://localhost:3008/uploads/${user.photo}`;
+      }
+    } else {
+      return 'assets/default-avatar.png';
+    }
   }
 
   closeEditModal() {
@@ -111,6 +132,7 @@ export class HeaderComponent implements OnInit {
     this.previewImage = null;
     this.selectedFile = null;
     this.selectedFileName = '';
+    this.isLoading = false;
   }
 
   onPhotoSelected(event: any) {
@@ -126,58 +148,57 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  removeSelectedImage() {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.previewImage = this.getCleanImageUrl(this.userData);
+  }
+
   saveProfilePicture() {
     if (!this.userData?._id) {
       alert('User not found. Please try logging in again.');
       return;
     }
 
-    if (!this.selectedFile) {
-      alert('Please select a photo to upload.');
-      return;
-    }
+    this.isLoading = true;
 
     const formData = new FormData();
-    formData.append('photo', this.selectedFile);
-    formData.append('userCode', this.userData.userCode || '');
-    formData.append('name', this.userData.name || this.userData.UserName || '');
-    formData.append('userName', this.userData.userName || this.userData.UserName || '');
-    formData.append('emailId', this.userData.emailId || this.userData.Email || '');
-    formData.append('phoneNumber', this.userData.phoneNumber || this.userData.Phone || '');
-    formData.append('role', this.userData.role || '');
-    formData.append('department', this.userData.departmentName || this.userData.department?.departmentName || '');
-    formData.append('subDepartment', this.userData.subDepartment || '');
-    formData.append('keepExistingImage', 'true');
+
+
+    if (this.selectedFile) {
+      formData.append('photo', this.selectedFile);
+    } else if (this.previewImage === 'assets/default-avatar.png') {
+      formData.append('removePhoto', 'true');
+    } else {
+      formData.append('keepExistingImage', 'true');
+    }
+
+    this.appendUserDataToForm(formData);
 
     console.log('Updating profile picture for user:', this.userData._id);
 
     this.userService.edituser(this.userData._id, formData).subscribe({
       next: (res: any) => {
         console.log('Profile picture update response:', res);
+        this.isLoading = false;
         
-        if (res.photo) {
-          this.userData.photo = res.photo;
-          this.userData.photoURL = `http://localhost:3008/uploads/${res.photo}`;
-        } else if (res.photoURL) {
-          this.userData.photoURL = res.photoURL;
-        }
+
+        this.updateUserDataFromResponse(res);
         
-        if (res.photoURL) {
-          this.userData.photoURL = res.photoURL;
-        }
-        
+ 
         sessionStorage.setItem('user', JSON.stringify(this.userData));
         
-        alert('Profile picture updated successfully!');
 
+        this.refreshUserData();
+        
         this.showEditModal = false;
-        this.previewImage = null;
         this.selectedFile = null;
         this.selectedFileName = '';
-
-        this.getCurrentUser();
+        
+        alert('Profile picture updated successfully!');
       },
       error: (err: any) => {
+        this.isLoading = false;
         console.error('Error updating profile picture:', err);
         
         let errorMessage = 'Failed to update profile picture.';
@@ -198,16 +219,50 @@ export class HeaderComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
+
     const formData = new FormData();
+
 
     if (this.selectedFile) {
       formData.append('photo', this.selectedFile);
+    } else if (this.previewImage === 'assets/default-avatar.png') {
+      formData.append('removePhoto', 'true');
     } else {
-
       formData.append('keepExistingImage', 'true');
     }
 
 
+    this.appendUserDataToForm(formData);
+
+    console.log('Updating user profile:', this.userData._id);
+
+    this.userService.edituser(this.userData._id, formData).subscribe({
+      next: (res: any) => {
+        console.log('User profile update response:', res);
+        this.isLoading = false;
+
+
+        this.updateUserDataFromResponse(res);
+        
+
+        sessionStorage.setItem('user', JSON.stringify(this.userData));
+        
+   
+        this.refreshUserData();
+        
+        alert('Profile updated successfully!');
+        this.showEditModal = false;
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        console.error('Error updating profile:', err);
+        alert('Failed to update profile. Please try again.');
+      }
+    });
+  }
+
+  private appendUserDataToForm(formData: FormData): void {
     formData.append('userCode', this.userData.userCode || '');
     formData.append('name', this.userData.name || this.userData.UserName || '');
     formData.append('userName', this.userData.userName || this.userData.UserName || '');
@@ -216,35 +271,51 @@ export class HeaderComponent implements OnInit {
     formData.append('role', this.userData.role || '');
     formData.append('department', this.userData.departmentName || this.userData.department?.departmentName || '');
     formData.append('subDepartment', this.userData.subDepartment || '');
+  }
 
-    console.log('Updating user profile:', this.userData._id);
+  private updateUserDataFromResponse(res: any): void {
 
-    this.userService.edituser(this.userData._id, formData).subscribe({
-      next: (res: any) => {
-        console.log('User profile update response:', res);
+    if (res.photo) {
+      this.userData.photo = res.photo;
+    }
+    if (res.photoURL) {
+      this.userData.photoURL = res.photoURL;
+    }
+    
 
-        if (res.photo) {
-          this.userData.photo = res.photo;
+    if (res.removePhoto === true || (!res.photo && !res.photoURL)) {
+      this.userData.photo = null;
+      this.userData.photoURL = 'assets/default-avatar.png';
+    }
+
+
+    if (res.name) this.userData.name = res.name;
+    if (res.userName) this.userData.userName = res.userName;
+    if (res.emailId) this.userData.emailId = res.emailId;
+    if (res.phoneNumber) this.userData.phoneNumber = res.phoneNumber;
+    if (res.role) this.userData.role = res.role;
+    if (res.department) this.userData.department = res.department;
+    if (res.subDepartment) this.userData.subDepartment = res.subDepartment;
+
+
+    this.processUserImage(this.userData);
+  }
+
+  private refreshUserData(): void {
+
+    this.userService.getuser().subscribe({
+      next: (users: any) => {
+        if (Array.isArray(users)) {
+          const updatedUser = users.find((u: any) => u._id === this.userData._id);
+          if (updatedUser) {
+            this.userData = updatedUser;
+            this.processUserImage(this.userData);
+            sessionStorage.setItem('user', JSON.stringify(this.userData));
+          }
         }
-        if (res.photoURL) {
-          this.userData.photoURL = res.photoURL;
-        }
-        
-
-        if (res.name) this.userData.name = res.name;
-        if (res.userName) this.userData.userName = res.userName;
-        if (res.emailId) this.userData.emailId = res.emailId;
-        
-
-        sessionStorage.setItem('user', JSON.stringify(this.userData));
-        
-        alert('Profile updated successfully!');
-        this.showEditModal = false;
-        this.getCurrentUser();
       },
-      error: (err: any) => {
-        console.error('Error updating profile:', err);
-        alert('Failed to update profile. Please try again.');
+      error: (err) => {
+        console.error('Error refreshing user data:', err);
       }
     });
   }
@@ -270,7 +341,6 @@ export class HeaderComponent implements OnInit {
     return role?.toLowerCase() === 'admin';
   }
 
-
   removeProfilePicture() {
     if (!this.userData?._id) {
       alert('User not found.');
@@ -278,35 +348,33 @@ export class HeaderComponent implements OnInit {
     }
 
     if (confirm('Are you sure you want to remove your profile picture?')) {
+      this.isLoading = true;
+
       const formData = new FormData();
       formData.append('removePhoto', 'true');
-      
-
-      formData.append('userCode', this.userData.userCode || '');
-      formData.append('name', this.userData.name || this.userData.UserName || '');
-      formData.append('userName', this.userData.userName || this.userData.UserName || '');
-      formData.append('emailId', this.userData.emailId || this.userData.Email || '');
-      formData.append('phoneNumber', this.userData.phoneNumber || this.userData.Phone || '');
-      formData.append('role', this.userData.role || '');
-      formData.append('department', this.userData.departmentName || this.userData.department?.departmentName || '');
-      formData.append('subDepartment', this.userData.subDepartment || '');
+      this.appendUserDataToForm(formData);
 
       this.userService.edituser(this.userData._id, formData).subscribe({
         next: (res: any) => {
+          this.isLoading = false;
+          
 
           this.userData.photo = null;
           this.userData.photoURL = 'assets/default-avatar.png';
-  
           sessionStorage.setItem('user', JSON.stringify(this.userData));
           
 
-          this.previewImage = null;
+          this.previewImage = 'assets/default-avatar.png';
           this.selectedFile = null;
           this.selectedFileName = '';
+          
+
+          this.refreshUserData();
           
           alert('Profile picture removed successfully!');
         },
         error: (err: any) => {
+          this.isLoading = false;
           console.error('Error removing profile picture:', err);
           alert('Failed to remove profile picture.');
         }

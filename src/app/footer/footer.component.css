@@ -7,14 +7,16 @@
   font-family: 'Inter', sans-serif;
 }
 
-.footer-custom h3,
-.footer-custom h4 {
+.footer-custom h1,
+.footer-custom h2 {
   color: #ffffff;
+  font-size: x-large;
   margin-bottom: 1rem;
 }
 .list-unstyled{
     font-size: 1rem;
 }
+  
 
 .footer-custom ul {
   padding-left: 0;

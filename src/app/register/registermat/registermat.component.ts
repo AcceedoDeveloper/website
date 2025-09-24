@@ -21,6 +21,7 @@ export class RegistermatComponent implements OnInit {
   previewImage: string | ArrayBuffer | null = null;
   existingImageUrl: string | null = null;
   existingPhotoField: string | null = null;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -55,8 +56,8 @@ export class RegistermatComponent implements OnInit {
 
   patchForm(item: any) {
     this.registerForm.patchValue({
-      userCode: item.userCode || item.UserCode || '',  
-      name: item.name || item.UserName || '',               
+      userCode: item.userCode || item.UserCode || '',
+      name: item.name || item.UserName || '',
       userName: item.userName || item.userName || '',
       emailId: item.emailId || item.Email || '',
       phoneNumber: item.phoneNumber || item.Phone || '',
@@ -72,7 +73,6 @@ export class RegistermatComponent implements OnInit {
       this.existingImageUrl = item.photoURL;
       this.previewImage = item.photoURL;
     } else if (item.photo) {
-
       if (item.photo.startsWith('http')) {
         this.existingImageUrl = item.photo;
         this.previewImage = item.photo;
@@ -80,12 +80,20 @@ export class RegistermatComponent implements OnInit {
         this.existingImageUrl = `http://localhost:3008/uploads/${item.photo}`;
         this.previewImage = this.existingImageUrl;
       }
+    } else {
+      this.previewImage = 'assets/default-avatar.png';
     }
 
     if (item.department && item.department.subDepartments) {
       this.subDepartmentsData = item.department.subDepartments;
     } else {
       this.subDepartmentsData = [];
+    }
+
+
+    if (this.isEdit) {
+      this.registerForm.get('password')?.clearValidators();
+      this.registerForm.get('password')?.updateValueAndValidity();
     }
 
     this.registerForm.get('password')?.reset('');
@@ -134,15 +142,30 @@ export class RegistermatComponent implements OnInit {
     }
   }
 
+  removeImage() {
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.previewImage = this.existingImageUrl || 'assets/default-avatar.png';
+  }
+
   onSubmit() {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
+      Object.keys(this.registerForm.controls).forEach(key => {
+        const control = this.registerForm.get(key);
+        if (control?.invalid) {
+          console.log(`Invalid control: ${key}`, control.errors);
+        }
+      });
       return;
     }
+
+    this.isLoading = true;
 
     const formValue = this.registerForm.value;
     const formData = new FormData();
 
+  
     formData.append('userCode', formValue.userCode);
     formData.append('name', formValue.name);
     formData.append('userName', formValue.userName);
@@ -152,42 +175,82 @@ export class RegistermatComponent implements OnInit {
     formData.append('department', formValue.departmentName);
     formData.append('subDepartment', formValue.subDepartmentName);
 
+ 
     if (formValue.password) {
       formData.append('password', formValue.password);
     }
 
+ 
     if (this.selectedFile) {
       formData.append('photo', this.selectedFile);
-    } else if (this.existingPhotoField && !this.selectedFile) {
+    } else if (this.previewImage === 'assets/default-avatar.png' || !this.previewImage) {
+
+      formData.append('removeImage', 'true');
+    } else {
+
       formData.append('keepExistingImage', 'true');
     }
 
     if (this.isEdit) {
-      this.userservice.edituser(this.data.item._id, formData).subscribe({
-        next: (response: any) => {
-          const updatedUser = {
-            ...this.data.item,
-            ...response,
-            photoURL: response.photoURL || this.existingImageUrl,
-            photo: response.photo || this.existingPhotoField
-          };
-          this.dialogRef.close(updatedUser);
-        },
-        error: (err) => {
-          console.error('Error updating user:', err);
-          alert('Failed to update user. Please try again.');
-        }
-      });
+      this.updateUser(formData);
     } else {
-      this.userservice.saveuser(formData).subscribe({
-        next: (response: any) => {
-          this.registerForm.reset();
-          this.previewImage = null;
-          this.selectedFile = null;
-          this.dialogRef.close(response);
-        },
-        error: (err) => console.error('Error saving user:', err)
-      });
+      this.createUser(formData);
     }
+  }
+
+  private updateUser(formData: FormData) {
+    this.userservice.edituser(this.data.item._id, formData).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('User updated successfully:', response);
+        const updatedUser = this.processUserResponse(response);        
+        this.dialogRef.close(updatedUser);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error updating user:', err);
+        alert('Failed to update user. Please try again.');
+      }
+    });
+  }
+
+  private createUser(formData: FormData) {
+    this.userservice.saveuser(formData).subscribe({
+      next: (response: any) => {
+        this.isLoading = false;
+        console.log('User created successfully:', response);
+        const newUser = this.processUserResponse(response);
+        
+        this.registerForm.reset();
+        this.previewImage = null;
+        this.selectedFile = null;
+        this.dialogRef.close(newUser);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error saving user:', err);
+        alert('Failed to create user. Please try again.');
+      }
+    });
+  }
+
+  private processUserResponse(response: any): any {
+    let photoURL = response.photoURL;
+    
+    if (!photoURL && response.photo) {
+      if (response.photo.startsWith('http')) {
+        photoURL = response.photo;
+      } else {
+        photoURL = `http://localhost:3008/uploads/${response.photo}`;
+      }
+    } else if (!photoURL && !response.photo) {
+      photoURL = 'assets/default-avatar.png';
+    }
+
+    return {
+      ...response,
+      photoURL: photoURL,
+      photo: response.photo || this.existingPhotoField
+    };
   }
 }
