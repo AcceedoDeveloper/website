@@ -13,7 +13,7 @@
     </div>
   </div>
   
-  <div>
+  <div class="header">
 
     <svg width="0" height="5">
       <defs>
@@ -24,9 +24,7 @@
     </svg>
     <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
          style="clip-path: url(#circle-shape);" />
-  </div>
 
-<div class="task-controls">
   <!-- Project Dropdown -->
   <div class="pill-dropdown">
     <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
@@ -36,6 +34,40 @@
       </option>
     </select>
   </div>
+    <!-- Project Dropdown -->
+  <div class="pill-dropdown">
+    <!-- <select [(ngModel)]="selectedProjectId" >
+      <option value="">Documents</option>
+      <option *ngFor="let project of projects" [value]="project._id || project.id">
+        {{ project.projectName || project.name || 'Untitled Project' }}
+      </option>
+    </select> -->
+    <button>Documents</button>
+  </div>
+    <!-- Project Dropdown -->
+  <div class="pill-dropdown">
+    <!-- <select [(ngModel)]="selectedProjectId" >
+      <option value="">User-View</option>
+      <option *ngFor="let project of projects" [value]="project._id || project.id">
+        {{ project.projectName || project.name || 'Untitled Project' }}
+      </option>
+    </select> -->
+
+        <button>User-View</button>
+  </div>
+         
+  </div>
+
+<div class="task-controls">
+  <!-- Project Dropdown -->
+  <!-- <div class="pill-dropdown">
+    <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
+      <option value="">All Projects</option>
+      <option *ngFor="let project of projects" [value]="project._id || project.id">
+        {{ project.projectName || project.name || 'Untitled Project' }}
+      </option>
+    </select>
+  </div> -->
 
   <!-- Add Task Button -->
   <button class="pill-btn" (click)="openAssignmentDialog()" [disabled]="!selectedProjectId">
