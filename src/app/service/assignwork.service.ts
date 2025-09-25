@@ -29,6 +29,10 @@ export interface MyFormData {
   files: File[];
 }
 
+export interface UserViewResponse {
+  total: number;
+  works: AssignWork[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -80,4 +84,16 @@ export class AssignWorkService {
   deleteDocument(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/deleteDocument/${id}`);
   }
+
+
+  //user-view
+
+//     getUserview():Observable<any>{
+//     return this.http.get<any>('${this.baseUrl}/getAssignWorkByProject/:projectName/:assignedTo')
+// }
+
+getUserview(projectName: string, assignedTo: string): Observable<UserViewResponse> {
+    return this.http.get<UserViewResponse>(`${this.baseUrl}/getAssignWorkByProject/${encodeURIComponent(projectName)}`);
+  }
+  
 }

@@ -32,7 +32,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   selectedFile: File | null = null; 
 
   //task
-  showmaintask=false;
+  showmaintask=true;
+
+ 
+
+  // User View
+  showinuserview = false;
+  userViewAssignments: AssignWork[] = [];
 
   userData: any = null;
   username = '';
@@ -529,15 +535,17 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   //task
 
   opentask(){
-    this.showmaintask=! this.showmaintask;
+    this.showmaintask=true;
     this.showmaindocument=false;
+    this.showinuserview=false;
   }
 
   //document
 
   opendoc(){
-    this.showmaindocument=!this.showmaindocument;
+    this.showmaindocument=true;
      this.showmaintask=false;
+     this.showinuserview=false;
   }
 
 
@@ -654,7 +662,40 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.subs.add(s);
   }
 
+  // User View
   openuv() {
-    // Placeholder for user view functionality
+    this.showinuserview = true;
+    this.showmaintask = false;
+    this.showmaindocument = false;
+    this.loadUserViewAssignments();
+  }
+
+  loadUserViewAssignments() {
+    if (!this.username || !this.selectedProjectName) {
+      this.userViewAssignments = [];
+      this.snackBar.open('Please select a project to view tasks', 'Close', { duration: 3000 });
+      return;
+    }
+
+    this.loading = true;
+    const s = this.assignworkService.getUserview(this.selectedProjectName, this.username).subscribe({
+      next: (res) => {
+        this.loading = false;
+        if (Array.isArray(res)) {
+          this.userViewAssignments = res;
+        } else if (res?.works && Array.isArray(res.works)) {
+          this.userViewAssignments = res.works;
+        } else {
+          this.userViewAssignments = [];
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('User view error:', err);
+        this.snackBar.open('Failed to load user tasks', 'Close', { duration: 3000 });
+        this.userViewAssignments = [];
+      }
+    });
+    this.subs.add(s);
   }
 }

@@ -39,19 +39,25 @@
  
     <button (click)="opentask()" >task</button>
   </div>
-    <!-- Project Dropdown -->
-  <div class="pill-dropdown">
- 
-    <button (click)="opendoc()">Documents</button>
-  </div>
-    <!-- Project Dropdown -->
+
+
+      
   <div class="pill-dropdown">
  
 
         <button  (click)="openuv()">User-View</button>
   </div>
+
+  <div class="pill-dropdown">
+ 
+    <button (click)="opendoc()">Documents</button>
+  </div>
          
   </div>
+
+    
+
+
 
 
 
@@ -272,6 +278,44 @@
 </div>
 
 
+
+
+<!-- User View Section -->
+  <div class="mainuserview" *ngIf="showinuserview">
+    <div class="task-controls">
+      <h3>User View: Tasks for {{ username }} in {{ selectedProjectName || 'All Projects' }}</h3>
+    </div>
+    <div class="kanban-board" *ngIf="!loading && !error">
+      <div class="kanban-column">
+        <h3>Tasks <span class="task-count">{{ userViewAssignments.length }}</span></h3>
+        <div *ngFor="let task of userViewAssignments" class="kanban-card">
+          <div class="task-header-clean">
+             <div class="task-info-clean">
+              <span class="heading-clean">Project:</span> <span class="point-clean">{{ task.projectName }}</span>
+            </div>
+            
+            <div class="task-info-clean">
+              <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
+            </div>
+           
+            <div class="task-info-clean">
+              <span class="heading-clean">AssignedTo:</span> <span class="point-clean">{{ task.assignedTo}}</span>
+            </div>
+            <div class="task-info-clean">
+              <span class="heading-clean">Due Date:</span> <span class="point-clean">{{ task.dueDate }}</span>
+            </div>
+          </div>
+          <div class="task-footer">
+            <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+              <small><strong>Comments: {{ task.comment.length }}</strong></small>
+            </div>
+           
+          </div>
+        </div>
+        <div *ngIf="userViewAssignments.length === 0" class="empty-state">No tasks assigned to you</div>
+      </div>
+    </div>
+  </div>
 
 
 
