@@ -35,31 +35,75 @@
     </select>
   </div>
 
-   <div class="pill-dropdown">
- 
-    <button (click)="opentask()" >task</button>
-  </div>
-
-
-      
   <div class="pill-dropdown">
- 
-
-        <button  (click)="openuv()">User-View</button>
+    <button (click)="opentask()" >Task</button>
   </div>
 
   <div class="pill-dropdown">
- 
+         <button  (click)="openuv()">Work-List</button>
+  </div>
+
+  <div class="pill-dropdown">     
+        <button  (click)="openMonthView()">Calendar</button>
+  </div>
+
+  <div class="pill-dropdown">
     <button (click)="opendoc()">Documents</button>
   </div>
-         
+
   </div>
 
-    
 
 
 
 
+
+
+<div class="Month-view" *ngIf="showMonthView">
+  <div class="container">
+    <!-- Header with selectors -->
+    <div class="headerr">
+      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
+        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
+      </select>
+
+      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color red"></div><span>Weekend</span></div>
+      </div>
+
+    <!-- Calendar -->
+    <div class="main-content">
+      <div class="calendar">
+        <div class="day-header">
+          <div>Monday</div>
+          <div>Tuesday</div>
+          <div>Wednesday</div>
+          <div>Thursday</div>
+          <div>Friday</div>
+          <div>Saturday</div>
+          <div>Sunday</div>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="day-cell"
+               *ngFor="let day of days">
+            <div class="day-number" [ngClass]="{'sunday': day.isSunday, 'holiday': day.isHoliday}">
+              {{ day.date }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="holidays"></div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -98,7 +142,7 @@
   <div class="document-list" *ngIf="documents.length > 0; else noDocs">
     <h3>Uploaded Documents</h3>
     <ul>
-      <li *ngFor="let doc of documents">
+      <li *ngFor="let doc of documents"> 
         <span class="doc-title">{{ doc.title }}</span>
 
         <!-- View / Download -->
@@ -305,12 +349,7 @@
               <span class="heading-clean">Due Date:</span> <span class="point-clean">{{ task.dueDate }}</span>
             </div>
           </div>
-          <div class="task-footer">
-            <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-              <small><strong>Comments: {{ task.comment.length }}</strong></small>
-            </div>
-           
-          </div>
+
         </div>
         <div *ngIf="userViewAssignments.length === 0" class="empty-state">No tasks assigned to you</div>
       </div>

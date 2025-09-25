@@ -25,6 +25,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   showmaindocument = false;
   showdocumentpop = false;
+  showMonthView = false;
   editingDocument: Document | null = null; 
   documentForm: FormGroup; 
   documents: Document[] = []; 
@@ -49,7 +50,7 @@ selectedPictureFiles: File[] = [];
   projects: any[] = [];
   selectedProjectId = '';
   selectedProjectName = '';
-  selectedProjectTeamLeads: string[] = [];
+  getcurrentUserData: any;
 
   allAssignments: AssignWork[] = [];
   todoAssignments: AssignWork[] = [];
@@ -68,8 +69,20 @@ selectedPictureFiles: File[] = [];
   error = '';
   successMessage = '';
 
+  months = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+years: number[] = [];
+  selectedMonth: number = new Date().getMonth();  // current month
+  selectedYear: number = new Date().getFullYear(); // current year
+  days: any[] = [];
+
+
+
   private subs = new Subscription();
   private dateIntervalId: any = null;
+  searchQuery: any;
 
   constructor(
     private projectService: CreatprojectService,
@@ -94,7 +107,13 @@ selectedPictureFiles: File[] = [];
     this.loadUserFromSession();
     this.loadEmployees();
     this.updateDateTime();
-     this.getDocuments();
+    this.getDocuments();
+        const currentYear = new Date().getFullYear();
+    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+      this.years.push(i);
+    }
+
+    this.generateCalendar();
   
  
     this.getDocuments();
@@ -115,6 +134,7 @@ selectedPictureFiles: File[] = [];
   }
 
   private initForm() {
+  
     this.assignmentForm = this.fb.group({
       title: ['', Validators.required],
       description: [''],
@@ -170,9 +190,12 @@ selectedPictureFiles: File[] = [];
         } else {
           this.employees = [];
         }
+        if (this.employees.length === 0) {
+          this.employees = ['Sabari', 'Ramesh', 'Anitha', 'Vijay'];
+        }
       },
       error: () => {
-        this.employees = [];
+        this.employees = ['Sabari', 'Ramesh', 'Anitha', 'Vijay'];
       }
     });
     this.subs.add(s);
@@ -230,25 +253,30 @@ selectedPictureFiles: File[] = [];
     );
 
     if (!selectedProject && this.selectedProjectId) {
+      console.warn('Selected projectId not found in loaded projects:', this.selectedProjectId);
       this.selectedProjectName = '';
-      this.selectedProjectTeamLeads = [];
     } else {
       this.selectedProjectName = selectedProject?.projectName || selectedProject?.name || '';
-      this.selectedProjectTeamLeads = selectedProject?.teamLeads || [];
     }
 
     this.filterAssignmentsByProject();
   }
 
-  isCurrentUserTeamLead(): boolean {
-    if (!this.selectedProjectTeamLeads.length) return false;
+
+  private processUserImage(user: any): any {
+    const processedUser = { ...user };
     
+    if (processedUser.photo) {
+      if (processedUser.photo.startsWith('http')) {
+        processedUser.photoURL = processedUser.photo;
+      } else {
+        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+      }
+    } else {
+      processedUser.photoURL = 'assets/default-avatar.png';
+    }
     
-    return this.selectedProjectTeamLeads.some(lead => 
-      lead === this.username || 
-      lead === this.userData?.UserName || 
-      lead === this.userData?.username
-    );
+    return processedUser;
   }
 
   onPictureSelected(event: Event) {
@@ -349,12 +377,12 @@ viewImage(path: string) {
     }
 
 
-    if (!this.isCurrentUserTeamLead() && !task) {
-      this.error = "Only team leads can assign tasks to this project";
-      this.snackBar.open(this.error, 'Close', { duration: 3000 });
-      this.error = '';
-      return;
-    }
+    // if (!this.isCurrentUserTeamLead() && !task) {
+    //   this.error = "Only team leads can assign tasks to this project";
+    //   this.snackBar.open(this.error, 'Close', { duration: 3000 });
+    //   this.error = '';
+    //   return;
+    // }
 
     if (task && task.pictures?.length) {
   this.uploadedPictures = [...task.pictures];
@@ -405,6 +433,7 @@ this.selectedPictureFiles = [];
       this.selectedTask = null;
       afterSub.unsubscribe();
     });
+
 
     this.subs.add(afterSub);
   }
@@ -548,6 +577,7 @@ saveAssignment() {
       const updatePayload = { ...movedTask, Status: newStatus };
       const s = this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
         next: () => {
+  
           this.getAssignments();
         },
         error: () => {
@@ -579,18 +609,32 @@ saveAssignment() {
     this.showmaintask=true;
     this.showmaindocument=false;
     this.showinuserview=false;
+    this.showMonthView=false
   }
 
-
+  // User View
+  openuv() {
+    this.showinuserview = true;
+    this.showmaintask = false;
+    this.showMonthView = false;
+    this.showmaindocument = false;
+    this.loadUserViewAssignments();
+  }
 
   opendoc(){
     this.showmaindocument=true;
      this.showmaintask=false;
      this.showinuserview=false;
+     this.showMonthView=false
   }
 
 
-
+openMonthView(){
+  this.showMonthView =true;
+  this.showmaintask=false;
+  this.showmaindocument=false
+  this.showinuserview=false;
+}
 
 
   opendocpop(doc?: any) {
@@ -703,14 +747,7 @@ saveAssignment() {
     this.subs.add(s);
   }
 
-  // User View
-  openuv() {
-    this.showinuserview = true;
-    this.showmaintask = false;
-    this.showmaindocument = false;
-    this.loadUserViewAssignments();
-  }
-
+//user-view
   loadUserViewAssignments() {
     if (!this.username || !this.selectedProjectName) {
       this.userViewAssignments = [];
@@ -739,4 +776,36 @@ saveAssignment() {
     });
     this.subs.add(s);
   }
+
+
+generateCalendar() {
+    this.days = [];
+    const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
+    const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startDay = firstDay.getDay(); // Sunday = 0
+
+    // Adjust so Saturday is first (since your header starts with Saturday)
+    const offset = (startDay + 6) % 7;
+
+    // Fill previous month blanks
+    for (let i = 0; i < offset; i++) {
+      this.days.push({ date: '', isSunday: false, isHoliday: false });
+    }
+
+    // Fill current month
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
+      const isSunday = dateObj.getDay() === 0; // Sunday
+      const isHoliday = (this.selectedMonth === 8 && d === 25); // Example holiday Sep 25
+
+      this.days.push({ date: d, isSunday, isHoliday });
+    }
+
+    // Pad the last row to complete the grid (optional)
+    while (this.days.length % 7 !== 0) {
+      this.days.push({ date: '', isSunday: false, isHoliday: false });
+    }
+  }
 }
+
