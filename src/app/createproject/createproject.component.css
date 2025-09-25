@@ -630,15 +630,16 @@ width: 100%;
 max-width: 160px;
 height: 100%;
 max-height: 45px;
-background-color: #8ad4f4;
+background: #cbcdcd;
+color: #2c3e50;
 border-radius: 12px;
 margin: 50px;
-color: black;
 font-size: 14px;
 }
 
 .section-header h4{
 font-size: 15px;
+font-weight: bold;
 padding: 10px;
 padding-top: 17px;
 }
@@ -667,13 +668,60 @@ margin-top: -670px;
 }
 
 .date-time {
-  margin-left: 895px;
+  margin-left: 880px;
 }
 
 .user-welcome span {
-  margin-top: -35px;
+  margin-top: -50px;
 
 }
+.maincontent {
+  max-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.maincontent::-webkit-scrollbar {
+  width: 12px;
+}
+
+.maincontent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.maincontent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.maincontent::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Custom scrollbar for Firefox */
+.maincontent {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+.projects-list {
+  gap: 50px;
+  width: 100%;
+  max-width: 1600px;
+  margin: 40px 100px;
+  height: 100%;
+  max-height: 53%;
+}
+
+.project-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: -20px;
+}
+
 
 
 }
@@ -901,39 +949,6 @@ margin-top: -670px;
   text-align: center;
   color: #95a5a6;
   font-style: italic;
-}
-
-/* Custom scrollbar styling for the entire component */
-.maincontent {
-  max-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
-
-/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
-.maincontent::-webkit-scrollbar {
-  width: 12px;
-}
-
-.maincontent::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.maincontent::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-  border: 2px solid #f1f1f1;
-}
-
-.maincontent::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Custom scrollbar for Firefox */
-.maincontent {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
 }
 
 @media (min-width: 1138px) {

@@ -70,40 +70,64 @@ margin-top: -1140px;
   display: block;
 }
 @media (max-width: 2200px) {
-.maincontent {
-  width: 100%;
-  max-width: 1285px;
-  height: 100%;
-  margin-left: 275px;
-  margin-top: -800px;
+  
+.maincontent{
+
+width: 100%;
+max-width: 1285px;
+height: 100%;
+margin-left: 275px;
+margin-top: -670px;
   padding: 0px 20px;
-  flex: 1;
+  flex:1;
+
 }
 
 .welcome-card {
   height: 20%;
-  margin-top: 0px;
 }
 
 .date-time {
-  margin-left: 895px;
+  margin-left: 880px;
 }
 
 .user-welcome span {
-  margin-top: -35px;
+  margin-top: -55px;
+
+}
+.maincontent {
+  max-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.maincontent::-webkit-scrollbar {
+  width: 12px;
+}
+
+.maincontent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.maincontent::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  border: 1px solid #f1f1f1;
+}
+
+.maincontent::-webkit-scrollbar-thumb:hover {
+  background: #faf8f8;
+}
+
+.maincontent {
+  scrollbar-width: thin;
+  scrollbar-color: #fffdfd #f1f1f1;
 }
 
 
-@media (min-width: 1200px) {
-  .maincontent {
-    margin-left: 275px;
-    margin-top: -800px;
-  }
-
-  .date-time {
-    margin-left: 895px;
-  }
 }
+
 
 /* ✅ Medium Screens / Tablets (992px - 1199px) */
 @media (max-width: 1199px) and (min-width: 992px) {
@@ -175,8 +199,6 @@ margin-top: -1140px;
   }
 }
 
-
-}
 
 .projects-container {
   max-width: 980px;
