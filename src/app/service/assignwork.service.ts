@@ -14,6 +14,7 @@ export interface AssignWork {
   dueDate: string;
   Status: string;    
   projectId: string;
+  pictures:string;
 }
 
 export interface Comment {
@@ -38,20 +39,26 @@ export class AssignWorkService {
 
   constructor(private http: HttpClient) {}
 
-  createAssignment(task: AssignWork): Observable<any> {
+createAssignment(task: FormData | any): Observable<any> {
+  if (task instanceof FormData) {
+    return this.http.post(`${this.baseUrl}/CreateAssignWork`, task);
+  } else {
     return this.http.post(`${this.baseUrl}/CreateAssignWork`, task);
   }
-
+}
   getAssignments(): Observable<AssignWork[]> {
     return this.http.get<AssignWork[]>(`${this.baseUrl}/GetAssignWork`);
   }
 
-  updateAssignment(id: string, task: any): Observable<any> {
+ updateAssignment(id: string, task: FormData | any): Observable<any> {
+  if (task instanceof FormData) {
+    return this.http.put(`${this.baseUrl}/UpdateAssignWork/${id}`, task);
+  } else {
     return this.http.put(`${this.baseUrl}/UpdateAssignWork/${id}`, task, {
       headers: { 'Content-Type': 'application/json' }
     });
   }
-
+}
   deleteAssignment(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/DeleteAssignWork/${id}`);
   }

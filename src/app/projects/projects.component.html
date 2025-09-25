@@ -272,41 +272,6 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div *ngIf="error" class="error-state">
     <mat-icon>error_outline</mat-icon>
     <span>{{ error }}</span>
@@ -409,6 +374,19 @@
     </form>
   </div>
 </div>
+<div class="section-block">
+  <h3 class="section-title">• Pictures</h3>
+
+
+  <input type="file" (change)="onPictureSelected($event)" accept="image/*" multiple>
+  <div class="uploaded-images">
+    <div *ngFor="let img of uploadedPictures; let i = index" class="image-preview">
+      <img [src]="getImageUrl(img)" (click)="viewImage(img)" alt="Task Picture" class="thumb">
+     
+    </div>
+  </div>
+</div>
+
           </div>
 
       
