@@ -8,8 +8,7 @@ import { CreatprojectService } from '../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
 
-// Define the Document interface to type the documents array
-// Define the Document interface to type the documents array
+
 interface Document {
   _id: string;
   title: string;
@@ -23,13 +22,16 @@ interface Document {
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
 
-// Document
+
   showmaindocument = false;
   showdocumentpop = false;
   editingDocument: Document | null = null; 
   documentForm: FormGroup; 
   documents: Document[] = []; 
   selectedFile: File | null = null; 
+  uploadedPictures: string[] = []; 
+selectedPictureFiles: File[] = [];
+
 
   //task
   showmaintask=true;
@@ -78,7 +80,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar
     
   ) {
-    // Initialize documentForm in constructor to satisfy TypeScript
+
     this.documentForm = this.fb.group({
       title: ['', Validators.required],
       file: [null]
@@ -94,7 +96,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.updateDateTime();
      this.getDocuments();
   
-    //  this.initDocumentForm();
+ 
     this.getDocuments();
   }
 
@@ -249,6 +251,31 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     );
   }
 
+  onPictureSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files) {
+    Array.from(input.files).forEach(file => {
+      this.selectedPictureFiles.push(file);
+    });
+  }
+}
+
+
+getImageUrl(path: string): string {
+  if (path.startsWith('http')) return path;
+  return `http://localhost:3008/${path.replace(/\\/g, '/')}`;
+}
+
+removePicture(index: number) {
+  this.uploadedPictures.splice(index, 1);
+}
+
+
+viewImage(path: string) {
+  const url = this.getImageUrl(path);
+  window.open(url, '_blank');
+}
+
   getAssignments() {
     this.loading = true;
     const s = this.assignworkService.getAssignments().subscribe({
@@ -321,13 +348,20 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Check if current user is a team lead for the selected project
+
     if (!this.isCurrentUserTeamLead() && !task) {
       this.error = "Only team leads can assign tasks to this project";
       this.snackBar.open(this.error, 'Close', { duration: 3000 });
       this.error = '';
       return;
     }
+
+    if (task && task.pictures?.length) {
+  this.uploadedPictures = [...task.pictures];
+} else {
+  this.uploadedPictures = [];
+}
+this.selectedPictureFiles = [];
 
     this.editingTask = task || null;
     this.selectedTask = task || null;
@@ -411,52 +445,59 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveAssignment() {
-    if (this.assignmentForm.invalid) {
-      this.snackBar.open('Please fill required fields', 'Close', { duration: 2500 });
-      return;
-    }
-
-    const formValue = this.assignmentForm.value;
-    const payload: any = {
-      projectName: this.selectedProjectName || (this.editingTask?.projectName || ''),
-      title: formValue.title,
-      description: formValue.description,
-      comment: this.editingTask?.comment || [],
-      assignedTo: formValue.assignedTo || this.username,
-      assignee: formValue.assignee,
-      startDate: formValue.startDate ? new Date(formValue.startDate).toISOString().split('T')[0] : '',
-      dueDate: formValue.dueDate ? new Date(formValue.dueDate).toISOString().split('T')[0] : '',
-      Status: formValue.Status || (this.editingTask ? this.editingTask.Status : 'ToDo'),
-      projectId: this.selectedProjectId || (this.editingTask?.projectId || '')
-    };
-
-    if (this.editingTask && this.editingTask._id) {
-      const s = this.assignworkService.updateAssignment(this.editingTask._id, payload).subscribe({
-        next: () => {
-          this.snackBar.open('Task updated successfully', 'Close', { duration: 2500 });
-          this.getAssignments();
-          this.dialog.closeAll();
-        },
-        error: () => {
-          this.snackBar.open('Failed to update task', 'Close', { duration: 3000 });
-        }
-      });
-      this.subs.add(s);
-    } else {
-      const s = this.assignworkService.createAssignment(payload).subscribe({
-        next: () => {
-          this.snackBar.open('Task created successfully', 'Close', { duration: 2500 });
-          this.getAssignments();
-          this.dialog.closeAll();
-        },
-        error: () => {
-          this.snackBar.open('Failed to create task', 'Close', { duration: 3000 });
-        }
-      });
-      this.subs.add(s);
-    }
+saveAssignment() {
+  if (this.assignmentForm.invalid) {
+    this.snackBar.open('Please fill required fields', 'Close', { duration: 2500 });
+    return;
   }
+
+  const formValue = this.assignmentForm.value;
+  const formData = new FormData();
+
+  formData.append('projectName', this.selectedProjectName || (this.editingTask?.projectName || ''));
+  formData.append('title', formValue.title);
+  formData.append('description', formValue.description);
+  formData.append('assignedTo', formValue.assignedTo || this.username);
+  formData.append('assignee', formValue.assignee);
+  formData.append('startDate', formValue.startDate ? new Date(formValue.startDate).toISOString().split('T')[0] : '');
+  formData.append('dueDate', formValue.dueDate ? new Date(formValue.dueDate).toISOString().split('T')[0] : '');
+  formData.append('Status', formValue.Status || (this.editingTask ? this.editingTask.Status : 'ToDo'));
+  formData.append('projectId', this.selectedProjectId || (this.editingTask?.projectId || ''));
+
+
+  if (this.uploadedPictures?.length) {
+    formData.append('existingPictures', JSON.stringify(this.uploadedPictures));
+  }
+
+
+  this.selectedPictureFiles.forEach(file => {
+    formData.append('pictures', file);
+  });
+
+  if (this.editingTask && this.editingTask._id) {
+    this.assignworkService.updateAssignment(this.editingTask._id, formData).subscribe({
+      next: () => {
+        this.snackBar.open('Task updated successfully', 'Close', { duration: 2500 });
+        this.getAssignments();
+        this.dialog.closeAll();
+      },
+      error: () => {
+        this.snackBar.open('Failed to update task', 'Close', { duration: 3000 });
+      }
+    });
+  } else {
+    this.assignworkService.createAssignment(formData).subscribe({
+      next: () => {
+        this.snackBar.open('Task created successfully', 'Close', { duration: 2500 });
+        this.getAssignments();
+        this.dialog.closeAll();
+      },
+      error: () => {
+        this.snackBar.open('Failed to create task', 'Close', { duration: 3000 });
+      }
+    });
+  }
+}
 
   deleteAssignment(id: string | undefined) {
     if (!id) return;
@@ -532,7 +573,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  //task
+
 
   opentask(){
     this.showmaintask=true;
@@ -540,7 +581,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.showinuserview=false;
   }
 
-  //document
+
 
   opendoc(){
     this.showmaindocument=true;
@@ -568,7 +609,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // --- Document Upload ---
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -590,7 +631,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     }
 
     if (this.editingDocument && this.editingDocument._id) {
-      // Update existing document
+  
       const s = this.assignworkService.updateDocument(this.editingDocument._id, formData).subscribe({
         next: () => {
           this.snackBar.open('Document updated successfully', 'Close', { duration: 2500 });
@@ -606,7 +647,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       });
       this.subs.add(s);
     } else {
-      // Create new document
+   
       if (!this.selectedFile) {
         this.snackBar.open('Please provide a file for new document', 'Close', { duration: 2500 });
         return;
