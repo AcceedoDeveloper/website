@@ -8,12 +8,32 @@ import { CreatprojectService } from '../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
 
+// Define the Document interface to type the documents array
+// Define the Document interface to type the documents array
+interface Document {
+  _id: string;
+  title: string;
+  files: string[];
+}
+
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
+
+// Document
+  showmaindocument = false;
+  showdocumentpop = false;
+  editingDocument: Document | null = null; 
+  documentForm: FormGroup; 
+  documents: Document[] = []; 
+  selectedFile: File | null = null; 
+
+  //task
+  showmaintask=false;
+
   userData: any = null;
   username = '';
   displayName = 'User';
@@ -50,7 +70,14 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+    
+  ) {
+    // Initialize documentForm in constructor to satisfy TypeScript
+    this.documentForm = this.fb.group({
+      title: ['', Validators.required],
+      file: [null]
+    });
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -59,6 +86,10 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.loadUserFromSession();
     this.loadEmployees();
     this.updateDateTime();
+     this.getDocuments();
+  
+    //  this.initDocumentForm();
+    this.getDocuments();
   }
 
   ngOnDestroy(): void {
@@ -493,5 +524,137 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       );
       this.snackBar.open('Cannot change status for unsaved task', 'Close', { duration: 3000 });
     }
+  }
+
+  //task
+
+  opentask(){
+    this.showmaintask=! this.showmaintask;
+    this.showmaindocument=false;
+  }
+
+  //document
+
+  opendoc(){
+    this.showmaindocument=!this.showmaindocument;
+     this.showmaintask=false;
+  }
+
+
+
+
+
+  opendocpop(doc?: any) {
+    this.editingDocument = doc || null;
+    this.showdocumentpop = true;
+
+    if (doc) {
+      this.documentForm.patchValue({
+        title: doc.title,
+        file: null
+      });
+      this.selectedFile = null;
+    } else {
+      this.documentForm.reset();
+      this.selectedFile = null;
+    }
+  }
+
+  // --- Document Upload ---
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.documentForm.patchValue({ file: this.selectedFile });
+    }
+  }
+
+  submitDocument() {
+    if (!this.documentForm.valid && !this.editingDocument) {
+      this.snackBar.open('Please provide title and file', 'Close', { duration: 2500 });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', this.documentForm.get('title')?.value);
+    if (this.selectedFile) {
+      formData.append('files', this.selectedFile);
+    }
+
+    if (this.editingDocument && this.editingDocument._id) {
+      // Update existing document
+      const s = this.assignworkService.updateDocument(this.editingDocument._id, formData).subscribe({
+        next: () => {
+          this.snackBar.open('Document updated successfully', 'Close', { duration: 2500 });
+          this.getDocuments();
+          this.showdocumentpop = false;
+          this.documentForm.reset();
+          this.selectedFile = null;
+          this.editingDocument = null;
+        },
+        error: () => {
+          this.snackBar.open('Failed to update document', 'Close', { duration: 3000 });
+        }
+      });
+      this.subs.add(s);
+    } else {
+      // Create new document
+      if (!this.selectedFile) {
+        this.snackBar.open('Please provide a file for new document', 'Close', { duration: 2500 });
+        return;
+      }
+      const s = this.assignworkService.createDocument(formData).subscribe({
+        next: () => {
+          this.snackBar.open('Document uploaded successfully', 'Close', { duration: 2500 });
+          this.getDocuments();
+          this.showdocumentpop = false;
+          this.documentForm.reset();
+          this.selectedFile = null;
+        },
+        error: () => {
+          this.snackBar.open('Failed to upload document', 'Close', { duration: 3000 });
+        }
+      });
+      this.subs.add(s);
+    }
+  }
+
+  getDocuments() {
+    const s = this.assignworkService.getDocument().subscribe({
+      next: (res) => {
+        if (Array.isArray(res)) {
+          this.documents = res;
+        } else if (res?.data && Array.isArray(res.data)) {
+          this.documents = res.data;
+        } else {
+          this.documents = [];
+        }
+      },
+      error: () => {
+        this.snackBar.open('Failed to load documents', 'Close', { duration: 3000 });
+        this.documents = [];
+      }
+    });
+    this.subs.add(s);
+  }
+
+  deleteDocument(id: string) {
+    if (!id) return;
+    if (!confirm('Are you sure you want to delete this document?')) return;
+
+    const s = this.assignworkService.deleteDocument(id).subscribe({
+      next: () => {
+        this.snackBar.open('Document deleted successfully', 'Close', { duration: 2500 });
+        this.documents = this.documents.filter(doc => String(doc._id) !== String(id));
+      },
+      error: () => {
+        this.snackBar.open('Failed to delete document', 'Close', { duration: 3000 });
+      }
+    });
+    this.subs.add(s);
+  }
+
+  openuv() {
+    // Placeholder for user view functionality
   }
 }

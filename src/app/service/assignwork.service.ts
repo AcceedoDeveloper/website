@@ -22,6 +22,14 @@ timestamp: string|number|Date;
   message: string;
 }
 
+
+// for document
+export interface MyFormData {
+  title: string;
+  files: File[];
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -50,5 +58,26 @@ export class AssignWorkService {
 
   getEmployees(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/GetUsers`);
+  }
+
+// upload document service need here
+
+//get
+
+// Document-related services
+  getDocument(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/getDocument`);
+  }
+
+  createDocument(task: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/createDocument`, task);
+  }
+
+  updateDocument(id: string, task: FormData): Observable<any> {
+    return this.http.put(`${this.baseUrl}/updateDocument/${id}`, task);
+  }
+
+  deleteDocument(id: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/deleteDocument/${id}`);
   }
 }
