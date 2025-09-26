@@ -53,12 +53,6 @@
 
   </div>
 
-
-
-
-
-
-
 <div class="Month-view" *ngIf="showMonthView">
   <div class="container">
     <!-- Header with selectors -->
@@ -104,9 +98,6 @@
     </div>
   </div>
 </div>
-
-
-
 
 <div class="maindocument" *ngIf="showmaindocument">
 
@@ -170,8 +161,6 @@
   </ng-template>
 </div>
 
-
-
 <div class="maintask" *ngIf="showmaintask">
 
   <div class="task-controls">
@@ -194,19 +183,23 @@
      id="todo-list">
   <h3>To Do <span class="task-count">{{ todoAssignments.length }}</span></h3>
   
-  <div *ngFor="let task of todoAssignments"
-       class="kanban-card"
-       cdkDrag
-       [cdkDragData]="task">
-       
+<div *ngFor="let task of todoAssignments"
+     class="kanban-card"
+     cdkDrag
+     [cdkDragData]="task">
+
   <div class="task-header-clean">
-  <div class="task-info-clean">
-    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
+    <div class="task-info-clean">
+      <span class="heading-clean">Task:</span>
+      <span class="point-clean" [title]="task.title">{{ task.title }}</span>
+    </div>
+    <div class="task-info-clean">
+      <span class="heading-clean">Assigned To:</span>
+      <span class="point-clean" [title]="task.assignee">{{ task.assignee }}</span>
+    </div>
   </div>
-  <div class="task-info-clean">
-    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
-  </div>
-  </div>
+
+
   
   
     <div class="task-footer">
@@ -321,9 +314,6 @@
   </div>
 </div>
 
-
-
-
 <!-- User View Section -->
   <div class="mainuserview" *ngIf="showinuserview">
     <div class="task-controls">
@@ -357,39 +347,6 @@
   </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div *ngIf="error" class="error-state">
     <mat-icon>error_outline</mat-icon>
     <span>{{ error }}</span>
@@ -407,14 +364,21 @@
     <span>Loading tasks...</span>
   </div>
 
-
-
-
-
-
 </div>
-
 <app-footer></app-footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <ng-template #assignmentDialog>

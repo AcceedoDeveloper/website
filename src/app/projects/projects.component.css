@@ -1553,3 +1553,19 @@ margin-top: -670px;
     overflow-y: auto;
   }
 }
+.task-info-clean {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 52%;
+}
+
+.point-clean {
+  flex: 1;
+  min-width: 0; /* allows text-overflow to work inside flexbox */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: middle;
+}

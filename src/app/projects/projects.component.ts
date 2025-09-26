@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,6 +21,20 @@ interface Document {
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
+removeImage: any;
+cancelEdit: any;
+onPictureDropped($event: DragEvent) {
+throw new Error('Method not implemented.');
+}
+onDragOver($event: DragEvent) {
+throw new Error('Method not implemented.');
+}
+onDragEnter($event: DragEvent) {
+throw new Error('Method not implemented.');
+}
+onDragLeave($event: DragEvent) {
+throw new Error('Method not implemented.');
+}
 
 
   showmaindocument = false;
@@ -29,17 +43,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   editingDocument: Document | null = null; 
   documentForm: FormGroup; 
   documents: Document[] = []; 
+
   selectedFile: File | null = null; 
   uploadedPictures: string[] = []; 
 selectedPictureFiles: File[] = [];
 
-
-  //task
   showmaintask=true;
 
- 
-
-  // User View
   showinuserview = false;
   userViewAssignments: AssignWork[] = [];
 
@@ -74,8 +84,8 @@ selectedPictureFiles: File[] = [];
     "July","August","September","October","November","December"
   ];
 years: number[] = [];
-  selectedMonth: number = new Date().getMonth();  // current month
-  selectedYear: number = new Date().getFullYear(); // current year
+  selectedMonth: number = new Date().getMonth();  
+  selectedYear: number = new Date().getFullYear(); 
   days: any[] = [];
 
 
@@ -83,6 +93,7 @@ years: number[] = [];
   private subs = new Subscription();
   private dateIntervalId: any = null;
   searchQuery: any;
+isDragActive: any;
 
   constructor(
     private projectService: CreatprojectService,
@@ -417,11 +428,11 @@ this.selectedPictureFiles = [];
     this.assignmentForm.reset(formData);
     this.commentForm.reset();
 
-    const dialogRef = this.dialog.open(this.assignmentDialog, {
-      width: '1000px',
-      maxWidth: '95vw',
-      maxHeight: '90vh'
-    });
+const dialogRef = this.dialog.open(this.assignmentDialog, {
+  width: '1000px',
+  maxWidth: '95vw',
+  maxHeight: '90vh'
+});
 
     const afterSub = dialogRef.afterClosed().subscribe(() => {
       this.assignmentForm.reset({
@@ -438,40 +449,40 @@ this.selectedPictureFiles = [];
     this.subs.add(afterSub);
   }
 
-  addComment() {
-    if (this.commentForm.invalid || !this.selectedTask) return;
+addComment() {
+  if (this.commentForm.invalid || !this.selectedTask) return;
 
-    const message = this.commentForm.get('message')?.value;
-    const newComment = {
-      user: this.username,
-      message: message,
-      timestamp: new Date()
-    };
+  const message = this.commentForm.get('message')?.value;
+  const newComment = {
+    user: this.username,
+    message: message,
+    timestamp: new Date()
+  };
 
-    const comments = this.selectedTask.comment ? [...this.selectedTask.comment] : [];
-    comments.push(newComment);
-    this.selectedTask.comment = comments;
+  const comments = this.selectedTask.comment ? [...this.selectedTask.comment] : [];
+  comments.push(newComment);
+  this.selectedTask.comment = comments;
 
-    if (this.selectedTask._id) {
-      const payload = { ...this.selectedTask, comment: comments };
-      const s = this.assignworkService.updateAssignment(this.selectedTask._id, payload).subscribe({
-        next: () => {
-          this.snackBar.open('Comment added', 'Close', { duration: 2000 });
-          this.commentForm.reset();
-          this.getAssignments();
-        },
-        error: () => {
-          this.snackBar.open('Failed to add comment', 'Close', { duration: 3000 });
-          const arr = this.selectedTask?.comment || [];
-          arr.pop();
-          this.selectedTask!.comment = arr;
-        }
-      });
-      this.subs.add(s);
-    } else {
-      this.snackBar.open('Comment added locally (save task to persist)', 'Close', { duration: 3000 });
-      this.commentForm.reset();
-    }
+  if (this.selectedTask._id) {
+    const payload = { ...this.selectedTask, comment: comments };
+    const s = this.assignworkService.updateAssignment(this.selectedTask._id, payload).subscribe({
+      next: () => {
+        this.snackBar.open('Comment added', 'Close', { duration: 2000 });
+        this.commentForm.reset();
+        // ✅ Don’t reload tasks, comments are already updated locally
+      },
+      error: () => {
+        this.snackBar.open('Failed to add comment', 'Close', { duration: 3000 });
+        const arr = this.selectedTask?.comment || [];
+        arr.pop();
+        this.selectedTask!.comment = arr;
+      }
+    });
+    this.subs.add(s);
+  } else {
+    this.snackBar.open('Comment added locally (save task to persist)', 'Close', { duration: 3000 });
+    this.commentForm.reset();
+  }
   }
 
 saveAssignment() {
@@ -554,54 +565,59 @@ saveAssignment() {
     removeFrom(this.inProgressAssignments);
     removeFrom(this.doneAssignments);
   }
-
-  drop(event: CdkDragDrop<AssignWork[]>, newStatus: string) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      return;
-    }
-
-    const movedTask = event.previousContainer.data[event.previousIndex];
-    if (!movedTask) return;
-    transferArrayItem(
-      event.previousContainer.data,
-      event.container.data,
-      event.previousIndex,
-      event.currentIndex
-    );
-
-    const previousStatus = movedTask.Status;
-    movedTask.Status = newStatus;
-
-    if (movedTask._id) {
-      const updatePayload = { ...movedTask, Status: newStatus };
-      const s = this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
-        next: () => {
-  
-          this.getAssignments();
-        },
-        error: () => {
-          transferArrayItem(
-            event.container.data,
-            event.previousContainer.data,
-            event.currentIndex,
-            event.previousIndex
-          );
-          movedTask.Status = previousStatus;
-          this.snackBar.open('Failed to update task status', 'Close', { duration: 3000 });
-        }
-      });
-      this.subs.add(s);
-    } else {
-      transferArrayItem(
-        event.container.data,
-        event.previousContainer.data,
-        event.currentIndex,
-        event.previousIndex
-      );
-      this.snackBar.open('Cannot change status for unsaved task', 'Close', { duration: 3000 });
-    }
+drop(event: CdkDragDrop<AssignWork[]>, newStatus: string) {
+  if (event.previousContainer === event.container) {
+    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    return;
   }
+
+  const movedTask = event.previousContainer.data[event.previousIndex];
+  if (!movedTask) return;
+
+  // Move task locally
+  transferArrayItem(
+    event.previousContainer.data,
+    event.container.data,
+    event.previousIndex,
+    event.currentIndex
+  );
+
+  const previousStatus = movedTask.Status;
+  movedTask.Status = newStatus;
+
+  if (movedTask._id) {
+    // ✅ Only send status, not comments
+    const updatePayload = { Status: newStatus };
+
+    const s = this.assignworkService.updateAssignment(movedTask._id, updatePayload).subscribe({
+      next: () => {
+        this.snackBar.open('Task status updated', 'Close', { duration: 2000 });
+      },
+      error: () => {
+        // Rollback if failed
+        transferArrayItem(
+          event.container.data,
+          event.previousContainer.data,
+          event.currentIndex,
+          event.previousIndex
+        );
+        movedTask.Status = previousStatus;
+        this.snackBar.open('Failed to update task status', 'Close', { duration: 3000 });
+      }
+    });
+    this.subs.add(s);
+  } else {
+    // Rollback for unsaved tasks
+    transferArrayItem(
+      event.container.data,
+      event.previousContainer.data,
+      event.currentIndex,
+      event.previousIndex
+    );
+    this.snackBar.open('Cannot change status for unsaved task', 'Close', { duration: 3000 });
+  }
+}
+
 
 
 
@@ -612,7 +628,7 @@ saveAssignment() {
     this.showMonthView=false
   }
 
-  // User View
+
   openuv() {
     this.showinuserview = true;
     this.showmaintask = false;
@@ -747,7 +763,7 @@ openMonthView(){
     this.subs.add(s);
   }
 
-//user-view
+
   loadUserViewAssignments() {
     if (!this.username || !this.selectedProjectName) {
       this.userViewAssignments = [];
@@ -783,26 +799,26 @@ generateCalendar() {
     const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
     const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startDay = firstDay.getDay(); // Sunday = 0
+    const startDay = firstDay.getDay(); 
 
-    // Adjust so Saturday is first (since your header starts with Saturday)
+
     const offset = (startDay + 6) % 7;
 
-    // Fill previous month blanks
+
     for (let i = 0; i < offset; i++) {
       this.days.push({ date: '', isSunday: false, isHoliday: false });
     }
 
-    // Fill current month
+  
     for (let d = 1; d <= daysInMonth; d++) {
       const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
-      const isSunday = dateObj.getDay() === 0; // Sunday
-      const isHoliday = (this.selectedMonth === 8 && d === 25); // Example holiday Sep 25
+      const isSunday = dateObj.getDay() === 0; 
+      const isHoliday = (this.selectedMonth === 8 && d === 25); 
 
       this.days.push({ date: d, isSunday, isHoliday });
     }
 
-    // Pad the last row to complete the grid (optional)
+  
     while (this.days.length % 7 !== 0) {
       this.days.push({ date: '', isSunday: false, isHoliday: false });
     }
