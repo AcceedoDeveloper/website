@@ -38,7 +38,8 @@ margin-top: -1140px;
 .calendar-icon {
   width: 20px;
   height: 20px;
-  margin-left: 100px;
+  margin-left: 110px;
+  margin-bottom: 28px;
 }
 
 .user-welcome {
@@ -172,7 +173,7 @@ margin-top: -1140px;
   gap: 20px;
   padding: 20px 0;
   overflow-x: auto;
-  margin-left: 130px;
+  margin-left: 10px;
   width: 100%;
   max-width: 1800px;
 }
@@ -1043,7 +1044,7 @@ textarea {
   padding: 20px;
   width: 100%;
   max-width: 1800px;
-  margin-left: 130px;
+  margin-left: 40px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -1478,7 +1479,7 @@ margin-top: -670px;
   }
 }
 
-/* ✅ Mobile (576px - 767px) */
+
 @media (max-width: 767px) and (min-width: 576px) {
   .maincontent {
     margin-left: 0;
@@ -1497,7 +1498,7 @@ margin-top: -670px;
   }
 }
 
-/* ✅ Extra Small Mobile (up to 575px) */
+
 @media (max-width: 575px) {
   .maincontent {
     margin-left: 0;
@@ -1519,7 +1520,7 @@ margin-top: -670px;
   }
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .form-columns {
     flex-direction: column;
@@ -1534,14 +1535,14 @@ margin-top: -670px;
   }
 }
 
-/* Responsive design */
+
 @media (max-width: 1024px) {
   .kanban-board {
     grid-template-columns: 1fr;
   }
 }
 
-/* Make form fields more compact on smaller screens */
+
 @media (max-width: 768px) {
   .form-columns {
     flex-direction: column;
@@ -1562,10 +1563,42 @@ margin-top: -670px;
 
 .point-clean {
   flex: 1;
-  min-width: 0; /* allows text-overflow to work inside flexbox */
+  min-width: 0; 
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: inline-block;
   vertical-align: middle;
 }
+
+.maincontent {
+  width: 100%;
+  max-width: 2100px;
+  height: 100%;
+  margin-left: 275px;
+  margin-top: -1140px;
+  padding: 0 20px;
+  flex: 1;
+}
+
+
+@media (max-width: 2200px) {
+  .maincontent { max-width: 67%; margin-left: 20px; margin-top: -900px; }
+}
+
+@media (max-width: 1920px) {
+  .maincontent { max-width: 85%; margin-left: 250px; margin-top: -1030px; }
+}
+
+
+@media (max-width: 1600px) {
+  .maincontent { max-width: 80%; margin-left: 250px; margin-top: -860px; }
+}
+
+@media (max-width: 1366px) {
+  .maincontent { max-width: 90%; margin-left: 10px; margin-top: 10px; }
+}
+
+
+
+

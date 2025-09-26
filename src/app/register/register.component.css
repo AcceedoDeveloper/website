@@ -328,19 +328,6 @@ margin-top: -1140px;
 }
 
 
-.user-table-wrapper.scrollable::-webkit-scrollbar {
-  width: 8px;
-}
-
-.user-table-wrapper.scrollable::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.2);
-  border-radius: 4px;
-}
-
-.user-table-wrapper.scrollable::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 
 @media (max-width: 2200px) {
   
@@ -350,7 +337,7 @@ width: 100%;
 max-width: 1285px;
 height: 100%;
 margin-left: 275px;
-margin-top: -670px;
+margin-top: -850px;
   padding: 0px 20px;
   flex:1;
 
@@ -374,32 +361,4 @@ margin-top: -670px;
   overflow-y: auto;
   scroll-behavior: smooth;
 }
-
-/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
-.maincontent::-webkit-scrollbar {
-  width: 12px;
-}
-
-.maincontent::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.maincontent::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-  border: 2px solid #f1f1f1;
-}
-
-.maincontent::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Custom scrollbar for Firefox */
-.maincontent {
-  scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
-}
-
-
 }

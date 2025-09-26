@@ -12,7 +12,7 @@ margin-top: -1140px;
 
 .welcome-card {
   background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
-  color: #333;  /* Dark text for better contrast */
+  color: #333;  
   padding: 16px 20px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -59,7 +59,7 @@ margin-top: -1140px;
   margin-top: -70px;
   margin-left: 30px;
   object-fit: cover;
-  border-radius: 50%;   /* makes it a circle */
+  border-radius: 50%;   
   border: 3px solid #FFD54F;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
@@ -68,7 +68,7 @@ margin-top: -1140px;
   display: block;
 }
 
-/* General Styles */
+
 .contains {
   display: flex;
   min-height: calc(100vh - 60px);
@@ -79,7 +79,7 @@ margin-top: -1140px;
   padding: 20px;
 }
 
-/* Project Box */
+
 .project-box {
   background: white;
   padding: 20px;
@@ -108,7 +108,7 @@ margin-top: -1140px;
   border-radius: 4px;
 }
 
-/* Employee Dropdown */
+
 .employees-input-container {
   position: relative;
   cursor: pointer;
@@ -221,7 +221,7 @@ margin-top: -1140px;
   border-left: 4px solid #4CAF50;
 }
 
-/* Projects List */
+
 .projects-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -281,7 +281,7 @@ margin-top: -1140px;
   border-radius: 8px;
 }
 
-/* Edit Modal */
+
 .edit-task-modal {
   position: fixed;
   top: 0;
@@ -350,7 +350,7 @@ margin-top: -1140px;
   cursor: pointer;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .contains {
     flex-direction: column;
@@ -431,7 +431,7 @@ margin-top: -1140px;
   padding: 24px;
 }
 
-/* Animations */
+
 @keyframes fadeIn {
   from { opacity: 0;}
   to { opacity: 1;}
@@ -442,7 +442,7 @@ margin-top: -1140px;
   to { transform: scale(1); opacity: 1;}
 }
 
-/* === Form === */
+
 .form-row {
   margin-bottom: 20px;
   display: flex;
@@ -481,7 +481,7 @@ margin-top: -1140px;
   flex-direction: column;
 }
 
-/* Employees Dropdown */
+
 .employees-input-container {
   display: flex;
   align-items: center;
@@ -557,7 +557,7 @@ margin-top: -1140px;
   font-size: 14px;
 }
 
-/* Buttons */
+
 .form-buttons {
   display: flex;
   justify-content: flex-end;
@@ -656,7 +656,7 @@ width: 100%;
 max-width: 1285px;
 height: 100%;
 margin-left: 275px;
-margin-top: -670px;
+margin-top: -850px;
   padding: 0px 20px;
   flex:1;
 
