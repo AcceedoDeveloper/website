@@ -69,136 +69,6 @@ margin-top: -1140px;
 .t0{
   display: block;
 }
-@media (max-width: 2200px) {
-  
-.maincontent{
-
-width: 100%;
-max-width: 1285px;
-height: 100%;
-margin-left: 275px;
-margin-top: -670px;
-  padding: 0px 20px;
-  flex:1;
-
-}
-
-.welcome-card {
-  height: 20%;
-}
-
-.date-time {
-  margin-left: 880px;
-}
-
-.user-welcome span {
-  margin-top: -55px;
-
-}
-.maincontent {
-  max-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
-
-.maincontent::-webkit-scrollbar {
-  width: 12px;
-}
-
-.maincontent::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.maincontent::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-  border: 1px solid #f1f1f1;
-}
-
-.maincontent::-webkit-scrollbar-thumb:hover {
-  background: #faf8f8;
-}
-
-.maincontent {
-  scrollbar-width: thin;
-  scrollbar-color: #fffdfd #f1f1f1;
-}
-
-
-}
-
-
-/* ✅ Medium Screens / Tablets (992px - 1199px) */
-@media (max-width: 1199px) and (min-width: 992px) {
-  .maincontent {
-    margin-left: 200px;
-    margin-top: -500px;
-    max-width: 1000px;
-  }
-
-  .date-time {
-    margin-left: 650px;
-  }
-}
-    
-@media (max-width: 991px) and (min-width: 768px) {
-  .maincontent {
-    margin-left: 150px;
-    margin-top: -400px;
-    max-width: 90%;
-  }
-
-  .date-time {
-    margin-left: 450px;
-  }
-
-  .user-welcome span {
-    margin-top: -20px;
-  }
-}
-
-/* ✅ Mobile (576px - 767px) */
-@media (max-width: 767px) and (min-width: 576px) {
-  .maincontent {
-    margin-left: 0;
-    margin-top: -200px;
-    max-width: 95%;
-  }
-
-  .date-time {
-    margin-left: auto;
-    text-align: right;
-  }
-
-  .user-welcome span {
-    margin-top: -10px;
-    display: block;
-  }
-}
-
-/* ✅ Extra Small Mobile (up to 575px) */
-@media (max-width: 575px) {
-  .maincontent {
-    margin-left: 0;
-    margin-top: -100px;
-    max-width: 100%;
-    padding: 0 10px;
-  }
-
-  .date-time {
-    margin-left: 0;
-    text-align: center;
-    margin-top: 10px;
-  }
-
-  .user-welcome span {
-    margin-top: 0;
-    text-align: center;
-    display: block;
-  }
-}
-
 
 .projects-container {
   max-width: 980px;
@@ -305,45 +175,64 @@ margin-top: -670px;
   margin-left: 130px;
   width: 100%;
   max-width: 1800px;
-  margin-top: 20px;
 }
 
 .kanban-column {
-  background: #f8f9fa;
+  background: white;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 300px;
   border-radius: 8px;
   padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 70vh;
+  overflow-y: auto;
   min-height: 500px;
 }
 
 .kanban-column h3 {
   margin: 0 0 15px 0;
   padding-bottom: 10px;
-  border-bottom: 2px solid #e9ecef;
-  color: #2c3e50;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #333;
+  border-bottom: 2px solid #ddd;
 }
 
 .task-count {
-  background: #e9ecef;
-  color: #6c757d;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
+  display: inline-flex;       /* keeps text centered */
+  align-items: center;
+  justify-content: center;
   font-weight: 600;
+  background: #3f51b5;
+  color: white;
+  width: 24px;                /* fixed circle size */
+  height: 24px;               /* same as width */
+  border-radius: 30%;         /* makes it a circle */
+  font-size: 0.5em;           /* adjust text size */
 }
 
+
 .kanban-card {
-  background: white;
+  background: rgb(249, 247, 247);
   border-radius: 6px;
   padding: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   border-left: 4px solid #3498db;
   cursor: move;
+  box-shadow: 0 2px 6px #0000001a;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  font-size: 16px;
+  max-width: 900px;
+  height: 100%;
+  max-height: 80px;
+  overflow: hidden;
+  transition: all 0.2s ease;
 }
-
 .kanban-card .task-content {
   margin-bottom: 10px;
 }
@@ -398,13 +287,6 @@ margin-top: -670px;
   margin-bottom: 15px;
 }  
 
-
-/* Responsive design */
-@media (max-width: 1024px) {
-  .kanban-board {
-    grid-template-columns: 1fr;
-  }
-}
 /* Success message */
 .success-message {
   display: flex;
@@ -458,38 +340,6 @@ margin-top: -670px;
 
 #done-list .kanban-card {
   border-left: 4px solid #27ae60; /* Green for Done */
-}
-.kanban-column {
-  flex: 1;
-  min-width: 300px;
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.kanban-column h3 {
-  margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #eee;
-  color: #333;
-}
-
-.task-count {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.kanban-card {
-  background-color: #f9f9f9;
-  border-radius: 6px;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-left: 4px solid #667eea;
-  cursor: move;
-  transition: all 0.2s ease;
 }
 
 .kanban-card:hover {
@@ -648,19 +498,6 @@ textarea {
   padding: 16px 24px;
   margin: 0;
   border-top: 1px solid #e0e0e0;
-}
-
-/* Make form fields more compact on smaller screens */
-@media (max-width: 768px) {
-  .form-columns {
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .dialog-container {
-    max-height: 80vh;
-    overflow-y: auto;
-  }
 }
 
 
@@ -822,56 +659,9 @@ textarea {
   gap: 15px;
 }
 
-.kanban-board {
-  display: flex;
-  gap: 20px;
-  padding: 20px 0;
-  overflow-x: auto;
-}
 
-.kanban-column {
-  flex: 1;
-  min-width: 300px;
-  background: #f5f5f5;
-  border-radius: 8px;
-  padding: 15px;
-  min-height: 500px;
-}
 
-.kanban-column h3 {
-  margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #ddd;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.task-count {
-  background: #3f51b5;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 0.8em;
-}
-
-.kanban-card {
-  background: white;
-  border-radius: 3px;
-  padding: 8px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-  cursor: move;
-  max-width: 900px;
-  min-height: 100px;
-  max-height: 250px;
-  overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-  position: relative; 
-}
 
 .task-content {
   margin-top: 28px; 
@@ -983,21 +773,6 @@ textarea {
   padding: 15px 0 0 0;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .form-columns {
-    flex-direction: column;
-  }
-  
-  .kanban-board {
-    flex-direction: column;
-  }
-  
-  .kanban-column {
-    min-width: auto;
-  }
-}
-
 .task-controls {
   display: flex;
   align-items: center;
@@ -1009,25 +784,28 @@ textarea {
 }
 
 .pill-dropdown select {
-  padding: 8px 16px;
+  padding: 8px ;
   font-size: 14px;
-  border-radius: 50px;
+  border-radius: 7px;
   border: 1px solid #ccc;
   outline: none;
   background: #f5f5f5;
   cursor: pointer;
   transition: all 0.2s;
+  margin-left: 30px;
 }
 
 .pill-dropdown select:focus {
-  border-color: #1976d2;
+  border-color: #040404;
   background: #fff;
 }
 
 .pill-dropdown button {
-  padding: 8px 16px;
+  padding: 5px 15px 15px 15px;
   font-size: 14px;
-  border-radius: 50px;
+  height: 100%;
+  border-radius: 7px;
+  max-height: 35px;
   border: 1px solid #ccc;
   outline: none;
   background: #f5f5f5;
@@ -1048,11 +826,12 @@ textarea {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+  margin-left: 135px;
   transition: background 0.3s;
 }
 
 .pill-btn:disabled {
-  background-color: #aaa;
+  background-color: #fcf8f8;
   cursor: not-allowed;
 }
 
@@ -1060,23 +839,6 @@ textarea {
   background-color: #125aa0;
 }
 
-.kanban-column {
-  background: #f4f5f7;
-  padding: 12px;
-  border-radius: 8px;
-  min-width: 260px;
-}
-
-.kanban-card {
-  background: #fff;
-  border-radius: 6px;
-  padding: 10px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 6px #0000001a;
-  display: flex;
-  position: relative;
-  flex-direction: column;
-}
 
 .task-header {
   display: flex;
@@ -1242,8 +1004,8 @@ textarea {
 
 .documentpop input[type="text"],
 .documentpop input[type="file"] {
-  padding: 5px;
-  /* border: 1px solid #d1d5db; */
+  padding: 10px;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
   transition: all 0.3s ease;
@@ -1378,144 +1140,6 @@ p {
   background-color: #0f235d;
 }
 
-.document-list {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.list-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 20px 0 12px;
-  color: #202124;
-}
-.document-container {
-  display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to next line */
-  gap: 16px;       /* Space between items */
-}
-
-
-
-.document-box {
-  background: #fff;
-  border: 1px solid #dadce0;
-  border-radius: 10px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-  cursor: pointer;
-  width: 400px;
-  height: 250px;
-}
-
-.document-box:hover {
-  box-shadow: 0 4px 12px rgba(60, 64, 67, 0.15);
-  transform: translateY(-2px);
-}
-
-.doc-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: #202124;
-  margin-bottom: 12px;
-  word-break: break-word;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content:flex-end;
-  align-items: center;
-}
-
-.view-link,
-.delete-btn {
-  font-size: 13px;
-  font-weight: 500;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  text-decoration: none;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-
-.view-link {
-  color: #1a73e8;
-  background: #e8f0fe;
-}
-
-.view-link:hover {
-  background: #d2e3fc;
-}
-
-.delete-btn {
-  background: #fce8e6;
-  color: #d93025;
-  cursor: pointer;
-}
-
-.delete-btn:hover {
-  background: #fad2cf;
-}
-
-.preview-container {
-  /* margin: 10px 0; */
-  text-align: center;
-}
-
-.excel-placeholder, .other-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* height: 200px; */
-  /* background-color: #f5f5f5;
-  border: 1px solid #ddd; */
-  border-radius: 4px;
-}
-
-.excel-placeholder img {
-  margin-bottom: 10px;
-}
-
-.excel-placeholder p, .other-placeholder p {
-  color: #666;
-  font-size: 14px;
-}
-
-.preview-container {
-  margin: 10px 0;
-  text-align: center;
-}
-
-.pdf-error-placeholder,
-.excel-placeholder,
-.other-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  /* height: 200px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd; */
-  border-radius: 4px;
-}
-
-.pdf-error-placeholder p,
-.excel-placeholder p,
-.other-placeholder p {
-  color: #666;
-  font-size: 14px;
-}
-
-.excel-placeholder img {
-  margin-bottom: 10px;
-}
-
-
 
 /* Animations */
 @keyframes fadeIn {
@@ -1537,16 +1161,16 @@ p {
 
 .image-preview {
   position: relative;
-  /* width: 100px;
-  height: 100px; */
+  width: 100px;
+  height: 100px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 .image-preview img.thumb {
-  /* width: 100%;
-  height: 100%; */
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   cursor: pointer;
   transition: transform 0.2s ease;
@@ -2318,6 +1942,214 @@ margin-top: -670px;
   margin-top: -1140px;
   padding: 0 20px;
   flex: 1;
+}
+
+/*Doucments*/
+
+.doc-title a{
+  background-color: #0f235d;
+}
+
+.document-list {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.list-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  color: #202124;
+}
+
+.document-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to next line */
+  gap: 16px;       /* Space between items */
+}
+
+
+
+.document-box {
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  width: 400px;
+  height: 250px;
+}
+
+.document-box:hover {
+  box-shadow: 0 4px 12px rgba(60, 64, 67, 0.15);
+  transform: translateY(-2px);
+}
+
+.doc-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #202124;
+  margin-bottom: 12px;
+  word-break: break-word;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content:flex-end;
+  align-items: center;
+}
+
+.view-link,
+.delete-btn {
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.view-link {
+  color: #1a73e8;
+  background: #e8f0fe;
+}
+
+.view-link:hover {
+  background: #d2e3fc;
+}
+
+.delete-btn {
+  background: #fce8e6;
+  color: #d93025;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #fad2cf;
+}
+
+.preview-container {
+  /* margin: 10px 0; */
+  text-align: center;
+}
+
+.excel-placeholder, .other-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* height: 200px; */
+  /* background-color: #f5f5f5;
+  border: 1px solid #ddd; */
+  border-radius: 4px;
+}
+
+.excel-placeholder img {
+  margin-bottom: 10px;
+}
+
+.excel-placeholder p, .other-placeholder p {
+  color: #666;
+  font-size: 14px;
+}
+
+.preview-container {
+  margin: 10px 0;
+  text-align: center;
+}
+
+.pdf-error-placeholder,
+.excel-placeholder,
+.other-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* height: 200px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd; */
+  border-radius: 4px;
+}
+
+.pdf-error-placeholder p,
+.excel-placeholder p,
+.other-placeholder p {
+  color: #666;
+  font-size: 14px;
+}
+
+.excel-placeholder img {
+  margin-bottom: 10px;
+}
+
+
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popScale {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+/* Uploaded Images Section */
+.uploaded-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview {
+  position: relative;
+  /* width: 100px;
+  height: 100px; */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  /* overflow: hidden; */
+}
+
+.image-preview img.thumb {
+  /* width: 100%;
+  height: 100%; */
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.image-preview img.thumb:hover {
+  transform: scale(1.1);
+}
+
+/* Delete button inside image preview */
+.image-preview button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Section block styling */
+.section-block {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 

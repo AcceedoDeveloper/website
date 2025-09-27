@@ -35,10 +35,6 @@
     </select>
   </div>
 
-   <div class="pill-dropdown">
- 
-    <button (click)="opentask()" >task</button>
-  </div>
 
 
 
@@ -59,24 +55,6 @@
   </div>
          
   </div>
-
-<div class="Month-view" *ngIf="showMonthView">
-  <div class="container">
-    <!-- Header with selectors -->
-    <div class="headerr">
-      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
-        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
-      </select>
-    <div class="headerr1">
-      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
-        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-      </select>
-    </div></div>
-
-
-
-
-
 <div class="maindocument" *ngIf="showmaindocument">
 
    <div class="task-controls">
@@ -215,7 +193,7 @@
   <div class="date-filter-section">
     <div class="date-filter-controls">
       <mat-form-field appearance="outline" class="date-picker-field">
-        <mat-label>Filter Tasks by Due Date</mat-label>
+        <mat-label></mat-label>
         <input matInput [matDatepicker]="taskDatePicker" 
                [(ngModel)]="selectedTaskDate" 
                (dateChange)="onTaskDateChange()"
@@ -466,7 +444,7 @@
     <div class="col-lg-6">
       <div class="card-box">
         <h5 class="Status-overView">Status overview</h5>
-        <div class="chart-container">
+       <div class="chart-container">
   <canvas id="workItemsChart"></canvas>
   <div class="chart-legend">
     <div class="legend-item">
@@ -514,7 +492,56 @@
 </div>
 
 </div>
-<app-footer></app-footer>
+ <div class="Month-view" *ngIf="showMonthView">
+  <div class="container">
+    <!-- Header with selectors -->
+    <div class="headerr">
+      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
+        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
+      </select>
+    <div class="headerr1">
+      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+    </div></div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color red"></div><span>Weekend</span></div>
+      </div>
+
+    <!-- Calendar -->
+    <div class="main-content">
+      <div class="calendar">
+        <div class="day-header">
+          <div>Monday</div>
+          <div>Tuesday</div>
+          <div>Wednesday</div>
+          <div>Thursday</div>
+          <div>Friday</div>
+          <div>Saturday</div>
+          <div>Sunday</div>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="day-cell"
+               *ngFor="let day of days">
+            <div class="day-number" [ngClass]="{'sunday': day.isSunday, 'holiday': day.isHoliday}">
+              {{ day.date }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="holidays"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
 
 <ng-template #assignmentDialog>
   <div class="dialog-container">
@@ -679,3 +706,4 @@
     </mat-dialog-actions>
   </div>
 </ng-template>
+<app-footer></app-footer>
