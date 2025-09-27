@@ -161,152 +161,173 @@
   </ng-template>
 </div>
 
+
+
+
+
+
+
+
+
 <div class="maintask" *ngIf="showmaintask">
 
-  <div class="task-controls">
- 
+<div class="task-controls-container">
 
-  <!-- Add Task Button -->
-  <button  class="pill-btn" (click)="openAssignmentDialog()" [disabled]="!selectedProjectId">
-    + Add Task
-  </button>
-</div>
+  <div class="task-controls">
+    <!-- Add Task Button -->
+    <button class="pill-btn" (click)="openAssignmentDialog()" [disabled]="!selectedProjectId">
+      + Add Task
+    </button>
+  </div>
+  <div class="date-filter-section">
+    <div class="date-filter-controls">
+      <mat-form-field appearance="outline" class="date-picker-field">
+        <mat-label>Filter Tasks by Due Date</mat-label>
+        <input matInput [matDatepicker]="taskDatePicker" 
+               [(ngModel)]="selectedTaskDate" 
+               (dateChange)="onTaskDateChange()"
+               placeholder="Select date to filter tasks">
+        <mat-datepicker-toggle matSuffix [for]="taskDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #taskDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <button mat-button color="warn" (click)="clearDateFilter()" 
+              *ngIf="selectedTaskDate" class="clear-date-btn">
+        <mat-icon>clear</mat-icon> Clear Filter
+      </button>
+    </div>
+  </div>
+
 
 
   <div class="kanban-board" *ngIf="!loading && !error" cdkDropListGroup>
   
-  
-  <div class="kanban-column"
-     cdkDropList
-     [cdkDropListData]="todoAssignments"
-     (cdkDropListDropped)="drop($event, 'ToDo')"
-     id="todo-list">
-  <h3>To Do <span class="task-count">{{ todoAssignments.length }}</span></h3>
-  
-<div *ngFor="let task of todoAssignments"
-     class="kanban-card"
-     cdkDrag
-     [cdkDragData]="task">
 
-  <div class="task-header-clean">
-    <div class="task-info-clean">
-      <span class="heading-clean">Task:</span>
-      <span class="point-clean" [title]="task.title">{{ task.title }}</span>
-    </div>
-    <div class="task-info-clean">
-      <span class="heading-clean">Assigned To:</span>
-      <span class="point-clean" [title]="task.assignee">{{ task.assignee }}</span>
-    </div>
-  </div>
+    <div class="kanban-column"
+       cdkDropList
+       [cdkDropListData]="getFilteredTasksByStatus('ToDo')"
+       (cdkDropListDropped)="drop($event, 'ToDo')"
+       id="todo-list">
+    <h3>To Do <span class="task-count">{{ getFilteredTasksByStatus('ToDo').length }}</span></h3>
+    
+    <div *ngFor="let task of getFilteredTasksByStatus('ToDo')"
+       class="kanban-card"
+       cdkDrag
+       [cdkDragData]="task">
 
-
-  
-  
-    <div class="task-footer">
-      <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-        <small><strong>Comments: {{ task.comment.length }}</strong></small>
+    <div class="task-header-clean">
+      <div class="task-info-clean">
+        <span class="heading-clean">Task:</span>
+        <span class="point-clean" [title]="task.title">{{ task.title }}</span>
       </div>
-     <div class="actions">
-    <button mat-icon-button color="accent"
-            (click)="openAssignmentDialog(task); $event.stopPropagation()">
-      <mat-icon>edit</mat-icon>
-    </button>
-    <button mat-icon-button color="warn"
-            (click)="deleteAssignment(task._id); $event.stopPropagation()">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>
+      <div class="task-info-clean">
+        <span class="heading-clean">Assigned To:</span>
+        <span class="point-clean" [title]="task.assignee">{{ task.assignee }}</span>
+      </div>
     </div>
-  </div>
-  
-  <div *ngIf="todoAssignments.length === 0" class="empty-state">
-    No tasks in To Do
-  </div>
-  </div>
-  
-   
+      <div class="task-footer">
+        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+          <small><strong>Comments: {{ task.comment.length }}</strong></small>
+        </div>
+       <div class="actions">
+      <button mat-icon-button color="accent"
+              (click)="openAssignmentDialog(task); $event.stopPropagation()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn"
+              (click)="deleteAssignment(task._id); $event.stopPropagation()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+      </div>
+    </div>
+    
+    <div *ngIf="getFilteredTasksByStatus('ToDo').length === 0" class="empty-state">
+      No tasks in To Do
+    </div>
+    </div>
+    
+    <!-- In Progress Column -->
     <div class="kanban-column"
          cdkDropList
-         [cdkDropListData]="inProgressAssignments"
+         [cdkDropListData]="getFilteredTasksByStatus('InProgress')"
          (cdkDropListDropped)="drop($event, 'InProgress')"
          id="progress-list">
-      <h3>In Progress <span class="task-count">{{ inProgressAssignments.length }}</span></h3>
-      <div *ngFor="let task of inProgressAssignments"
+      <h3>In Progress <span class="task-count">{{ getFilteredTasksByStatus('InProgress').length }}</span></h3>
+      <div *ngFor="let task of getFilteredTasksByStatus('InProgress')"
            class="kanban-card"
            cdkDrag
            [cdkDragData]="task">
-  <div class="task-header-clean">
-  <div class="task-info-clean">
-    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
-  </div>
-  <div class="task-info-clean">
-    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
-  </div>
-  </div>
-  
-    <div class="task-footer">
-      <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-        <small><strong>Comments: {{ task.comment.length }}</strong></small>
-      </div>
-     <div class="actions">
-    <button mat-icon-button color="accent"
-            (click)="openAssignmentDialog(task); $event.stopPropagation()">
-      <mat-icon>edit</mat-icon>
-    </button>
-    <button mat-icon-button color="warn"
-            (click)="deleteAssignment(task._id); $event.stopPropagation()">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>
+    <div class="task-header-clean">
+    <div class="task-info-clean">
+      <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
     </div>
-  </div>
-  
-  <div *ngIf="inProgressAssignments.length === 0" class="empty-state">
-    No tasks In Progress
-  </div>
-  </div>
-  
-  
+    <div class="task-info-clean">
+      <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
+    </div>
+    </div>
+
+      <div class="task-footer">
+        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+          <small><strong>Comments: {{ task.comment.length }}</strong></small>
+        </div>
+       <div class="actions">
+      <button mat-icon-button color="accent"
+              (click)="openAssignmentDialog(task); $event.stopPropagation()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn"
+              (click)="deleteAssignment(task._id); $event.stopPropagation()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+      </div>
+    </div>
+    
+    <div *ngIf="getFilteredTasksByStatus('InProgress').length === 0" class="empty-state">
+      No tasks In Progress
+    </div>
+    </div>
+    
+    <!-- Done Column -->
     <div class="kanban-column"
          cdkDropList
-         [cdkDropListData]="doneAssignments"
+         [cdkDropListData]="getFilteredTasksByStatus('Done')"
          (cdkDropListDropped)="drop($event, 'Done')"
          id="done-list">
-      <h3>Done <span class="task-count">{{ doneAssignments.length }}</span></h3>
+      <h3>Done <span class="task-count">{{ getFilteredTasksByStatus('Done').length }}</span></h3>
   
-      <div *ngFor="let task of doneAssignments"
+      <div *ngFor="let task of getFilteredTasksByStatus('Done')"
            class="kanban-card"
            cdkDrag
            [cdkDragData]="task">
-  <div class="task-header-clean">
-  <div class="task-info-clean">
-    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
-  </div>
-  <div class="task-info-clean">
-    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
-  </div>
-  </div>
-  
-  
-    <div class="task-footer">
-      <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-        <small><strong>Comments: {{ task.comment.length }}</strong></small>
-      </div>
-     <div class="actions">
-    <button mat-icon-button color="accent"
-            (click)="openAssignmentDialog(task); $event.stopPropagation()">
-      <mat-icon>edit</mat-icon>
-    </button>
-    <button mat-icon-button color="warn"
-            (click)="deleteAssignment(task._id); $event.stopPropagation()">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>
+    <div class="task-header-clean">
+    <div class="task-info-clean">
+      <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
     </div>
-  </div>
-  
-  
-      <div *ngIf="doneAssignments.length === 0" class="empty-state">
+    <div class="task-info-clean">
+      <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
+    </div>
+    </div>
+    
+      <div class="task-footer">
+        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+          <small><strong>Comments: {{ task.comment.length }}</strong></small>
+        </div>
+       <div class="actions">
+      <button mat-icon-button color="accent"
+              (click)="openAssignmentDialog(task); $event.stopPropagation()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn"
+              (click)="deleteAssignment(task._id); $event.stopPropagation()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+      </div>
+    </div>
+    
+      <div *ngIf="getFilteredTasksByStatus('Done').length === 0" class="empty-state">
         No tasks completed
       </div>
     </div>
@@ -364,6 +385,7 @@
     <span>Loading tasks...</span>
   </div>
 
+</div>
 </div>
 <app-footer></app-footer>
 

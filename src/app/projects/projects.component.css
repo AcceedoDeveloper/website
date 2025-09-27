@@ -1599,6 +1599,148 @@ margin-top: -670px;
   .maincontent { max-width: 90%; margin-left: 10px; margin-top: 10px; }
 }
 
+/* Date Picker Styles */
+.date-picker {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.date-picker:focus {
+  outline: none;
+  border-color: #3f51b5;
+}
+
+/* Date View Tasks Styles */
+.date-view-tasks {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.date-view-tasks h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.task-list {
+  display: grid;
+  gap: 15px;
+}
+
+.task-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #3f51b5;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.task-status.ToDo {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.task-status.InProgress {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.task-status.Done {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.task-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.no-tasks-message {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .date-picker {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .task-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .task-status {
+    margin-top: 5px;
+  }
+}
 
 
+.task-controls-container {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 20px;
+}
 
+
+.date-filter-section {
+  display: flex;
+  align-items: center;
+}
+
+
+.date-picker-field {
+  width: 250px; 
+  margin-right: 10px;
+}
+
+
+.clear-date-btn {
+  margin-left: 5px;
+}
+
+
+.pill-btn {
+  height: 40px;
+  padding: 0 15px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+
+@media (max-width: 768px) {
+  .task-controls-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pill-btn {
+    margin-top: 10px;
+  }
+}
