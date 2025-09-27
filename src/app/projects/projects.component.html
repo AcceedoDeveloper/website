@@ -35,69 +35,34 @@
     </select>
   </div>
 
+   <div class="pill-dropdown">
+ 
+    <button (click)="opentask()" >task</button>
+  </div>
+
+
+      
   <div class="pill-dropdown">
-    <button (click)="opentask()" >Task</button>
+ 
+
+        <button  (click)="openuv()">User-View</button>
   </div>
 
   <div class="pill-dropdown">
-         <button  (click)="openuv()">Work-List</button>
-  </div>
-
-  <div class="pill-dropdown">     
-        <button  (click)="openMonthView()">Calendar</button>
-  </div>
-
-  <div class="pill-dropdown">
+ 
     <button (click)="opendoc()">Documents</button>
   </div>
-
+         
   </div>
 
-<div class="Month-view" *ngIf="showMonthView">
-  <div class="container">
-    <!-- Header with selectors -->
-    <div class="headerr">
-      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
-        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
-      </select>
+    
 
-      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
-        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-      </select>
-    </div>
 
-    <!-- Legend -->
-    <div class="legend">
-      <div class="legend-item"><div class="legend-color red"></div><span>Weekend</span></div>
-      </div>
 
-    <!-- Calendar -->
-    <div class="main-content">
-      <div class="calendar">
-        <div class="day-header">
-          <div>Monday</div>
-          <div>Tuesday</div>
-          <div>Wednesday</div>
-          <div>Thursday</div>
-          <div>Friday</div>
-          <div>Saturday</div>
-          <div>Sunday</div>
-        </div>
 
-        <div class="calendar-grid">
-          <div class="day-cell"
-               *ngFor="let day of days">
-            <div class="day-number" [ngClass]="{'sunday': day.isSunday, 'holiday': day.isHoliday}">
-              {{ day.date }}
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="holidays"></div>
-    </div>
-  </div>
-</div>
+
+
 
 <div class="maindocument" *ngIf="showmaindocument">
 
@@ -108,64 +73,119 @@
     </div>
 
  
+<div class="documentpop" *ngIf="showdocumentpop">
+  <div class="upload-form" [formGroup]="documentForm">
+    <span class="close-btn" (click)="showdocumentpop = false">&times;</span>
 
-  <div class="documentpop" *ngIf="showdocumentpop">
-    <div class="upload-form" [formGroup]="documentForm">
-      <span class="close-btn" (click)="showdocumentpop = false">&times;</span>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <mat-form-field appearance="outline" class="full-width1" >
+        <input
+          id="title"
+          type="text"
+          matInput
+          formControlName="title"
+          placeholder="Enter or select title"
+          [matAutocomplete]="auto"
+          (input)="filterTitles()"
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onTitleSelected($event)">
+          <mat-option *ngFor="let title of filteredTitles" [value]="title">
+            {{ title }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="documentForm.get('title')?.hasError('required')">
+          Title is required
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-      <div class="form-group">
-        <label for="title">Title</label>
-        <input id="title" type="text" formControlName="title" placeholder="Enter title" />
+    <div class="form-group">
+      <label for="file">Upload File (optional for edit)</label>
+      <input id="file" type="file" (change)="onFileSelected($event)" />
+    </div>
+
+    <button type="button" (click)="submitDocument()">
+      {{ editingDocument ? 'Update' : 'Submit' }}
+    </button>
+  </div>
+</div>
+
+<!-- Document List -->
+<!-- Document List -->
+<div class="document-list" *ngIf="documents.length">
+  <div *ngFor="let doc of documents; let docIndex = index">
+    <!-- Section Title -->
+    <h3 class="list-title">Uploaded Documents - {{ doc.title }}</h3>
+
+    <!-- Grid Container -->
+    <div class="document-container">
+      <div class="document-box" *ngFor="let file of doc.files; let fileIndex = index">
+        <h6 class="doc-title">{{ file }}</h6>
+
+        <!-- Preview Section -->
+        <div class="preview-container">
+
+
+   <ng-container *ngIf="getFileType(file) === 'pdf'">
+  <div *ngIf="!loadError[file] && isPdfLoaded[file]; else pdfError">
+    <pdf-viewer
+      [src]="getFileUrl(file)"
+      [render-text]="false"
+      [show-all]="false"
+      [page]="1"
+      [original-size]="true"
+      style="width: 100%; height: 200px;"
+      (after-load-complete)="onPdfLoad(file)"
+      (error)="onPdfError(file, $event)"
+    ></pdf-viewer>
+  </div>
+  <ng-template #pdfError>
+    <div class="pdf-error-placeholder">
+      <p>Unable to load PDF preview</p>
+    </div>
+  </ng-template>
+</ng-container>
+
+
+          <ng-container *ngIf="getFileType(file) === 'image'">
+            <img [src]="getSafeFileUrl(file)" alt="Image Preview" style="max-width: 50%; max-height: 100px;" />
+          </ng-container>
+
+          <ng-container *ngIf="getFileType(file) === 'excel'">
+            <div class="excel-placeholder">
+              <img src="assets/excel-icon.png" alt="Excel Icon" style="width: 50px; height: 50px;" />
+              <p>Excel File (Preview not available)</p>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="getFileType(file) === 'other'">
+            <div class="other-placeholder">
+              <p>File Preview not supported</p>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="action-buttons">
+       
+       <!-- Download -->
+<a mat-icon-button [href]="getFileUrl(file)" target="_blank" aria-label="Download file">
+  <mat-icon>download</mat-icon>
+</a>
+
+<!-- Delete -->
+<button mat-icon-button color="warn" (click)="deleteDocument(doc._id)" aria-label="Delete file">
+  <mat-icon>delete</mat-icon>
+</button>
+
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="file">Upload File (optional for edit)</label>
-        <input id="file" type="file" (change)="onFileSelected($event)" />
-      </div>
-
-      <button type="button" (click)="submitDocument()">
-        {{ editingDocument ? 'Update' : 'Submit' }}
-      </button>
     </div>
   </div>
-
-  <!-- Document List -->
-  <div class="document-list" *ngIf="documents.length > 0; else noDocs">
-    <h3>Uploaded Documents</h3>
-    <ul>
-      <li *ngFor="let doc of documents"> 
-        <span class="doc-title">{{ doc.title }}</span>
-
-        <!-- View / Download -->
-        <a
-          *ngIf="doc.files && doc.files.length > 0"
-          [href]="'http://localhost:3008/uploads/' + doc.files[0]"
-          target="_blank"
-          class="view-link"
-        >
-          View
-        </a>
-
-       
-
-        <!-- Delete -->
-        <button (click)="deleteDocument(doc._id)" class="delete-btn">
-          Delete
-        </button>
-      </li>
-    </ul>
-  </div>
-
-  <ng-template #noDocs>
-    <p>No documents uploaded yet.</p>
-  </ng-template>
 </div>
 
 
-
-
-
-
+</div>
 
 
 
@@ -201,28 +221,32 @@
 
 
   <div class="kanban-board" *ngIf="!loading && !error" cdkDropListGroup>
-  
-
-    <div class="kanban-column"
-       cdkDropList
-       [cdkDropListData]="getFilteredTasksByStatus('ToDo')"
-       (cdkDropListDropped)="drop($event, 'ToDo')"
-       id="todo-list">
-    <h3>To Do <span class="task-count">{{ getFilteredTasksByStatus('ToDo').length }}</span></h3>
     
-    <div *ngFor="let task of getFilteredTasksByStatus('ToDo')"
+  <div class="kanban-column"
+     cdkDropList
+     [cdkDropListData]="todoAssignments"
+     (cdkDropListDropped)="drop($event, 'ToDo')"
+     id="todo-list">
+  <h3>To Do <span class="task-count">{{ todoAssignments.length }}</span></h3>
+  
+  <div *ngFor="let task of todoAssignments"
        class="kanban-card"
        cdkDrag
        [cdkDragData]="task">
-
-    <div class="task-header-clean">
-      <div class="task-info-clean">
-        <span class="heading-clean">Task:</span>
-        <span class="point-clean" [title]="task.title">{{ task.title }}</span>
-      </div>
-      <div class="task-info-clean">
-        <span class="heading-clean">Assigned To:</span>
-        <span class="point-clean" [title]="task.assignee">{{ task.assignee }}</span>
+       
+  <div class="task-header-clean">
+  <div class="task-info-clean">
+    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
+  </div>
+  <div class="task-info-clean">
+    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
+  </div>
+  </div>
+  
+  
+    <div class="task-footer">
+      <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+        <small><strong>Comments: {{ task.comment.length }}</strong></small>
       </div>
     </div>
       <div class="task-footer">
@@ -335,6 +359,9 @@
   </div>
 </div>
 
+
+
+
 <!-- User View Section -->
   <div class="mainuserview" *ngIf="showinuserview">
     <div class="task-controls">
@@ -360,12 +387,50 @@
               <span class="heading-clean">Due Date:</span> <span class="point-clean">{{ task.dueDate }}</span>
             </div>
           </div>
-
+          <div class="task-footer">
+            <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+              <small><strong>Comments: {{ task.comment.length }}</strong></small>
+            </div>
+           
+          </div>
         </div>
         <div *ngIf="userViewAssignments.length === 0" class="empty-state">No tasks assigned to you</div>
       </div>
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   <div *ngIf="error" class="error-state">
@@ -385,22 +450,13 @@
     <span>Loading tasks...</span>
   </div>
 
-</div>
+
+
+
+
+
 </div>
 <app-footer></app-footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <ng-template #assignmentDialog>

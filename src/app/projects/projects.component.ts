@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs';
 import { CreatprojectService } from '../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 interface Document {
   _id: string;
@@ -23,21 +25,31 @@ export class ProjectsComponent implements OnInit, OnDestroy {
 
   showmaindocument = false;
   showdocumentpop = false;
-  showMonthView = false;
+showMonthView = false;
   showmaintask = true;
-  showinuserview = false;
-
+  safePdfUrl: SafeResourceUrl | null = null;
+ filteredTitles: string[] = []; 
+  allTitles: string[] = []; 
   
   editingDocument: Document | null = null;
   documentForm: FormGroup;
   documents: Document[] = [];
+  filteredDocuments: Document[] = [];
+  searchTerm: string = '';
   selectedFile: File | null = null;
-
- 
   uploadedPictures: string[] = [];
   selectedPictureFiles: File[] = [];
+ 
+
+
+  // User View
+  showinuserview = false;
   userViewAssignments: AssignWork[] = [];
   
+
+  // PDF
+  loadError: { [key: string]: boolean } = {}; 
+  isPdfLoaded: { [key: string]: boolean } = {}; 
 
   userData: any = null;
   username = '';
@@ -48,7 +60,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   projects: any[] = [];
   selectedProjectId = '';
   selectedProjectName = '';
-  getcurrentUserData: any;
+  selectedProjectTeamLeads: string[] = [];
 
 
   allAssignments: AssignWork[] = [];
@@ -83,14 +95,15 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   private dateIntervalId: any = null;
   searchQuery: any;
   isDragActive: any;
-
   constructor(
     private projectService: CreatprojectService,
     private assignworkService: AssignWorkService,
     private userService: UserservicesService,
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {
     this.documentForm = this.fb.group({
       title: ['', Validators.required],
@@ -273,12 +286,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         } else {
           this.employees = [];
         }
-        if (this.employees.length === 0) {
-          this.employees = ['Sabari', 'Ramesh', 'Anitha', 'Vijay'];
-        }
       },
       error: () => {
-        this.employees = ['Sabari', 'Ramesh', 'Anitha', 'Vijay'];
+        this.employees = [];
       }
     });
     this.subs.add(s);
@@ -288,7 +298,6 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     const userStr = sessionStorage.getItem('user');
     if (userStr) {
       this.userData = JSON.parse(userStr);
-      
       if (this.userData.photo) {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
@@ -336,13 +345,23 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     );
 
     if (!selectedProject && this.selectedProjectId) {
-      console.warn('Selected projectId not found in loaded projects:', this.selectedProjectId);
       this.selectedProjectName = '';
+      this.selectedProjectTeamLeads = [];
     } else {
       this.selectedProjectName = selectedProject?.projectName || selectedProject?.name || '';
+      this.selectedProjectTeamLeads = selectedProject?.teamLeads || [];
     }
 
     this.filterAssignmentsByProject();
+  }
+
+  isCurrentUserTeamLead(): boolean {
+    if (!this.selectedProjectTeamLeads.length) return false;
+    return this.selectedProjectTeamLeads.some(lead =>
+      lead === this.username ||
+      lead === this.userData?.UserName ||
+      lead === this.userData?.username
+    );
   }
 
   onPictureSelected(event: Event) {
@@ -444,6 +463,13 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if (!this.isCurrentUserTeamLead() && !task) {
+      this.error = "Only team leads can assign tasks to this project";
+      this.snackBar.open(this.error, 'Close', { duration: 3000 });
+      this.error = '';
+      return;
+    }
+
     if (task && task.pictures?.length) {
       this.uploadedPictures = [...task.pictures];
     } else {
@@ -517,6 +543,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         next: () => {
           this.snackBar.open('Comment added', 'Close', { duration: 2000 });
           this.commentForm.reset();
+          this.getAssignments();
         },
         error: () => {
           this.snackBar.open('Failed to add comment', 'Close', { duration: 3000 });
@@ -676,7 +703,7 @@ export class ProjectsComponent implements OnInit, OnDestroy {
     this.showmaintask = false;
     this.showMonthView = false;
     this.showmaindocument = false;
-    this.loadUserViewAssignments();
+    this.showinuserview = false;
   }
 
   opendoc() {
@@ -775,13 +802,52 @@ export class ProjectsComponent implements OnInit, OnDestroy {
         } else {
           this.documents = [];
         }
+        this.filteredDocuments = [...this.documents];
+        // Populate allTitles with unique document titles
+        this.allTitles = [...new Set(this.documents.map(doc => doc.title))];
+        this.filteredTitles = [...this.allTitles];
       },
       error: () => {
         this.snackBar.open('Failed to load documents', 'Close', { duration: 3000 });
         this.documents = [];
+        this.filteredDocuments = [];
+        this.allTitles = [];
+        this.filteredTitles = [];
       }
     });
     this.subs.add(s);
+  }
+
+  filterDocuments() {
+    if (!this.searchTerm) {
+      this.filteredDocuments = [...this.documents];
+      return;
+    }
+    const searchLower = this.searchTerm.toLowerCase();
+    this.filteredDocuments = this.documents.filter(doc =>
+      doc.title.toLowerCase().includes(searchLower)
+    );
+  }
+
+  filterTitles() {
+    const filterValue = this.documentForm.get('title')?.value?.toLowerCase() || '';
+    this.filteredTitles = this.allTitles.filter(title =>
+      title.toLowerCase().includes(filterValue)
+    );
+  }
+
+  onTitleSelected(event: any) {
+    const selectedTitle = event.option.value;
+    this.documentForm.get('title')?.setValue(selectedTitle);
+    const selectedDoc = this.documents.find(doc => doc.title === selectedTitle);
+    if (selectedDoc) {
+      this.editingDocument = selectedDoc;
+      this.documentForm.patchValue({
+        title: selectedDoc.title,
+        file: null
+      });
+      this.selectedFile = null;
+    }
   }
 
   deleteDocument(id: string) {
@@ -792,6 +858,9 @@ export class ProjectsComponent implements OnInit, OnDestroy {
       next: () => {
         this.snackBar.open('Document deleted successfully', 'Close', { duration: 2500 });
         this.documents = this.documents.filter(doc => String(doc._id) !== String(id));
+        this.filterDocuments();
+        this.allTitles = [...new Set(this.documents.map(doc => doc.title))];
+        this.filteredTitles = [...this.allTitles];
       },
       error: () => {
         this.snackBar.open('Failed to delete document', 'Close', { duration: 3000 });
@@ -869,4 +938,39 @@ export class ProjectsComponent implements OnInit, OnDestroy {
   }
   removeImage: any;
   cancelEdit: any;
+  getFileUrl(file: string): string {
+    const cleanFile = file.replace(/^uploads\//, '');
+    const url = file.startsWith('http') ? file : `http://localhost:3008/uploads/${cleanFile.replace(/\\/g, '/')}`;
+    console.log(`Generated PDF URL: ${url}`);
+    return url;
+  }
+
+  getSafeFileUrl(file: string): SafeResourceUrl {
+    const url = this.getFileUrl(file);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  getFileType(file: string): string {
+    const extension = file.split('.').pop()?.toLowerCase();
+    if (extension === 'pdf') {
+      return 'pdf';
+    } else if (['png', 'jpg', 'jpeg', 'gif', 'bmp'].includes(extension || '')) {
+      return 'image';
+    } else if (['xls', 'xlsx', 'csv'].includes(extension || '')) {
+      return 'excel';
+    }
+    return 'other';
+  }
+
+  onPdfLoad(file: string) {
+    console.log(`PDF loaded successfully: ${file}`);
+    this.isPdfLoaded[file] = true;
+    this.loadError[file] = false;
+  }
+
+  onPdfError(file: string, error: any) {
+    console.error(`PDF load error for ${file}:`, error);
+    this.isPdfLoaded[file] = false;
+    this.loadError[file] = true;
+  }
 }

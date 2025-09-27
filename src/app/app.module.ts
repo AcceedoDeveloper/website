@@ -91,6 +91,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
+
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -163,7 +166,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatListModule,
     CarouselModule,
     DragDropModule,
- 
+ MatAutocompleteModule,
     MatSelectModule,
      MatNativeDateModule ,
  MatIconModule,
@@ -179,6 +182,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    PdfViewerModule
     
   ],
   providers: [
