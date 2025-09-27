@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef ,AfterViewInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,7 +9,9 @@ import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
 
+Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 interface Document {
   _id: string;
   title: string;
@@ -21,10 +23,38 @@ interface Document {
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
-export class ProjectsComponent implements OnInit, OnDestroy {
+export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit{
+removeImage: any;
+cancelEdit: any;
+
+
+
+ ngAfterViewInit(): void {
+    const ctx = document.getElementById('workItemsChart') as HTMLCanvasElement;
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Done', 'In Progress', 'To Do'],
+        datasets: [{
+          data: [1, 1, 2],
+          backgroundColor: ['#4285F4', '#7CB342', '#BA68C8'], // blue, green, purple
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%', // makes it a ring
+        plugins: {
+          legend: { display: false }, // hide default legend
+          tooltip: { enabled: true }
+        }
+      }
+    });
+  }
 
   showmaindocument = false;
   showdocumentpop = false;
+showinsummary = false;
 showMonthView = false;
   showmaintask = true;
   safePdfUrl: SafeResourceUrl | null = null;
@@ -44,6 +74,9 @@ showMonthView = false;
 
   // User View
   showinuserview = false;
+
+
+
   userViewAssignments: AssignWork[] = [];
   
 
@@ -694,22 +727,21 @@ showMonthView = false;
   opentask() {
     this.showmaintask = true;
     this.showmaindocument = false;
-    this.showinuserview = false;
+    this.showinsummary = false;
     this.showMonthView = false;
   }
 
   openuv() {
-    this.showinuserview = true;
+    this.showinsummary = true;
     this.showmaintask = false;
     this.showMonthView = false;
     this.showmaindocument = false;
-    this.showinuserview = false;
-  }
+}
 
   opendoc() {
     this.showmaindocument = true;
     this.showmaintask = false;
-    this.showinuserview = false;
+    this.showinsummary = false;
     this.showMonthView = false;
   }
 
@@ -717,7 +749,7 @@ showMonthView = false;
     this.showMonthView = true;
     this.showmaintask = false;
     this.showmaindocument = false;
-    this.showinuserview = false;
+    this.showinsummary = false;
   }
 
   opendocpop(doc?: any) {
@@ -936,9 +968,7 @@ showMonthView = false;
   onDragLeave($event: DragEvent) {
     throw new Error('Method not implemented.');
   }
-  removeImage: any;
-  cancelEdit: any;
-  getFileUrl(file: string): string {
+getFileUrl(file: string): string {
     const cleanFile = file.replace(/^uploads\//, '');
     const url = file.startsWith('http') ? file : `http://localhost:3008/uploads/${cleanFile.replace(/\\/g, '/')}`;
     console.log(`Generated PDF URL: ${url}`);

@@ -41,24 +41,37 @@
   </div>
 
 
-      
-  <div class="pill-dropdown">
- 
 
-        <button  (click)="openuv()">User-View</button>
+  <div class="pill-dropdown">
+    <button (click)="opentask()" >Task</button>
+  </div>
+
+  <div class="pill-dropdown">     
+        <button  (click)="openMonthView()">Calendar</button>
   </div>
 
   <div class="pill-dropdown">
- 
-    <button (click)="opendoc()">Documents</button>
+         <button  (click)="openuv()">Summary</button>
+  </div>
+
+  <div class="pill-dropdown">
+  <button (click)="opendoc()">Documents</button>
   </div>
          
   </div>
 
-    
-
-
-
+<div class="Month-view" *ngIf="showMonthView">
+  <div class="container">
+    <!-- Header with selectors -->
+    <div class="headerr">
+      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
+        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
+      </select>
+    <div class="headerr1">
+      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+    </div></div>
 
 
 
@@ -362,59 +375,6 @@
 
 
 
-<!-- User View Section -->
-  <div class="mainuserview" *ngIf="showinuserview">
-    <div class="task-controls">
-      <h3>User View: Tasks for {{ username }} in {{ selectedProjectName || 'All Projects' }}</h3>
-    </div>
-    <div class="kanban-board" *ngIf="!loading && !error">
-      <div class="kanban-column">
-        <h3>Tasks <span class="task-count">{{ userViewAssignments.length }}</span></h3>
-        <div *ngFor="let task of userViewAssignments" class="kanban-card">
-          <div class="task-header-clean">
-             <div class="task-info-clean">
-              <span class="heading-clean">Project:</span> <span class="point-clean">{{ task.projectName }}</span>
-            </div>
-            
-            <div class="task-info-clean">
-              <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
-            </div>
-           
-            <div class="task-info-clean">
-              <span class="heading-clean">AssignedTo:</span> <span class="point-clean">{{ task.assignedTo}}</span>
-            </div>
-            <div class="task-info-clean">
-              <span class="heading-clean">Due Date:</span> <span class="point-clean">{{ task.dueDate }}</span>
-            </div>
-          </div>
-          <div class="task-footer">
-            <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-              <small><strong>Comments: {{ task.comment.length }}</strong></small>
-            </div>
-           
-          </div>
-        </div>
-        <div *ngIf="userViewAssignments.length === 0" class="empty-state">No tasks assigned to you</div>
-      </div>
-    </div>
-  </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -453,11 +413,108 @@
 
 
 
+</div>
 
+<!-- User View Section -->
+  <div class="mainuserview" *ngIf="showinsummary">
+
+<button class="filter-btn">
+  <span class="filter-icon">≡</span>
+  Filter
+</button>
+
+  <div class="row g-3">
+
+    <!-- Top Summary Cards -->
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card">
+        <div class="icon done"></div>
+        <div>
+          <h4>2 completed</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card2">
+        <div class="icon updated"></div>
+        <div>
+          <h4>2 updated</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card3">
+        <div class="icon created"></div>
+        <div>
+          <h4>0 created</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card4">
+        <div class="icon due"></div>
+        <div>
+          <h4>0 due soon</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Overview + Recent Activity -->
+    <div class="col-lg-6">
+      <div class="card-box">
+        <h5 class="Status-overView">Status overview</h5>
+        <div class="chart-container">
+  <canvas id="workItemsChart"></canvas>
+  <div class="chart-legend">
+    <div class="legend-item">
+      <span class="legend-color done"></span> Done: 1
+    </div>
+    <div class="legend-item">
+      <span class="legend-color progress"></span> In Progress: 1
+    </div>
+    <div class="legend-item">
+      <span class="legend-color todo"></span> To Do: 2
+    </div>
+  </div>
+</div>
+
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card-box2">
+        <h5>Recent activity</h5>
+        <ul class="activity-list">
+          <li><b>M Sabari</b> created <span class="tag">CRM-14</span> <span class="badge bg-success">IN PROGRESS</span></li>
+          <li><b>A. Selvakarthi</b> created <span class="tag">CRM-16</span> <span class="badge bg-primary">DONE</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Priority Breakdown -->
+    <div class="col-lg-6">
+      <div class="card-box">
+        <h5>Priority breakdown</h5>
+        <canvas id="priorityChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Types of Work -->
+    <div class="col-lg-6">
+      <div class="card-box2">
+        <h5>Types of work</h5>
+        <div class="progress my-2">
+          <div class="progress-bar bg-info" style="width: 100%">Task 100%</div>
+        </div>
+      </div>
+    </div>
+</div>
 
 </div>
 <app-footer></app-footer>
-
 
 <ng-template #assignmentDialog>
   <div class="dialog-container">
