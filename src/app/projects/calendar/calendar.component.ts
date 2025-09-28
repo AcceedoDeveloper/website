@@ -1,89 +1,101 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AssignWorkService, AssignWork } from '../../service/assignwork.service';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css'
+  styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent {
-
-  showmaindocument = false;
-  showdocumentpop = false;
-showinsummary = true;
-showMonthView = false;
-  showmaintask = false;
-
-
+export class CalendarComponent implements OnInit {
   months = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
-    years: number[] = [];
-    selectedMonth: number = new Date().getMonth();
-    selectedYear: number = new Date().getFullYear();
-      days: any[] = [];
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  years: number[] = [];
+  selectedMonth: number = new Date().getMonth();
+  selectedYear: number = new Date().getFullYear();
+  days: any[] = [];
 
 
-        opentask() {
-    this.showmaintask = true;
-    this.showmaindocument = false;
-    this.showinsummary = false;
-    this.showMonthView = false;
-  }
+  allAssignments: AssignWork[] = [];
+  allAssignees: string[] = [];
+  selectedAssignee: string = '';
 
-    openuv() {
-    this.showinsummary = true;
-    this.showmaintask = false;
-    this.showMonthView = false;
-    this.showmaindocument = false;
-    }
+  constructor(private assignWorkService: AssignWorkService) {}
 
-  opendoc() {
-    this.showmaindocument = true;
-    this.showmaintask = false;
-    this.showinsummary = false;
-    this.showMonthView = false;
-  }
-
-  openMonthView() {
-    this.showMonthView = true;
-    this.showmaintask = false;
-    this.showmaindocument = false;
-    this.showinsummary = false;
-  }
-
-      ngOnInit(): void {
-        const currentYear = new Date().getFullYear();
+  ngOnInit(): void {
+    const currentYear = new Date().getFullYear();
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
       this.years.push(i);
     }
+    this.loadAssignments();
+  }
 
-    this.generateCalendar();
-}
+  loadAssignments() {
+    this.assignWorkService.getAssignments().subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res)) {
+          this.allAssignments = res;
+        } else if (res?.works && Array.isArray(res.works)) {
+          this.allAssignments = res.works;
+        } else {
+          this.allAssignments = [];
+        }
+
+        // Extract unique assignee names
+        this.allAssignees = Array.from(
+          new Set(this.allAssignments.map(task => task.assignee).filter(Boolean))
+        );
+
+        this.generateCalendar();
+      },
+      error: () => {
+        this.allAssignments = [];
+        this.allAssignees = [];
+        this.generateCalendar();
+      }
+    });
+  }
 
   generateCalendar() {
     this.days = [];
     const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
     const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startDay = firstDay.getDay();
+    const startDay = (firstDay.getDay() + 6) % 7; // Monday = 0
 
-    const offset = (startDay + 6) % 7;
-
-    for (let i = 0; i < offset; i++) {
-      this.days.push({ date: '', isSunday: false, isHoliday: false });
+    // Add empty cells for days before month starts
+    for (let i = 0; i < startDay; i++) {
+      this.days.push({ date: '', isSunday: false, tasks: [] });
     }
 
+    // Fill actual days
     for (let d = 1; d <= daysInMonth; d++) {
       const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
       const isSunday = dateObj.getDay() === 0;
-      const isHoliday = (this.selectedMonth === 8 && d === 25);
 
-      this.days.push({ date: d, isSunday, isHoliday });
+      // Filter tasks by date and assignee
+      const tasksForDay = this.allAssignments.filter(task => {
+        if (!task.dueDate) return false;
+
+        const taskDate = new Date(task.dueDate);
+        const matchDate =
+          taskDate.getDate() === d &&
+          taskDate.getMonth() === this.selectedMonth &&
+          taskDate.getFullYear() === this.selectedYear;
+
+        const matchAssignee =
+          !this.selectedAssignee || task.assignee === this.selectedAssignee;
+
+        return matchDate && matchAssignee;
+      });
+
+      this.days.push({ date: d, isSunday, tasks: tasksForDay });
     }
 
+    // Add empty cells to complete last week
     while (this.days.length % 7 !== 0) {
-      this.days.push({ date: '', isSunday: false, isHoliday: false });
+      this.days.push({ date: '', isSunday: false, tasks: [] });
     }
   }
 }
