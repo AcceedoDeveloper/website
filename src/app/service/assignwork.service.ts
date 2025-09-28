@@ -51,9 +51,7 @@ createAssignment(task: FormData | any): Observable<any> {
     return this.http.post(`${this.baseUrl}/CreateAssignWork`, task);
   }
 }
-  getAssignments(): Observable<AssignWork[]> {
-    return this.http.get<AssignWork[]>(`${this.baseUrl}/GetAssignWork`);
-  }
+
 
  updateAssignment(id: string, task: FormData | any): Observable<any> {
   if (task instanceof FormData) {
@@ -103,5 +101,14 @@ createAssignment(task: FormData | any): Observable<any> {
 getUserview(projectName: string, assignedTo: string): Observable<UserViewResponse> {
     return this.http.get<UserViewResponse>(`${this.baseUrl}/getAssignWorkByProject/${encodeURIComponent(projectName)}`);
   }
+
+  //GetAssignWork
+
+// GetAssignWork
+getAssignments(): Observable<UserViewResponse> {
+  console.log('Fetching assignments from:', `${this.baseUrl}/GetAssignWork`);
+  return this.http.get<UserViewResponse>(`${this.baseUrl}/GetAssignWork`);
+}
+
   
 }

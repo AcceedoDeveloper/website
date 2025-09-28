@@ -1,21 +1,41 @@
-
-  <div class="Month-view" >
+<div class="Month-view">
   <div class="container">
-    <!-- Header with selectors -->
-    <div class="headerr">
-      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
-        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
-      </select>
-    <div class="headerr1">
-      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
-        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-      </select>
-    </div></div>
+
+    <!-- Top Filter Bar -->
+    <div class="data-filter-bar">
+      <!-- Assignee Filter -->
+      <div class="filter-item">
+        <label for="assignee">Assignee</label>
+        <select id="assignee" [(ngModel)]="selectedAssignee" (change)="generateCalendar()">
+          <option value="">All</option>
+          <option *ngFor="let emp of allAssignees" [value]="emp">{{ emp }}</option>
+        </select>
+      </div>
+
+      <!-- Month Filter -->
+      <div class="filter-item">
+        <label for="month">Month</label>
+        <select id="month" [(ngModel)]="selectedMonth" (change)="generateCalendar()">
+          <option *ngFor="let m of months; let i = index" [value]="i">{{ m }}</option>
+        </select>
+      </div>
+
+      <!-- Year Filter -->
+      <div class="filter-item">
+        <label for="year">Year</label>
+        <select id="year" [(ngModel)]="selectedYear" (change)="generateCalendar()">
+          <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+        </select>
+      </div>
+    </div>
 
     <!-- Legend -->
     <div class="legend">
-      <div class="legend-item"><div class="legend-color red"></div><span>Weekend</span></div>
+      <div class="legend-item">
+        <div class="legend-color red"></div>
+        <span>Weekend</span>
       </div>
+    </div>
 
     <!-- Calendar -->
     <div class="main-content">
@@ -31,16 +51,23 @@
         </div>
 
         <div class="calendar-grid">
-          <div class="day-cell"
-               *ngFor="let day of days">
-            <div class="day-number" [ngClass]="{'sunday': day.isSunday, 'holiday': day.isHoliday}">
+          <div class="day-cell" *ngFor="let day of days">
+            <div class="day-number" [ngClass]="{ sunday: day.isSunday }">
               {{ day.date }}
             </div>
+
+            
+       <div class="task" *ngFor="let task of day.tasks">
+  <b ></b> <span class="task-title">{{ task.title }}</span>
+</div>
+
           </div>
         </div>
       </div>
 
-      <div class="holidays"></div>
+     
+      <div class="holidays">
+        <div class="holidays-title"></div>
     </div>
   </div>
 </div>
