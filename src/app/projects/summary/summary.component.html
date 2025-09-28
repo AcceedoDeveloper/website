@@ -1,82 +1,119 @@
-<!-- User View Section -->
+<div class="mainuserview">
+  <!-- Loading and Error States -->
+  <!-- <div *ngIf="isLoading" class="alert alert-info text-center">
+    Loading data...
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{errorMessage}}
+  </div> -->
 
+  <!-- Filter Section -->
+  <div class="filter-section mb-4">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label for="viewModeFilter" class="form-label">View Mode</label>
+        <select id="viewModeFilter" class="form-select" [(ngModel)]="viewMode" (change)="applyFilters()">
+          <option value="today">Today's Tasks</option>
+          <option value="all">All Tasks</option>
+          <option value="month">By Month</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label for="assigneeFilter" class="form-label">Assignee</label>
+        <select id="assigneeFilter" class="form-select" [(ngModel)]="selectedAssignee" (change)="applyFilters()">
+          <option value="">All Assignees</option>
+          <option *ngFor="let employee of employees" [value]="employee._id">{{employee.name || employee.username || employee._id}}</option>
+        </select>
+        <small *ngIf="!employees.length" class="text-muted">No employees available. Using assignment IDs.</small>
+      </div>
+      <div class="col-md-3">
+        <label for="assignedToFilter" class="form-label">Assigned To</label>
+        <select id="assignedToFilter" class="form-select" [(ngModel)]="selectedAssignedTo" (change)="applyFilters()">
+          <option value="">All Assigned To</option>
+          <option *ngFor="let employee of employees" [value]="employee._id">{{employee.name || employee.username || employee._id}}</option>
+        </select>
+        <small *ngIf="!employees.length" class="text-muted">No employees available. Using assignment IDs.</small>
+      </div>
+      <div class="col-md-3">
+        <label for="dateFilter" class="form-label">Created Date/Month</label>
+        <input type="date" id="dateFilter" class="form-control" [(ngModel)]="selectedDate" (change)="applyFilters()" [disabled]="viewMode === 'all'">
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+      </div>
+    </div>
+  </div>
 
-  <div class="mainuserview" >
-
-<button class="filter-btn">
-  <span class="filter-icon">≡</span>
-  Filter
-</button>
-
-  <div class="row g-6">
-
+  <!-- Main Content -->
+  <div class="row g-6" *ngIf="!isLoading">
     <!-- Top Summary Cards -->
     <div class="col-md-3 col-sm-6">
       <div class="summary-card">
         <div class="icon done"></div>
         <div>
-          <h4>2 completed</h4>
+          <h4>{{summary.completed}} completed</h4>
         </div>
       </div>
     </div>
-
     <div class="col-md-3 col-sm-6">
       <div class="summary-card2">
         <div class="icon updated"></div>
         <div>
-          <h4>2 updated</h4>
+          <h4>{{summary.updated}} updated</h4>
         </div>
       </div>
     </div>
-
     <div class="col-md-3 col-sm-6">
       <div class="summary-card3">
         <div class="icon created"></div>
         <div>
-          <h4>0 created</h4>
+          <h4>{{summary.created}} created</h4>
         </div>
       </div>
     </div>
-
     <div class="col-md-3 col-sm-6">
       <div class="summary-card4">
         <div class="icon due"></div>
         <div>
-          <h4>0 due soon</h4>
+          <h4>{{summary.dueSoon}} due soon</h4>
         </div>
       </div>
     </div>
 
     <!-- Status Overview + Recent Activity -->
-     
     <div class="col-lg-6">
-
       <div class="card-box">
-        <h5 class="Status-overView">Status overview</h5>
-       <div class="chart-container">
-  <canvas id="workItemsChart"></canvas>
-  <div class="chart-legend"  >
-    <div class="legend-item">
-      <span class="legend-color done"></span> Done: 1
-    </div>
-    <div class="legend-item">
-      <span class="legend-color progress"></span> In Progress: 1
-    </div>
-    <div class="legend-item">
-      <span class="legend-color todo"></span> To Do: 2
-    </div>
-  </div>
-</div>
-
+        <h5 class="Status-overView">Status Overview</h5>
+        <div class="chart-container">
+          <canvas id="workItemsChart"></canvas>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color done"></span> Done: {{chartData.done}}
+            </div>
+            <div class="legend-item">
+              <span class="legend-color progress"></span> In Progress: {{chartData.inProgress}}
+            </div>
+            <div class="legend-item">
+              <span class="legend-color todo"></span> To Do: {{chartData.toDo}}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="col-lg-6">
       <div class="card-box2">
-        <h5>Recent activity</h5>
+        <h5>Recent Activity</h5>
         <ul class="activity-list">
-          <li><b>M Sabari</b> created <span class="tag">CRM-14</span> <span class="badge bg-success">IN PROGRESS</span></li>
-          <li><b>A. Selvakarthi</b> created <span class="tag">CRM-16</span> <span class="badge bg-primary">DONE</span></li>
+          <li *ngFor="let activity of recentActivities">
+            <b>{{getEmployeeName(activity.assignee) || activity.assignee}}</b> created <span class="tag">{{activity.projectId}}</span>
+            <span class="badge" [ngClass]="{
+              'bg-success': activity.Status === 'Done',
+              'bg-primary': activity.Status === 'InProgress',
+              'bg-secondary': activity.Status === 'ToDo'
+            }">{{activity.Status === 'Done' ? 'Done' : activity.Status === 'InProgress' ? 'In Progress' : 'To Do'}}</span>
+          </li>
+          <li *ngIf="!recentActivities.length">No recent activities found.</li>
         </ul>
       </div>
     </div>
@@ -92,12 +129,11 @@
     <!-- Types of Work -->
     <div class="col-lg-6">
       <div class="card-box3">
-        <h5>Types of work</h5>
+        <h5>Types of Work</h5>
         <div class="progress my-2">
           <div class="progress-bar bg-info" style="width: 100%">Task 100%</div>
         </div>
       </div>
     </div>
-</div>
-
+  </div>
 </div>
