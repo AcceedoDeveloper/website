@@ -1624,3 +1624,20 @@ canvas {
 }
 
 /* Responsive design */
+
+@media (max-width: 2200px) {
+  .maincontent { max-width: 67%; margin-left: 20px; margin-top: -900px; }
+}
+
+@media (max-width: 1920px) {
+  .maincontent { max-width: 85%; margin-left: 250px; margin-top: -1030px; }
+}
+
+
+@media (max-width: 1600px) {
+  .maincontent { max-width: 80%; margin-left: 250px; margin-top: -860px; }
+}
+
+@media (max-width: 1366px) {
+  .maincontent { max-width: 90%; margin-left: 10px; margin-top: 10px; }
+}
