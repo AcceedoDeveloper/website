@@ -1,7 +1,6 @@
 /* Document Section Styles */
 .maindocument {
   padding: 20px;
-  background-color: #f8f9fa;
   min-height: 100vh;
 }
 
@@ -76,7 +75,7 @@
 /* Document List */
 .document-list {
   max-width: 1200px;
-  margin: 0 auto;
+  margin-right: 500px;
 }
 
 .list-title {

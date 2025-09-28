@@ -71,31 +71,17 @@
       + Add Task
     </button>
   </div>
-  <div class="date-filter-section">
-    <div class="date-filter-controls">
-      <select [(ngModel)]="selectedDay" (change)="onDateChange()">
-  <option *ngFor="let day of days" [value]="day.date" [disabled]="!day.date">
-    {{ day.date }}
-  </option>
-</select>
+<div class="date-filter-section">
+  <mat-form-field appearance="outline">
+    <!-- <mat-label>Choose Date</mat-label> -->
+    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedTaskDate" (dateChange)="onDateChange()">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
 
 
-  
-  <select [(ngModel)]="selectedMonth" (change)="onDateChange()">
-    <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
-  </select>
+</div>
 
- 
-  <select [(ngModel)]="selectedYear" (change)="onDateChange()">
-    <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-  </select>
-
-      <button mat-button color="warn" (click)="clearDateFilter()" 
-              *ngIf="selectedTaskDate" class="clear-date-btn">
-        <mat-icon>clear</mat-icon> Clear Filter
-      </button>
-    </div>
-  </div>
 
 
 

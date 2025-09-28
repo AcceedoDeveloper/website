@@ -336,6 +336,7 @@ generateDays() {
 }
 
 onDateChange() {
+  console.log('Selected Date:', this.selectedTaskDate);
   this.generateDays();
 }
 
@@ -1101,4 +1102,6 @@ getFileUrl(file: string): string {
     this.isPdfLoaded[file] = false;
     this.loadError[file] = true;
   }
+
+  
 }

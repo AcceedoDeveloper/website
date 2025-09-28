@@ -280,17 +280,23 @@ margin-top: -1140px;
 .date-filter-section {
   display: flex;
   align-items: center;
+  gap: 16px;
+  color: #174a6b;
+  width: 100%;
+  max-width: 124px;
+  margin-right: 200px;
 }
 
-
-.date-picker-field {
-  width: 250px; 
-  margin-right: 10px;
+.date-filter-section mat-form-field {
+  --mat-form-field-container-height: 16px;
+  font-size: 12px;
 }
 
-
-.clear-date-btn {
-  margin-left: 5px;
+.date-filter-section input.mat-input-element {
+  height: 16px !important;
+  max-height: 16px !important;
+  padding: 0 6px !important;
+  font-size: 12px;
 }
 
 
