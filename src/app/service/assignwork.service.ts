@@ -15,6 +15,7 @@ export interface AssignWork {
   Status: string;    
   projectId: string;
   pictures:string;
+  createdAt: string;
 }
 
 export interface Comment {

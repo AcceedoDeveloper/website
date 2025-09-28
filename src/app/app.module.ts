@@ -94,6 +94,10 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { TaskComponent } from './projects/task/task.component';
+import { CalendarComponent } from './projects/calendar/calendar.component';
+import { SummaryComponent } from './projects/summary/summary.component';
+import { DocumentsComponent } from './projects/documents/documents.component';
 
 @NgModule({
   declarations: [
@@ -144,7 +148,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
    DepartmentDialogComponent,
    RoledialogComponent,
    RegistermatComponent,
-   HeaderComponent
+   HeaderComponent,
+   TaskComponent,
+   CalendarComponent,
+   SummaryComponent,
+   DocumentsComponent
   ],
 
   imports: [

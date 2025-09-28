@@ -1,0 +1,46 @@
+
+  <div class="Month-view" >
+  <div class="container">
+    <!-- Header with selectors -->
+    <div class="headerr">
+      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
+        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
+      </select>
+    <div class="headerr1">
+      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
+        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+      </select>
+    </div></div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color red"></div><span>Weekend</span></div>
+      </div>
+
+    <!-- Calendar -->
+    <div class="main-content">
+      <div class="calendar">
+        <div class="day-header">
+          <div>Monday</div>
+          <div>Tuesday</div>
+          <div>Wednesday</div>
+          <div>Thursday</div>
+          <div>Friday</div>
+          <div>Saturday</div>
+          <div>Sunday</div>
+        </div>
+
+        <div class="calendar-grid">
+          <div class="day-cell"
+               *ngFor="let day of days">
+            <div class="day-number" [ngClass]="{'sunday': day.isSunday, 'holiday': day.isHoliday}">
+              {{ day.date }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="holidays"></div>
+    </div>
+  </div>
+</div>

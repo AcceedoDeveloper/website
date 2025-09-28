@@ -14,7 +14,6 @@
   </div>
   
   <div class="header">
-
     <svg width="0" height="5">
       <defs>
         <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
@@ -42,145 +41,27 @@
     <button (click)="opentask()" >Task</button>
   </div>
 
+  
   <div class="pill-dropdown">     
         <button  (click)="openMonthView()">Calendar</button>
   </div>
 
   <div class="pill-dropdown">
-         <button  (click)="openuv()">Summary</button>
+         <button  (click)="openuv()" >Summary</button>
   </div>
+
 
   <div class="pill-dropdown">
   <button (click)="opendoc()">Documents</button>
   </div>
          
   </div>
-<div class="maindocument" *ngIf="showmaindocument">
-
-   <div class="task-controls">
-  <button class="pill-btn" (click)="opendocpop()">
-    + Add Documents
-  </button>
-    </div>
-
- 
-<div class="documentpop" *ngIf="showdocumentpop">
-  <div class="upload-form" [formGroup]="documentForm">
-    <span class="close-btn" (click)="showdocumentpop = false">&times;</span>
-
-    <div class="form-group">
-      <label for="title">Title</label>
-      <mat-form-field appearance="outline" class="full-width1" >
-        <input
-          id="title"
-          type="text"
-          matInput
-          formControlName="title"
-          placeholder="Enter or select title"
-          [matAutocomplete]="auto"
-          (input)="filterTitles()"
-        />
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onTitleSelected($event)">
-          <mat-option *ngFor="let title of filteredTitles" [value]="title">
-            {{ title }}
-          </mat-option>
-        </mat-autocomplete>
-        <mat-error *ngIf="documentForm.get('title')?.hasError('required')">
-          Title is required
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <div class="form-group">
-      <label for="file">Upload File (optional for edit)</label>
-      <input id="file" type="file" (change)="onFileSelected($event)" />
-    </div>
-
-    <button type="button" (click)="submitDocument()">
-      {{ editingDocument ? 'Update' : 'Submit' }}
-    </button>
-  </div>
-</div>
-
-<!-- Document List -->
-<!-- Document List -->
-<div class="document-list" *ngIf="documents.length">
-  <div *ngFor="let doc of documents; let docIndex = index">
-    <!-- Section Title -->
-    <h3 class="list-title">Uploaded Documents - {{ doc.title }}</h3>
-
-    <!-- Grid Container -->
-    <div class="document-container">
-      <div class="document-box" *ngFor="let file of doc.files; let fileIndex = index">
-        <h6 class="doc-title">{{ file }}</h6>
-
-        <!-- Preview Section -->
-        <div class="preview-container">
-
-
-   <ng-container *ngIf="getFileType(file) === 'pdf'">
-  <div *ngIf="!loadError[file] && isPdfLoaded[file]; else pdfError">
-    <pdf-viewer
-      [src]="getFileUrl(file)"
-      [render-text]="false"
-      [show-all]="false"
-      [page]="1"
-      [original-size]="true"
-      style="width: 100%; height: 200px;"
-      (after-load-complete)="onPdfLoad(file)"
-      (error)="onPdfError(file, $event)"
-    ></pdf-viewer>
-  </div>
-  <ng-template #pdfError>
-    <div class="pdf-error-placeholder">
-      <p>Unable to load PDF preview</p>
-    </div>
-  </ng-template>
-</ng-container>
-
-
-          <ng-container *ngIf="getFileType(file) === 'image'">
-            <img [src]="getSafeFileUrl(file)" alt="Image Preview" style="max-width: 50%; max-height: 100px;" />
-          </ng-container>
-
-          <ng-container *ngIf="getFileType(file) === 'excel'">
-            <div class="excel-placeholder">
-              <img src="assets/excel-icon.png" alt="Excel Icon" style="width: 50px; height: 50px;" />
-              <p>Excel File (Preview not available)</p>
-            </div>
-          </ng-container>
-
-          <ng-container *ngIf="getFileType(file) === 'other'">
-            <div class="other-placeholder">
-              <p>File Preview not supported</p>
-            </div>
-          </ng-container>
-        </div>
-
-        <div class="action-buttons">
-       
-       <!-- Download -->
-<a mat-icon-button [href]="getFileUrl(file)" target="_blank" aria-label="Download file">
-  <mat-icon>download</mat-icon>
-</a>
-
-<!-- Delete -->
-<button mat-icon-button color="warn" (click)="deleteDocument(doc._id)" aria-label="Delete file">
-  <mat-icon>delete</mat-icon>
-</button>
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-</div>
 
 
 
-<div class="maintask" *ngIf="showmaintask">
+
+  <!-- <app-task *ngIf="mainTask"></app-task> -->
+   <div class="maintask" *ngIf="showmaintask">
 
 <div class="task-controls-container">
 
@@ -192,15 +73,22 @@
   </div>
   <div class="date-filter-section">
     <div class="date-filter-controls">
-      <mat-form-field appearance="outline" class="date-picker-field">
-        <mat-label></mat-label>
-        <input matInput [matDatepicker]="taskDatePicker" 
-               [(ngModel)]="selectedTaskDate" 
-               (dateChange)="onTaskDateChange()"
-               placeholder="Select date to filter tasks">
-        <mat-datepicker-toggle matSuffix [for]="taskDatePicker"></mat-datepicker-toggle>
-        <mat-datepicker #taskDatePicker></mat-datepicker>
-      </mat-form-field>
+      <select [(ngModel)]="selectedDay" (change)="onDateChange()">
+  <option *ngFor="let day of days" [value]="day.date" [disabled]="!day.date">
+    {{ day.date }}
+  </option>
+</select>
+
+
+  
+  <select [(ngModel)]="selectedMonth" (change)="onDateChange()">
+    <option *ngFor="let month of months; let i = index" [value]="i">{{ month }}</option>
+  </select>
+
+ 
+  <select [(ngModel)]="selectedYear" (change)="onDateChange()">
+    <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+  </select>
 
       <button mat-button color="warn" (click)="clearDateFilter()" 
               *ngIf="selectedTaskDate" class="clear-date-btn">
@@ -351,26 +239,6 @@
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <div *ngIf="error" class="error-state">
     <mat-icon>error_outline</mat-icon>
     <span>{{ error }}</span>
@@ -393,155 +261,11 @@
 
 </div>
 
-<!-- User View Section -->
-  <div class="mainuserview" *ngIf="showinsummary">
-
-<button class="filter-btn">
-  <span class="filter-icon">≡</span>
-  Filter
-</button>
-
-  <div class="row g-3">
-
-    <!-- Top Summary Cards -->
-    <div class="col-md-3 col-sm-6">
-      <div class="summary-card">
-        <div class="icon done"></div>
-        <div>
-          <h4>2 completed</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6">
-      <div class="summary-card2">
-        <div class="icon updated"></div>
-        <div>
-          <h4>2 updated</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6">
-      <div class="summary-card3">
-        <div class="icon created"></div>
-        <div>
-          <h4>0 created</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6">
-      <div class="summary-card4">
-        <div class="icon due"></div>
-        <div>
-          <h4>0 due soon</h4>
-        </div>
-      </div>
-    </div>
-
-    <!-- Status Overview + Recent Activity -->
-    <div class="col-lg-6">
-      <div class="card-box">
-        <h5 class="Status-overView">Status overview</h5>
-       <div class="chart-container">
-  <canvas id="workItemsChart"></canvas>
-  <div class="chart-legend">
-    <div class="legend-item">
-      <span class="legend-color done"></span> Done: 1
-    </div>
-    <div class="legend-item">
-      <span class="legend-color progress"></span> In Progress: 1
-    </div>
-    <div class="legend-item">
-      <span class="legend-color todo"></span> To Do: 2
-    </div>
-  </div>
-</div>
-
-      </div>
-    </div>
-
-    <div class="col-lg-6">
-      <div class="card-box2">
-        <h5>Recent activity</h5>
-        <ul class="activity-list">
-          <li><b>M Sabari</b> created <span class="tag">CRM-14</span> <span class="badge bg-success">IN PROGRESS</span></li>
-          <li><b>A. Selvakarthi</b> created <span class="tag">CRM-16</span> <span class="badge bg-primary">DONE</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Priority Breakdown -->
-    <div class="col-lg-6">
-      <div class="card-box">
-        <h5>Priority breakdown</h5>
-        <canvas id="priorityChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Types of Work -->
-    <div class="col-lg-6">
-      <div class="card-box2">
-        <h5>Types of work</h5>
-        <div class="progress my-2">
-          <div class="progress-bar bg-info" style="width: 100%">Task 100%</div>
-        </div>
-      </div>
-    </div>
-</div>
+  <app-documents *ngIf="Documents"></app-documents>
+  <app-calendar *ngIf="Calendar"></app-calendar>
+<app-summary *ngIf="Summary"></app-summary> 
 
 </div>
- <div class="Month-view" *ngIf="showMonthView">
-  <div class="container">
-    <!-- Header with selectors -->
-    <div class="headerr">
-      <select [(ngModel)]="selectedMonth" (change)="generateCalendar()">
-        <option *ngFor="let m of months; let i=index" [value]="i">{{ m }}</option>
-      </select>
-    <div class="headerr1">
-      <select [(ngModel)]="selectedYear" (change)="generateCalendar()">
-        <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-      </select>
-    </div></div>
-
-    <!-- Legend -->
-    <div class="legend">
-      <div class="legend-item"><div class="legend-color red"></div><span>Weekend</span></div>
-      </div>
-
-    <!-- Calendar -->
-    <div class="main-content">
-      <div class="calendar">
-        <div class="day-header">
-          <div>Monday</div>
-          <div>Tuesday</div>
-          <div>Wednesday</div>
-          <div>Thursday</div>
-          <div>Friday</div>
-          <div>Saturday</div>
-          <div>Sunday</div>
-        </div>
-
-        <div class="calendar-grid">
-          <div class="day-cell"
-               *ngFor="let day of days">
-            <div class="day-number" [ngClass]="{'sunday': day.isSunday, 'holiday': day.isHoliday}">
-              {{ day.date }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="holidays"></div>
-    </div>
-  </div>
-</div>
-</div>
-
-
-
-
 
 <ng-template #assignmentDialog>
   <div class="dialog-container">
@@ -706,4 +430,8 @@
     </mat-dialog-actions>
   </div>
 </ng-template>
+
+
+
+
 <app-footer></app-footer>

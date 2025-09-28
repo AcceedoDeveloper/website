@@ -81,16 +81,7 @@ this.roledata=data;
 
 
 editroles:any;
-editrole(role: any) {
-  console.log(role);  // you should see role object here with _id and role name
-  this.dialog.open(RoledialogComponent, {
-    width: '400px',
-    height: 'auto',
-    maxHeight: '90vh',
-    panelClass: 'custom-dialog',
-    data: { role }  
-  });
-}
+
 
 //delete role
 
@@ -208,21 +199,39 @@ editrole(role: any) {
     }
   
  
-    getrole()
 
-    {
+  getrole() {
+  const dialogRef = this.dialog.open(RoledialogComponent, {
+    width: '400px',
+    panelClass: 'custom-dialog',
+  });
 
-      
-      
-     this.dialog.open(RoledialogComponent, {
-  width: '400px',
-  // height: '100%',
-  panelClass: 'custom-dialog',
-
-
-});
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.Loadroledata(); 
     }
+  });
+}
+
   
+editrole(role: any) {
+  console.log(role);
+  const dialogRef = this.dialog.open(RoledialogComponent, {
+    width: '400px',
+    height: 'auto',
+    maxHeight: '90vh',
+    panelClass: 'custom-dialog',
+    data: { role }  
+  });
+
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      this.Loadroledata();
+    }
+  });
+}
+
     
   
     cancel() {

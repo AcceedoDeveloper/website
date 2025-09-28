@@ -28,35 +28,20 @@ removeImage: any;
 cancelEdit: any;
 
 
+showmaintask = true;
+Documents =false;
+Calendar = false;
+Summary = false;
+showdocumentpop = false;
+ currentDate!: string;
+  currentTime!: string;
 
- ngAfterViewInit(): void {
-    const ctx = document.getElementById('workItemsChart') as HTMLCanvasElement;
 
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Done', 'In Progress', 'To Do'],
-        datasets: [{
-          data: [1, 1, 2],
-          backgroundColor: ['#4285F4', '#7CB342', '#BA68C8'], // blue, green, purple
-          borderWidth: 0
-        }]
-      },
-      options: {
-        cutout: '70%', // makes it a ring
-        plugins: {
-          legend: { display: false }, // hide default legend
-          tooltip: { enabled: true }
-        }
-      }
-    });
-  }
+todayDay = new Date().getDate();  
+todayMonth = new Date().getMonth();
+todayYear = new Date().getFullYear();
+  selectedDay: number = 1;
 
-  showmaindocument = false;
-  showdocumentpop = false;
-showinsummary = false;
-showMonthView = false;
-  showmaintask = true;
   safePdfUrl: SafeResourceUrl | null = null;
  filteredTitles: string[] = []; 
   allTitles: string[] = []; 
@@ -128,6 +113,7 @@ showMonthView = false;
   private dateIntervalId: any = null;
   searchQuery: any;
   isDragActive: any;
+  cd: any;
   constructor(
     private projectService: CreatprojectService,
     private assignworkService: AssignWorkService,
@@ -152,6 +138,7 @@ showMonthView = false;
     this.loadEmployees();
     this.updateDateTime();
     this.getDocuments();
+    this.ngAfterViewInit()
     
     const currentYear = new Date().getFullYear();
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
@@ -160,6 +147,17 @@ showMonthView = false;
 
     this.generateCalendar();
     this.getDocuments();
+
+        const today = new Date();
+  this.selectedTaskDate = today;
+      this.days = Array.from({ length: 31 }, (_, i) => i + 1);
+    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+      this.years.push(i);
+    }
+
+    this.generateCalendar();
+    this.getDocuments();
+   
   }
 
   ngOnDestroy(): void {
@@ -168,6 +166,37 @@ showMonthView = false;
       this.dateIntervalId = null;
     }
     this.subs.unsubscribe();
+  }
+  
+
+  ngAfterViewInit(): void {
+    const canvas = document.getElementById('workItemsChart') as HTMLCanvasElement;
+
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+
+      if (ctx) {
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Done', 'In Progress', 'To Do'],
+            datasets: [{
+              data: [1, 1, 2],
+              backgroundColor: ['#4285F4', '#7CB342', '#BA68C8'], // blue, green, purple
+              borderWidth: 0
+            }]
+          },
+          options: {
+            cutout: '70%',
+            plugins: {
+              legend: { display: false },
+              tooltip: { enabled: true }
+            }
+          }
+        });
+      }
+    }
+
   }
   onTaskDateChange() {
     this.applyDateFilter();
@@ -207,10 +236,10 @@ showMonthView = false;
       tasks = tasks.filter(task => {
         if (!task.dueDate) return false;
         
-        const taskDueDate = new Date(task.dueDate);
-        taskDueDate.setHours(0, 0, 0, 0);
+        const taskCreatedDate = new Date(task.dueDate);
+        taskCreatedDate.setHours(0, 0, 0, 0);
         
-        return taskDueDate.getTime() === selectedDate.getTime();
+        return taskCreatedDate.getTime() === selectedDate.getTime();
       });
     }
 
@@ -232,36 +261,84 @@ showMonthView = false;
 
   getFilteredTasksCount(): number {
     if (!this.selectedTaskDate) return this.allAssignments.length;
-    
+
     const selectedDate = new Date(this.selectedTaskDate);
     selectedDate.setHours(0, 0, 0, 0);
-    
+
     return this.allAssignments.filter(task => {
-      if (!task.dueDate) return false;
-      
-      const taskDueDate = new Date(task.dueDate);
-      taskDueDate.setHours(0, 0, 0, 0);
-      
-      return taskDueDate.getTime() === selectedDate.getTime();
+      if (!task.createdAt) return false;
+
+      const taskCreatedDate = new Date(task.createdAt);
+      taskCreatedDate.setHours(0, 0, 0, 0);
+
+      return taskCreatedDate.getTime() === selectedDate.getTime();
     }).length;
   }
 
-  isOverdue(task: AssignWork): boolean {
+ isOverdue(task: AssignWork): boolean {
     if (!task.dueDate || task.Status?.toLowerCase().includes('done')) return false;
-    
+
     const dueDate = new Date(task.dueDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     dueDate.setHours(0, 0, 0, 0);
-    
+
     return dueDate < today;
   }
-
-  private updateDateTime() {
+ private updateDateTime() {
     this.dateIntervalId = setInterval(() => {
-      this.dateTime = new Date().toLocaleString();
+      const now = new Date();
+
+      this.currentDate = now.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+
+      this.currentTime = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
     }, 1000);
   }
+
+  onDayChange() {
+  this.generateDays();
+}
+
+onMonthChange() {
+  this.generateDays();
+}
+
+onYearChange() {
+  this.generateDays();
+}
+
+generateDays() {
+  const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0).getDate();
+  this.days = [];
+
+  for (let d = 1; d <= lastDay; d++) {
+    const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
+    const isSunday = dateObj.getDay() === 0;
+    const isHoliday = (this.selectedMonth === 8 && d === 25);
+
+    this.days.push({ date: d, isSunday, isHoliday });
+  }
+
+  if (!this.selectedDay || this.selectedDay > lastDay) {
+    this.selectedDay = this.todayDay <= lastDay ? this.todayDay : 1;
+  }
+
+}
+
+onDateChange() {
+  this.generateDays();
+}
+
 
   private initForm() {
     this.assignmentForm = this.fb.group({
@@ -281,32 +358,46 @@ showMonthView = false;
     });
   }
 
-  private loadUserFromSession() {
-    const userStr = sessionStorage.getItem('user');
-    if (userStr) {
-      try {
-        this.userData = JSON.parse(userStr);
-      } catch {
-        this.userData = { UserName: userStr };
-      }
-    } else {
-      const usernameOnly = sessionStorage.getItem('username');
-      this.userData = usernameOnly ? { UserName: usernameOnly } : null;
-    }
+ private loadUserFromSession() {
+  const userStr = sessionStorage.getItem('user');
 
-    this.displayName = this.userData?.UserName || this.userData?.username || 'User';
-    this.username = this.displayName;
-
-    if (this.assignmentForm) {
-      this.assignmentForm.patchValue({ assignedTo: this.username });
+  if (userStr) {
+    try {
+      this.userData = JSON.parse(userStr);
+    } catch {
+      this.userData = { UserName: userStr };
     }
-
-    if (this.username && this.username !== 'User') {
-      this.fetchProjectsByEmployee(this.username);
-      this.getAssignments();
-    }
+  } else {
+    const usernameOnly = sessionStorage.getItem('username');
+    this.userData = usernameOnly ? { UserName: usernameOnly } : { UserName: 'User' };
   }
 
+  this.displayName = this.userData?.UserName || this.userData?.username || 'User';
+  this.username = this.displayName;
+
+  if (this.userData.photo) {
+    this.userData.photoURL = this.userData.photo.startsWith('http')
+      ? this.userData.photo
+      : `http://localhost:3008/uploads/${this.userData.photo}`;
+  } else {
+    this.userData.photoURL = 'assets/default-avatar.png';
+  }
+
+  const img = new Image();
+  img.src = this.userData.photoURL;
+  img.onload = () => {
+    this.userData.photoURL = this.userData.photoURL + '?t=' + new Date().getTime();
+    this.cd.detectChanges(); 
+  };
+
+  if (this.assignmentForm) {
+    this.assignmentForm.patchValue({ assignedTo: this.username });
+  }
+  if (this.username && this.username !== 'User') {
+    this.fetchProjectsByEmployee(this.username);
+    this.getAssignments();
+  }
+}
   private loadEmployees() {
     const s = this.userService.getuser().subscribe({
       next: (res: any) => {
@@ -327,7 +418,7 @@ showMonthView = false;
     this.subs.add(s);
   }
 
-  getCurrentUser() {
+    getCurrentUser() {
     const userStr = sessionStorage.getItem('user');
     if (userStr) {
       this.userData = JSON.parse(userStr);
@@ -725,31 +816,33 @@ showMonthView = false;
 
   // Navigation Methods
   opentask() {
-    this.showmaintask = true;
-    this.showmaindocument = false;
-    this.showinsummary = false;
-    this.showMonthView = false;
+this.showmaintask = true;
+this.Documents =false;
+this.Calendar = false;
+this.Summary = false;
   }
 
   openuv() {
-    this.showinsummary = true;
-    this.showmaintask = false;
-    this.showMonthView = false;
-    this.showmaindocument = false;
+    this.ngAfterViewInit()
+this.showmaintask = false;
+this.Documents =false;
+this.Calendar = false;
+this.Summary = true;
+    
 }
 
   opendoc() {
-    this.showmaindocument = true;
-    this.showmaintask = false;
-    this.showinsummary = false;
-    this.showMonthView = false;
+this.showmaintask = false;
+this.Documents =true;
+this.Calendar = false;
+this.Summary = false;
   }
 
   openMonthView() {
-    this.showMonthView = true;
-    this.showmaintask = false;
-    this.showmaindocument = false;
-    this.showinsummary = false;
+this.showmaintask = false;
+this.Documents =false;
+this.Calendar = true;
+this.Summary = false;
   }
 
   opendocpop(doc?: any) {
@@ -930,32 +1023,37 @@ showMonthView = false;
     this.subs.add(s);
   }
 
-  generateCalendar() {
-    this.days = [];
-    const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
-    const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startDay = firstDay.getDay();
+generateCalendar() {
+  this.days = [];
+  const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
+  const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startDay = firstDay.getDay();
 
-    const offset = (startDay + 6) % 7;
-
-    for (let i = 0; i < offset; i++) {
-      this.days.push({ date: '', isSunday: false, isHoliday: false });
-    }
-
-    for (let d = 1; d <= daysInMonth; d++) {
-      const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
-      const isSunday = dateObj.getDay() === 0;
-      const isHoliday = (this.selectedMonth === 8 && d === 25);
-
-      this.days.push({ date: d, isSunday, isHoliday });
-    }
-
-    while (this.days.length % 7 !== 0) {
-      this.days.push({ date: '', isSunday: false, isHoliday: false });
-    }
+  const offset = (startDay + 6) % 7;
+  for (let i = 0; i < offset; i++) {
+    this.days.push({ date: '', isSunday: false, isHoliday: false });
   }
 
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
+    const isSunday = dateObj.getDay() === 0;
+    const isHoliday = (this.selectedMonth === 8 && d === 25);
+
+    this.days.push({ date: d, isSunday, isHoliday });
+  }
+
+  while (this.days.length % 7 !== 0) {
+    this.days.push({ date: '', isSunday: false, isHoliday: false });
+  }
+
+  
+  if (this.todayDay <= daysInMonth) {
+    this.selectedDay = this.todayDay;
+  } else {
+    this.selectedDay = 1;
+  }
+}
   onPictureDropped($event: DragEvent) {
     throw new Error('Method not implemented.');
   }

@@ -1,0 +1,103 @@
+<!-- User View Section -->
+
+
+  <div class="mainuserview" >
+
+<button class="filter-btn">
+  <span class="filter-icon">≡</span>
+  Filter
+</button>
+
+  <div class="row g-6">
+
+    <!-- Top Summary Cards -->
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card">
+        <div class="icon done"></div>
+        <div>
+          <h4>2 completed</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card2">
+        <div class="icon updated"></div>
+        <div>
+          <h4>2 updated</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card3">
+        <div class="icon created"></div>
+        <div>
+          <h4>0 created</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card4">
+        <div class="icon due"></div>
+        <div>
+          <h4>0 due soon</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Overview + Recent Activity -->
+     
+    <div class="col-lg-6">
+
+      <div class="card-box">
+        <h5 class="Status-overView">Status overview</h5>
+       <div class="chart-container">
+  <canvas id="workItemsChart"></canvas>
+  <div class="chart-legend"  >
+    <div class="legend-item">
+      <span class="legend-color done"></span> Done: 1
+    </div>
+    <div class="legend-item">
+      <span class="legend-color progress"></span> In Progress: 1
+    </div>
+    <div class="legend-item">
+      <span class="legend-color todo"></span> To Do: 2
+    </div>
+  </div>
+</div>
+
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card-box2">
+        <h5>Recent activity</h5>
+        <ul class="activity-list">
+          <li><b>M Sabari</b> created <span class="tag">CRM-14</span> <span class="badge bg-success">IN PROGRESS</span></li>
+          <li><b>A. Selvakarthi</b> created <span class="tag">CRM-16</span> <span class="badge bg-primary">DONE</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Priority Breakdown -->
+    <div class="col-lg-6">
+      <div class="card-box">
+        <h5>Team Workload</h5>
+        <canvas id="priorityChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Types of Work -->
+    <div class="col-lg-6">
+      <div class="card-box3">
+        <h5>Types of work</h5>
+        <div class="progress my-2">
+          <div class="progress-bar bg-info" style="width: 100%">Task 100%</div>
+        </div>
+      </div>
+    </div>
+</div>
+
+</div>
