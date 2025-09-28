@@ -2,18 +2,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { ConfigService } from './config.service';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3008';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private config : ConfigService) {}
 
-  login(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, { username, password });
+
+
+
+ login(username: string, password: string): Observable<any> {
+    return this.http.post<any>(this.config.getWebsiteUrl('login'), { username, password });
   }
+
 
   getUserRole(): string | null {
     const user = sessionStorage.getItem('user');

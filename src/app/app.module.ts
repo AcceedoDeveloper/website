@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -28,6 +28,8 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 // Environment Firebase config
 import { environment } from '../environments/environment';
+
+import {ConfigService} from './service/config.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -98,6 +100,16 @@ import { TaskComponent } from './projects/task/task.component';
 import { CalendarComponent } from './projects/calendar/calendar.component';
 import { SummaryComponent } from './projects/summary/summary.component';
 import { DocumentsComponent } from './projects/documents/documents.component';
+import { SharedComponent } from './shared/shared.component';
+
+
+
+
+
+export function loadConfigFactory(configService: ConfigService) {
+  return () => configService.load();
+}
+
 
 @NgModule({
   declarations: [
@@ -152,7 +164,8 @@ import { DocumentsComponent } from './projects/documents/documents.component';
    TaskComponent,
    CalendarComponent,
    SummaryComponent,
-   DocumentsComponent
+   DocumentsComponent,
+   SharedComponent
   ],
 
   imports: [
@@ -193,9 +206,17 @@ import { DocumentsComponent } from './projects/documents/documents.component';
     PdfViewerModule
     
   ],
-  providers: [
-    provideAnimationsAsync()
-  ],
+providers: [
+  provideAnimationsAsync(),
+  ConfigService, // make sure ConfigService is provided
+  {
+    provide: APP_INITIALIZER,
+    useFactory: loadConfigFactory,
+    deps: [ConfigService],
+    multi: true
+  }
+],
+
   bootstrap: [AppComponent],
 
   
