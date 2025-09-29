@@ -430,3 +430,126 @@
 .task-title {
   word-break: break-word; 
 }
+/* Add these to your existing CSS */
+
+/* Task title clickable style */
+.task-title {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px 6px;
+  border-radius: 4px;
+  display: block;
+  width: 100%;
+  margin-bottom: 2px;
+  position: relative;
+  z-index: 10;
+}
+
+.task-title:hover {
+  background-color: rgba(33, 150, 243, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Make sure task container doesn't block clicks */
+.task {
+  position: relative;
+  z-index: 5;
+  cursor: default;
+}
+
+/* Holiday sidebar details */
+.holiday-details {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease;
+}
+
+.holiday-details h3 {
+  margin-top: 0;
+  color: #1976d2;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.detail-item {
+  margin-bottom: 12px;
+  display: flex;
+}
+
+.detail-label {
+  font-weight: 600;
+  min-width: 100px;
+  color: #555;
+}
+
+.detail-value {
+  flex: 1;
+  word-break: break-word;
+}
+
+.no-task-selected {
+  text-align: center;
+  color: #757575;
+  font-style: italic;
+  padding: 20px 0;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-todo {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-inprogress {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+.status-done {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Comments section */
+.comments-section {
+  margin-top: 16px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  background: #f5f5f5;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.comment-user {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.comment-time {
+  font-size: 11px;
+  color: #757575;
+  margin-left: 8px;
+}
+
+.comment-message {
+  margin-top: 4px;
+  color: #333;
+}
