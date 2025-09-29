@@ -36,15 +36,11 @@ export class CalendarComponent implements OnInit {
   loadAssignments() {
     this.assignWorkService.getAssignments().subscribe({
       next: (res: any) => {
-        if (Array.isArray(res)) {
-          this.allAssignments = res;
-        } else if (res?.works && Array.isArray(res.works)) {
-          this.allAssignments = res.works;
-        } else {
-          this.allAssignments = [];
-        }
+        if (Array.isArray(res)) this.allAssignments = res;
+        else if (res?.works && Array.isArray(res.works)) this.allAssignments = res.works;
+        else this.allAssignments = [];
 
-    
+       
         this.allAssignees = Array.from(
           new Set(this.allAssignments.map(task => task.assignee).filter(Boolean))
         );
@@ -68,37 +64,27 @@ export class CalendarComponent implements OnInit {
     const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startDay = (firstDay.getDay() + 6) % 7; 
-
-  
     for (let i = 0; i < startDay; i++) {
       this.days.push({ date: '', isSunday: false, tasks: [] });
     }
-
-    
     for (let d = 1; d <= daysInMonth; d++) {
       const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
       const isSunday = dateObj.getDay() === 0;
-
- 
-      const tasksForDay = this.allAssignments.filter(task => {
+      let tasksForDay = this.allAssignments.filter(task => {
         if (!task.dueDate) return false;
-
         const taskDate = new Date(task.dueDate);
         const matchDate =
           taskDate.getDate() === d &&
           taskDate.getMonth() === this.selectedMonth &&
           taskDate.getFullYear() === this.selectedYear;
 
-        const matchAssignee =
-          !this.selectedAssignee || task.assignee === this.selectedAssignee;
+        const matchAssignee = !this.selectedAssignee || task.assignee === this.selectedAssignee;
 
         return matchDate && matchAssignee;
       });
 
       this.days.push({ date: d, isSunday, tasks: tasksForDay });
     }
-
-    
     while (this.days.length % 7 !== 0) {
       this.days.push({ date: '', isSunday: false, tasks: [] });
     }
@@ -107,7 +93,12 @@ export class CalendarComponent implements OnInit {
   selectDay(day: any) {
     if (day.tasks.length > 0) {
       this.selectedDay = day;
-      this.selectedDayTasks = day.tasks;
+      if (this.selectedAssignee) {
+        this.selectedDayTasks = day.tasks.map((task: { title: any; }) => ({ title: task.title }));
+      } else {
+
+        this.selectedDayTasks = day.tasks.map((task: { title: any; assignee: any; }) => ({ title: task.title, assignee: task.assignee }));
+      }
     } else {
       this.selectedDay = null;
       this.selectedDayTasks = [];
