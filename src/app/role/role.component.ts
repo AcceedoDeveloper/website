@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { Timestamp } from 'firebase/firestore';
 import { MatDialog } from '@angular/material/dialog';
 import{RoledialogComponent} from './roledialog/roledialog.component';
 import{RoleserviceService} from '../service/roleservice.service';
@@ -41,9 +38,7 @@ roleid:any;
   userService: any;
 
   constructor(
-    private firestore: AngularFirestore,
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore, 
+   
     private router: Router,
     private dialog: MatDialog,
     private roleservices:RoleserviceService,
@@ -271,12 +266,7 @@ editrole(role: any) {
   
   
     fetchUsers() {
-      this.afs
-        .collection('users')
-        .valueChanges({ idField: 'id' })
-        .subscribe((users) => {
-          this.users = users;
-        });
+     
     }
   
   getCurrentUser() {
@@ -343,14 +333,7 @@ editrole(role: any) {
     }
   
     saveProfilePicture() {
-      this.afs
-        .collection('users')
-        .doc(this.userData.uid)
-        .update(this.editUserData)
-        .then(() => {
-          this.showEditModal = false;
-          this.getCurrentUser();
-        });
+    
     }
   
     onPhotoSelected(event: any) {
@@ -366,7 +349,6 @@ editrole(role: any) {
     }
   
     signOut() {
-      this.afAuth.signOut();
     }
   
     getInitials(name: string): string {

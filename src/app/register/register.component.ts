@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { UserservicesService } from './services/userservices.service';
@@ -50,9 +48,7 @@ export class RegisterComponent implements OnInit {
   userData: any = null;
 
   constructor(
-    private firestore: AngularFirestore,
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore, 
+   
     private router: Router,
     private dialog: MatDialog,
     private userserives: UserservicesService,
@@ -432,12 +428,7 @@ export class RegisterComponent implements OnInit {
   }
 
   fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
+
   }
 
   openEditModal(task: any) {
@@ -481,7 +472,6 @@ export class RegisterComponent implements OnInit {
   }
 
   signOut() {
-    this.afAuth.signOut();
   }
 
   getInitials(name: string): string {
@@ -493,39 +483,6 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(form: any) {
-    if (form.valid && this.user.password === this.confirmPassword) {
-      this.afAuth.createUserWithEmailAndPassword(this.user.email, this.user.password)
-        .then((userCredential) => {
-          const uid = userCredential.user?.uid;
-          if (uid) {
-            const userData = {
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              email: this.user.email,
-              mobile: this.user.mobile,
-              role: this.user.role,
-              username: this.user.username,
-              password: this.user.password
-            };
-            this.firestore.collection('users').doc(uid).set(userData).then(() => {
-              console.log('User data saved to Firestore!');
-              sessionStorage.setItem('uid', uid);
-              sessionStorage.setItem('username', `${this.user.firstName} ${this.user.lastName}`);
-              sessionStorage.setItem('email', this.user.email);
-              sessionStorage.setItem('role', this.user.role);
-
-              this.formSubmitted = true;
-              setTimeout(() => {
-                this.router.navigate(['/register']);
-              }, 1000);
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error during Firebase Auth or Firestore:', error);
-        });
-    } else {
-      console.log('Form not valid or passwords do not match.');
-    }
+  
   }
 } 
