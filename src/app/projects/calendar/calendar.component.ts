@@ -19,8 +19,9 @@ export class CalendarComponent implements OnInit {
   allAssignments: AssignWork[] = [];
   allAssignees: string[] = [];
   selectedAssignee: string = '';
-  
-  selectedTask: AssignWork | null = null;
+
+  selectedDay: any = null;         
+  selectedDayTasks: AssignWork[] = []; 
 
   constructor(private assignWorkService: AssignWorkService) {}
 
@@ -35,8 +36,6 @@ export class CalendarComponent implements OnInit {
   loadAssignments() {
     this.assignWorkService.getAssignments().subscribe({
       next: (res: any) => {
-        console.log('Assignments loaded:', res); 
-        
         if (Array.isArray(res)) {
           this.allAssignments = res;
         } else if (res?.works && Array.isArray(res.works)) {
@@ -45,17 +44,14 @@ export class CalendarComponent implements OnInit {
           this.allAssignments = [];
         }
 
-        console.log('Processed assignments:', this.allAssignments); 
-
-      
+    
         this.allAssignees = Array.from(
           new Set(this.allAssignments.map(task => task.assignee).filter(Boolean))
         );
 
         this.generateCalendar();
       },
-      error: (error) => {
-        console.error('Error loading assignments:', error);
+      error: () => {
         this.allAssignments = [];
         this.allAssignees = [];
         this.generateCalendar();
@@ -64,75 +60,57 @@ export class CalendarComponent implements OnInit {
   }
 
   generateCalendar() {
-    console.log('Generating calendar...'); 
     this.days = [];
+    this.selectedDay = null;
+    this.selectedDayTasks = [];
+
     const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
     const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startDay = (firstDay.getDay() + 6) % 7; 
 
-   
+  
     for (let i = 0; i < startDay; i++) {
       this.days.push({ date: '', isSunday: false, tasks: [] });
     }
 
-  
+    
     for (let d = 1; d <= daysInMonth; d++) {
       const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
       const isSunday = dateObj.getDay() === 0;
 
-  
+ 
       const tasksForDay = this.allAssignments.filter(task => {
         if (!task.dueDate) return false;
 
-        try {
-          const taskDate = new Date(task.dueDate);
-          const matchDate =
-            taskDate.getDate() === d &&
-            taskDate.getMonth() === this.selectedMonth &&
-            taskDate.getFullYear() === this.selectedYear;
+        const taskDate = new Date(task.dueDate);
+        const matchDate =
+          taskDate.getDate() === d &&
+          taskDate.getMonth() === this.selectedMonth &&
+          taskDate.getFullYear() === this.selectedYear;
 
-          const matchAssignee =
-            !this.selectedAssignee || task.assignee === this.selectedAssignee;
+        const matchAssignee =
+          !this.selectedAssignee || task.assignee === this.selectedAssignee;
 
-          return matchDate && matchAssignee;
-        } catch (error) {
-          console.error('Error processing task date:', task.dueDate, error);
-          return false;
-        }
+        return matchDate && matchAssignee;
       });
 
-      console.log(`Day ${d} tasks:`, tasksForDay); 
-
-      this.days.push({ 
-        date: d, 
-        isSunday, 
-        tasks: tasksForDay 
-      });
+      this.days.push({ date: d, isSunday, tasks: tasksForDay });
     }
 
-  
+    
     while (this.days.length % 7 !== 0) {
       this.days.push({ date: '', isSunday: false, tasks: [] });
     }
-
-    console.log('Final days array:', this.days); 
   }
 
-  showTaskDetails(task: AssignWork) {
-    console.log('Task clicked:', task); 
-    this.selectedTask = task;
-    
-
-    setTimeout(() => {
-      const detailsElement = document.querySelector('.holiday-details');
-      if (detailsElement) {
-        detailsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
-  }
-
-  clearTaskSelection() {
-    this.selectedTask = null;
+  selectDay(day: any) {
+    if (day.tasks.length > 0) {
+      this.selectedDay = day;
+      this.selectedDayTasks = day.tasks;
+    } else {
+      this.selectedDay = null;
+      this.selectedDayTasks = [];
+    }
   }
 }
