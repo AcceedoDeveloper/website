@@ -1,7 +1,6 @@
 <div class="Month-view">
   <div class="container">
 
-
     <div class="data-filter-bar">
 
       <div class="filter-item">
@@ -11,7 +10,6 @@
           <option *ngFor="let emp of allAssignees" [value]="emp">{{ emp }}</option>
         </select>
       </div>
-
 
       <div class="filter-item">
         <label for="month">Month</label>
@@ -56,20 +54,21 @@
             <div class="day-number" [ngClass]="{ sunday: day.isSunday }">
               {{ day.date }}
             </div>
+
             <div class="task" *ngIf="day.tasks.length > 0">
               <span class="task-title">{{ day.tasks[0]?.title }}<span *ngIf="day.tasks.length > 1">...</span></span>
             </div>
-
           </div>
         </div>
       </div>
-      <div class="holidays">
-        <div class="holidays-title" *ngIf="selectedDayTasks.length > 0">
+      <div class="holidays" *ngIf="selectedDayTasks.length > 0">
+        <div class="holidays-title">
           Tasks for {{ selectedDay?.date }}/{{ selectedMonth + 1 }}/{{ selectedYear }}
         </div>
         <div class="task-list">
           <div class="task" *ngFor="let task of selectedDayTasks">
-            <b>{{ task.title }}</b> - {{ task.assignee }}
+            <b>{{ task.title }}</b>
+            <span *ngIf="!selectedAssignee"> - {{ task.assignee }}</span>
           </div>
         </div>
       </div>
