@@ -2,9 +2,6 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from 'firebase/firestore';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -92,7 +89,7 @@ subdepartments: string[] = [''];
   dateTime: string = '';
   hasNotification = false;
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth,private dialog: MatDialog,
+  constructor(private dialog: MatDialog,
     private departmentservices:DepartmentserviceService,
     private userserives:UserservicesService,
     private route:ActivatedRoute
@@ -151,7 +148,7 @@ editdepartment(department: any) {
 
   ngOnInit(): void {
     this.getCurrentUser();
-    this.fetchUsers();
+   
     this.updateTime();
   }
 
@@ -215,22 +212,7 @@ editdepartment(department: any) {
 }
 
   fetchTasks() {
-    this.afs
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' })
-      .subscribe((data) => {
-        this.tasks = data;
-      });
-  }
-
-
-  fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
+  
   }
 
 
@@ -247,26 +229,11 @@ editdepartment(department: any) {
   }
 
   addTask() {
-    if (!this.task.description || !this.task.assignee) return;
-
-    const newTask = {
-      ...this.task,
-      createdAt: Timestamp.now(),
-      assignedBy: this.userData?.uid || 'admin'
-    };
-
-    this.afs.collection('tasks').add(newTask).then(() => {
-      this.showSuccessMessage = true;
-      setTimeout(() => (this.showSuccessMessage = false), 2000);
-      this.fetchTasks();
-      this.cancel();
-    });
+   
   }
 
   deleteTask(task: any) {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.afs.collection('tasks').doc(task.id).delete();
-    }
+   
   }
 
   openEditModal(task: any) {
@@ -278,16 +245,7 @@ editdepartment(department: any) {
   saveEdit() {
     if (!this.selectedTask || !this.editComment) return;
 
-    this.afs
-      .collection('tasks')
-      .doc(this.selectedTask.id)
-      .update({
-        description: this.editComment
-      })
-      .then(() => {
-        this.isModalOpen = false;
-        this.fetchTasks();
-      });
+   
   }
 
   closeModal() {
@@ -295,13 +253,7 @@ editdepartment(department: any) {
   }
 
   markAsCompleted(task: any) {
-    this.afs
-      .collection('tasks')
-      .doc(task.id)
-      .update({ status: 'done' })
-      .then(() => {
-        this.fetchTasks();
-      });
+   
   }
 
   // Profile Modal Methods
@@ -315,14 +267,7 @@ editdepartment(department: any) {
   }
 
   saveProfilePicture() {
-    this.afs
-      .collection('users')
-      .doc(this.userData.uid)
-      .update(this.editUserData)
-      .then(() => {
-        this.showEditModal = false;
-        this.getCurrentUser();
-      });
+   
   }
 
   onPhotoSelected(event: any) {
@@ -338,7 +283,7 @@ editdepartment(department: any) {
   }
 
   signOut() {
-    this.afAuth.signOut();
+    
   }
 
   getInitials(name: string): string {

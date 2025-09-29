@@ -21,13 +21,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Owl Carousel
 import { CarouselModule } from 'ngx-owl-carousel-o';
 
-// Firebase Modules
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-
-// Environment Firebase config
-import { environment } from '../environments/environment';
 
 import {ConfigService} from './service/config.service';
 
@@ -199,10 +192,7 @@ export function loadConfigFactory(configService: ConfigService) {
  MatChipsModule,
 
  
-    // ✅ Firebase Initialization
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
-    AngularFirestoreModule,
+
     PdfViewerModule
     
   ],

@@ -2,9 +2,6 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from 'firebase/firestore';
 import { Pipe, PipeTransform } from '@angular/core';
 
 
@@ -82,7 +79,7 @@ filteredTasks: any[] = [];
 
 
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) {}
+  constructor() {}
   // function
 
    onSearch() {
@@ -99,20 +96,10 @@ filteredTasks: any[] = [];
      this.fetchTasks();
   }
  fetchTasks() {
-    this.afs
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' })
-      .subscribe((data) => {
-        this.tasks = data;
-      });
+  
   }
 fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
+    
   }
   updateTime() {
     const now = new Date();
@@ -130,37 +117,18 @@ fetchUsers() {
     this.showEditModal = false;
   }
  getCurrentUser() {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.afs
-          .collection('users')
-          .doc(user.uid)
-          .valueChanges()
-          .subscribe((data) => {
-            this.userData = data;
-          });
-      }
-    });
+    
   }
 
      newTask = {
-        ...this.task,
-        createdAt: Timestamp.now(),
-        assignedBy: this.userData?.uid || 'admin'
+       
       };
 
       // Profile Modal Methods
     
 
  saveProfilePicture() {
-    this.afs
-      .collection('users')
-      .doc(this.userData.uid)
-      .update(this.editUserData)
-      .then(() => {
-        this.showEditModal = false;
-        this.getCurrentUser();
-      });
+   
   }
 
     onPhotoSelected(event: any) {
@@ -187,7 +155,7 @@ getrole()
   
 }
    signOut() {
-    this.afAuth.signOut();
+    
   }
  
 }
