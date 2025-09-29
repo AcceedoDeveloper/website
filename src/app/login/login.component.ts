@@ -154,10 +154,7 @@ onSubmit(): void {
         this.router.navigate(['/creat']);
       }
       
-      // Reload the page to update navigation
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
+      
     },
     error: (err) => {
       console.error('❌ Login error:', err);

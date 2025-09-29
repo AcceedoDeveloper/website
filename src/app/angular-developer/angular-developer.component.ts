@@ -1,8 +1,5 @@
 
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from 'firebase/firestore';
 import { Pipe, PipeTransform } from '@angular/core';
 import { UserservicesService } from '../register/services/userservices.service'; 
 
@@ -80,7 +77,7 @@ filteredTasks: any[] = [];
   dateTime: string = '';
   hasNotification = false;
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth,
+  constructor(
     private userserives:UserservicesService,
   ) {}
 
@@ -198,7 +195,7 @@ filteredTasks: any[] = [];
   }
 
   signOut() {
-    this.afAuth.signOut();
+   
   }
 
   getInitials(name: string): string {

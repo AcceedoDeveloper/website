@@ -2,9 +2,6 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from 'firebase/firestore';
 import { Pipe, PipeTransform } from '@angular/core';
 
 
@@ -80,7 +77,7 @@ filteredTasks: any[] = [];
   dateTime: string = '';
   hasNotification = false;
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.getCurrentUser();
@@ -156,36 +153,16 @@ filteredTasks: any[] = [];
 }
 
   fetchTasks() {
-    this.afs
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' })
-      .subscribe((data) => {
-        this.tasks = data;
-      });
+
   }
 
 
   fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
+   
   }
 
   getCurrentUser() {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.afs
-          .collection('users')
-          .doc(user.uid)
-          .valueChanges()
-          .subscribe((data) => {
-            this.userData = data;
-          });
-      }
-    });
+   
   }
 
   selectAssignee(user: any) {
@@ -203,24 +180,11 @@ filteredTasks: any[] = [];
   addTask() {
     if (!this.task.description || !this.task.assignee) return;
 
-    const newTask = {
-      ...this.task,
-      createdAt: Timestamp.now(),
-      assignedBy: this.userData?.uid || 'admin'
-    };
-
-    this.afs.collection('tasks').add(newTask).then(() => {
-      this.showSuccessMessage = true;
-      setTimeout(() => (this.showSuccessMessage = false), 2000);
-      this.fetchTasks();
-      this.cancel();
-    });
+   
   }
 
   deleteTask(task: any) {
-    if (confirm('Are you sure you want to delete this task?')) {
-      this.afs.collection('tasks').doc(task.id).delete();
-    }
+    
   }
 
   openEditModal(task: any) {
@@ -232,16 +196,7 @@ filteredTasks: any[] = [];
   saveEdit() {
     if (!this.selectedTask || !this.editComment) return;
 
-    this.afs
-      .collection('tasks')
-      .doc(this.selectedTask.id)
-      .update({
-        description: this.editComment
-      })
-      .then(() => {
-        this.isModalOpen = false;
-        this.fetchTasks();
-      });
+
   }
 
   closeModal() {
@@ -249,13 +204,7 @@ filteredTasks: any[] = [];
   }
 
   markAsCompleted(task: any) {
-    this.afs
-      .collection('tasks')
-      .doc(task.id)
-      .update({ status: 'done' })
-      .then(() => {
-        this.fetchTasks();
-      });
+  
   }
 
   // Profile Modal Methods
@@ -269,14 +218,7 @@ filteredTasks: any[] = [];
   }
 
   saveProfilePicture() {
-    this.afs
-      .collection('users')
-      .doc(this.userData.uid)
-      .update(this.editUserData)
-      .then(() => {
-        this.showEditModal = false;
-        this.getCurrentUser();
-      });
+
   }
 
   onPhotoSelected(event: any) {
@@ -292,7 +234,6 @@ filteredTasks: any[] = [];
   }
 
   signOut() {
-    this.afAuth.signOut();
   }
 
   getInitials(name: string): string {
