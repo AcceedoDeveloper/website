@@ -1,9 +1,9 @@
 <div class="Month-view">
   <div class="container">
 
-    <!-- Top Filter Bar -->
+   
     <div class="data-filter-bar">
-      <!-- Assignee Filter -->
+
       <div class="filter-item">
         <label for="assignee">Assignee</label>
         <select id="assignee" [(ngModel)]="selectedAssignee" (change)="generateCalendar()">
@@ -12,7 +12,7 @@
         </select>
       </div>
 
-      <!-- Month Filter -->
+
       <div class="filter-item">
         <label for="month">Month</label>
         <select id="month" [(ngModel)]="selectedMonth" (change)="generateCalendar()">
@@ -20,7 +20,6 @@
         </select>
       </div>
 
-      <!-- Year Filter -->
       <div class="filter-item">
         <label for="year">Year</label>
         <select id="year" [(ngModel)]="selectedYear" (change)="generateCalendar()">
@@ -29,7 +28,6 @@
       </div>
     </div>
 
-    <!-- Legend -->
     <div class="legend">
       <div class="legend-item">
         <div class="legend-color red"></div>
@@ -37,7 +35,6 @@
       </div>
     </div>
 
-    <!-- Calendar -->
     <div class="main-content">
       <div class="calendar">
         <div class="day-header">
@@ -51,23 +48,84 @@
         </div>
 
         <div class="calendar-grid">
-          <div class="day-cell" *ngFor="let day of days">
+          <div class="day-cell" *ngFor="let day of days; let i = index">
             <div class="day-number" [ngClass]="{ sunday: day.isSunday }">
               {{ day.date }}
             </div>
 
-            
-       <div class="task" *ngFor="let task of day.tasks">
-  <b ></b> <span class="task-title">{{ task.title }}</span>
-</div>
-
+            <div class="task" *ngFor="let task of day.tasks; let j = index">
+              <span 
+                class="task-title" 
+                (click)="showTaskDetails(task)"
+                [attr.data-index]="'task-' + i + '-' + j">
+                {{ task.title }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-
-     
       <div class="holidays">
-        <div class="holidays-title"></div>
+        <div class="holidays-title">Task Details</div>
+        
+        <div *ngIf="selectedTask" class="holiday-details">
+          <h3>{{ selectedTask.title }}</h3>
+          
+          <div class="detail-item">
+            <span class="detail-label">Assignee:</span>
+            <span class="detail-value">{{ selectedTask.assignee || selectedTask.assignedTo || 'Not assigned' }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Project:</span>
+            <span class="detail-value">{{ selectedTask.projectName || 'No project' }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Description:</span>
+            <span class="detail-value">{{ selectedTask.description || 'No description' }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Due Date:</span>
+            <span class="detail-value">
+              {{ selectedTask.dueDate ? (selectedTask.dueDate | date:'mediumDate') : 'No due date' }}
+            </span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Status:</span>
+            <span class="detail-value">
+              <span class="status-badge" 
+                    [ngClass]="{
+                      'status-todo': (selectedTask.Status || 'ToDo').toLowerCase().includes('todo'),
+                      'status-inprogress': (selectedTask.Status || '').toLowerCase().includes('progress'),
+                      'status-done': (selectedTask.Status || '').toLowerCase().includes('done') || 
+                                    (selectedTask.Status || '').toLowerCase().includes('complete')
+                    }">
+                {{ selectedTask.Status || 'ToDo' }}
+              </span>
+            </span>
+          </div>
+          
+  
+          <div *ngIf="selectedTask.comment && selectedTask.comment.length > 0" class="comments-section">
+            <h4>Comments ({{ selectedTask.comment.length }})</h4>
+            <div *ngFor="let comment of selectedTask.comment" class="comment-item">
+              <span class="comment-user">{{ comment.user || 'Unknown' }}</span>
+              <span class="comment-time">{{ comment.timestamp | date:'short' }}</span>
+              <div class="comment-message">{{ comment.message }}</div>
+            </div>
+          </div>
+          
+          <div *ngIf="!selectedTask.comment || selectedTask.comment.length === 0" class="comments-section">
+            <p>No comments yet</p>
+          </div>
+        </div>
+        
+        <div *ngIf="!selectedTask" class="no-task-selected">
+          Click on a task title to view details
+        </div>
+      </div>
     </div>
   </div>
 </div>
