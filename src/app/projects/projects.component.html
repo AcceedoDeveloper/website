@@ -32,7 +32,18 @@
         {{ project.projectName || project.name || 'Untitled Project' }}
       </option>
     </select>
+    <!-- In your projects.component.html -->
+<!-- <div *ngIf="Calendar" class="calendar-section">
+  <app-calendar
+    [selectedProjectId]="selectedProjectId"
+    [selectedProjectName]="selectedProjectName"
+    [username]="username"
+    [projects]="projects">
+  </app-calendar>
+</div> -->
   </div>
+
+  
 
 
 
@@ -44,6 +55,14 @@
   
   <div class="pill-dropdown">     
         <button  (click)="openMonthView()">Calendar</button>
+        <!-- <div *ngIf="Calendar" class="calendar-section">
+  <app-calendar
+    [selectedProjectId]="selectedProjectId"
+    [selectedProjectName]="selectedProjectName"
+    [username]="username"
+    [projects]="projects">
+  </app-calendar>
+</div> -->
   </div>
 
   <div class="pill-dropdown">
@@ -248,10 +267,20 @@
 </div>
 
   <app-documents *ngIf="Documents"></app-documents>
-  <app-calendar *ngIf="Calendar"></app-calendar>
+         <div *ngIf="Calendar" class="calendar-section">
+  <app-calendar
+    [selectedProjectId]="selectedProjectId"
+    [selectedProjectName]="selectedProjectName"
+    [username]="username"
+    [projects]="projects">
+  </app-calendar>
+</div>
 <app-summary *ngIf="Summary"></app-summary> 
 
 </div>
+
+
+
 
 <ng-template #assignmentDialog>
   <div class="dialog-container">

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface AssignWork {
+status: any;
   _id?: string;
   projectName: string;
   title: string;
