@@ -7,10 +7,11 @@
   background: linear-gradient(135deg, #ffffff, #f8f9fa);
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  overflow: visible;   
   margin-top: 40px;
-  height: 690px;
   margin-bottom: 20px;
+  min-height: 690px;  
+  height: auto;        
   transition: all 0.3s ease;
 }
 
@@ -18,7 +19,7 @@
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Header */
+
 .headerr ,.headerr1{
   display: flex;
   align-items: center;
@@ -66,7 +67,7 @@
   background: #f0f4ff
 }
 
-/* Legend */
+
 .legend {
   display: flex;
   justify-content: center;
@@ -94,21 +95,21 @@
 
 .red { background: #ff5252; }
 
-/* Main Content */
+
 .main-content {
   display: flex;
   height: auto;
   min-height: 600px;
 }
 
-/* Calendar */
+
 .calendar {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-/* Day Header */
+
 .day-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -132,7 +133,7 @@
   transform: translateY(-2px);
 }
 
-/* Calendar Grid */
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -179,7 +180,7 @@
   opacity: 1;
 }
 
-/* Day Number */
+
 .day-number {
   font-size: 18px;
   font-weight: 700;
@@ -220,7 +221,7 @@
   transform: rotate(90deg);
 }
 
-/* Holidays Sidebar */
+
 .holidays {
   width: 280px;
   background: linear-gradient(135deg, #f0f4ff, #e3f2fd);
@@ -288,7 +289,7 @@
 }
 
 
-/*button*/
+
 .pill-dropdown button {
   padding: 5px 15px 15px 15px;
   font-size: 14px;
