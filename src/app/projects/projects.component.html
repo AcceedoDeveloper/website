@@ -24,16 +24,27 @@
     <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
          style="clip-path: url(#circle-shape);" />
 
-  <!-- Project Dropdown it is common for every component -->
-   
-    <div class="pill-dropdown">
-      <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
-        <option value="">All Projects</option>
-        <option *ngFor="let project of projects" [value]="project._id || project.id">
-          {{ project.projectName || project.name || 'Untitled Project' }}
-        </option>
-      </select>
-    </div>
+  <!-- Project Dropdown -->
+  <div class="pill-dropdown">
+    <select   [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
+      <option value="">All Projects</option>
+      <option *ngFor="let project of projects" [value]="project._id || project.id">
+        {{ project.projectName || project.name || 'Untitled Project' }}
+      </option>
+    </select>
+    <!-- In your projects.component.html -->
+<!-- <div *ngIf="Calendar" class="calendar-section">
+  <app-calendar
+    [selectedProjectId]="selectedProjectId"
+    [selectedProjectName]="selectedProjectName"
+    [username]="username"
+    [projects]="projects">
+  </app-calendar>
+</div> -->
+  </div>
+
+  
+
 
 
 
@@ -44,6 +55,14 @@
   
   <div class="pill-dropdown">     
         <button  (click)="openMonthView()">Calendar</button>
+        <!-- <div *ngIf="Calendar" class="calendar-section">
+  <app-calendar
+    [selectedProjectId]="selectedProjectId"
+    [selectedProjectName]="selectedProjectName"
+    [username]="username"
+    [projects]="projects">
+  </app-calendar>
+</div> -->
   </div>
 
   <div class="pill-dropdown">
@@ -253,11 +272,22 @@
 </div>
 
   <app-documents *ngIf="Documents"></app-documents>
-  <app-calendar *ngIf="Calendar"></app-calendar>
-  <app-summary *ngIf="Summary" [selectedProjectId]="selectedProjectId" [projects]="projects"></app-summary> 
+<app-summary *ngIf="Summary" [selectedProjectId]="selectedProjectId" [projects]="projects"></app-summary> 
+
+         <div *ngIf="Calendar" class="calendar-section">
+  <app-calendar
+    [selectedProjectId]="selectedProjectId"
+    [selectedProjectName]="selectedProjectName"
+    [username]="username"
+    [projects]="projects">
+  </app-calendar>
+</div>
 
 
 </div>
+
+
+
 
 <ng-template #assignmentDialog>
   <div class="dialog-container">

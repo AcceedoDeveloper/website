@@ -1,5 +1,4 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { UserservicesService } from '../register/services/userservices.service';
 
@@ -32,7 +31,7 @@ export class HeaderComponent implements OnInit {
   isLoading = false;
 
   constructor(
-    private afAuth: AngularFireAuth,
+    
     private router: Router,
     private userService: UserservicesService,
     private elementRef: ElementRef
@@ -321,10 +320,7 @@ export class HeaderComponent implements OnInit {
   }
 
   signOut() {
-    this.afAuth.signOut().then(() => {
-      sessionStorage.clear();
-      this.router.navigate(['/login']);
-    });
+   
   }
 
   getInitials(name: string): string {

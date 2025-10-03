@@ -2,9 +2,6 @@
 
 
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Timestamp } from 'firebase/firestore';
 import { Pipe, PipeTransform } from '@angular/core';
 import { UserservicesService } from '../register/services/userservices.service';
 
@@ -80,7 +77,7 @@ filteredTasks: any[] = [];
   dateTime: string = '';
   hasNotification = false;
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth,
+  constructor(
     private userserives:UserservicesService,
   ) {}
 
@@ -159,22 +156,12 @@ filteredTasks: any[] = [];
 }
 
   fetchTasks() {
-    this.afs
-      .collection('tasks', (ref) => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' })
-      .subscribe((data) => {
-        this.tasks = data;
-      });
+   
   }
 
 
   fetchUsers() {
-    this.afs
-      .collection('users')
-      .valueChanges({ idField: 'id' })
-      .subscribe((users) => {
-        this.users = users;
-      });
+   
   }
 
   getCurrentUser() {
@@ -239,16 +226,7 @@ filteredTasks: any[] = [];
   saveEdit() {
     if (!this.selectedTask || !this.editComment) return;
 
-    this.afs
-      .collection('tasks')
-      .doc(this.selectedTask.id)
-      .update({
-        description: this.editComment
-      })
-      .then(() => {
-        this.isModalOpen = false;
-        this.fetchTasks();
-      });
+   
   }
 
   closeModal() {
@@ -256,13 +234,7 @@ filteredTasks: any[] = [];
   }
 
   markAsCompleted(task: any) {
-    this.afs
-      .collection('tasks')
-      .doc(task.id)
-      .update({ status: 'done' })
-      .then(() => {
-        this.fetchTasks();
-      });
+   
   }
 
   // Profile Modal Methods
@@ -276,14 +248,7 @@ filteredTasks: any[] = [];
   }
 
   saveProfilePicture() {
-    this.afs
-      .collection('users')
-      .doc(this.userData.uid)
-      .update(this.editUserData)
-      .then(() => {
-        this.showEditModal = false;
-        this.getCurrentUser();
-      });
+   
   }
 
   onPhotoSelected(event: any) {
@@ -299,7 +264,7 @@ filteredTasks: any[] = [];
   }
 
   signOut() {
-    this.afAuth.signOut();
+    
   }
 
   getInitials(name: string): string {

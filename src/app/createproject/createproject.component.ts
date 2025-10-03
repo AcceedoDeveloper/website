@@ -1,6 +1,4 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { CreatprojectService } from '../service/creatproject.service';
 import { UserservicesService } from '../register/services/userservices.service';
 
@@ -45,8 +43,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
   private documentClickListener: (event: MouseEvent) => void;
 
   constructor(
-    private afs: AngularFirestore, 
-    private afAuth: AngularFireAuth,
+ 
     private projectService: CreatprojectService,
     private userserives: UserservicesService,
   ) {
@@ -173,14 +170,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
 
   fetchProjectsFromFirestore() {
     console.log('Fetching projects from Firestore (fallback)...');
-    this.afs
-      .collection('projects', (ref) => ref.orderBy('createdAt', 'desc'))
-      .valueChanges({ idField: 'id' })
-      .subscribe((data) => {
-        console.log('Firestore projects:', data);
-        this.projects = data;
-        this.filteredProjects = [...data];
-      });
+   
   }
 
   getCurrentUser() {

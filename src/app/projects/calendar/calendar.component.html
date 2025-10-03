@@ -1,43 +1,43 @@
 <div class="Month-view">
   <div class="container">
+    <!-- Project Info Display -->
 
-    <!-- Top Filter Bar -->
+
     <div class="data-filter-bar">
-      <!-- Assignee Filter -->
       <div class="filter-item">
         <label for="assignee">Assignee</label>
-        <select id="assignee" [(ngModel)]="selectedAssignee" (change)="generateCalendar()">
-          <option value="">All</option>
+        <select id="assignee" [(ngModel)]="selectedAssignee" (change)="onAssigneeChange()">
+          <option value="">All Assignees</option>
           <option *ngFor="let emp of allAssignees" [value]="emp">{{ emp }}</option>
         </select>
       </div>
 
-      <!-- Month Filter -->
       <div class="filter-item">
         <label for="month">Month</label>
-        <select id="month" [(ngModel)]="selectedMonth" (change)="generateCalendar()">
+        <select id="month" [(ngModel)]="selectedMonth" (change)="onMonthChange()">
           <option *ngFor="let m of months; let i = index" [value]="i">{{ m }}</option>
         </select>
       </div>
 
-      <!-- Year Filter -->
       <div class="filter-item">
         <label for="year">Year</label>
-        <select id="year" [(ngModel)]="selectedYear" (change)="generateCalendar()">
+        <select id="year" [(ngModel)]="selectedYear" (change)="onYearChange()">
           <option *ngFor="let y of years" [value]="y">{{ y }}</option>
         </select>
       </div>
     </div>
 
-    <!-- Legend -->
     <div class="legend">
       <div class="legend-item">
         <div class="legend-color red"></div>
         <span>Weekend</span>
       </div>
+      <div class="legend-item">
+        <div class="legend-color blue"></div>
+        <span>Has Tasks</span>
+      </div>
     </div>
 
-    <!-- Calendar -->
     <div class="main-content">
       <div class="calendar">
         <div class="day-header">
@@ -51,23 +51,42 @@
         </div>
 
         <div class="calendar-grid">
-          <div class="day-cell" *ngFor="let day of days">
-            <div class="day-number" [ngClass]="{ sunday: day.isSunday }">
+          <div 
+            class="day-cell" 
+            *ngFor="let day of days" 
+            (click)="selectDay(day)"
+            [class.clickable]="day.tasks.length > 0"
+            [class.has-tasks]="day.tasks.length > 0"
+            [class.sunday]="day.isSunday"
+          >
+            <div class="day-number">
               {{ day.date }}
             </div>
 
-            
-       <div class="task" *ngFor="let task of day.tasks">
-  <b ></b> <span class="task-title">{{ task.title }}</span>
-</div>
-
+          <div class="task" *ngIf="day.tasks.length > 0">
+              <span class="task-title">{{ day.tasks[0]?.title }}<span *ngIf="day.tasks.length > 1">...</span></span>
+            </div>
           </div>
         </div>
       </div>
 
-     
-      <div class="holidays">
-        <div class="holidays-title"></div>
+      <div class="task-details" *ngIf="selectedDayTasks.length > 0">
+        <div class="task-details-title">
+          Tasks for {{ selectedDay?.date }}/{{ selectedMonth + 1 }}/{{ selectedYear }}
+        </div>
+        <div class="task-list">
+          <div class="task-item" *ngFor="let task of selectedDayTasks">
+            <div class="task-title"><b>{{ task.title }}</b></div>
+            <div class="task-meta" *ngIf="!selectedAssignee">
+              <span class="assignee">Assignee: {{ task.assignee }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="no-tasks-message" *ngIf="selectedDay && selectedDayTasks.length === 0">
+        No tasks found for selected day.
+      </div>
     </div>
   </div>
 </div>
