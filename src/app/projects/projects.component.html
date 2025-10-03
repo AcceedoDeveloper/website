@@ -24,16 +24,16 @@
     <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
          style="clip-path: url(#circle-shape);" />
 
-  <!-- Project Dropdown -->
-  <div class="pill-dropdown">
-    <select   [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
-      <option value="">All Projects</option>
-      <option *ngFor="let project of projects" [value]="project._id || project.id">
-        {{ project.projectName || project.name || 'Untitled Project' }}
-      </option>
-    </select>
-  </div>
-
+  <!-- Project Dropdown it is common for every component -->
+   
+    <div class="pill-dropdown">
+      <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
+        <option value="">All Projects</option>
+        <option *ngFor="let project of projects" [value]="project._id || project.id">
+          {{ project.projectName || project.name || 'Untitled Project' }}
+        </option>
+      </select>
+    </div>
 
 
 
@@ -93,6 +93,11 @@
      (cdkDropListDropped)="drop($event, 'ToDo')"
      id="todo-list">
   <h3>To Do <span class="task-count">{{ todoAssignments.length }}</span></h3>
+
+
+
+
+  
   
   <div *ngFor="let task of todoAssignments"
        class="kanban-card"
@@ -249,7 +254,8 @@
 
   <app-documents *ngIf="Documents"></app-documents>
   <app-calendar *ngIf="Calendar"></app-calendar>
-<app-summary *ngIf="Summary"></app-summary> 
+  <app-summary *ngIf="Summary" [selectedProjectId]="selectedProjectId" [projects]="projects"></app-summary> 
+
 
 </div>
 

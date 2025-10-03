@@ -230,6 +230,42 @@ canvas {
 .legend-color.progress { background-color: #7CB342; } /* Green */
 .legend-color.todo { background-color: #BA68C8; }     /* Purple */
 
+.chart-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  font-size: 14px;
+}
+
+.legend-color {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-right: 6px;
+}
+
+.legend-color.high { background-color: #FF4444; }
+.legend-color.medium { background-color: #FFBB33; }
+.legend-color.low { background-color: #00C851; }
+
+#priorityChart {
+  width: 50% !important;
+  height: 250px !important;
+  max-height: 400px;
+  margin-right: 20px;
+}
+
 @media (max-width: 2200px) {
   
 .maincontent{

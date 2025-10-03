@@ -1,11 +1,21 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Chart, DoughnutController, ArcElement, Tooltip, Legend, BarController, BarElement } from 'chart.js';
 import { AssignWorkService, AssignWork, UserViewResponse } from '../../service/assignwork.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import {
 
-Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
+  CategoryScale,
+  LinearScale,
+  Title,
 
-// Extend AssignWork to include updatedAt
+} from 'chart.js';
+
+// Register components
+
+
+// Register Chart.js components
+Chart.register(DoughnutController, ArcElement, BarController, BarElement, CategoryScale, LinearScale, Title, Tooltip, Legend);
+
 export interface AssignWorkExtended extends AssignWork {
   updatedAt?: string;
 }
@@ -15,22 +25,19 @@ export interface AssignWorkExtended extends AssignWork {
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css']
 })
-export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy {
+export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+  @Input() selectedProjectId: string = '';
+  @Input() projects: any[] = [];
+
   isLoading: boolean = false;
   errorMessage: string = '';
-  showmaindocument = false;
-  showdocumentpop = false;
-  showinsummary = false;
-  showMonthView = false;
-  showmaintask = true;
-  viewMode: 'today' | 'all' | 'month' = 'today'; // Default to today's tasks
-
+  dateFilter: 'today' | 'all' | 'month' | 'custom' = 'today';
   employees: any[] = [];
   assignments: AssignWorkExtended[] = [];
   filteredAssignments: AssignWorkExtended[] = [];
   selectedAssignee: string = '';
-  selectedAssignedTo: string = '';
-  selectedDate: string = ''; // Used for date or month filtering
+  selectedDate: string = '';
+  username: string = '';
 
   summary = {
     completed: 0,
@@ -45,37 +52,74 @@ export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy {
     toDo: 0
   };
 
+  assigneeData: { [key: string]: { count: number, percentage: string, color: string } } = {};
+
   recentActivities: AssignWorkExtended[] = [];
-  private chart: Chart | null = null;
+  private workItemsChart: Chart | null = null;
+  private assigneeChart: Chart | null = null;
   private subscriptions: Subscription[] = [];
 
-  constructor(private assignWorkService: AssignWorkService) {}
+  private colors = ['#4285F4', '#7CB342', '#BA68C8', '#FF4444', '#FFBB33', '#00C851', '#33B5E5'];
+
+  constructor(private assignWorkService: AssignWorkService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     console.log('SummaryComponent initialized');
-    this.showinsummary = true;
+    console.log('Projects available:', this.projects);
+    this.loadUsername();
     this.loadEmployees();
     this.loadAssignments();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedProjectId']) {
+      console.log('selectedProjectId changed:', this.selectedProjectId);
+      console.log('Projects available:', this.projects);
+      this.applyFilters();
+    }
+  }
+
   ngAfterViewInit(): void {
-    // Delay chart update to ensure DOM is ready
+    console.log('ngAfterViewInit called, isLoading:', this.isLoading);
+    this.cdr.detectChanges();
+    this.updateWorkItemsChart();
+    this.updateAssigneeChart();
+    // Force redraw after delay to handle DOM timing issues
     setTimeout(() => {
-      console.log('Attempting to update chart in ngAfterViewInit');
-      this.updateChart();
-    }, 0);
+      console.log('Forcing assignee chart redraw after delay');
+      this.updateAssigneeChart();
+    }, 100);
   }
 
   ngOnDestroy(): void {
     console.log('Destroying SummaryComponent');
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    if (this.chart) {
-      this.chart.destroy();
-      console.log('Chart destroyed');
+    if (this.workItemsChart) {
+      this.workItemsChart.destroy();
+      console.log('Work items chart destroyed');
+    }
+    if (this.assigneeChart) {
+      this.assigneeChart.destroy();
+      console.log('Assignee chart destroyed');
     }
   }
 
-  // Load employees from the service
+  private loadUsername(): void {
+    const userStr = sessionStorage.getItem('user');
+    if (userStr) {
+      try {
+        const userData = JSON.parse(userStr);
+        this.username = userData?.UserName || userData?.username || 'User';
+      } catch {
+        this.username = userStr;
+      }
+    } else {
+      const usernameOnly = sessionStorage.getItem('username');
+      this.username = usernameOnly || 'User';
+    }
+    console.log('Username loaded:', this.username);
+  }
+
   loadEmployees(): void {
     this.isLoading = true;
     console.log('Starting to load employees...');
@@ -96,27 +140,28 @@ export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  // Load all assignments and filter to today's tasks by default
   loadAssignments(): void {
     this.isLoading = true;
     console.log('Starting to load assignments...');
     this.subscriptions.push(
-      this.assignWorkService.getAssignments().subscribe({
+      (this.assignWorkService.getAssignments() as any as Observable<UserViewResponse>).subscribe({
         next: (response: UserViewResponse) => {
-          console.log('Assignments response:', response);
-          this.assignments = response.works || [];
-          // Filter to today's tasks by default
-          const today = new Date().toDateString();
-          this.filteredAssignments = this.assignments.filter(
-            assignment => new Date(assignment.createdAt).toDateString() === today
-          );
+          console.log('Raw API response:', response);
+          this.assignments = (response.works || []).map(a => ({
+            ...a,
+            projectName: a.projectName || this.getProjectNameById(a.projectId) || 'Unknown Project'
+          }));
+          console.log('Assignments with details:', this.assignments.map(a => ({
+            title: a.title,
+            projectId: a.projectId,
+            projectName: a.projectName,
+            assignee: a.assignee,
+            status: a.Status
+          })));
+          this.applyFilters();
           if (!this.employees.length) {
             this.extractEmployeesFromAssignments();
           }
-          this.updateSummary();
-          this.updateRecentActivities();
-          this.updateChartData();
-          this.updateChart();
           this.isLoading = false;
         },
         error: (err) => {
@@ -128,80 +173,119 @@ export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  // Extract unique employee IDs from assignments as a fallback
   extractEmployeesFromAssignments(): void {
     const uniqueIds = new Set<string>();
     this.assignments.forEach(assignment => {
       if (assignment.assignee) uniqueIds.add(assignment.assignee);
-      if (assignment.assignedTo) uniqueIds.add(assignment.assignedTo);
     });
     this.employees = Array.from(uniqueIds).map(id => ({ _id: id, name: id }));
     console.log('Fallback employees extracted:', this.employees);
   }
 
-  // Get employee name by ID, falling back to ID if name is unavailable
   getEmployeeName(id: string): string | undefined {
     const employee = this.employees.find(emp => emp._id === id);
     const name = employee ? (employee.name || employee.username || employee._id) : id;
-    console.log(`Getting employee name for id ${id}: ${name}`);
+    console.log(`getEmployeeName for id ${id}:`, name);
     return name;
   }
 
-  // Apply filters based on view mode, assignee, assignedTo, and date/month
+  getProjectName(): string {
+    const project = this.projects.find(p => String(p._id) === String(this.selectedProjectId));
+    const name = project ? (project.projectName || project.name || 'Untitled Project') : 'All Projects';
+    console.log(`getProjectName for selectedProjectId ${this.selectedProjectId}:`, name);
+    return name;
+  }
+
+  getProjectNameById(projectId: string): string {
+    const project = this.projects.find(p => String(p._id) === String(projectId));
+    if (!project) {
+      console.warn(`No project found for projectId: ${projectId}. Available projects:`, this.projects.map(p => ({ id: p._id, name: p.projectName || p.name })));
+      return 'Unknown Project';
+    }
+    const name = project.projectName || project.name || 'Untitled Project';
+    console.log(`getProjectNameById for projectId ${projectId}:`, name);
+    return name;
+  }
+
   applyFilters(): void {
     console.log('Applying filters:', {
-      viewMode: this.viewMode,
+      dateFilter: this.dateFilter,
       assignee: this.selectedAssignee,
-      assignedTo: this.selectedAssignedTo,
-      date: this.selectedDate
+      date: this.selectedDate,
+      projectId: this.selectedProjectId,
+      username: this.username
     });
 
     this.filteredAssignments = this.assignments.filter(assignment => {
-      const matchesAssignee = !this.selectedAssignee || assignment.assignee === this.selectedAssignee;
-      const matchesAssignedTo = !this.selectedAssignedTo || assignment.assignedTo === this.selectedAssignedTo;
-      let matchesDate = true;
-
-      if (this.viewMode === 'today') {
-        const today = new Date().toDateString();
-        matchesDate = new Date(assignment.createdAt).toDateString() === today;
-      } else if (this.viewMode === 'month' && this.selectedDate) {
-        const selected = new Date(this.selectedDate);
-        const assignmentDate = new Date(assignment.createdAt);
-        matchesDate = assignmentDate.getFullYear() === selected.getFullYear() &&
-                      assignmentDate.getMonth() === selected.getMonth();
-      } else if (this.viewMode === 'all' && this.selectedDate) {
-        matchesDate = new Date(assignment.createdAt).toDateString() === new Date(this.selectedDate).toDateString();
+      let matchesProject = true;
+      if (this.selectedProjectId) {
+        matchesProject =
+          String(assignment.projectId) === String(this.selectedProjectId) ||
+          String(assignment.projectId || '') === String(this.selectedProjectId) ||
+          String(assignment.projectName || '').toLowerCase() ===
+          String(this.projects.find(p => String(p._id) === String(this.selectedProjectId))?.projectName || '').toLowerCase();
+      } else {
+        matchesProject =
+          String(assignment.assignedTo) === String(this.username) ||
+          String(assignment.assignee) === String(this.username);
       }
 
-      console.log(`Assignment ${assignment._id} matches: assignee=${matchesAssignee}, assignedTo=${matchesAssignedTo}, date=${matchesDate}`);
-      return matchesAssignee && matchesAssignedTo && matchesDate;
+      const matchesAssignee = !this.selectedAssignee || assignment.assignee === this.selectedAssignee;
+
+      let matchesDate = true;
+      if (this.dateFilter === 'today') {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const dueDate = new Date(assignment.dueDate);
+        dueDate.setHours(0, 0, 0, 0);
+        matchesDate = dueDate.getTime() === today.getTime();
+      } else if (this.dateFilter === 'month' && this.selectedDate) {
+        const selected = new Date(this.selectedDate);
+        const dueDate = new Date(assignment.dueDate);
+        matchesDate =
+          dueDate.getFullYear() === selected.getFullYear() &&
+          dueDate.getMonth() === selected.getMonth();
+      } else if (this.dateFilter === 'custom' && this.selectedDate) {
+        const selected = new Date(this.selectedDate);
+        selected.setHours(0, 0, 0, 0);
+        const dueDate = new Date(assignment.dueDate);
+        dueDate.setHours(0, 0, 0, 0);
+        matchesDate = dueDate.getTime() === selected.getTime();
+      }
+
+      const matches = matchesAssignee && matchesProject && matchesDate;
+      console.log(`Assignment filter check:`, {
+        assignment: {
+          projectId: assignment.projectId,
+          projectName: assignment.projectName,
+          assignee: assignment.assignee,
+          dueDate: assignment.dueDate,
+          title: assignment.title
+        },
+        matchesProject,
+        matchesAssignee,
+        matchesDate,
+        matches
+      });
+      return matches;
     });
 
     console.log('Filtered assignments:', this.filteredAssignments);
     this.updateSummary();
     this.updateRecentActivities();
     this.updateChartData();
-    this.updateChart();
+    this.updateWorkItemsChart();
+    this.updateAssigneeChart();
   }
 
-  // Clear filters and reset to today's tasks
   clearFilters(): void {
     console.log('Clearing filters');
-    this.viewMode = 'today';
+    this.dateFilter = 'today';
     this.selectedAssignee = '';
-    this.selectedAssignedTo = '';
     this.selectedDate = '';
-    const today = new Date().toDateString();
-    this.filteredAssignments = this.assignments.filter(
-      assignment => new Date(assignment.createdAt).toDateString() === today
-    );
-    this.updateSummary();
-    this.updateRecentActivities();
-    this.updateChartData();
-    this.updateChart();
+    this.applyFilters();
   }
 
-  // Update summary metrics (completed, updated, created, due soon)
   updateSummary(): void {
     const now = new Date();
     const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -220,7 +304,6 @@ export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('Updated summary:', this.summary);
   }
 
-  // Update recent activities (sorted by createdAt, limited to 5)
   updateRecentActivities(): void {
     this.recentActivities = [...this.filteredAssignments]
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -229,29 +312,56 @@ export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('Recent activities:', this.recentActivities);
   }
 
-  // Update chart data based on assignment statuses
   updateChartData(): void {
+    console.log('Raw assignments for chart data:', this.filteredAssignments.map(a => ({
+      title: a.title,
+      projectId: a.projectId,
+      projectName: a.projectName,
+      assignee: a.assignee,
+      status: a.Status
+    })));
+
     this.chartData = {
       done: this.filteredAssignments.filter(a => a.Status === 'Done').length,
       inProgress: this.filteredAssignments.filter(a => a.Status === 'InProgress').length,
       toDo: this.filteredAssignments.filter(a => a.Status === 'ToDo').length
     };
 
+    // Compute assignee data
+    const assigneeCounts: { [key: string]: number } = {};
+    this.filteredAssignments.forEach(a => {
+      if (a.assignee) {
+        assigneeCounts[a.assignee] = (assigneeCounts[a.assignee] || 0) + 1;
+      }
+    });
+
+    const totalTasks = this.filteredAssignments.length;
+    this.assigneeData = {};
+    Object.keys(assigneeCounts).forEach((assignee, index) => {
+      const count = assigneeCounts[assignee];
+      const percentage = totalTasks > 0 ? ((count / totalTasks) * 100).toFixed(1) : '0.0';
+      this.assigneeData[assignee] = {
+        count,
+        percentage,
+        color: this.colors[index % this.colors.length]
+      };
+    });
+
     console.log('Chart data:', this.chartData);
+    console.log('Assignee data:', this.assigneeData);
   }
 
-  // Update the doughnut chart for status overview
-  updateChart(): void {
+  updateWorkItemsChart(): void {
     const canvas = document.getElementById('workItemsChart') as HTMLCanvasElement;
-    console.log('Canvas element:', canvas);
+    console.log('Work items canvas element:', canvas);
     if (canvas) {
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        if (this.chart) {
-          this.chart.destroy();
-          console.log('Previous chart destroyed');
+        if (this.workItemsChart) {
+          this.workItemsChart.destroy();
+          console.log('Previous work items chart destroyed');
         }
-        this.chart = new Chart(ctx, {
+        this.workItemsChart = new Chart(ctx, {
           type: 'doughnut',
           data: {
             labels: ['Done', 'In Progress', 'To Do'],
@@ -265,16 +375,165 @@ export class SummaryComponent implements OnInit, AfterViewInit, OnDestroy {
             cutout: '70%',
             plugins: {
               legend: { display: false },
-              tooltip: { enabled: true }
+              tooltip: {
+                enabled: true,
+                callbacks: {
+                  title: function(context) { return context[0].label; },
+                  label: function(context) {
+                    const value = context.parsed;
+                    const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                    return `${percentage}% (${value} tasks)`;
+                  }
+                }
+              }
+            },
+            animation: {
+              animateRotate: true,
+              duration: 2000
             }
-          }
+          },
+          plugins: [{
+            id: 'centerText',
+            beforeDraw(chart) {
+              const { ctx, chartArea: { width, height } } = chart;
+              const total = chart.data.datasets[0].data.reduce((a: number, b: number) => a + b, 0);
+              ctx.save();
+              ctx.font = 'bold 16px Arial';
+              ctx.fillStyle = '#333';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText(`${total} Tasks`, chart.width / 2, chart.height / 2);
+
+              ctx.restore();
+            }
+          }]
         });
-        console.log('New chart created');
+        console.log('Work items chart created with data:', this.chartData);
       } else {
-        console.error('Failed to get 2D context for chart');
+        console.error('Failed to get 2D context for work items chart');
       }
     } else {
-      console.warn('Canvas element not found for chart. Check if DOM is ready or *ngIf conditions.');
+      console.error('Work items canvas element not found. Check if DOM is ready or *ngIf conditions.');
     }
   }
+
+
+
+updateAssigneeChart(): void {
+  const canvas = document.getElementById('priorityChart') as HTMLCanvasElement;
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      if (this.assigneeChart) {
+        this.assigneeChart.destroy();
+      }
+
+      const labels = Object.keys(this.assigneeData).map(
+        assignee => this.getEmployeeName(assignee) || assignee
+      );
+      const data = Object.values(this.assigneeData).map(d => d.count);
+      const colors = Object.values(this.assigneeData).map(d => d.color);
+
+      this.assigneeChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Tasks',
+            data,
+            backgroundColor: colors,
+            borderRadius: 8,  // ✅ Sleek rounded bars
+            barThickness: 25,
+            borderSkipped: false // ✅ Full rounded look
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              display: false, 
+              grid: {
+                
+                drawTicks: false,
+                display: false
+              }
+            },
+            y: {
+              grid: {
+              
+                drawTicks: false,
+                display: false
+              },
+              ticks: {
+                font: {
+                     // ✅ modern clean font
+                  size: 19,
+                  
+                   weight: "normal"
+                 
+                },
+                 color: '#222', // softer than pure black
+        padding: 20 // ✅ clean spacing instead of "gap"
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                 titleColor: '#111',
+    bodyColor: '#333',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    padding: 10,
+    cornerRadius: 8, 
+  
+    displayColors: false, 
+              callbacks: {
+                title: function(context) { return context[0].label; },
+                label: function(context) {
+                  const value = context.parsed.x;
+                  const dataset = context.dataset.data as number[];
+                  const total = dataset.reduce((a, b) => a + b, 0);
+                  const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                  return ` ${percentage}%  |  ${value} tasks`;
+                }
+              }
+            }
+          },
+          animation: {
+            duration: 1000,
+            // easing: 'easeOutCubic'
+          },
+          layout: {
+            padding: { left: 10, right: 20, top: 10, bottom: 10 }
+          }
+        },
+        plugins: [{
+          id: 'noData',
+          beforeDraw(chart) {
+            const { ctx, chartArea: { width, height }, data } = chart;
+            if (data.datasets[0].data.length === 0) {
+              ctx.save();
+              ctx.font = 'bold 16px Arial';
+              ctx.fillStyle = '#666';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('No Data', width / 2, height / 2);
+              ctx.restore();
+            }
+          }
+        }]
+      });
+    }
+  }
+}
+
+
+
+  
 }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface AssignWork {
   _id?: string;
-  projectName: string;
+
   title: string;
   description: string;
   comment: Comment[];
@@ -14,6 +14,7 @@ export interface AssignWork {
   dueDate: string;
   Status: string;    
   projectId: string;
+  projectName?: string;
   pictures:string;
   createdAt: string;
 }

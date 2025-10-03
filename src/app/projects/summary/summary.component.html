@@ -1,42 +1,44 @@
 <div class="mainuserview">
-  <!-- Loading and Error States -->
-  <!-- <div *ngIf="isLoading" class="alert alert-info text-center">
-    Loading data...
-  </div>
-  <div *ngIf="errorMessage" class="alert alert-danger text-center">
-    {{errorMessage}}
-  </div> -->
 
   <!-- Filter Section -->
   <div class="filter-section mb-4">
     <div class="row g-3 align-items-end">
       <div class="col-md-3">
-        <label for="viewModeFilter" class="form-label">View Mode</label>
-        <select id="viewModeFilter" class="form-select" [(ngModel)]="viewMode" (change)="applyFilters()">
-          <option value="today">Today's Tasks</option>
-          <option value="all">All Tasks</option>
-          <option value="month">By Month</option>
-        </select>
+        <label for="projectFilter" class="form-label">Selected Project</label>
+        <input id="projectFilter" class="form-control" [value]="getProjectName()" readonly>
       </div>
+ <div class="col-md-3">
+  <label for="dateModeFilter" class="form-label">Date Filter</label>
+  <select id="dateModeFilter" 
+          class="form-select" 
+          [(ngModel)]="dateFilter" 
+          (change)="applyFilters()">
+    <option value="today">Today's Tasks</option>
+    <option value="all">All Tasks</option>
+    <option value="month">By Month</option>
+    <option value="custom">Custom Date</option>
+  </select>
+</div>
+
+<div class="col-md-3" *ngIf="dateFilter === 'custom' || dateFilter === 'month'">
+  <label for="dateFilterInput" class="form-label">
+    {{ dateFilter === 'month' ? 'Select Month' : 'Select Date' }}
+  </label>
+  <input [type]="dateFilter === 'month' ? 'month' : 'date'" 
+         id="dateFilterInput" 
+         class="form-control" 
+         [(ngModel)]="selectedDate" 
+         (change)="applyFilters()">
+</div>
+
+      
       <div class="col-md-3">
-        <label for="assigneeFilter" class="form-label">Assignee</label>
+        <label for="assigneeFilter" class="form-label">User</label>
         <select id="assigneeFilter" class="form-select" [(ngModel)]="selectedAssignee" (change)="applyFilters()">
           <option value="">All Assignees</option>
           <option *ngFor="let employee of employees" [value]="employee._id">{{employee.name || employee.username || employee._id}}</option>
         </select>
         <small *ngIf="!employees.length" class="text-muted">No employees available. Using assignment IDs.</small>
-      </div>
-      <div class="col-md-3">
-        <label for="assignedToFilter" class="form-label">Assigned To</label>
-        <select id="assignedToFilter" class="form-select" [(ngModel)]="selectedAssignedTo" (change)="applyFilters()">
-          <option value="">All Assigned To</option>
-          <option *ngFor="let employee of employees" [value]="employee._id">{{employee.name || employee.username || employee._id}}</option>
-        </select>
-        <small *ngIf="!employees.length" class="text-muted">No employees available. Using assignment IDs.</small>
-      </div>
-      <div class="col-md-3">
-        <label for="dateFilter" class="form-label">Created Date/Month</label>
-        <input type="date" id="dateFilter" class="form-control" [(ngModel)]="selectedDate" (change)="applyFilters()" [disabled]="viewMode === 'all'">
       </div>
       <div class="col-md-3">
         <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
@@ -117,12 +119,30 @@
         </ul>
       </div>
     </div>
-
-    <!-- Priority Breakdown -->
+  <!-- Team Workload -->
+   <!-- Team Workload -->
     <div class="col-lg-6">
       <div class="card-box">
         <h5>Team Workload</h5>
-        <canvas id="priorityChart"></canvas>
+        <div class="chart-container">
+          <canvas id="priorityChart"></canvas>
+          <div class="chart-legend">
+            <div class="legend-item" *ngFor="let assignee of assigneeData | keyvalue">
+              <span class="legend-color" [ngStyle]="{'background-color': assignee.value.color}"></span>
+              {{getEmployeeName(assignee.key) || assignee.key}}: {{assignee.value.count}} ({{assignee.value.percentage}}%)
+            </div>
+          </div>
+        </div>
+        <!-- <div class="workload-details mt-3">
+          <h6>Workload Details</h6>
+          <ul class="activity-list">
+            <li *ngFor="let assignment of filteredAssignments | slice:0:5">
+              <b>{{assignment.projectName || 'Unknown Project'}}</b> - {{assignment.title || 'No Title'}}
+              <p class="text-muted mb-0">Assigned to: {{getEmployeeName(assignment.assignee) || assignment.assignee}}</p>
+            </li>
+            <li *ngIf="!filteredAssignments.length" class="text-muted">No assignments found.</li>
+          </ul>
+        </div> -->
       </div>
     </div>
 
