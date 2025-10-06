@@ -37,6 +37,7 @@ showMonthView = false;
     selectedFile: File | null = null;
     uploadedPictures: string[] = [];
     selectedPictureFiles: File[] = [];
+    isDragOver: boolean = false;
 
         loadError: { [key: string]: boolean } = {}; 
   isPdfLoaded: { [key: string]: boolean } = {}; 
@@ -123,6 +124,40 @@ showMonthView = false;
       if (input.files && input.files.length > 0) {
         this.selectedFile = input.files[0];
         this.documentForm.patchValue({ file: this.selectedFile });
+      }
+    }
+
+    onDragOver(event: DragEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isDragOver = true;
+    }
+
+    onDragLeave(event: DragEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isDragOver = false;
+    }
+
+    onDrop(event: DragEvent) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.isDragOver = false;
+
+      const files = event.dataTransfer?.files;
+      if (files && files.length > 0) {
+        this.selectedFile = files[0];
+        this.documentForm.patchValue({ file: this.selectedFile });
+      }
+    }
+
+    removeFile() {
+      this.selectedFile = null;
+      this.documentForm.patchValue({ file: null });
+      // Reset the file input
+      const fileInput = document.getElementById('file') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
       }
     }
   
@@ -235,7 +270,7 @@ showMonthView = false;
     deleteDocument(id: string) {
       if (!id) return;
       if (!confirm('Are you sure you want to delete this document?')) return;
-  
+
       const s = this.assignworkService.deleteDocument(id).subscribe({
         next: () => {
           this.snackBar.open('Document deleted successfully', 'Close', { duration: 2500 });
@@ -246,6 +281,33 @@ showMonthView = false;
         },
         error: () => {
           this.snackBar.open('Failed to delete document', 'Close', { duration: 3000 });
+        }
+      });
+      this.subs.add(s);
+    }
+
+    deleteFile(documentId: string, fileName: string) {
+      if (!documentId || !fileName) return;
+      if (!confirm(`Are you sure you want to delete "${fileName}"?`)) return;
+
+      const s = this.assignworkService.deleteFile(documentId, fileName).subscribe({
+        next: () => {
+          this.snackBar.open('File deleted successfully', 'Close', { duration: 2500 });
+          // Update the document by removing the deleted file
+          const docIndex = this.documents.findIndex(doc => String(doc._id) === String(documentId));
+          if (docIndex !== -1) {
+            this.documents[docIndex].files = this.documents[docIndex].files.filter(file => file !== fileName);
+            // If no files left, remove the entire document
+            if (this.documents[docIndex].files.length === 0) {
+              this.documents.splice(docIndex, 1);
+              this.allTitles = [...new Set(this.documents.map(doc => doc.title))];
+              this.filteredTitles = [...this.allTitles];
+            }
+            this.filterDocuments();
+          }
+        },
+        error: () => {
+          this.snackBar.open('Failed to delete file', 'Close', { duration: 3000 });
         }
       });
       this.subs.add(s);

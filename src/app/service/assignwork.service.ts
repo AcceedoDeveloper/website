@@ -92,6 +92,10 @@ createAssignment(task: FormData | any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/deleteDocument/${id}`);
   }
 
+  deleteFile(documentId: string, fileName: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/deleteFile/${documentId}/${encodeURIComponent(fileName)}`);
+  }
+
 
   //user-view
 
