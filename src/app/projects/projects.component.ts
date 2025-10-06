@@ -28,8 +28,8 @@ removeImage: any;
 cancelEdit: any;
 
 
-showmaintask = true;
-Documents =false;
+showmaintask = false;
+Documents =true;
 Calendar = false;
 Summary = false;
 showdocumentpop = false;

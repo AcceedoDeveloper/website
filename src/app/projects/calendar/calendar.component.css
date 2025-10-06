@@ -9,6 +9,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   overflow: visible;   
   margin-top: 40px;
+  height: 790px;
   margin-bottom: 20px;
   min-height: 690px;  
   height: auto;        
@@ -387,7 +388,7 @@
 }
 
 .day-cell {
-  min-height: 80px;
+  min-height: 105px;
   border: 1px solid #ddd;
   padding: 5px;
   background-color: #fafafa;

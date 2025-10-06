@@ -9,39 +9,98 @@
   <!-- Add Document Popup -->
   <div class="documentpop" *ngIf="showdocumentpop">
     <div class="upload-form" [formGroup]="documentForm">
-      <span class="close-btn" (click)="showdocumentpop = false">&times;</span>
-
-      <div class="form-group">
-        <label for="title">Title</label>
-        <mat-form-field appearance="outline" class="full-width1">
-          <input
-            id="title"
-            type="text"
-            matInput
-            formControlName="title"
-            placeholder="Enter or select title"
-            [matAutocomplete]="auto"
-            (input)="filterTitles()"
-          />
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onTitleSelected($event)">
-            <mat-option *ngFor="let title of filteredTitles" [value]="title">
-              {{ title }}
-            </mat-option>
-          </mat-autocomplete>
-          <mat-error *ngIf="documentForm.get('title')?.hasError('required')">
-            Title is required
-          </mat-error>
-        </mat-form-field>
+      <!-- Professional Header -->
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <mat-icon>cloud_upload</mat-icon>
+          </div>
+          <div class="header-text">
+            <h2 class="popup-title">{{ editingDocument ? 'Update Document' : 'Add New Document' }}</h2>
+            <p class="popup-subtitle">Upload and organize your project documents</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="showdocumentpop = false" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
 
-      <div class="form-group">
-        <label for="file">Upload File (optional for edit)</label>
-        <input id="file" type="file" (change)="onFileSelected($event)" />
+      <!-- Form Content -->
+      <div class="form-content">
+        <div class="form-group">
+          <label for="title" class="form-label">
+            <mat-icon class="label-icon">title</mat-icon>
+            Document Title
+          </label>
+          <mat-form-field appearance="outline" class="full-width1">
+            <mat-label>Enter document title</mat-label>
+            <input
+              id="title"
+              type="text"
+              matInput
+              formControlName="title"
+              placeholder="Enter or select title"
+              [matAutocomplete]="auto"
+              (input)="filterTitles()"
+            />
+            <mat-icon matSuffix>edit</mat-icon>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onTitleSelected($event)">
+              <mat-option *ngFor="let title of filteredTitles" [value]="title">
+                {{ title }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="documentForm.get('title')?.hasError('required')">
+              Title is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <mat-icon class="label-icon">attach_file</mat-icon>
+            File Upload
+          </label>
+          <div class="file-upload-area" 
+               [class.dragover]="isDragOver"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)">
+            <div class="upload-content">
+              <mat-icon class="upload-icon">cloud_upload</mat-icon>
+              <div class="upload-text">
+                <p class="upload-primary">Drop your file here or click to browse</p>
+                <p class="upload-secondary">Supports PDF, DOC, DOCX, XLS, XLSX, images</p>
+              </div>
+              <input 
+                id="file" 
+                type="file" 
+                class="file-input"
+                (change)="onFileSelected($event)" 
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
+              />
+            </div>
+            <div class="file-info" *ngIf="selectedFile">
+              <mat-icon class="file-type-icon">description</mat-icon>
+              <span class="file-name">{{ selectedFile.name }}</span>
+              <button class="remove-file" (click)="removeFile()" mat-icon-button>
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <button type="button" (click)="submitDocument()">
-        {{ editingDocument ? 'Update' : 'Submit' }}
-      </button>
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="showdocumentpop = false" mat-stroked-button>
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+        <button type="button" class="submit-btn" (click)="submitDocument()" mat-raised-button color="primary">
+          <mat-icon>{{ editingDocument ? 'update' : 'cloud_upload' }}</mat-icon>
+          {{ editingDocument ? 'Update Document' : 'Upload Document' }}
+        </button>
+      </div>
     </div>
   </div>
 
@@ -62,9 +121,9 @@
                 <mat-icon>download</mat-icon>
               </a>
               <!-- Delete -->
-        <button mat-icon-button color="warn" (click)="deleteDocument(doc._id)" aria-label="Delete file">
-  <mat-icon>delete</mat-icon>
-</button>
+              <button mat-icon-button color="warn" (click)="deleteFile(doc._id, file)" aria-label="Delete file">
+                <mat-icon>delete</mat-icon>
+              </button>
             </div>
           </div>
 
