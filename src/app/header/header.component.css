@@ -1,6 +1,6 @@
 body {
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  background-color: #f8fafc;
+  /* background-color: #ff0000; */
   margin: 0;
   padding: 0;
 }
@@ -11,6 +11,23 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
+
+/* Main Content Area - Account for fixed sidebar */
+.main-content {
+  margin-left: 280px;
+  min-height: calc(100vh - 80px);
+  padding: 20px;
+}
+
+/* .submain{
+  display: flex;
+  flex-direction: row;
+}
+
+.sidebarothercontent{
+  display: flex;
+  flex-direction: column;
+} */
 
 .top-bar {
   display: flex;
@@ -397,20 +414,94 @@ body {
   transform: scale(1.05);
 }
 
+/* Welcome Card - Exact Match Design */
+.welcome-card {
+  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
+  color: #333;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  margin: 20px 20px 20px 310px;
+  position: relative;
+  min-height: 150px;
+  overflow: visible;
+  margin-bottom: 80px;
+  
+}
+
+.welcome-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  width: 100%;
+}
+
+.date-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: black;
+  margin-top: 10px;
+}
+
+.user-welcome {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-icon-wrapper {
+  position: absolute;
+  bottom: -70px;
+  left: 20px;
+  z-index: 10;
+}
+
+.user-welcome span {
+  font-size: 32px;
+  font-weight: 600;
+  color: Black;
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.user-icon {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #FFD54F;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  background-color: white;
+}
+
+/* Sidebar - Fixed Position */
 .sidebar {
+  position:absolute;
+  top: 80px;
+  left: 0;
   width: 280px;
-  min-width: 280px;
   height: calc(100vh - 80px);
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  color: #2d3748;
-  padding: 32px 24px;
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
   border-right: 1px solid rgba(226, 232, 240, 0.8);
-  position: fixed;
-  left: 0;
-  top: 80px;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+  padding: 32px 24px;
   overflow-y: auto;
-  /* z-index: 50; */
+  overflow-x: hidden;
+  z-index: 1000;
+  color: #2d3748;
+  margin: 0;
+  border: none;
 }
 
 .sidebar-header {
@@ -899,6 +990,124 @@ body {
   }
 }
 
+/* Welcome Card Responsive */
+@media screen and (max-width: 1200px) {
+  .welcome-card {
+    margin-left: 250px;
+    margin-bottom: 60px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .welcome-card {
+    margin-left: 200px;
+    margin-bottom: 50px;
+    min-height: 120px;
+  }
+  
+  .user-icon {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .user-icon-wrapper {
+    bottom: -60px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .welcome-card {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 40px;
+    min-height: 100px;
+    padding: 15px;
+  }
+  
+  .welcome-header {
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .date-time {
+    align-self: center;
+    margin-top: 0;
+  }
+  
+  .user-welcome {
+    margin-bottom: 0;
+  }
+  
+  .user-icon-wrapper {
+    position: static;
+    margin-top: 15px;
+  }
+  
+  .user-icon {
+    position: static;
+    margin: 0 auto;
+    width: 80px;
+    height: 80px;
+  }
+  
+  .user-welcome span {
+    font-size: 24px;
+  }
+  
+  .date-time {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .welcome-card {
+    margin: 10px;
+    margin-bottom: 30px;
+    min-height: 80px;
+    padding: 12px;
+  }
+  
+  .user-welcome span {
+    font-size: 20px;
+  }
+  
+  .date-time {
+    font-size: 13px;
+  }
+  
+  .calendar-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .user-icon {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .welcome-card {
+    margin: 5px;
+    margin-bottom: 25px;
+    padding: 10px;
+  }
+  
+  .user-welcome span {
+    font-size: 18px;
+  }
+  
+  .date-time {
+    font-size: 12px;
+  }
+  
+  .user-icon {
+    width: 60px;
+    height: 60px;
+  }
+}
+
 /* Standard Desktop Screens (992px to 1199px) */
 @media screen and (max-width: 1199px) and (min-width: 992px) {
   .top-bar {
@@ -984,9 +1193,16 @@ body {
     flex-direction: column;
   }
   
+  /* Sidebar - Tablet */
   .sidebar {
     width: 220px;
+    height: calc(100vh - 60px);
+    top: 60px;
     padding: 20px 15px;
+  }
+  
+  .main-content {
+    margin-left: 220px;
   }
 }
 
@@ -1058,8 +1274,14 @@ body {
   
   .sidebar {
     width: 200px;
+    min-width: 200px;
     padding: 15px 10px;
-    margin-top: 20px;
+    height: calc(100vh - 60px);
+    top: 60px;
+    position: fixed;
+    left: 0;
+    overflow-y: auto;
+    z-index: 50;
   }
   
   .menu-title {
@@ -1165,11 +1387,17 @@ body {
     font-size: 0.8rem;
   }
   
+  /* Sidebar - Mobile */
   .sidebar {
     width: 100%;
-    margin-top: 15px;
-    border-radius: 0;
+    height: calc(100vh - 80px);
+    top: 80px;
     padding: 15px 10px;
+    border-radius: 0;
+  }
+  
+  .main-content {
+    margin-left: 0;
   }
   
   .sidebar-header {
@@ -1250,6 +1478,18 @@ body {
   .btn {
     padding: 6px 12px;
     font-size: 0.75rem;
+  }
+  
+  /* Sidebar - Extra Small Mobile */
+  .sidebar {
+    width: 100%;
+    height: calc(100vh - 70px);
+    top: 70px;
+    padding: 10px 5px;
+  }
+  
+  .main-content {
+    margin-left: 0;
   }
 }
 

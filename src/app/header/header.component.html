@@ -135,59 +135,95 @@
   </div>
 </div>
 
+<div class="submain">
 
-   
+  <div class="welcome-card"> 
+    <div  class="welcome-header">
+      <div class="user-welcome">
+        <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
+      </div>
+      <div class="date-time">
+        <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+        <span>{{ dateTime }}</span>
+      </div>
+      
+  
+    </div>
+  
+    <div class="user-icon-wrapper">
+      <svg width="0" height="0">
+        <defs>
+          <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
+            <circle cx="0.5" cy="0.5" r="0.5" />
+          </clipPath>
+        </defs>
+      </svg>
+  
+      <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
+           style="clip-path: url(#circle-shape);" />
+    </div>
+    <!-- add div class="header" -->
+  
+  </div>
+  
+   <!-- sidebar in left side and right side other content it will come her  -->
+  <div class="sidebarothercontent">
 
+    <!-- Sidebar -->
+    <aside class="sidebar">
+    <h3 class="menu-title">Menu</h3>
+    <ul class="menu-list">
+      <li *ngIf="isAdmin()">
+        <div class="menu-section">
+          <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+          <label for="master-toggle" class="section-title">
+            Master <i class="fa fa-chevron-down"></i>
+          </label>
+          <div class="submenu">
+            <a routerLink="/register">User</a>
+            <a routerLink="/department">Department</a>
+            <a routerLink="/role">Role</a>
+            <a routerLink="/create">Create Project</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a routerLink="/projects">Projects</a>
+      </li>
+      <li>
+        <div class="menu-section">
+          <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+          <label for="frontend-toggle" class="section-title">
+            Frontend <i class="fa fa-chevron-down"></i>
+          </label>
+          <div class="submenu">
+            <a routerLink="/webdev">WebDev</a>
+            <a routerLink="/angulardeveloper">Angular Developer</a>
+            <a routerLink="/ngrx">NGRX</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="menu-section">
+          <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+          <label for="backend-toggle" class="section-title">
+            Backend <i class="fa fa-chevron-down"></i>
+          </label>
+          <div class="submenu">
+            <a routerLink="/node">Node.js</a>
+            <a routerLink="/api&database">API & Database</a>
+          </div>
+        </div>
+      </li>
+      <li>
+        <a href="#">Full Stack</a>
+      </li>
+    </ul>
+    </aside>
 
-<!-- Sidebar -->
-<aside class="sidebar">
-  <h3 class="menu-title">Menu</h3>
-  <ul class="menu-list">
-    <li *ngIf="isAdmin()">
-      <div class="menu-section">
-        <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-        <label for="master-toggle" class="section-title">
-          Master <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/register">User</a>
-          <a routerLink="/department">Department</a>
-          <a routerLink="/role">Role</a>
-          <a routerLink="/create">Create Project</a>
-        </div>
-      </div>
-    </li>
-    <li>
-      <a routerLink="/projects">Projects</a>
-    </li>
-    <li>
-      <div class="menu-section">
-        <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-        <label for="frontend-toggle" class="section-title">
-          Frontend <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/webdev">WebDev</a>
-          <a routerLink="/angulardeveloper">Angular Developer</a>
-          <a routerLink="/ngrx">NGRX</a>
-        </div>
-      </div>
-    </li>
-    <li>
-      <div class="menu-section">
-        <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-        <label for="backend-toggle" class="section-title">
-          Backend <i class="fa fa-chevron-down"></i>
-        </label>
-        <div class="submenu">
-          <a routerLink="/node">Node.js</a>
-          <a routerLink="/api&database">API & Database</a>
-        </div>
-      </div>
-    </li>
-    <li>
-      <a href="#">Full Stack</a>
-    </li>
-  </ul>
-</aside>
+ <!-- another content in right side here  -->
+  </div>
+
+</div>
+       <!-- Welcome Header -->
 

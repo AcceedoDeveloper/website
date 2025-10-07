@@ -1,27 +1,438 @@
-.maincontent{
+/* ===========================================
+   HEADER SECTION - MINIMAL COLOR PALETTE
+   =========================================== */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* ===========================================
+   PILL DROPDOWN STYLES - MINIMAL
+   =========================================== */
+.pill-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.pill-dropdown::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #9ca3af;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.pill-dropdown:hover::after {
+  border-top-color: #6b7280;
+}
+
+.pill-dropdown select {
+  appearance: none;
+  background: #ffffff;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px 32px 10px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 150px;
+  text-align: left;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.pill-dropdown select:hover {
+  border-color: #d1d5db;
+  background: #f8fafc;
+  color: #374151;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.pill-dropdown select:focus {
+  outline: none;
+  border-color: #cbd5e1;
+  background: #f8fafc;
+  color: #374151;
+  box-shadow: 0 0 0 3px rgba(203, 213, 225, 0.1);
+}
+
+.pill-dropdown select option {
+  background: #ffffff;
+  color: #6b7280;
+  padding: 8px;
+  font-weight: 400;
+}
+
+.pill-dropdown button {
+  background: #ffffff;
+  color: #6b7280 !important;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  display: inline-block;
+  min-width: auto;
+}
+
+.pill-dropdown button:hover {
+  background: #f8fafc;
+  color: #374151 !important;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.pill-dropdown button:active {
+  background: #f1f5f9;
+  color: #1f2937 !important;
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure button text is visible */
+.header .pill-dropdown button {
+  color: #6b7280 !important;
+  font-weight: 400 !important;
+}
+
+/* ===========================================
+   COMPREHENSIVE RESPONSIVE DESIGN FOR ALL DEVICES
+   =========================================== */
+
+/* Extra Large Devices (1400px and up) */
+@media (min-width: 1400px) {
+  .header {
+    gap: 20px;
+    padding: 25px 0;
+  }
+  
+  .pill-dropdown select {
+    padding: 14px 24px;
+    font-size: 16px;
+    min-width: 180px;
+  }
+  
+  .pill-dropdown button {
+    padding: 12px 24px;
+    font-size: 15px;
+    min-width: auto;
+  }
+}
+
+/* Large Devices (1200px to 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .header {
+    gap: 18px;
+    padding: 22px 0;
+  }
+  
+  .pill-dropdown select {
+    padding: 12px 22px;
+    font-size: 15px;
+    min-width: 160px;
+  }
+  
+  .pill-dropdown button {
+    padding: 11px 22px;
+    font-size: 14px;
+    min-width: auto;
+  }
+}
+
+/* Medium-Large Devices (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .header {
+    gap: 16px;
+    padding: 20px 0;
+  }
+  
+  .pill-dropdown select {
+    padding: 11px 20px;
+    font-size: 14px;
+    min-width: 140px;
+  }
+  
+  .pill-dropdown button {
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: auto;
+  }
+}
+
+/* Medium Devices (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 18px 0;
+    justify-content: center;
+  }
+  
+  .pill-dropdown {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+  }
+  
+  .pill-dropdown select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  .pill-dropdown button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+/* Small Devices (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 15px 0;
+  }
+  
+  .pill-dropdown {
+    width: 100%;
+  }
+  
+  .pill-dropdown select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    text-align: center;
+  }
+  
+  .pill-dropdown button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    text-align: center;
+  }
+}
+
+/* Extra Small Devices (up to 575px) */
+@media (max-width: 575px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px 0;
+  }
+  
+  .pill-dropdown {
+    width: 100%;
+  }
+  
+  .pill-dropdown select {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  .pill-dropdown button {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+/* Landscape Mobile Devices */
+@media (max-width: 767px) and (orientation: landscape) {
+  .header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 0;
+  }
+  
+  .pill-dropdown {
+    flex: 1;
+    min-width: 80px;
+  }
+  
+  .pill-dropdown select {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .pill-dropdown button {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .pill-dropdown select,
+  .pill-dropdown button {
+    border-width: 0.5px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .header {
+    display: none;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .pill-dropdown select,
+  .pill-dropdown button {
+    transition: none;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .pill-dropdown select {
+    background: #f8fafc;
+    color: #64748b;
+    border-color: #e2e8f0;
+  }
+  
+  .pill-dropdown select:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #475569;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pill-dropdown select:focus {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+    color: #475569;
+    box-shadow: 0 0 0 3px rgba(203, 213, 225, 0.15);
+  }
+  
+  .pill-dropdown select option {
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 400;
+  }
+  
+  .pill-dropdown button {
+    background: #f8fafc;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    box-shadow: none;
+  }
+  
+  .pill-dropdown button:hover {
+    background: #f1f5f9;
+    color: #475569;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pill-dropdown button:active {
+    background: #e2e8f0;
+    color: #334155;
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+  
+  .header .pill-dropdown button {
+    color: #64748b !important;
+  }
+}
+
+.mainproject {
   width: calc(100% - 280px);
-  max-width: 2100px;
-  height: calc(100vh - 80px);
   margin-left: 280px;
-  margin-top: 80px;
   padding: 20px;
-  flex: 1;
-  box-sizing: border-box;
+  min-height: calc(100vh - 80px);
+  background-color: #f8fafc;
   overflow-y: auto;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.content-wrapper {
+  width: 90%;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.mainproject::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mainproject::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.mainproject::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.mainproject::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Custom scrollbar for Firefox */
+.mainproject {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
-  color: #333; 
-  padding: 16px 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  color: #2d3748; 
+  padding: 20px 24px;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   margin-top: 0;
   height: auto;
   min-height: 120px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 
@@ -33,7 +444,7 @@
   gap: 8px;
   font-size: 15px;
   font-weight: 500;
-  color: black;
+  color: #4a5568;
 }
 
 .calendar-icon {
@@ -49,57 +460,50 @@
 }
 
 .user-welcome span {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 600;
   margin-top: 0;
-  color: Black;
+  color: #2d3748;
 }
 
 .user-icon {
-  width: 140px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   margin-top: 0;
   margin-left: 30px;
   object-fit: cover;
-  border-radius: 50%;   /* makes it a circle */
-  border: 3px solid #FFD54F;
-  background-color: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border-radius: 50%;
+  border: 3px solid #667eea;
+  background-color: #f8fafc;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
 }
 
 .pill-dropdown select {
-  padding: 8px ;
+  padding: 12px 16px;
   font-size: 14px;
-  border-radius: 7px;
-  border: 1px solid #ccc;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   outline: none;
-  background: #f5f5f5;
+  background: rgba(255, 255, 255, 0.95);
   cursor: pointer;
-  transition: all 0.2s;
   margin-left: 30px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .pill-dropdown select:focus {
-  border-color: #040404;
-  background: #fff;
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.pill-dropdown button {
-  padding: 5px 15px 15px 15px;
-  font-size: 14px;
-  height: 100%;
-  border-radius: 7px;
-  max-height: 35px;
-  border: 1px solid #ccc;
-  outline: none;
-  background: #f5f5f5;
-  cursor: pointer;
-  transition: all 0.2s;
-}
+/* Removed duplicate pill-dropdown button styles */
 
-.pill-dropdown button:focus {
-  border-color: #1976d2;
-  background: #fff;
+/* Ensure button text is visible */
+.header .pill-dropdown button {
+  color: #000000 !important;
+  font-weight: 400 !important;
+  /* text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); */
 }
 
 .t0{
@@ -138,34 +542,37 @@
 .project-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px 8px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  margin-bottom: 8px;
+  padding: 16px 20px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  margin-bottom: 12px;
   width: 100px;
-  background: #fff;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .project-item h3 {
   margin: 0 0 6px 0;
+  font-weight: 600;
+  color: #2d3748;
 }
 
 .meta {
-  color: #666;
+  color: #718096;
   font-size: 13px;
 }
 
 .employees {
   margin-top: 6px;
   font-size: 13px;
-  color: #444;
+  color: #718096;
 }
 
 .loading, .error, .no-projects {
   margin-top: 12px;
-  color: #666;
+  color: #718096;
 }
-.error { color: #b00020; }
+.error { color: #ef4444; }
 .project-controls {
   display: flex;
   gap: 10px;
@@ -186,20 +593,23 @@
 }
 
 .project-item {
-  padding: 20px 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  background: #f9f9f9;
-  font-weight: 900;
+  padding: 20px 24px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 .project-controls select {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  font-size: 14px;
   width: 100%;
   max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .kanban-board {
@@ -214,60 +624,65 @@
 }
 
 .kanban-column {
-  background: white;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 12px;
   flex: 1;
   min-width: 300px;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   max-height: 70vh;
   overflow-y: auto;
   min-height: 500px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .kanban-column h3 {
-  margin: 0 0 15px 0;
-  padding-bottom: 10px;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #333;
-  border-bottom: 2px solid #ddd;
+  color: #2d3748;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+  font-weight: 600;
 }
 
 .task-count {
-  display: inline-flex;       /* keeps text centered */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  background: #3f51b5;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  width: 24px;                /* fixed circle size */
-  height: 24px;               /* same as width */
-  border-radius: 30%;         /* makes it a circle */
-  font-size: 0.5em;           /* adjust text size */
+  width: 24px;
+  height: 24px;
+  border-radius: 30%;
+  font-size: 0.5em;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .pill-btn {
-  padding: 8px 20px;
-  border-radius: 50px;
+  padding: 12px 24px;
+  border-radius: 12px;
   border: none;
-  background-color: #1976d2;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
   margin-left: 135px;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 .pill-btn:disabled {
-  background-color: #fcf8f8;
+  background: rgba(102, 126, 234, 0.3);
   cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .pill-btn:hover:not(:disabled) {
-  background-color: #125aa0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 .task-controls-container {
   display: flex;
@@ -281,23 +696,44 @@
 .date-filter-section {
   display: flex;
   align-items: center;
-  gap: 16px;
-  color: #174a6b;
-  width: 100%;
-  max-width: 124px;
-  margin-right: 200px;
+  gap: 12px;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  width: fit-content;
+  margin-bottom: 20px;
 }
 
-.date-filter-section mat-form-field {
-  --mat-form-field-container-height: 16px;
-  font-size: 12px;
+.date-filter-section .form-label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+  margin: 0;
+  white-space: nowrap;
 }
 
-.date-filter-section input.mat-input-element {
-  height: 16px !important;
-  max-height: 16px !important;
-  padding: 0 6px !important;
-  font-size: 12px;
+.date-filter-section .form-control {
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  min-width: 160px;
+}
+
+.date-filter-section .form-control:focus {
+  outline: none;
+  border-color: #6b7280;
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.1);
+}
+
+.date-filter-section .form-control:hover {
+  border-color: #9ca3af;
 }
 
 
@@ -310,36 +746,37 @@
 
 
 .kanban-card {
-  background: rgb(249, 247, 247);
-  border-radius: 6px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  border-left: 4px solid #3498db;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #667eea;
   cursor: move;
-  box-shadow: 0 2px 6px #0000001a;
   display: flex;
   position: relative;
   flex-direction: column;
-  font-size: 16px;
+  font-size: 14px;
   max-width: 900px;
   height: 100%;
   max-height: 80px;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
+
 .kanban-card .task-content {
   margin-bottom: 10px;
 }
 
 .kanban-card strong {
-  color: #2c3e50;
+  color: #2d3748;
   display: block;
   margin-bottom: 5px;
+  font-weight: 600;
 }
 
 .kanban-card small {
-  color: #6c757d;
+  color: #718096;
   display: block;
   margin-bottom: 2px;
 }
@@ -352,7 +789,7 @@
 
 .empty-state {
   text-align: center;
-  color: #6c757d;
+  color: #9ca3af;
   font-style: italic;
   padding: 20px;
 }
@@ -398,11 +835,11 @@
 /* Drag and drop styling */
 .cdk-drag-preview {
   box-sizing: border-box;
-  border-radius: 6px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  background: white;
-  padding: 15px;
-  border-left: 4px solid #3498db;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  padding: 16px;
+  border-left: 4px solid #667eea;
 }
 
 .cdk-drag-placeholder {
@@ -419,27 +856,21 @@
 
 /* Kanban card hover effect */
 .kanban-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
-
 #todo-list .kanban-card {
-  border-left: 4px solid #3498db; /* Blue for Todo */
+  border-left: 4px solid #3b82f6; /* Blue for Todo */
 }
 
 #progress-list .kanban-card {
-  border-left: 4px solid #f39c12; /* Orange for In Progress */
+  border-left: 4px solid #f59e0b; /* Orange for In Progress */
 }
 
 #done-list .kanban-card {
-  border-left: 4px solid #27ae60; /* Green for Done */
-}
-
-.kanban-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  border-left: 4px solid #10b981; /* Green for Done */
 }
 
 .task-content {
@@ -454,9 +885,9 @@
 
 .empty-state {
   text-align: center;
-  color: #999;
-  padding: 20px;
+  color: #718096;
   font-style: italic;
+  padding: 20px;
 }
 
 .error-state, .success-message {
@@ -977,6 +1408,94 @@ textarea {
 }
 #done-list .point-clean {
   color: #000000; 
+}
+
+/* Responsive Design for All Devices */
+@media (max-width: 1200px) {
+  .maincontent {
+    width: calc(100% - 220px);
+    margin-left: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .maincontent {
+    width: 100%;
+    margin-left: 0;
+    padding: 10px;
+  }
+  
+  .content-wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .task-controls-container {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .kanban-board {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .kanban-column {
+    min-width: 100%;
+  }
+  
+  .date-filter-section {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 15px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  .date-filter-section .form-control {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  .pill-dropdown {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .maincontent {
+    padding: 5px;
+  }
+  
+  .kanban-board {
+    padding: 10px 0;
+  }
+  
+  .kanban-column {
+    padding: 10px;
+  }
+  
+  .task-controls-container {
+    margin-bottom: 15px;
+  }
+  
+  .pill-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  
+  
+  .header {
+    padding: 10px;
+  }
 }
 
 
@@ -1691,4 +2210,107 @@ canvas {
 .maincontent {
   scrollbar-width: thin;
   scrollbar-color: #888 #f1f1f1;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .mainproject {
+    width: 100%;
+    margin-left: 0;
+    padding: 15px;
+    min-height: calc(100vh - 60px);
+  }
+
+  .content-wrapper {
+    width: 95%;
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .pill-dropdown {
+    width: 100%;
+  }
+
+  .pill-dropdown select,
+  .pill-dropdown button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .task-controls-container {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .kanban-board {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .kanban-column {
+    min-width: 250px;
+  }
+
+  .date-filter-section {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+  }
+  
+  .date-filter-section .form-control {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .date-filter-section .form-label {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainproject {
+    padding: 10px;
+  }
+
+  .content-wrapper {
+    width: 98%;
+    max-width: 98%;
+  }
+
+  .header {
+    gap: 10px;
+  }
+
+  .pill-dropdown select,
+  .pill-dropdown button {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .kanban-column {
+    min-width: 200px;
+  }
+
+  .task-card {
+    padding: 12px;
+  }
+
+  .task-card h3 {
+    font-size: 14px;
+  }
+
+  .task-card p {
+    font-size: 12px;
+  }
 }

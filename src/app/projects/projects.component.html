@@ -1,28 +1,9 @@
 <app-header></app-header>
 
-<div class="maincontent">
-
-  <!-- Welcome Header -->
-  <div class="welcome-card">
-    <div class="date-time">
-      <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
-      <span>{{ dateTime }}</span>
-    </div>
-    <div class="user-welcome">
-      <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
-    </div>
-  </div>
-  
-  <div class="header">
-    <svg width="0" height="5">
-      <defs>
-        <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
-          <circle cx="0.5" cy="0.5" r="0.5" />
-        </clipPath>
-      </defs>
-    </svg>
-    <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
-         style="clip-path: url(#circle-shape);" />
+<div class="mainproject">
+  <div class="content-wrapper">
+    <div class="header">
+   
 
   <!-- Project Dropdown -->
   <div class="pill-dropdown">
@@ -91,14 +72,8 @@
     </button>
   </div>
 <div class="date-filter-section">
-  <mat-form-field appearance="outline">
-    <!-- <mat-label>Choose Date</mat-label> -->
-    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedTaskDate" (dateChange)="onDateChange()">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-
-
+  <label for="task-date" class="form-label">Select Date</label>
+  <input type="date" id="task-date" class="form-control" [(ngModel)]="selectedTaskDate" (change)="onDateChange()">
 </div>
 
 
@@ -451,7 +426,5 @@
       </button>
     </mat-dialog-actions>
   </div>
-</ng-template>
-
-
-
+  </ng-template>
+</div>

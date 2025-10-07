@@ -12,73 +12,162 @@
             overflow-x: hidden;
         }
 
-        .maincontent{
-
-width: 100%;
-max-width: 2100px;
-height: 100%;
-margin-left: 275px;
-margin-top: -1140px;
-  padding: 0px 20px;
-  flex:1;
-
-}
-
-.welcome-card {
-  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
-  color: #333;  /* Dark text for better contrast */
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        .maincontent {
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  padding: 20px;
+  min-height: calc(100vh - 80px);
+  background-color: #f8fafc;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-  height: 15%;
 }
 
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.maincontent::-webkit-scrollbar {
+  width: 8px;
+}
 
-.date-time {
+.maincontent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.maincontent::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.maincontent::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Custom scrollbar for Firefox */
+.maincontent {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Container for 90% width content */
+.webdev-container {
+  width: 90%;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 0;
+  flex: 1;
   display: flex;
-  align-items: end;
-  text-align: end;
-  margin-left: 1700px;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  color: black;
+  flex-direction: column;
 }
 
-.calendar-icon {
-  width: 20px;
-  height: 20px;
-  margin-left: 100px;
-}
-
-.user-welcome {
+.webdevblogger {
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  padding: 20px;
+  min-height: calc(100vh - 80px);
+  background-color: #f8fafc;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
 }
 
-.user-welcome span {
-  font-size: 32px;
-  font-weight: 600;
-  margin-top: -20px;
-  color:Black;
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.webdevblogger::-webkit-scrollbar {
+  width: 8px;
 }
 
-.user-icon {
-  width: 150px;
-  height: 150px;
-  margin-top: -70px;
-  margin-left: 30px;
-  object-fit: cover;
-  border-radius: 50%;   /* makes it a circle */
-  border: 3px solid #FFD54F;
-  background-color: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+.webdevblogger::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
 }
+
+.webdevblogger::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.webdevblogger::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Custom scrollbar for Firefox */
+.webdevblogger {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Container for 90% width content */
+.webdev-content-wrapper {
+  width: 90%;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+        .vision-section {
+         background: linear-gradient(135deg, #3f51b5, #ff4081);
+            color: white;
+            padding: 60px 20px;
+            
+            position: relative;
+            overflow: hidden;
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .requirements-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+/* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.maincontent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.maincontent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.maincontent::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.maincontent::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Custom scrollbar for Firefox */
+.maincontent {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+/* Container for 90% width content */
+.webdev-container {
+  width: 90%;
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 0;
+}
+
 
 /* Custom scrollbar styling for the entire component */
 .maincontent {
@@ -140,6 +229,10 @@ margin-top: -1140px;
             
             position: relative;
             overflow: hidden;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
@@ -224,6 +317,9 @@ margin-top: -1140px;
             max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .section-header {
@@ -258,6 +354,8 @@ margin-top: -1140px;
             scrollbar-width: none;
             padding: 20px 0;
             margin: 0 -20px;
+            flex: 1;
+            min-height: 0;
         }
         
         .slides-wrapper::-webkit-scrollbar {
@@ -268,6 +366,8 @@ margin-top: -1140px;
             display: flex;
             gap: 20px;
             padding: 0 20px;
+            align-items: stretch;
+            min-height: 100%;
         }
         
         .slide {
@@ -278,6 +378,9 @@ margin-top: -1140px;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         /* Color-coded left borders */
@@ -722,6 +825,79 @@ margin-top: -1140px;
         @keyframes slideIn {
             0% { width: 0; }
             100% { width: 60px; }
+        }
+
+        /* Responsive Design for All Devices */
+        @media (max-width: 1200px) {
+            .webdevblogger {
+                width: calc(100% - 220px);
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .webdevblogger {
+                width: 100%;
+                margin-left: 0;
+                padding: 10px;
+            }
+            
+            .webdev-content-wrapper {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            .vision-section {
+                padding: 40px 15px;
+            }
+            
+            .requirements-container {
+                padding: 20px 15px;
+            }
+            
+            .slides-wrapper {
+                overflow-x: auto;
+                flex: 1;
+            }
+            
+            .slides-track {
+                min-width: 600px;
+                align-items: stretch;
+            }
+            
+            .slide {
+                min-width: 280px;
+                height: auto;
+                min-height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .webdevblogger {
+                padding: 5px;
+            }
+            
+            .vision-section {
+                padding: 30px 10px;
+            }
+            
+            .requirements-container {
+                padding: 15px 10px;
+            }
+            
+            .slide {
+                min-width: 250px;
+                padding: 20px 15px;
+                min-height: 250px;
+            }
+            
+            .section-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .vision-content h2 {
+                font-size: 1.8rem;
+            }
         }
 
         /* Tablet Styles */

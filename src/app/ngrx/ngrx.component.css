@@ -13,73 +13,29 @@
             margin-bottom: 20px;
         }
 
-        .maincontent{
+        .maincontent {
+            width: calc(100% - 280px);
+            margin-left: 280px;
+            padding: 20px;
+            min-height: calc(100vh - 80px);
+            background-color: #f8fafc;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
 
-width: 100%;
-max-width: 2100px;
-height: 100%;
-margin-left: 275px;
-margin-top: -1140px;
-  padding: 0px 20px;
-  flex:1;
+        .ngrxcontainer {
+            width: 90%;
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
-}
-
-        .welcome-card {
-  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
-  color: #333;  /* Dark text for better contrast */
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-  height: 15%;
-}
-
-
-.date-time {
-  display: flex;
-  align-items: end;
-  text-align: end;
-  margin-left: 1700px;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  color: black;
-}
-
-.calendar-icon {
-  width: 20px;
-  height: 20px;
-  margin-left: 100px;
-}
-
-.user-welcome {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.user-welcome span {
-  font-size: 32px;
-  font-weight: 600;
-  margin-top: -20px;
-  color:Black;
-}
-
-.user-icon {
-  width: 140px;
-  height: 140px;
-  margin-top: -70px;
-  margin-left: 30px;
-  object-fit: cover;
-  border-radius: 50%;   /* makes it a circle */
-  border: 3px solid #FFD54F;
-  background-color: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
 
         header {
             text-align: center;
@@ -426,32 +382,172 @@ margin-top: -1140px;
     padding: 0 10px; /* Inner padding for caption */
 }
 
-/* Responsive adjustments */
-@media (max-width: 480px) {
-    .ngrx-section {
-        margin: 0 10px;
-        padding: 1rem 10px;
-    }
-    
-    .ngrx-section .component-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .ngrx-section .component-icon {
-        margin-right: 0;
-        margin-bottom: 1rem;
-    }
-    
-    .component-features ul {
-        grid-template-columns: 1fr;
-    }
-    
-    .ngrx-image-container {
-        padding: 0 5px;
-    }
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            .maincontent {
+                width: 100%;
+                margin-left: 0;
+                padding: 15px;
+                min-height: calc(100vh - 60px);
+            }
 
-}
+            .ngrxcontainer {
+                width: 95%;
+                max-width: 95%;
+                margin: 0 auto;
+                padding: 0;
+            }
+
+            .heat-treatment-monitor header {
+                padding: 1.5rem 0;
+                margin-top: 20px;
+            }
+
+            .heat-treatment-monitor header h1 {
+                font-size: 2rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-step {
+                padding-left: 50px;
+            }
+
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .counter-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .ngrx-section {
+                padding: 1rem 15px;
+                margin: 0 15px;
+            }
+
+            .ngrx-store-image {
+                max-width: 95%;
+            }
+
+            .heat-treatment-monitor .content-box {
+                margin: 20px auto;
+                padding: 20px;
+                text-align: center;
+                width: 90%;
+                max-width: 400px;
+            }
+
+            .heat-treatment-monitor .content-box h1 {
+                font-size: 1.7rem;
+                margin-right: 15px;
+            }
+
+            .heat-treatment-monitor .content-box p {
+                width: 90%;
+                max-width: 300px;
+                font-size: 14px;
+                margin-right: 23px;
+            }
+
+            .heat-treatment-monitor .content-box img {
+                width: 100%;
+                max-width: 300px;
+                margin-top: 15px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .maincontent {
+                padding: 10px;
+            }
+
+            .ngrxcontainer {
+                width: 98%;
+                max-width: 98%;
+            }
+
+            .heat-treatment-monitor header {
+                padding: 1rem 0;
+                margin-top: 10px;
+            }
+
+            .heat-treatment-monitor header h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .card h2 {
+                font-size: 1.3rem;
+            }
+
+            .flow-step {
+                padding-left: 45px;
+            }
+
+            .step-number {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+
+            .counter-value {
+                font-size: 3rem;
+            }
+
+            .ngrx-section {
+                margin: 0 10px;
+                padding: 1rem 10px;
+            }
+
+            .ngrx-section .component-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .ngrx-section .component-icon {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+
+            .component-features ul {
+                grid-template-columns: 1fr;
+            }
+
+            .ngrx-image-container {
+                padding: 0 5px;
+            }
+
+            .heat-treatment-monitor .content-box {
+                width: 95%;
+                max-width: 350px;
+                padding: 15px;
+            }
+
+            .heat-treatment-monitor .content-box h1 {
+                font-size: 1.4rem;
+            }
+
+            .heat-treatment-monitor .content-box p {
+                font-size: 13px;
+            }
+        }
+
 
 
 
@@ -535,153 +631,9 @@ margin-top: -1140px;
     flex-direction: column;
 }
 
- @media (max-width: 768px) {
-    .ngrx-section {
-        padding: 1rem 15px;
-        margin: 0 15px;
-    }
-    
-    .ngrx-store-image {
-        max-width: 95%;
-    }
-
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .flow-step {
-                padding-left: 50px;
-            }
-            
-            .step-number {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-
-            .counter-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 100%;
-                max-width: 200px;
-            }
-        
-  .container {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .greeting-banner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .top-bar {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .brand-title,
-  .brand-subtitle {
-    text-align: center;
-  }
-
-  .right-icons {
-    justify-content: flex-end;
-    width: 100%;
-  }
-
-  .login-menu {
-    right: 10px;
-    top: 45px;
-  }
-    .heat-treatment-monitor header {
-        padding: 2rem 0;
-    }
-    
-    .heat-treatment-monitor header::before {
-        top: -110%;
-        width: 220%;
-        height: 200%;
-    }
-    
-    .heat-treatment-monitor .content-box {
-        margin: 20px auto;
-        padding: 20px;
-        text-align: center;
-        width: 90%;
-        max-width: 400px;
-    }
-    
-    .heat-treatment-monitor .content-box h1 {
-        font-size: 1.7rem;
-        margin-right: 15px;
-    }
-    
-    .heat-treatment-monitor .content-box p {
-        width: 90%;
-        max-width: 300px;
-        font-size: 14px;
-        margin-right: 23px;
-    }
-    
-    .heat-treatment-monitor .content-box img {
-        width: 100%;
-        max-width: 300px;
-        margin-top: 15px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
 
 
-@media (max-width: 2200px) {
-.maincontent{
 
-width: 100%;
-max-width: 1285px;
-height: 100%;
-margin-left: 275px;
-margin-top: -670px;
-  padding: 0px 20px;
-  flex:1;
-
-}
-
-.welcome-card {
-  height: 20%;
-  margin-top: 0px;
-}
-
-.date-time {
-  margin-left: 900px;
-}
-
-.user-welcome span {
-  margin-top: -77px;
-}
-
-}
-
-/* Custom scrollbar styling for the entire component */
-.maincontent {
-  max-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
 
 /* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
 .maincontent::-webkit-scrollbar {

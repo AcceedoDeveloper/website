@@ -1,71 +1,27 @@
 
- .maincontent{
+        .maincontent {
+            width: calc(100% - 280px);
+            margin-left: 280px;
+            padding: 20px;
+            min-height: calc(100vh - 80px);
+            background-color: #f8fafc;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
 
-width: 100%;
-max-width: 2100px;
-height: 100%;
-margin-left: 275px;
-margin-top: -1140px;
-  padding: 0px 20px;
-  flex:1;
+        .apibloger {
+            width: 90%;
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
 
-}
-
-        .welcome-card {
-  background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
-  color: #333;  /* Dark text for better contrast */
-  padding: 16px 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
-  height: 15%;
-}
-
-
-.date-time {
-  display: flex;
-  align-items: end;
-  text-align: end;
-  margin-left: 1700px;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  color: black;
-}
-
-.calendar-icon {
-  width: 20px;
-  height: 20px;
-  margin-left: 100px;
-}
-
-.user-welcome {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.user-welcome span {
-  font-size: 32px;
-  font-weight: 600;
-  margin-top: -20px;
-  color:Black;
-}
-
-.user-icon {
-  width: 140px;
-  height: 140px;
-  margin-top: -70px;
-  margin-left: 30px;
-  object-fit: cover;
-  border-radius: 50%;   /* makes it a circle */
-  border: 3px solid #FFD54F;
-  background-color: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
 
 .container {
     max-width: 100%;
@@ -297,25 +253,93 @@ li {
 }
 
 
-@media (max-width: 768px) {
-    .container {
-        margin-top: 20%;
-        padding: 0 1.5rem;
-    }
+        /* Responsive Media Queries */
+        @media (max-width: 768px) {
+            .maincontent {
+                width: 100%;
+                margin-left: 0;
+                padding: 15px;
+                min-height: calc(100vh - 60px);
+            }
 
-    .card-body {
-        padding: 1.5rem;
-    }
+            .apibloger {
+                width: 95%;
+                max-width: 95%;
+                margin: 0 auto;
+                padding: 0;
+            }
 
-    h2 {
-        font-size: 1.5rem;
-    }
+            .container {
+                margin-top: 10%;
+                padding: 0 1.5rem;
+            }
 
-    h3 {
-        font-size: 1.25rem;
-    }
+            .card-body {
+                padding: 1.5rem;
+            }
 
-  }
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            h3 {
+                font-size: 1.25rem;
+            }
+
+            .table-container th,
+            .table-container td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .maincontent {
+                padding: 10px;
+            }
+
+            .apibloger {
+                width: 98%;
+                max-width: 98%;
+            }
+
+            .container {
+                padding: 0 1rem;
+                margin-top: 5%;
+            }
+
+            .card-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .card-body {
+                padding: 1.25rem;
+            }
+
+            .info-box {
+                padding: 1.25rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            h3 {
+                font-size: 1.1rem;
+            }
+
+            .table-container th,
+            .table-container td {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .img {
+                margin: 1rem auto;
+            }
+        }
+
+        @media (max-width: 768px) {
 
 @media (max-width: 576px) {
     .container {
@@ -436,27 +460,7 @@ li {
   background-color: #0056b3;
 }
 
-@media (max-width: 2200px) {
-  
-.maincontent{
 
-width: 100%;
-max-width: 1285px;
-height: 100%;
-margin-left: 275px;
-margin-top: -670px;
-  padding: 0px 20px;
-  flex:1;
-
-}
-
-}
-
-.maincontent {
-  max-height: 100vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-}
 
 .maincontent::-webkit-scrollbar {
   width: 12px;
@@ -480,35 +484,4 @@ margin-top: -670px;
 .maincontent {
   scrollbar-width: thin;
   scrollbar-color:#888#f1f1f1;
-}
-
-@media (max-width: 2200px) {
-  
-.maincontent{
-
-width: 100%;
-max-width: 1285px;
-height: 100%;
-margin-left: 275px;
-margin-top: -670px;
-  padding: 0px 20px;
-  flex:1;
-
-}
-
-.welcome-card {
-  height: 20%;
-  margin-top: 0px;
-}
-
-.date-time {
-  margin-left: 895px;
-}
-
-.user-welcome span {
-  margin-top: -82px;
-}
-
-
-
 }

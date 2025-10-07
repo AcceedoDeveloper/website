@@ -1,34 +1,10 @@
 <app-header></app-header>
 
-<div class="maincontent">
-  
-  <!-- Welcome Header -->
-  <div class="welcome-card">
-    <div class="date-time">
-      <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
-      <span>{{ dateTime }}</span>
-    </div>
-    <div class="user-welcome">
-      <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
-    </div>
-  </div>
-  
-  <div>
-    <svg width="0" height="0">
-      <defs>
-        <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
-          <circle cx="0.5" cy="0.5" r="0.5" />
-        </clipPath>
-      </defs>
-    </svg>
-    <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
-         style="clip-path: url(#circle-shape);" />
-  </div>
-
-  <div class="section-header">
-    <h4>Create Project</h4>
+<div class="main">
+  <button class="section-header">
+    Create Project
     <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
-  </div>
+  </button>
 
   <!-- Add Project Modal -->
   <div class="modal" *ngIf="showCreateProjectBox">
@@ -158,19 +134,19 @@
             {{ project.expectedEndDate | date:'mediumDate' }}</span>
         </div>
       </div>
-   <div class="project-actions">
-  <!-- Edit Button -->
-  <button mat-raised-button color="primary" (click)="openEditModal(project)">
-    <mat-icon>edit</mat-icon>
-    Edit
-  </button>
+      <div class="project-actions">
+        <!-- Edit Button -->
+        <button mat-raised-button color="primary" (click)="openEditModal(project)">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
 
-  <!-- Delete Button -->
-  <button mat-raised-button style="color: rgb(10, 10, 10);" (click)="deleteProject(project)">
-    <mat-icon>delete</mat-icon>
-    Delete
-  </button>
-</div>
+        <!-- Delete Button -->
+        <button mat-raised-button style="color: rgb(10, 10, 10);" (click)="deleteProject(project)">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </div>
 
     </div>
     <div *ngIf="filteredProjects.length === 0" class="no-projects">
