@@ -197,7 +197,10 @@ editroles:any;
 
   getrole() {
   const dialogRef = this.dialog.open(RoledialogComponent, {
-    width: '400px',
+    width: 'auto',
+   
+    height: 'auto',
+    maxHeight: 'auto',
     panelClass: 'custom-dialog',
   });
 
@@ -212,9 +215,9 @@ editroles:any;
 editrole(role: any) {
   console.log(role);
   const dialogRef = this.dialog.open(RoledialogComponent, {
-    width: '400px',
+    width: 'auto',
     height: 'auto',
-    maxHeight: '90vh',
+    maxHeight: 'auto',
     panelClass: 'custom-dialog',
     data: { role }  
   });

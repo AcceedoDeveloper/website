@@ -25,7 +25,7 @@
 .data-filter-bar {
   display: flex;
   align-items: center;
-  justify-content:flex-start;
+  justify-content:center;
   gap: 24px;
   padding: 20px;
   background: #ffffff;

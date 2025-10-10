@@ -1,14 +1,16 @@
 <!-- Documents Section -->
+<div class="task-controls">
+  <button class="pill-btn" (click)="opendocpop()">
+    + Add Documents
+  </button>
+</div>
+
+
 <div class="main1" >
-  <div class="task-controls">
-    <button class="pill-btn" (click)="opendocpop()">
-      + Add Documents
-    </button>
-  </div>
 
   <!-- Add Document Popup -->
   <div class="documentpop" *ngIf="showdocumentpop">
-    <div class="upload-form" [formGroup]="documentForm">
+    <div class="upload-form" [formGroup]="documentForm" [class.loading]="isLoading">
       <!-- Professional Header -->
       <div class="popup-header">
         <div class="header-content">
@@ -20,7 +22,7 @@
             <p class="popup-subtitle">Upload and organize your project documents</p>
           </div>
         </div>
-        <button class="close-btn" (click)="showdocumentpop = false" mat-icon-button>
+        <button class="close-btn" (click)="showdocumentpop = false" mat-icon-button [disabled]="isLoading">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -92,13 +94,14 @@
 
       <!-- Action Buttons -->
       <div class="form-actions">
-        <button type="button" class="cancel-btn" (click)="showdocumentpop = false" mat-stroked-button>
+        <button type="button" class="cancel-btn" (click)="showdocumentpop = false" mat-stroked-button [disabled]="isLoading">
           <mat-icon>close</mat-icon>
           Cancel
         </button>
-        <button type="button" class="submit-btn" (click)="submitDocument()" mat-raised-button color="primary">
+        <button type="button" class="submit-btn" (click)="submitDocument()" mat-raised-button color="primary" [disabled]="documentForm.invalid || isLoading">
           <mat-icon>{{ editingDocument ? 'update' : 'cloud_upload' }}</mat-icon>
-          {{ editingDocument ? 'Update Document' : 'Upload Document' }}
+          <span *ngIf="!isLoading">{{ editingDocument ? 'Update Document' : 'Upload Document' }}</span>
+          <span *ngIf="isLoading">Uploading...</span>
         </button>
       </div>
     </div>
@@ -170,4 +173,6 @@
       </div>
     </div>
   </div>
+
+
 </div>

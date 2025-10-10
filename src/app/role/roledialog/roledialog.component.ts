@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RoledialogComponent implements OnInit {
   roleform!: FormGroup;
   isEdit = false;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -57,6 +58,7 @@ export class RoledialogComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
     // Use `newName` for update to match backend API
     const payload = { newName: this.roleform.value.role }; // Changed from `role` to `newName`
     console.log('📤 Sending payload:', payload);
@@ -66,11 +68,15 @@ export class RoledialogComponent implements OnInit {
       this.roleservice.edirole(this.data.role._id, payload).subscribe({
         next: (result) => {
           console.log('✅ Role updated:', result);
+          this.isLoading = false;
           this.snackBar.open('Role updated successfully!', 'Close', { duration: 3000 });
-          this.dialogRef.close(true);
+          setTimeout(() => {
+            this.dialogRef.close(true);
+          }, 300);
         },
         error: (err) => {
           console.error('❌ Update failed:', JSON.stringify(err, null, 2));
+          this.isLoading = false;
           this.snackBar.open(`Failed to update role: ${err.error?.message || 'Unknown error'}`, 'Close', { duration: 5000 });
         }
       });
@@ -80,11 +86,15 @@ export class RoledialogComponent implements OnInit {
       this.roleservice.saverole(createPayload).subscribe({
         next: (result) => {
           console.log('✅ Role created:', result);
+          this.isLoading = false;
           this.snackBar.open('Role created successfully!', 'Close', { duration: 3000 });
-          this.dialogRef.close(true);
+          setTimeout(() => {
+            this.dialogRef.close(true);
+          }, 300);
         },
         error: (err) => {
           console.error('❌ Create failed:', JSON.stringify(err, null, 2));
+          this.isLoading = false;
           this.snackBar.open(`Failed to create role: ${err.error?.message || 'Unknown error'}`, 'Close', { duration: 5000 });
         }
       });

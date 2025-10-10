@@ -204,7 +204,9 @@ export class RegistermatComponent implements OnInit {
         this.isLoading = false;
         console.log('User updated successfully:', response);
         const updatedUser = this.processUserResponse(response);        
-        this.dialogRef.close(updatedUser);
+        setTimeout(() => {
+          this.dialogRef.close(updatedUser);
+        }, 300);
       },
       error: (err) => {
         this.isLoading = false;
@@ -224,7 +226,9 @@ export class RegistermatComponent implements OnInit {
         this.registerForm.reset();
         this.previewImage = null;
         this.selectedFile = null;
-        this.dialogRef.close(newUser);
+        setTimeout(() => {
+          this.dialogRef.close(newUser);
+        }, 300);
       },
       error: (err) => {
         this.isLoading = false;

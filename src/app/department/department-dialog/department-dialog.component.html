@@ -1,8 +1,8 @@
-<div class="form-wrapper">
-  <div class="form-card">
+
+  <div class="form-card" [class.loading]="isLoading">
     <h2>{{ isEdit ? 'Edit Department' : 'Create Department' }}</h2>
 
-    <form [formGroup]="dmform" (ngSubmit)="savedmdata()">
+    <form [formGroup]="dmform" (ngSubmit)="savedmdata()" [class.loading]="isLoading">
       <!-- Department Input -->
       <div class="form-group">
         <label for="department">{{ isEdit ? 'Edit Department' : 'Department' }}</label>
@@ -26,7 +26,10 @@
       <div class="form-group">
         <label>Subdepartments</label>
         <div class="subdept-list" formArrayName="subDepartments">
-          <div *ngFor="let sub of name.controls; let i = index" [formGroupName]="i" class="subdept-item">
+          <div *ngFor="let sub of name.controls; let i = index" 
+               [formGroupName]="i" 
+               class="subdept-item"
+               [class]="'subdept-item ' + (animationStates['subdept-' + i] || '')">
             <input 
               type="text" 
               placeholder="Enter subdepartment"
@@ -59,9 +62,12 @@
 
       <!-- Form Buttons -->
       <div class="form-actions">
-        <button type="submit" class="btn primary">{{ isEdit ? 'Update' : 'Save' }}</button>
-        <button type="button" class="btn secondary" (click)="createcancel()">Cancel</button>
+        <button type="button" class="btn secondary" (click)="createcancel()" [disabled]="isLoading">Cancel</button>
+        <button type="submit" class="btn primary" [disabled]="isLoading">
+          <span *ngIf="!isLoading">{{ isEdit ? 'Update' : 'Save' }}</span>
+          <span *ngIf="isLoading">Saving...</span>
+        </button>
       </div>
     </form>
   </div>
-</div>
+

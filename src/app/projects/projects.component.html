@@ -50,21 +50,29 @@
            </option>
          </select>
        </div>
+
        
-       <div class="pill-dropdown">
-         <button (click)="opentask()">Task</button>
+       <div class="pill-dropdown-containermv1">
+         <div class="pill-dropdown">
+           <button (click)="opentask()">Task</button>
+         </div>
+         
+         <div class="pill-dropdown">     
+           <button (click)="openMonthView()">Calendar</button>
+         </div>
+         
+
        </div>
-       
-       <div class="pill-dropdown">     
-         <button (click)="openMonthView()">Calendar</button>
-       </div>
-       
-       <div class="pill-dropdown">
-         <button (click)="openuv()">Summary</button>
-       </div>
-       
-       <div class="pill-dropdown">
-         <button (click)="opendoc()">Documents</button>
+
+       <div class="pill-dropdown-containermv1">
+         <div class="pill-dropdown">
+           <button (click)="openuv()">Summary</button>
+         </div>
+         
+         <div class="pill-dropdown">
+           <button (click)="opendoc()">Documents</button>
+         </div>
+
        </div>
      </div>
 
@@ -287,11 +295,13 @@
 
 
 <ng-template #assignmentDialog>
-  <div class="dialog-container">
-    <h2 mat-dialog-title>{{ editingTask ? 'Edit Task' : 'Add Task' }}</h2>
+  <div class="dialog-container" [class.loading]="isLoading">
+    <div class="dialog-header">
+      <h2 class="dialog-title">{{ editingTask ? 'Edit Task' : 'Add Task' }}</h2>
+    </div>
 
-    <mat-dialog-content>
-      <form [formGroup]="assignmentForm" class="dialog-form">
+    <div class="dialog-content">
+      <form [formGroup]="assignmentForm" class="dialog-form" [class.loading]="isLoading">
         <div class="form-columns">
           
      
@@ -300,29 +310,30 @@
         
             <div class="section-block">
               <h3 class="section-title">• Task Title</h3>
-              <mat-form-field appearance="outline" class="full-width">
+              <div class="form-group">
                 <input 
-                  matInput 
+                  type="text"
                   formControlName="title" 
                   required
-                  placeholder="Enter task title...">
-                <mat-error *ngIf="assignmentForm.get('title')?.hasError('required')">
+                  placeholder="Enter task title..."
+                  class="form-input">
+                <div class="error-message" *ngIf="assignmentForm.get('title')?.hasError('required')">
                   Title is required
-                </mat-error>
-              </mat-form-field>
+                </div>
+              </div>
             </div>
 
 
             <div class="section-block">
               <h3 class="section-title">• Task Description</h3>
-              <mat-form-field appearance="outline" class="full-width">
+              <div class="form-group">
                 <textarea 
-                  matInput 
                   formControlName="description" 
                   rows="4"
-                  placeholder="Enter detailed task description...">
+                  placeholder="Enter detailed task description..."
+                  class="form-textarea">
                 </textarea>
-              </mat-form-field>
+              </div>
             </div>
 
          
@@ -331,7 +342,7 @@
   
 
 <div *ngIf="(selectedTask?.comment?.length || 0) > 0" class="comments-section">
-  <div *ngFor="let comment of selectedTask?.comment || []" class="comment-item">
+  <div *ngFor="let comment of selectedTask?.comment || []; let i = index" class="comment-item" [style.animation-delay]="(i * 0.1) + 's'">
     <strong>{{ comment.user }}:</strong> {{ comment.message }}
     <br>
   </div>
@@ -339,24 +350,25 @@
   
 
   <div class="add-comment-section">
-    <h4>Add Comment:</h4>
+    <h4 class="comment-section-title">Add Comment:</h4>
     <form [formGroup]="commentForm" class="comment-form">
-      <mat-form-field appearance="outline" class="full-width">
+      <div class="form-group">
         <textarea 
-          matInput 
           formControlName="message" 
           rows="3"
-          placeholder="Add your comment...">
+          placeholder="Add your comment..."
+          class="form-textarea">
         </textarea>
-        <mat-error *ngIf="commentForm.get('message')?.hasError('required')">
+        <div class="error-message" *ngIf="commentForm.get('message')?.hasError('required')">
           Comment is required
-        </mat-error>
-      </mat-form-field>
-      <button mat-raised-button color="primary" 
+        </div>
+      </div>
+      <button type="button"
               (click)="addComment()"
-              [disabled]="commentForm.invalid"
+              [disabled]="commentForm.invalid || isLoading"
               class="add-comment-btn">
-        Add Comment
+        <span *ngIf="!isLoading">Add Comment</span>
+        <span *ngIf="isLoading">Adding...</span>
       </button>
     </form>
   </div>
@@ -364,12 +376,18 @@
 <div class="section-block">
   <h3 class="section-title">• Pictures</h3>
 
-
-  <input type="file" (change)="onPictureSelected($event)" accept="image/*" multiple>
+  <div class="file-upload-section">
+    <input type="file" (change)="onPictureSelected($event)" accept="image/*" multiple [disabled]="isLoading">
+    <div class="upload-hint" *ngIf="!isLoading">Click to select images or drag and drop</div>
+    <div class="upload-hint loading" *ngIf="isLoading">Uploading images...</div>
+  </div>
+  
   <div class="uploaded-images">
-    <div *ngFor="let img of uploadedPictures; let i = index" class="image-preview">
+    <div *ngFor="let img of uploadedPictures; let i = index" class="image-preview" [style.animation-delay]="(i * 0.1) + 's'">
       <img [src]="getImageUrl(img)" (click)="viewImage(img)" alt="Task Picture" class="thumb">
-     
+      <button class="remove-image-btn" (click)="removeImage(i)" [disabled]="isLoading" *ngIf="!isLoading">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
   </div>
 </div>
@@ -380,75 +398,75 @@
           <div class="right-column">
             
   
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Project</mat-label>
-              <input matInput [value]="selectedProjectName" readonly>
-            </mat-form-field>
+            <div class="form-group">
+              <label class="form-label">Project</label>
+              <input type="text" [value]="selectedProjectName" readonly class="form-input readonly">
+            </div>
             
      
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Assigned To (work giver)</mat-label>
-              <input matInput [value]="username" readonly>
+            <div class="form-group">
+              <label class="form-label">Assigned To (work giver)</label>
+              <input type="text" [value]="username" readonly class="form-input readonly">
               <input type="hidden" formControlName="assignedTo" [value]="username">
-            </mat-form-field>
+            </div>
 
       
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Assignee (work receiver)</mat-label>
-              <mat-select formControlName="assignee" [disabled]="!!editingTask">
-                <mat-option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+            <div class="form-group">
+              <label class="form-label">Assignee (work receiver)</label>
+              <select formControlName="assignee" [disabled]="!!editingTask" class="form-select">
+                <option value="">Select Assignee</option>
+                <option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
                   {{ getEmployeeDisplay(emp) }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="assignmentForm.get('assignee')?.hasError('required')">
+                </option>
+              </select>
+              <div class="error-message" *ngIf="assignmentForm.get('assignee')?.hasError('required')">
                 Assignee is required
-              </mat-error>
-            </mat-form-field>
+              </div>
+            </div>
 
          
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Start Date</mat-label>
-              <input matInput 
-                     [matDatepicker]="startPicker" 
+            <div class="form-group">
+              <label class="form-label">Start Date</label>
+              <input type="date" 
                      formControlName="startDate" 
-                     [readonly]="!!editingTask">
-              <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-              <mat-datepicker #startPicker></mat-datepicker>
-            </mat-form-field>
+                     [readonly]="!!editingTask"
+                     class="form-input">
+            </div>
 
         
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Due Date</mat-label>
-              <input matInput 
-                     [matDatepicker]="duePicker" 
-                     formControlName="dueDate">
-              <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
-              <mat-datepicker #duePicker></mat-datepicker>
-              <mat-error *ngIf="assignmentForm.get('dueDate')?.hasError('required')">
+            <div class="form-group">
+              <label class="form-label">Due Date</label>
+              <input type="date" 
+                     formControlName="dueDate"
+                     class="form-input">
+              <div class="error-message" *ngIf="assignmentForm.get('dueDate')?.hasError('required')">
                 Due date is required
-              </mat-error>
-            </mat-form-field>
+              </div>
+            </div>
 
       
-            <mat-form-field appearance="outline" class="full-width" *ngIf="editingTask">
-              <mat-label>Status</mat-label>
-              <input matInput [value]="assignmentForm.get('Status')?.value" readonly>
-            </mat-form-field>
+            <div class="form-group" *ngIf="editingTask">
+              <label class="form-label">Status</label>
+              <input type="text" [value]="assignmentForm.get('Status')?.value" readonly class="form-input readonly">
+            </div>
           </div>
         </div>
       </form>
-    </mat-dialog-content>
+    </div>
 
-    <mat-dialog-actions align="end" class="dialog-actions">
-      <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="primary"
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-cancel" [disabled]="isLoading" (click)="closeDialog()">Cancel</button>
+      <button type="button" class="btn btn-primary"
               (click)="saveAssignment()"
-              [disabled]="assignmentForm.invalid">
-        {{ editingTask ? 'Update Task' : 'Create Task' }}
+              [disabled]="assignmentForm.invalid || isLoading">
+        <span *ngIf="!isLoading">{{ editingTask ? 'Update Task' : 'Create Task' }}</span>
+        <span *ngIf="isLoading">Saving...</span>
       </button>
-    </mat-dialog-actions>
+    </div>
   </div>
   </ng-template>
+
+  
 </div>
 
 <app-footer></app-footer>

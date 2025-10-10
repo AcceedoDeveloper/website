@@ -4,39 +4,20 @@
 
 
     <div class="data-filter-bar">
-      <div class="filter-item">
-        <label for="assignee">Assignee</label>
-        <select id="assignee" [(ngModel)]="selectedAssignee" (change)="onAssigneeChange()">
-          <option value="">All Assignees</option>
-          <option *ngFor="let emp of allAssignees" [value]="emp">{{ emp }}</option>
-        </select>
+ 
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color red"></div>
+          <span>Weekend</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color blue"></div>
+          <span>Has Tasks</span>
+        </div>
       </div>
-
-      <div class="filter-item">
-        <label for="month">Month</label>
-        <select id="month" [(ngModel)]="selectedMonth" (change)="onMonthChange()">
-          <option *ngFor="let m of months; let i = index" [value]="i">{{ m }}</option>
-        </select>
-      </div>
-
-      <div class="filter-item">
-        <label for="year">Year</label>
-        <select id="year" [(ngModel)]="selectedYear" (change)="onYearChange()">
-          <option *ngFor="let y of years" [value]="y">{{ y }}</option>
-        </select>
-      </div>
+   
     </div>
 
-    <div class="legend">
-      <div class="legend-item">
-        <div class="legend-color red"></div>
-        <span>Weekend</span>
-      </div>
-      <div class="legend-item">
-        <div class="legend-color blue"></div>
-        <span>Has Tasks</span>
-      </div>
-    </div>
 
     <div class="main-content">
       <div class="calendar">

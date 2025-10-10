@@ -13,9 +13,9 @@
         <input type="text" placeholder="Search projects.." [(ngModel)]="searchQuery" (input)="filterprojects()" />
         <i class="fa fa-search"></i>
       </div>
-      <button class="section-header">
+      <button class="section-header" (click)="toggleCreateProjectBox()">
         Create Project
-        <i class="fa fa-plus add-task-icon" (click)="toggleCreateProjectBox()"></i>
+        <i class="fa fa-plus add-task-icon" ></i>
       </button>
 
     </div>
@@ -23,16 +23,16 @@
 
   <!-- Add Project Modal -->
   <div class="modal" *ngIf="showCreateProjectBox">
-    <div class="modal-content">
+    <div class="modal-content" [class.loading]="isLoading">
       <div class="modal-header">
         <h3>Add Project</h3>
-        <span class="close-modal" (click)="cancel()">&times;</span>
+        <span class="close-modal" (click)="!isLoading && cancel()">&times;</span>
       </div>
 
       <div class="form-body">
         <div class="form-row">
           <label for="projectName">Project Name *</label>
-          <input type="text" id="projectName" placeholder="Project Name" [(ngModel)]="project.projectName" required />
+          <input type="text" id="projectName" placeholder="Project Name" [(ngModel)]="project.projectName" required [disabled]="isLoading" />
         </div>
 
         <!-- Team Leads Selection -->
@@ -102,20 +102,22 @@
         <div class="form-row date-row">
           <div class="date-input">
             <label for="startDate">Start Date *</label>
-            <input type="date" id="startDate" [(ngModel)]="project.startDate" required />
+            <input type="date" id="startDate" [(ngModel)]="project.startDate" required [disabled]="isLoading" />
           </div>
           <div class="date-input">
             <label for="expectedEndDate">Expected End Date *</label>
-            <input type="date" id="expectedEndDate" [(ngModel)]="project.expectedEndDate" required />
+            <input type="date" id="expectedEndDate" [(ngModel)]="project.expectedEndDate" required [disabled]="isLoading" />
           </div>
         </div>
       </div>
 
       <div class="form-buttons">
-        <button class="create-button" (click)="createProject()">
-          <i class="fa fa-plus"></i> Create Project
+        <button class="create-button" (click)="createProject()" [disabled]="isLoading">
+          <i class="fa fa-plus"></i> 
+          <span *ngIf="!isLoading">Create Project</span>
+          <span *ngIf="isLoading">Creating...</span>
         </button>
-        <button class="cancel-button" (click)="cancel()">Cancel</button>
+        <button class="cancel-button" (click)="cancel()" [disabled]="isLoading">Cancel</button>
       </div>
 
       <div *ngIf="showSuccessMessage" class="success-message">

@@ -250,6 +250,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.showDropdown = !this.showDropdown;
   }
 
+  onOverlayClick(event: MouseEvent) {
+    // Only close if clicking on the overlay background (not on the content)
+    if (event.target === event.currentTarget) {
+      this.showDropdown = false;
+    }
+  }
+
   @HostListener('document:click', ['$event'])
   clickOutside(event: MouseEvent) {
     if (

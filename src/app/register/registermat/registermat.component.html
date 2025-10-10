@@ -1,13 +1,13 @@
-<div class="overlay">
-  <div class="popup-card">
+
+  <div class="popup-card" [class.loading]="isLoading">
     <!-- Header -->
     <div class="popup-header">
       <h2>{{ isEdit ? 'Edit User' : 'Create User' }}</h2>
-      <button class="close-btn" (click)="cancel()">&times;</button>
+      <button class="close-btn" (click)="cancel()" [disabled]="isLoading">&times;</button>
     </div>
 
     <!-- Form -->
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="popup-form">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="popup-form" [class.loading]="isLoading">
 
       <div class="popup-body">
         <!-- LEFT: Profile Image -->
@@ -89,10 +89,13 @@
       </div>
 
       <div class="popup-actions">
-        <button type="button" class="btn cancel" (click)="cancel()">Cancel</button>
-        <button type="submit" class="btn save" [disabled]="registerForm.invalid">Save</button>
+        <button type="button" class="btn cancel" (click)="cancel()" [disabled]="isLoading">Cancel</button>
+        <button type="submit" class="btn save" [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">{{ isEdit ? 'Update' : 'Save' }}</span>
+          <span *ngIf="isLoading">Saving...</span>
+        </button>
       </div>
 
     </form>
   </div>
-</div>
+

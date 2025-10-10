@@ -27,7 +27,7 @@ interface Document {
 export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit{
 removeImage: any;
 cancelEdit: any;
-
+isLoading = false;
 
 showmaintask = false;
 Documents =true;
@@ -692,6 +692,7 @@ onDateChange() {
       return;
     }
 
+    this.isLoading = true;
     const formValue = this.assignmentForm.value;
     const formData = new FormData();
 
@@ -717,22 +718,30 @@ onDateChange() {
     if (this.editingTask && this.editingTask._id) {
       this.assignworkService.updateAssignment(this.editingTask._id, formData).subscribe({
         next: () => {
+          this.isLoading = false;
           this.snackBar.open('Task updated successfully', 'Close', { duration: 2500 });
           this.getAssignments();
-          this.dialog.closeAll();
+          setTimeout(() => {
+            this.dialog.closeAll();
+          }, 300);
         },
         error: () => {
+          this.isLoading = false;
           this.snackBar.open('Failed to update task', 'Close', { duration: 3000 });
         }
       });
     } else {
       this.assignworkService.createAssignment(formData).subscribe({
         next: () => {
+          this.isLoading = false;
           this.snackBar.open('Task created successfully', 'Close', { duration: 2500 });
           this.getAssignments();
-          this.dialog.closeAll();
+          setTimeout(() => {
+            this.dialog.closeAll();
+          }, 300);
         },
         error: () => {
+          this.isLoading = false;
           this.snackBar.open('Failed to create task', 'Close', { duration: 3000 });
         }
       });
@@ -1106,6 +1115,9 @@ getFileUrl(file: string): string {
     this.loadError[file] = true;
   }
 
+  closeDialog() {
+    this.dialog.closeAll();
+  }
 
   
 }

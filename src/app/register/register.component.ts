@@ -276,8 +276,8 @@ export class RegisterComponent implements OnInit {
   editUser(item: any) {
     const dialogRef = this.dialog.open(RegistermatComponent, {
       width: '80vw',
-      height: 'auto',
-      maxHeight: '90vh',
+      height: '80vh',
+      maxHeight: '80vh',
       panelClass: 'custom-dialog',
       data: { item }
     });

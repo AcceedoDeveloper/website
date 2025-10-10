@@ -85,13 +85,18 @@
         </ng-template>
       </label>
 
-      <div class="login-menu" [class.show]="showDropdown">
-        <p><strong>{{ userData?.username || 'Username' }}</strong></p>
-        <p>{{ userData?.role || 'Role' }}</p>
-        <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
-        <a href="#" (click)="signOut()">Sign Out</a>
+      <div  class="login-menu" [class.show]="showDropdown" (click)="onOverlayClick($event)">
+        <button class="mobile-close-btn" (click)="toggleDropdown()">×</button>
+        <div class="mobile-content" (click)="$event.stopPropagation()">
+          <p><strong>{{ userData?.username || 'Username' }}</strong></p>
+          <p>{{ userData?.role || 'Role' }}</p>
+          <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
+          <a href="#" (click)="signOut()">Sign Out</a>
+        </div>
       </div>
+
     </div>
+    
   </div>
 </header>
 

@@ -19,8 +19,7 @@ interface Document {
 })
 
 export class DocumentsComponent {
-
-
+  isLoading = false;
   
   showmaindocument = false;
   showdocumentpop = false;
@@ -166,42 +165,52 @@ showMonthView = false;
         this.snackBar.open('Please provide title and file', 'Close', { duration: 2500 });
         return;
       }
-  
+
+      this.isLoading = true;
       const formData = new FormData();
       formData.append('title', this.documentForm.get('title')?.value);
       if (this.selectedFile) {
         formData.append('files', this.selectedFile);
       }
-  
+
       if (this.editingDocument && this.editingDocument._id) {
         const s = this.assignworkService.updateDocument(this.editingDocument._id, formData).subscribe({
           next: () => {
+            this.isLoading = false;
             this.snackBar.open('Document updated successfully', 'Close', { duration: 2500 });
             this.getDocuments();
-            this.showdocumentpop = false;
+            setTimeout(() => {
+              this.showdocumentpop = false;
+            }, 300);
             this.documentForm.reset();
             this.selectedFile = null;
             this.editingDocument = null;
           },
           error: () => {
+            this.isLoading = false;
             this.snackBar.open('Failed to update document', 'Close', { duration: 3000 });
           }
         });
         this.subs.add(s);
       } else {
         if (!this.selectedFile) {
+          this.isLoading = false;
           this.snackBar.open('Please provide a file for new document', 'Close', { duration: 2500 });
           return;
         }
         const s = this.assignworkService.createDocument(formData).subscribe({
           next: () => {
+            this.isLoading = false;
             this.snackBar.open('Document uploaded successfully', 'Close', { duration: 2500 });
             this.getDocuments();
-            this.showdocumentpop = false;
+            setTimeout(() => {
+              this.showdocumentpop = false;
+            }, 300);
             this.documentForm.reset();
             this.selectedFile = null;
           },
           error: () => {
+            this.isLoading = false;
             this.snackBar.open('Failed to upload document', 'Close', { duration: 3000 });
           }
         });

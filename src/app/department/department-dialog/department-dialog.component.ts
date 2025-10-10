@@ -14,6 +14,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DepartmentDialogComponent implements OnInit {
   dmform!: FormGroup;
   isEdit = false;
+  isLoading = false;
+  animationStates: { [key: string]: string } = {};
 
   constructor(
     private dialog: MatDialog,
@@ -52,11 +54,27 @@ export class DepartmentDialogComponent implements OnInit {
   }
 
   addSubDepartment(name: string = ''): void {
+    const index = this.name.length;
     this.name.push(this.createSubDepartment(name));
+    
+    // Add animation class
+    this.animationStates[`subdept-${index}`] = 'adding';
+    
+    // Remove animation class after animation completes
+    setTimeout(() => {
+      delete this.animationStates[`subdept-${index}`];
+    }, 200);
   }
 
   removeSubDepartment(index: number): void {
-    this.name.removeAt(index);
+    // Add removal animation
+    this.animationStates[`subdept-${index}`] = 'removing';
+    
+    // Remove the item after animation completes
+    setTimeout(() => {
+      this.name.removeAt(index);
+      delete this.animationStates[`subdept-${index}`];
+    }, 200);
   }
 
   patchForm(department: Department): void {
@@ -85,6 +103,7 @@ export class DepartmentDialogComponent implements OnInit {
       return;
     }
 
+    this.isLoading = true;
     const departmentName = this.dmform.value.departmentName.trim();
     const subDepartments = this.name.controls
       .map(ctrl => ({
@@ -108,6 +127,7 @@ export class DepartmentDialogComponent implements OnInit {
     this.dmservice.loaddm().subscribe({
       next: (departments: Department[]) => {
         if (departments.some(dept => dept.departmentName.toLowerCase() === departmentName.toLowerCase())) {
+          this.isLoading = false;
           this.snackBar.open('Department name already exists.', 'Close', { duration: 3000 });
           return;
         }
@@ -117,6 +137,7 @@ export class DepartmentDialogComponent implements OnInit {
             console.log('✅ Create department response:', response);
             const department = response.department;
             if (!department || !department._id) {
+              this.isLoading = false;
               this.snackBar.open('Failed to save department: No department ID returned.', 'Close', { duration: 3000 });
               return;
             }
@@ -129,25 +150,33 @@ export class DepartmentDialogComponent implements OnInit {
               this.dmservice.addSubDepartment(department._id, subDepartmentPayload).subscribe({
                 next: (subResponse: DepartmentResponse) => {
                   console.log('✅ Add subdepartment response:', subResponse);
+                  this.isLoading = false;
                   this.snackBar.open('Department and subdepartments saved successfully!', 'Close', { duration: 3000 });
-                  this.cleardm();
-                  this.dialog.closeAll();
-                  this.router.navigate(['/department']);
+                  setTimeout(() => {
+                    this.cleardm();
+                    this.dialog.closeAll();
+                    this.router.navigate(['/department']);
+                  }, 300);
                 },
                 error: (error) => {
                   console.error('❌ Error adding subdepartments:', JSON.stringify(error, null, 2));
+                  this.isLoading = false;
                   this.snackBar.open(`Failed to save subdepartments: ${error.error?.message || 'Server error'}`, 'Close', { duration: 3000 });
                 }
               });
             } else {
+              this.isLoading = false;
               this.snackBar.open('Department saved successfully!', 'Close', { duration: 3000 });
-              this.cleardm();
-              this.dialog.closeAll();
-              this.router.navigate(['/department']);
+              setTimeout(() => {
+                this.cleardm();
+                this.dialog.closeAll();
+                this.router.navigate(['/department']);
+              }, 300);
             }
           },
           error: (error) => {
             console.error('❌ Error saving department:', JSON.stringify(error, null, 2));
+            this.isLoading = false;
             const errorMessage = error.error?.message === 'Department name already exists'
               ? 'Department name already exists.'
               : error.error?.message || 'Server error';
@@ -157,6 +186,7 @@ export class DepartmentDialogComponent implements OnInit {
       },
       error: (error) => {
         console.error('❌ Error fetching departments:', JSON.stringify(error, null, 2));
+        this.isLoading = false;
         this.snackBar.open('Failed to validate department name.', 'Close', { duration: 3000 });
       }
     });

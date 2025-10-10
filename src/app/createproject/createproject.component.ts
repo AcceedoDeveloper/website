@@ -27,6 +27,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
   isModalOpen = false;
   selectedProject: any = null;
   filteredProjects: any[] = [];
+  isLoading = false;
   
   showTeamLeadsDropdown = false;
   teamLeadsSearchText = '';
@@ -444,6 +445,8 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isLoading = true;
+
     const projectData = {
       projectName: this.project.projectName,
       teamLeads: this.project.teamLeads.map((emp: any) => 
@@ -465,6 +468,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
     this.projectService.createProject(projectData).subscribe({
       next: (response: any) => {
         console.log('Project created successfully:', response);
+        this.isLoading = false;
         this.showSuccessMessage = true;
 
         const newProject = {
@@ -483,10 +487,11 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
           this.showTeamLeadsDropdown = false;
           this.showEmployeeDropdown = false;
           this.resetCreateForm();
-        }, 2000);
+        }, 300);
       },
       error: (err: any) => {
         console.error('Error creating project:', err);
+        this.isLoading = false;
         alert('Failed to create project: ' + (err.message || 'Unknown error. Check console.'));
       }
     });

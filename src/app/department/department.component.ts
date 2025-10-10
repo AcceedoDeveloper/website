@@ -119,9 +119,9 @@ subdepartments: string[] = [''];
 editdepartment(department: any) {
   console.log('Editing department:', department);
   this.dialog.open(DepartmentDialogComponent, {
-    width: '80vw',
-    height: 'auto',
-    maxHeight: '90vh',
+    width: '60vw',
+    height: '70vh',
+    maxHeight: '70vh',
     panelClass: 'custom-dialog',
     data: { department } 
   });

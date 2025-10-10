@@ -1,8 +1,8 @@
-<div class="form-wrapper">
-  <div class="form-card">
-    <h2>Create Role</h2>
 
-    <form class="main" [formGroup]="roleform" (ngSubmit)="saveroledata()">
+  <div class="form-card" [class.loading]="isLoading">
+    <h2>{{ isEdit ? 'Edit Role' : 'Create Role' }}</h2>
+
+    <form class="main" [formGroup]="roleform" (ngSubmit)="saveroledata()" [class.loading]="isLoading">
       <!-- Role Input -->
       <div class="form-group">
         <label for="role">Role</label>
@@ -19,13 +19,14 @@
 
       <!-- Buttons -->
       <div class="form-actions">
-        <button type="submit" class="btn primary" [disabled]="roleform.invalid">
-          Save
+        <button type="submit" class="btn primary" [disabled]="roleform.invalid || isLoading">
+          <span *ngIf="!isLoading">{{ isEdit ? 'Update' : 'Save' }}</span>
+          <span *ngIf="isLoading">Saving...</span>
         </button>
-        <button type="button" class="btn secondary" (click)="resetForm()">
+        <button type="button" class="btn secondary" (click)="resetForm()" [disabled]="isLoading">
           Cancel
         </button>
       </div>
     </form>
   </div>
-</div>
+
