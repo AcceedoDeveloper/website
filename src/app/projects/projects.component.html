@@ -1,61 +1,83 @@
 <app-header></app-header>
 
+
 <div class="mainproject">
+
+ 
+  <div class="welcome-usericon">
+
+    <div class="welcome-card"> 
+      <div  class="welcome-header">
+        <div class="user-welcome">
+          <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
+        </div>
+        <div class="date-time1">
+          <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+          <span>{{ dateTime }}</span>
+        </div>
+      </div>
+    
+      <div class="user-icon-wrapper">
+        <svg width="0" height="0">
+          <defs>
+            <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
+              <circle cx="0.5" cy="0.5" r="0.5" />
+            </clipPath>
+          </defs>
+        </svg>
+    
+        <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
+             style="clip-path: url(#circle-shape);" />
+      </div>
+      
+  
+       
+  
+      
+    </div>
+    
+    <div class="usericonheader">
+    
+
+
+      <div class="header">
+       <!-- Project Dropdown -->
+       <div class="pill-dropdown">
+         <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
+           <option value="">All Projects</option>
+           <option *ngFor="let project of projects" [value]="project._id || project.id">
+             {{ project.projectName || project.name || 'Untitled Project' }}
+           </option>
+         </select>
+       </div>
+       
+       <div class="pill-dropdown">
+         <button (click)="opentask()">Task</button>
+       </div>
+       
+       <div class="pill-dropdown">     
+         <button (click)="openMonthView()">Calendar</button>
+       </div>
+       
+       <div class="pill-dropdown">
+         <button (click)="openuv()">Summary</button>
+       </div>
+       
+       <div class="pill-dropdown">
+         <button (click)="opendoc()">Documents</button>
+       </div>
+     </div>
+
+    </div>
+
+
+  </div>
+
+  
+ 
+
   <div class="content-wrapper">
-    <div class="header">
-   
-
-  <!-- Project Dropdown -->
-  <div class="pill-dropdown">
-    <select   [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
-      <option value="">All Projects</option>
-      <option *ngFor="let project of projects" [value]="project._id || project.id">
-        {{ project.projectName || project.name || 'Untitled Project' }}
-      </option>
-    </select>
-    <!-- In your projects.component.html -->
-<!-- <div *ngIf="Calendar" class="calendar-section">
-  <app-calendar
-    [selectedProjectId]="selectedProjectId"
-    [selectedProjectName]="selectedProjectName"
-    [username]="username"
-    [projects]="projects">
-  </app-calendar>
-</div> -->
-  </div>
-
   
-
-
-
-
-  <div class="pill-dropdown">
-    <button (click)="opentask()" >Task</button>
-  </div>
-
-  
-  <div class="pill-dropdown">     
-        <button  (click)="openMonthView()">Calendar</button>
-        <!-- <div *ngIf="Calendar" class="calendar-section">
-  <app-calendar
-    [selectedProjectId]="selectedProjectId"
-    [selectedProjectName]="selectedProjectName"
-    [username]="username"
-    [projects]="projects">
-  </app-calendar>
-</div> -->
-  </div>
-
-  <div class="pill-dropdown">
-         <button  (click)="openuv()" >Summary</button>
-  </div>
-
-
-  <div class="pill-dropdown">
-  <button (click)="opendoc()">Documents</button>
-  </div>
-         
-  </div>
 
 
 
@@ -365,14 +387,14 @@
             
      
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Assignee</mat-label>
+              <mat-label>Assigned To (work giver)</mat-label>
               <input matInput [value]="username" readonly>
               <input type="hidden" formControlName="assignedTo" [value]="username">
             </mat-form-field>
 
       
             <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Assigned To</mat-label>
+              <mat-label>Assignee (work receiver)</mat-label>
               <mat-select formControlName="assignee" [disabled]="!!editingTask">
                 <mat-option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
                   {{ getEmployeeDisplay(emp) }}
@@ -428,3 +450,5 @@
   </div>
   </ng-template>
 </div>
+
+<app-footer></app-footer>

@@ -10,6 +10,7 @@ import { UserservicesService } from '../register/services/userservices.service';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
+import { DateUtilsService } from '../service/date-utils.service';
 
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 interface Document {
@@ -122,7 +123,8 @@ todayYear = new Date().getFullYear();
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private http: HttpClient,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private dateUtils: DateUtilsService
   ) {
     this.documentForm = this.fb.group({
       title: ['', Validators.required],
@@ -348,7 +350,7 @@ onDateChange() {
       assignedTo: ['', Validators.required],
       assignee: ['', Validators.required],
       startDate: [''],
-      dueDate: [new Date(), Validators.required],
+      dueDate: [this.dateUtils.stringToDate(this.dateUtils.getCurrentDateString()), Validators.required],
       Status: ['ToDo']
     });
   }
@@ -611,8 +613,8 @@ onDateChange() {
           description: task.description || '',
           assignedTo: task.assignedTo || this.username,
           assignee: task.assignee || '',
-          startDate: task.startDate ? new Date(task.startDate) : '',
-          dueDate: task.dueDate ? new Date(task.dueDate) : new Date(),
+          startDate: task.startDate ? this.dateUtils.stringToDate(task.startDate) : '',
+          dueDate: task.dueDate ? this.dateUtils.stringToDate(task.dueDate) : this.dateUtils.stringToDate(this.dateUtils.getCurrentDateString()),
           Status: task.Status || 'ToDo'
         }
       : {
@@ -621,7 +623,7 @@ onDateChange() {
           assignedTo: this.username,
           assignee: '',
           startDate: '',
-          dueDate: new Date(),
+          dueDate: this.dateUtils.stringToDate(this.dateUtils.getCurrentDateString()),
           Status: 'ToDo'
         };
 
@@ -698,8 +700,9 @@ onDateChange() {
     formData.append('description', formValue.description);
     formData.append('assignedTo', formValue.assignedTo || this.username);
     formData.append('assignee', formValue.assignee);
-    formData.append('startDate', formValue.startDate ? new Date(formValue.startDate).toISOString().split('T')[0] : '');
-    formData.append('dueDate', formValue.dueDate ? new Date(formValue.dueDate).toISOString().split('T')[0] : '');
+    // Fix date conversion to avoid timezone issues
+    formData.append('startDate', formValue.startDate ? this.dateUtils.formatDateForBackend(formValue.startDate) : '');
+    formData.append('dueDate', formValue.dueDate ? this.dateUtils.formatDateForBackend(formValue.dueDate) : '');
     formData.append('Status', formValue.Status || (this.editingTask ? this.editingTask.Status : 'ToDo'));
     formData.append('projectId', this.selectedProjectId || (this.editingTask?.projectId || ''));
 
@@ -1102,6 +1105,7 @@ getFileUrl(file: string): string {
     this.isPdfLoaded[file] = false;
     this.loadError[file] = true;
   }
+
 
   
 }

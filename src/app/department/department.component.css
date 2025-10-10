@@ -3,7 +3,7 @@
   margin-left: 280px;
   padding: 20px;
   min-height: calc(100vh - 80px);
-  background-color: #f8fafc;
+ 
   overflow-y: auto;
   scroll-behavior: smooth;
 }
@@ -41,6 +41,7 @@
   padding: 1.5rem;
   border-radius: 12px;
   font-family: 'Inter', sans-serif;
+  
 }
 
 .department-header {
@@ -57,25 +58,51 @@
 }
 
 .add-department-btn {
-  background: #1f3c88;;
+  background: #1f3c88;
   color: white;
-  padding: 0.5rem 1rem;
   border: none;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  padding: 0.5rem 0.9rem;
+  border-radius: 32px;
+  font-size: 1.2rem;
+  font-weight: 100;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(31, 60, 136, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.add-department-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.add-department-btn:hover::before {
+  left: 100%;
 }
 
 .add-department-btn:hover {
-  background: #1c86ee;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(30, 144, 255, 0.3);
+}
+
+.add-department-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(31, 60, 136, 0.2);
 }
 
 .department-table-wrapper {
   overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  background: white;
+  border: 1px solid #e9ecef;
 }
 
 .department-table {
@@ -83,6 +110,7 @@
   border-collapse: collapse;
   border-radius: 8px;
   overflow: hidden;
+  background: white;
 }
 
 .department-table th,
@@ -99,14 +127,16 @@
   background: #cbcdcd;
   font-weight: 600;
   color: #2c3e50;
+  border-bottom: 2px solid #1f3c88;
 }
 
 .department-table tbody tr {
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .department-table tbody tr:hover {
   background: #f8f9fa;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .sub-list {
@@ -126,11 +156,14 @@
   font-size: 0.85rem;
   display: inline-block;
   margin-bottom: 0.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
 }
 
-.sub-list li:nth-child(1),
-.sub-list li:nth-child(2) {
-  margin-right: 0.5rem;
+.sub-list li:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }
 
 .action-col {
@@ -146,6 +179,8 @@
   background: #f5f7fa;
   border-radius: 8px;
   margin-top: 1rem;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   animation: fadeIn 0.5s ease-in;
 }
 
@@ -180,11 +215,7 @@
     padding: 1rem;
   }
   
-  .department-header {
-    flex-direction: column;
-    gap: 15px;
-    align-items: stretch;
-  }
+
   
   .department-table th,
   .department-table td {
@@ -225,11 +256,14 @@
 }
 
 .black-btn {
-  color: black;            
-  border-radius: 4px;     
-  transition: background 0.3s;
+  color: black;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+ gap: 20px;
 }
 
 .black-btn:hover {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
 }

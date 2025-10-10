@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CreatprojectService } from '../service/creatproject.service';
 import { UserservicesService } from '../register/services/userservices.service';
+import { DateUtilsService } from '../service/date-utils.service';
 
 @Component({
   selector: 'app-createproject',
@@ -46,6 +47,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
  
     private projectService: CreatprojectService,
     private userserives: UserservicesService,
+    private dateUtils: DateUtilsService,
   ) {
     // Bind the method with the correct signature
     this.documentClickListener = this.onDocumentClick.bind(this);
@@ -450,11 +452,15 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
       employees: this.project.employees.map((emp: any) => 
         emp.username || emp.displayName || emp.UserName || emp.userName
       ),
-      startDate: new Date(this.project.startDate).toISOString().split('T')[0],
-      expectedEndDate: new Date(this.project.expectedEndDate).toISOString().split('T')[0]
+      startDate: this.dateUtils.formatDateForBackend(this.project.startDate),
+      expectedEndDate: this.dateUtils.formatDateForBackend(this.project.expectedEndDate)
     };
 
     console.log('Creating project with payload:', projectData);
+    console.log('Original startDate:', this.project.startDate);
+    console.log('Original expectedEndDate:', this.project.expectedEndDate);
+    console.log('Formatted startDate:', this.dateUtils.formatDateForBackend(this.project.startDate));
+    console.log('Formatted expectedEndDate:', this.dateUtils.formatDateForBackend(this.project.expectedEndDate));
 
     this.projectService.createProject(projectData).subscribe({
       next: (response: any) => {
@@ -523,7 +529,11 @@ deleteProject(project: any) {
 
   openEditModal(project: any) {
     console.log('Opening edit modal for project:', project);
+    console.log('Original project startDate:', project.startDate);
+    console.log('Original project expectedEndDate:', project.expectedEndDate);
     this.selectedProject = JSON.parse(JSON.stringify(project));
+    console.log('After JSON copy startDate:', this.selectedProject.startDate);
+    console.log('After JSON copy expectedEndDate:', this.selectedProject.expectedEndDate);
     
     if (!Array.isArray(this.selectedProject.teamLeads)) {
       this.selectedProject.teamLeads = [];
@@ -569,12 +579,7 @@ saveEdit() {
   }
 
 
-  const formatDate = (date: any) => {
-    if (!date) return '';
-    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
-    const parsed = new Date(date);
-    return isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0];
-  };
+  // Use the same date formatting method to avoid timezone issues
 
   const projectData = {
     projectName: this.selectedProject.projectName,
@@ -588,11 +593,15 @@ saveEdit() {
         ? emp
         : (emp.username || emp.UserName || emp.userName || emp.displayName)
     ),
-    startDate: formatDate(this.selectedProject.startDate),
-    expectedEndDate: formatDate(this.selectedProject.expectedEndDate),
+    startDate: this.dateUtils.formatDateForBackend(this.selectedProject.startDate),
+    expectedEndDate: this.dateUtils.formatDateForBackend(this.selectedProject.expectedEndDate),
   };
 
   console.log('Sending update payload:', projectData);
+  console.log('Original startDate:', this.selectedProject.startDate);
+  console.log('Original expectedEndDate:', this.selectedProject.expectedEndDate);
+  console.log('Formatted startDate:', this.dateUtils.formatDateForBackend(this.selectedProject.startDate));
+  console.log('Formatted expectedEndDate:', this.dateUtils.formatDateForBackend(this.selectedProject.expectedEndDate));
 
   this.projectService.updateProject(projectId, projectData).subscribe({
     next: (res: any) => {
@@ -652,4 +661,18 @@ saveEdit() {
       return 'Unknown';
     }).join(', ');
   }
+
+  filterprojects() {
+    if (!this.searchQuery || this.searchQuery.trim() === '') {
+      this.filteredProjects = [...this.projects];
+    } else {
+      const query = this.searchQuery.toLowerCase().trim();
+      this.filteredProjects = this.projects.filter(project => 
+        project.projectName.toLowerCase().includes(query) ||
+        this.getTeamLeadsNames(project.teamLeads).toLowerCase().includes(query) ||
+        this.getEmployeeNames(project.employees).toLowerCase().includes(query)
+      );
+    }
+  }
+
 }

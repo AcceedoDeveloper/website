@@ -1,13 +1,15 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserservicesService } from '../register/services/userservices.service';
+import { AssignWorkService, AssignWork } from '../service/assignwork.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   onSearch() {}
   onDepartmentChange($event: Event) {}
   
@@ -22,6 +24,9 @@ export class HeaderComponent implements OnInit {
 
   searchQuery = '';
   hasNotification = false;
+  notificationCount = 0;
+  todaysTasks: AssignWork[] = [];
+  showNotificationPopup = false;
   dateTime = '';
   roles: any[] = [];
   departments: any[] = [];
@@ -29,11 +34,21 @@ export class HeaderComponent implements OnInit {
   showDropdown = false; 
   dropdownOpen: any;
   isLoading = false;
+  showWelcomeCard=true;
+  sidebarOpen = false;
+  navSections: { [key: string]: boolean } = {
+    admin: false,
+    development: false,
+    tools: false,
+    resources: false
+  };
+  private subscriptions = new Subscription();
 
   constructor(
     
     private router: Router,
     private userService: UserservicesService,
+    private assignWorkService: AssignWorkService,
     private elementRef: ElementRef
   ) {}
 
@@ -41,6 +56,18 @@ export class HeaderComponent implements OnInit {
     this.getCurrentUser();
     this.updateTime();
     setInterval(() => this.updateTime(), 60000);
+    
+    // Load tasks after a short delay to ensure user data is loaded
+    setTimeout(() => {
+      this.loadTodaysTasks();
+    }, 1000);
+
+    // Start auto-refresh for notifications
+    this.startNotificationAutoRefresh();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   updateTime() {
@@ -58,6 +85,137 @@ export class HeaderComponent implements OnInit {
         this.userData.role = this.userData.role.role;
       }
     }
+  }
+
+  loadTodaysTasks() {
+    if (!this.userData) {
+      return;
+    }
+
+    const subscription = this.assignWorkService.getAssignments().subscribe({
+      next: (res: any) => {
+        let allAssignments: AssignWork[] = [];
+        
+        if (Array.isArray(res)) {
+          allAssignments = res;
+        } else if (res?.works && Array.isArray(res.works)) {
+          allAssignments = res.works;
+        } else if (res?.data && Array.isArray(res.data)) {
+          allAssignments = res.data;
+        } else if (res?.assignments && Array.isArray(res.assignments)) {
+          allAssignments = res.assignments;
+        } else {
+          // Try to find any array property
+          for (const key in res) {
+            if (Array.isArray(res[key])) {
+              allAssignments = res[key];
+              break;
+            }
+          }
+        }
+
+        // Filter tasks assigned to current user for today
+        this.todaysTasks = this.filterTodaysTasks(allAssignments);
+        this.updateNotificationStatus();
+      },
+      error: (err) => {
+        console.error('Error loading tasks for notifications:', err);
+        this.todaysTasks = [];
+        this.updateNotificationStatus();
+      }
+    });
+
+    this.subscriptions.add(subscription);
+  }
+
+  private filterTodaysTasks(allAssignments: AssignWork[]): AssignWork[] {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Get all possible user identifiers
+    const userIdentifiers = [
+      this.userData?.username,
+      this.userData?.UserName,
+      this.userData?.userName,
+      this.userData?.email,
+      this.userData?.emailId,
+      this.userData?.userCode
+    ].filter(Boolean); // Remove null/undefined values
+    
+    return allAssignments.filter(task => {
+      // Check if task is assigned to current user - focus on assignee field
+      const isAssignedToUser = userIdentifiers.some(userId => {
+        return String(task.assignee) === String(userId);
+      });
+      
+      if (!isAssignedToUser) {
+        return false;
+      }
+
+      // Check if task is due today, was created today, or is active
+      const isTodayTask = this.isTaskForToday(task, today);
+      
+      return isTodayTask;
+    });
+  }
+
+  private isTaskForToday(task: AssignWork, today: Date): boolean {
+    // Check if task is due today
+    if (task.dueDate) {
+      const dueDate = new Date(task.dueDate);
+      dueDate.setHours(0, 0, 0, 0);
+      if (dueDate.getTime() === today.getTime()) {
+        return true;
+      }
+    }
+
+    // Check if task was created today
+    if (task.createdAt) {
+      const createdDate = new Date(task.createdAt);
+      createdDate.setHours(0, 0, 0, 0);
+      if (createdDate.getTime() === today.getTime()) {
+        return true;
+      }
+    }
+
+    // Check if task has start date today
+    if (task.startDate) {
+      const startDate = new Date(task.startDate);
+      startDate.setHours(0, 0, 0, 0);
+      if (startDate.getTime() === today.getTime()) {
+        return true;
+      }
+    }
+
+    // Only show tasks that have a specific date assigned for today
+    // Don't show all active tasks - only those specifically assigned for today
+    return false;
+  }
+
+  private updateNotificationStatus() {
+    this.notificationCount = this.todaysTasks.length;
+    this.hasNotification = this.notificationCount > 0;
+  }
+
+  toggleNotificationPopup() {
+    this.showNotificationPopup = !this.showNotificationPopup;
+  }
+
+  onNotificationClick() {
+    this.toggleNotificationPopup();
+  }
+
+  onNotificationHover() {
+    if (this.notificationCount > 0) {
+      this.showNotificationPopup = true;
+    }
+  }
+
+  onNotificationLeave() {
+    // Add a small delay to prevent flickering
+    setTimeout(() => {
+      this.showNotificationPopup = false;
+    }, 300);
   }
 
   private processUserImage(user: any): void {
@@ -100,6 +258,16 @@ export class HeaderComponent implements OnInit {
       !this.loginDropdown.nativeElement.contains(event.target)
     ) {
       this.showDropdown = false;
+    }
+    
+    // Close notification popup when clicking outside
+    const notificationElement = this.elementRef.nativeElement.querySelector('.notification-icon');
+    if (
+      this.showNotificationPopup &&
+      notificationElement &&
+      !notificationElement.contains(event.target)
+    ) {
+      this.showNotificationPopup = false;
     }
   }
 
@@ -156,6 +324,11 @@ export class HeaderComponent implements OnInit {
   saveProfilePicture() {
     if (!this.userData?._id) {
       alert('User not found. Please try logging in again.');
+      return;
+    }
+
+    // Basic form validation
+    if (!this.validateForm()) {
       return;
     }
 
@@ -332,6 +505,33 @@ export class HeaderComponent implements OnInit {
       .toUpperCase();
   }
 
+  formatDate(dateString: string | Date): string {
+    if (!dateString) return '';
+    
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 1) {
+      return 'Today';
+    } else if (diffDays === 2) {
+      return 'Yesterday';
+    } else if (diffDays <= 7) {
+      return `${diffDays - 1} days ago`;
+    } else {
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+      });
+    }
+  }
+
+  getTaskPriority(task: AssignWork): string | null {
+    return (task as any).priority || null;
+  }
+
   isAdmin(): boolean {
     const role = sessionStorage.getItem('role') || this.userData?.role || '';
     return role?.toLowerCase() === 'admin';
@@ -376,5 +576,179 @@ export class HeaderComponent implements OnInit {
         }
       });
     }
+  }
+
+
+  // Close sidebar when clicking outside
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    const sidebar = document.querySelector('.sidebar');
+    const toggleButton = document.querySelector('.sidebar-toggle');
+    
+    if (this.sidebarOpen && 
+        !sidebar?.contains(target) && 
+        !toggleButton?.contains(target)) {
+      this.closeSidebar();
+    }
+  }
+
+  // Close sidebar on escape key
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapeKey(event: KeyboardEvent): void {
+    if (this.sidebarOpen) {
+      this.closeSidebar();
+    }
+  }
+
+  // Handle window resize
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(event: Event): void {
+    const windowWidth = window.innerWidth;
+    
+    // Auto-close sidebar on mobile when resizing to desktop
+    if (windowWidth > 991 && this.sidebarOpen) {
+      this.closeSidebar();
+    }
+  }
+
+
+  // Close notification popup
+  closeNotificationPopup(): void {
+    this.showNotificationPopup = false;
+  }
+
+  // Mark notification as read
+  markNotificationAsRead(): void {
+    this.hasNotification = false;
+    // You can add API call here to mark notifications as read
+  }
+
+  // Refresh notifications
+  refreshNotifications(): void {
+    this.loadTodaysTasks();
+  }
+
+  // Auto-refresh notifications every 5 minutes
+  startNotificationAutoRefresh(): void {
+    setInterval(() => {
+      this.refreshNotifications();
+    }, 300000); // 5 minutes
+  }
+
+  // Form validation
+  validateForm(): boolean {
+    if (!this.editUserData.name || this.editUserData.name.trim() === '') {
+      alert('Please enter your full name.');
+      return false;
+    }
+
+    if (!this.editUserData.userName || this.editUserData.userName.trim() === '') {
+      alert('Please enter a username.');
+      return false;
+    }
+
+    if (!this.editUserData.emailId || this.editUserData.emailId.trim() === '') {
+      alert('Please enter your email address.');
+      return false;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.editUserData.emailId)) {
+      alert('Please enter a valid email address.');
+      return false;
+    }
+
+    return true;
+  }
+
+  // Reset form to original values
+  resetForm(): void {
+    this.editUserData = { ...this.userData };
+    this.previewImage = this.getCleanImageUrl(this.userData);
+    this.selectedFile = null;
+    this.selectedFileName = '';
+  }
+
+  // Check if current route is /projects
+  isProjectsRoute(): boolean {
+    return this.router.url === '/projects';
+  }
+
+  // Get project count for badge display
+  getProjectCount(): number {
+    // This would typically come from a service
+    // For now, return a placeholder value
+    return 0;
+  }
+
+  // Enhanced navigation section toggle
+  toggleNavSection(section: string): void {
+    this.navSections[section] = !this.navSections[section];
+    
+    // Optional: Auto-expand section if it contains the current route
+    if (this.navSections[section]) {
+      this.autoExpandCurrentSection();
+    }
+  }
+
+  // Auto-expand section containing current route
+  private autoExpandCurrentSection(): void {
+    const currentRoute = this.router.url;
+    
+    // Define route mappings to sections
+    const routeToSectionMap: { [key: string]: string } = {
+      '/register': 'admin',
+      '/department': 'admin',
+      '/role': 'admin',
+      '/create': 'admin',
+      '/webdev': 'development',
+      '/angulardeveloper': 'development',
+      '/ngrx': 'development',
+      '/node': 'development',
+      '/api&database': 'development',
+      '/smart-attendance': 'tools',
+      '/production-monitor': 'tools',
+      '/power-metrics': 'tools',
+      '/heat-treatment': 'tools',
+      '/melting-software': 'tools',
+      '/blog': 'resources',
+      '/career': 'resources',
+      '/services': 'resources',
+      '/aboutas': 'resources',
+      '/contactas': 'resources',
+      '/privacy-policy': 'resources'
+    };
+
+    const section = routeToSectionMap[currentRoute];
+    if (section && !this.navSections[section]) {
+      this.navSections[section] = true;
+    }
+  }
+
+  // Initialize navigation state based on current route
+  private initializeNavigationState(): void {
+    this.autoExpandCurrentSection();
+  }
+
+  // Enhanced sidebar toggle with animation
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+    
+    // Initialize navigation state when opening sidebar
+    if (this.sidebarOpen) {
+      this.initializeNavigationState();
+    }
+  }
+
+  // Close sidebar with animation
+  closeSidebar(): void {
+    this.sidebarOpen = false;
+  }
+
+  // Handle route changes to update navigation state
+  onRouteChange(): void {
+    this.initializeNavigationState();
   }
 }

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UserservicesService } from './services/userservices.service';
 import { ActivatedRoute } from '@angular/router';
 import { RegistermatComponent } from './registermat/registermat.component';
-
+import { HeaderComponent } from '../header/header.component';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',

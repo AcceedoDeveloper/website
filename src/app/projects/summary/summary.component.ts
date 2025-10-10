@@ -469,14 +469,14 @@ updateAssigneeChart(): void {
               },
               ticks: {
                 font: {
-                     // ✅ modern clean font
+                     
                   size: 19,
                   
                    weight: "normal"
                  
                 },
                  color: '#222', // softer than pure black
-        padding: 20 // ✅ clean spacing instead of "gap"
+        padding: 20 
               }
             }
           },

@@ -1,7 +1,12 @@
 <header class="top-bar">
   <div class="left-section">
     <span class="brand-title">ACCEEDO</span>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" (click)="toggleSidebar()">
+      <i class="fa fa-bars"></i>
+    </button>
   </div>
+    
 
   <!-- Search Bar -->
   <div class="search-bar">
@@ -11,7 +16,10 @@
 
   <div class="right-icons" #loginDropdown>
     <!-- Notification -->
-    <div class="notification-icon">
+    <div class="notification-icon" 
+         (click)="onNotificationClick()" 
+         (mouseenter)="onNotificationHover()" 
+         (mouseleave)="onNotificationLeave()">
       <img
         [src]="hasNotification
           ? 'https://cdn-icons-png.flaticon.com/128/594/594838.png'
@@ -19,6 +27,51 @@
         alt="Notification"
         class="notification-bell"
       />
+      <span class="notification-count" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+      
+      <!-- Notification Popup -->
+      <div class="notification-popup" [class.show]="showNotificationPopup">
+        <div class="notification-header">
+          <h4>Today's Tasks ({{ notificationCount }})</h4>
+        </div>
+        <div class="notification-content">
+          <div *ngIf="todaysTasks.length === 0" class="no-tasks">
+            <div class="no-tasks-icon">📋</div>
+            <div class="no-tasks-text">No tasks assigned for today</div>
+          </div>
+          <div *ngFor="let task of todaysTasks; let i = index" class="task-item">
+            <div class="task-header">
+              <div class="task-title">{{ task.title || 'Untitled Task' }}</div>
+              <div class="task-priority" *ngIf="getTaskPriority(task)" [class]="'priority-' + (getTaskPriority(task) || '').toLowerCase()">
+                {{ getTaskPriority(task) }}
+              </div>
+            </div>
+            
+            <div class="task-details">
+              <div class="task-project" *ngIf="task.projectName">
+                <span class="label">Project:</span> {{ task.projectName }}
+              </div>
+              <!-- <div class="task-assignee" *ngIf="task.assignedTo || task.assignee">
+                <span class="label">Assigned to:</span> {{ task.assignedTo || task.assignee }}
+              </div> -->
+              <!-- <div class="task-due-date" *ngIf="task.dueDate">
+                <span class="label">Due:</span> {{ formatDate(task.dueDate) }}
+              </div> -->
+            </div>
+            
+            <!-- <div class="task-footer">
+              <div class="task-status" [class]="'status-' + (task.Status || 'pending').toLowerCase()">
+                {{ task.Status || 'Pending' }}
+              </div>
+              <div class="task-time" *ngIf="task.createdAt">
+                Created: {{ formatDate(task.createdAt) }}
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      
     </div>
 
     <!-- Profile Dropdown -->
@@ -137,6 +190,78 @@
 
 <div class="submain">
 
+  <div class="sidebarothercontent">
+
+  
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" [class.active]="sidebarOpen" (click)="closeSidebar()"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" [class.open]="sidebarOpen">
+       <!-- Close Button for Mobile -->
+       <button class="sidebar-close" (click)="closeSidebar()">
+         <i class="fa fa-times"></i>
+       </button>
+       
+       <h3 class="menu-title">Menu</h3>
+       <ul class="menu-list">
+         <li *ngIf="isAdmin()">
+           <div class="menu-section">
+             <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+             <label for="master-toggle" class="section-title">
+               Master <i class="fa fa-chevron-down"></i>
+             </label>
+             <div class="submenu">
+               <a routerLink="/register">User</a>
+               <a routerLink="/department">Department</a>
+               <a routerLink="/role">Role</a>
+               <a routerLink="/create">Create Project</a>
+             </div>
+           </div>
+         </li>
+         <li>
+           <a routerLink="/projects">Projects</a>
+         </li>
+         <li>
+           <div class="menu-section">
+             <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
+             <label for="frontend-toggle" class="section-title">
+               Frontend <i class="fa fa-chevron-down"></i>
+             </label>
+             <div class="submenu">
+               <a routerLink="/webdev">WebDev</a>
+               <a routerLink="/angulardeveloper">Angular Developer</a>
+               <a routerLink="/ngrx">NGRX</a>
+             </div>
+           </div>
+         </li>
+         <li>
+           <div class="menu-section">
+             <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
+             <label for="backend-toggle" class="section-title">
+               Backend <i class="fa fa-chevron-down"></i>
+             </label>
+             <div class="submenu">
+               <a routerLink="/node">Node.js</a>
+               <a routerLink="/api&database">API & Database</a>
+             </div>
+           </div>
+         </li>
+         <li>
+           <a href="#">Full Stack</a>
+         </li>
+       </ul>
+      </div>
+    
+    <!-- another content in right side here  -->
+     </div>
+  
+
+
+
+
+ <div class="wecomemaincontent" *ngIf="!isProjectsRoute()">
+
   <div class="welcome-card"> 
     <div  class="welcome-header">
       <div class="user-welcome">
@@ -163,67 +288,12 @@
            style="clip-path: url(#circle-shape);" />
     </div>
     <!-- add div class="header" -->
-  
+    
   </div>
   
-   <!-- sidebar in left side and right side other content it will come her  -->
-  <div class="sidebarothercontent">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-    <h3 class="menu-title">Menu</h3>
-    <ul class="menu-list">
-      <li *ngIf="isAdmin()">
-        <div class="menu-section">
-          <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
-          <label for="master-toggle" class="section-title">
-            Master <i class="fa fa-chevron-down"></i>
-          </label>
-          <div class="submenu">
-            <a routerLink="/register">User</a>
-            <a routerLink="/department">Department</a>
-            <a routerLink="/role">Role</a>
-            <a routerLink="/create">Create Project</a>
-          </div>
-        </div>
-      </li>
-      <li>
-        <a routerLink="/projects">Projects</a>
-      </li>
-      <li>
-        <div class="menu-section">
-          <input type="checkbox" id="frontend-toggle" class="section-toggle" hidden>
-          <label for="frontend-toggle" class="section-title">
-            Frontend <i class="fa fa-chevron-down"></i>
-          </label>
-          <div class="submenu">
-            <a routerLink="/webdev">WebDev</a>
-            <a routerLink="/angulardeveloper">Angular Developer</a>
-            <a routerLink="/ngrx">NGRX</a>
-          </div>
-        </div>
-      </li>
-      <li>
-        <div class="menu-section">
-          <input type="checkbox" id="backend-toggle" class="section-toggle" hidden>
-          <label for="backend-toggle" class="section-title">
-            Backend <i class="fa fa-chevron-down"></i>
-          </label>
-          <div class="submenu">
-            <a routerLink="/node">Node.js</a>
-            <a routerLink="/api&database">API & Database</a>
-          </div>
-        </div>
-      </li>
-      <li>
-        <a href="#">Full Stack</a>
-      </li>
-    </ul>
-    </aside>
+  <!-- because it is header so we can use all the components  -->
+ </div>
 
- <!-- another content in right side here  -->
-  </div>
-
-</div>
-       <!-- Welcome Header -->
-
+ 
+</div>            

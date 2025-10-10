@@ -8,11 +8,14 @@
     <!-- Header -->
     <div class="user-header">
       <h2>Users</h2>
-      <div class="search-container">
-      <input type="text" placeholder="Search users..." [(ngModel)]="searchQuery" (input)="filterUsers()" />
-      <i class="fa fa-search"></i>
-    </div>
-      <button class="add-user-btn" (click)="showcreateuserss()">+</button>
+      <div class="user-header-right">
+        
+        <div class="search-container">
+        <input type="text" placeholder="Search users..." [(ngModel)]="searchQuery" (input)="filterUsers()" />
+        <i class="fa fa-search"></i>
+      </div>
+        <button class="add-user-btn" (click)="showcreateuserss()">+</button>
+      </div>
     </div>
 
     <!-- Search Box -->
@@ -93,4 +96,4 @@
   </div>
 </div>
 
-
+<app-footer></app-footer>
