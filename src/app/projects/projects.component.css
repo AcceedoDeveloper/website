@@ -3762,7 +3762,8 @@
       padding: 7px 10px;
       font-size: 13px;
       background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      border-color: #667eea;
+      /* border-color: #667eea; */
+      margin-left: auto;
     }
     .pill-dropdown-containermv1{
       display: flex;
