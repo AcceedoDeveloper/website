@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { CreatprojectService } from '../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
+import { ConfigService } from '../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -119,6 +120,7 @@ todayYear = new Date().getFullYear();
     private projectService: CreatprojectService,
     private assignworkService: AssignWorkService,
     private userService: UserservicesService,
+    private configService: ConfigService,
     private fb: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -381,7 +383,7 @@ onDateChange() {
   if (this.userData.photo) {
     this.userData.photoURL = this.userData.photo.startsWith('http')
       ? this.userData.photo
-      : `http://localhost:3008/uploads/${this.userData.photo}`;
+      : this.configService.getUploadUrl(this.userData.photo);
   } else {
     this.userData.photoURL = 'assets/default-avatar.png';
   }
@@ -429,7 +431,7 @@ onDateChange() {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
         } else {
-          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+          this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
         this.userData.photoURL = 'assets/default-avatar.png';
@@ -502,7 +504,7 @@ onDateChange() {
 
   getImageUrl(path: string): string {
     if (path.startsWith('http')) return path;
-    return `http://localhost:3008/${path.replace(/\\/g, '/')}`;
+    return `${this.configService.getUploadsUrl()}${path.replace(/\\/g, '/')}`;
   }
 
   removePicture(index: number) {
@@ -1081,7 +1083,7 @@ generateCalendar() {
   }
 getFileUrl(file: string): string {
     const cleanFile = file.replace(/^uploads\//, '');
-    const url = file.startsWith('http') ? file : `http://localhost:3008/uploads/${cleanFile.replace(/\\/g, '/')}`;
+    const url = file.startsWith('http') ? file : this.configService.getUploadUrl(cleanFile.replace(/\\/g, '/'));
     console.log(`Generated PDF URL: ${url}`);
     return url;
   }

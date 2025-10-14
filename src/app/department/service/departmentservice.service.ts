@@ -26,18 +26,9 @@ export interface DepartmentResponse {
   providedIn: 'root'
 })
 export class DepartmentserviceService {
-  private apiUrl = 'http://localhost:3008';
   private httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
-
-  private getdmapi = `${this.apiUrl}/getDepartment`;
-  private savedmapi = `${this.apiUrl}/createDepartment`;
-  private editdmapi = `${this.apiUrl}/updateDepartment`;
-  private deletedmapi = `${this.apiUrl}/deleteDepartment`;
-  private savesubdmapi = `${this.apiUrl}/addSubdepartments`;
-  private editsubdmap1 = `${this.apiUrl}/updateSubdepartments`;
-  private deletesubdmapi = `${this.apiUrl}/deleteSubdepartments`;
 
   constructor(private http: HttpClient, private config : ConfigService ) {}
 

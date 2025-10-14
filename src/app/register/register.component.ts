@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { UserservicesService } from './services/userservices.service';
+import { ConfigService } from '../service/config.service';
 import { ActivatedRoute } from '@angular/router';
 import { RegistermatComponent } from './registermat/registermat.component';
 import { HeaderComponent } from '../header/header.component';
@@ -52,6 +53,7 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private userserives: UserservicesService,
+    private configService: ConfigService,
     private route: ActivatedRoute,
   ) {
     this.getuserdata();
@@ -240,7 +242,7 @@ export class RegisterComponent implements OnInit {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
         } else {
-          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+          this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
         this.userData.photoURL = 'assets/default-avatar.png';
@@ -337,7 +339,7 @@ export class RegisterComponent implements OnInit {
       if (user.photo.startsWith('http')) {
         return user.photo;
       } else {
-        return `http://localhost:3008/uploads/${user.photo}`;
+        return this.configService.getUploadUrl(user.photo);
       }
     } else {
       return 'assets/default-avatar.png';

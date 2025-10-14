@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { CreatprojectService } from '../../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../../service/assignwork.service';
 import { UserservicesService } from '../../register/services/userservices.service';
+import { ConfigService } from '../../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { DateUtilsService } from '../../service/date-utils.service';
@@ -86,6 +87,7 @@ private subs = new Subscription();
     private projectService: CreatprojectService,
     private assignworkService: AssignWorkService,
     private userService: UserservicesService,
+    private configService: ConfigService,
     private fb: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
@@ -228,7 +230,7 @@ private subs = new Subscription();
   
   getImageUrl(path: string): string {
     if (path.startsWith('http')) return path;
-    return `http://localhost:3008/${path.replace(/\\/g, '/')}`;
+    return `${this.configService.getUploadsUrl()}${path.replace(/\\/g, '/')}`;
   }
 
   removePicture(index: number) {

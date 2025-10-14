@@ -7,8 +7,6 @@ import { ConfigService } from './config.service';
   providedIn: 'root'
 })
 export class CreatprojectService {
-  private baseApi = 'http://localhost:3008';
-
   constructor(private http: HttpClient,private config : ConfigService ) {}
 
   
@@ -50,11 +48,11 @@ export class CreatprojectService {
 
   // Update project by ID
   updateProject(id: string, projectData: any): Observable<any> {
-    return this.http.put(this.config.getWebsiteUrl(`updateProduct/${id}`), projectData);
+    return this.http.put(`${this.config.getWebsiteUrl('updateProject')}/${id}`, projectData);
   }
 
   // Delete project by ID
   deleteProject(id: string): Observable<any> {
-    return this.http.delete(this.config.getWebsiteUrl(`deleteProduct/${id}`));
+    return this.http.delete(`${this.config.getWebsiteUrl('deleteProject')}/${id}`);
   }
 }

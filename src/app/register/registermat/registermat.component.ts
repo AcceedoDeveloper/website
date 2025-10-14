@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserservicesService } from '../services/userservices.service';
 import { RoleserviceService } from '../../service/roleservice.service';
 import { DepartmentserviceService } from '../../department/service/departmentservice.service';
+import { ConfigService } from '../../service/config.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -28,6 +29,7 @@ export class RegistermatComponent implements OnInit {
     private userservice: UserservicesService,
     private httprole: RoleserviceService,
     private departmentservices: DepartmentserviceService,
+    private configService: ConfigService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<RegistermatComponent>
   ) {
@@ -77,7 +79,7 @@ export class RegistermatComponent implements OnInit {
         this.existingImageUrl = item.photo;
         this.previewImage = item.photo;
       } else {
-        this.existingImageUrl = `http://localhost:3008/uploads/${item.photo}`;
+        this.existingImageUrl = this.configService.getUploadUrl(item.photo);
         this.previewImage = this.existingImageUrl;
       }
     } else {
@@ -245,7 +247,7 @@ export class RegistermatComponent implements OnInit {
       if (response.photo.startsWith('http')) {
         photoURL = response.photo;
       } else {
-        photoURL = `http://localhost:3008/uploads/${response.photo}`;
+        photoURL = this.configService.getUploadUrl(response.photo);
       }
     } else if (!photoURL && !response.photo) {
       photoURL = 'assets/default-avatar.png';

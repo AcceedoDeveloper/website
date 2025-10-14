@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import{RoledialogComponent} from './roledialog/roledialog.component';
 import{RoleserviceService} from '../service/roleservice.service';
 import { UserservicesService } from '../register/services/userservices.service';
+import { ConfigService } from '../service/config.service';
 import { Injectable } from '@angular/core';
 // for edit --> get id
 import { ActivatedRoute } from '@angular/router';
@@ -43,6 +44,7 @@ roleid:any;
     private dialog: MatDialog,
     private roleservices:RoleserviceService,
     private userserives:UserservicesService,
+    private configService: ConfigService,
      private route:ActivatedRoute,
      private snackBar: MatSnackBar
      
@@ -282,7 +284,7 @@ editrole(role: any) {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
         } else {
-          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+          this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
         this.userData.photoURL = 'assets/default-avatar.png';
@@ -316,7 +318,7 @@ editrole(role: any) {
       if (processedUser.photo.startsWith('http')) {
         processedUser.photoURL = processedUser.photo;
       } else {
-        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+        processedUser.photoURL = this.configService.getUploadUrl(processedUser.photo);
       }
     } else {
       processedUser.photoURL = 'assets/default-avatar.png';

@@ -4,6 +4,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { UserservicesService } from '../register/services/userservices.service';
+import { ConfigService} from '../service/config.service';
 
 
 @Pipe({
@@ -79,6 +80,7 @@ filteredTasks: any[] = [];
 
   constructor(
     private userserives:UserservicesService,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -164,23 +166,24 @@ filteredTasks: any[] = [];
    
   }
 
-  getCurrentUser() {
-    const userStr = sessionStorage.getItem('user');
-    if (userStr) {
-      this.userData = JSON.parse(userStr);
-      
-      // Process user image URL
-      if (this.userData.photo) {
-        if (this.userData.photo.startsWith('http')) {
-          this.userData.photoURL = this.userData.photo;
-        } else {
-          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
-        }
+getCurrentUser() {
+  const userStr = sessionStorage.getItem('user');
+  if (userStr) {
+    this.userData = JSON.parse(userStr);
+
+    // Process user image URL
+    if (this.userData.photo) {
+      if (this.userData.photo.startsWith('http')) {
+        this.userData.photoURL = this.userData.photo;
       } else {
-        this.userData.photoURL = 'assets/default-avatar.png';
+        this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
       }
+    } else {
+      this.userData.photoURL = 'assets/default-avatar.png';
     }
   }
+}
+
 
   getuserdata() {
     this.userserives.getuser().subscribe({
@@ -208,7 +211,7 @@ filteredTasks: any[] = [];
       if (processedUser.photo.startsWith('http')) {
         processedUser.photoURL = processedUser.photo;
       } else {
-        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+        processedUser.photoURL = this.configService.getUploadUrl(processedUser.photo);
       }
     } else {
       processedUser.photoURL = 'assets/default-avatar.png';

@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CreatprojectService } from '../service/creatproject.service';
 import { UserservicesService } from '../register/services/userservices.service';
+import { ConfigService } from '../service/config.service';
 import { DateUtilsService } from '../service/date-utils.service';
 
 @Component({
@@ -48,6 +49,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
  
     private projectService: CreatprojectService,
     private userserives: UserservicesService,
+    private configService: ConfigService,
     private dateUtils: DateUtilsService,
   ) {
     // Bind the method with the correct signature
@@ -185,7 +187,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
         } else {
-          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+          this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
         this.userData.photoURL = 'assets/default-avatar.png';
@@ -225,7 +227,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
       if (processedUser.photo.startsWith('http')) {
         processedUser.photoURL = processedUser.photo;
       } else {
-        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+        processedUser.photoURL = this.configService.getUploadUrl(processedUser.photo);
       }
     } else {
       processedUser.photoURL = 'assets/default-avatar.png';

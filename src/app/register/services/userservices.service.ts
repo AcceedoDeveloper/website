@@ -21,11 +21,6 @@ interface User {
 export class UserservicesService {
   constructor(private http: HttpClient, private config : ConfigService) {}
 
-  private getuserapi = 'http://localhost:3008/getUser';
-  private saveuserapi = 'http://localhost:3008/createUser';
-  private edituserapi = 'http://localhost:3008/updateUser';
-  private deleteuserapi = 'http://localhost:3008/deleteUser';
-
   // getuser(): Observable<User[]> {
   //   const timestamp = new Date().getTime();
   //   return this.httpuser.get<User[]>(`${this.getuserapi}?t=${timestamp}`);

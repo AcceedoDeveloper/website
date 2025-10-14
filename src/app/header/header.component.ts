@@ -2,7 +2,9 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild, OnDestroy } fro
 import { Router } from '@angular/router';
 import { UserservicesService } from '../register/services/userservices.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
+import { ConfigService } from '../service/config.service';
 import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-header',
@@ -49,7 +51,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private router: Router,
     private userService: UserservicesService,
     private assignWorkService: AssignWorkService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private configService: ConfigService
   ) {}
 
   ngOnInit(): void {
@@ -226,13 +229,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (user.photoURL.startsWith('http')) {
         user.photoURL = this.addCacheBuster(user.photoURL, timestamp);
       } else {
-        user.photoURL = this.addCacheBuster(`http://localhost:3008/uploads/${user.photoURL}`, timestamp);
+        user.photoURL = this.addCacheBuster(this.configService.getUploadUrl(user.photoURL), timestamp);
       }
     } else if (user.photo) {
       if (user.photo.startsWith('http')) {
         user.photoURL = this.addCacheBuster(user.photo, timestamp);
       } else {
-        user.photoURL = this.addCacheBuster(`http://localhost:3008/uploads/${user.photo}`, timestamp);
+        user.photoURL = this.addCacheBuster(this.configService.getUploadUrl(user.photo), timestamp);
       }
     } else {
       user.photoURL = 'assets/default-avatar.png';
@@ -294,7 +297,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (user.photo.startsWith('http')) {
         return user.photo;
       } else {
-        return `http://localhost:3008/uploads/${user.photo}`;
+        return this.configService.getUploadUrl(user.photo);
       }
     } else {
       return 'assets/default-avatar.png';

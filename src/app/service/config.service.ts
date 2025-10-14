@@ -5,6 +5,7 @@ export interface AppConfig {
   baseUrl: string;
  costingUrl: string;
   backupUrl: string;
+  uploadsUrl: string;
   liveTimeOut: number;
   urls: { name: string; url: string }[];
 }
@@ -32,6 +33,14 @@ private config!: AppConfig;
 
 getWebsiteUrl(name: string): string {
   return this.config.costingUrl + this.getUrl(name); 
+}
+
+getUploadsUrl(): string {
+  return this.config.uploadsUrl;
+}
+
+getUploadUrl(filename: string): string {
+  return this.config.uploadsUrl + filename;
 }
 
 }

@@ -9,6 +9,7 @@ import { DepartmentDialogComponent } from './department-dialog/department-dialog
 import { UserservicesService } from '../register/services/userservices.service';
 //import service
 import { DepartmentserviceService } from './service/departmentservice.service';
+import { ConfigService } from '../service/config.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'; // get id 
 
@@ -92,7 +93,8 @@ subdepartments: string[] = [''];
   constructor(private dialog: MatDialog,
     private departmentservices:DepartmentserviceService,
     private userserives:UserservicesService,
-    private route:ActivatedRoute
+    private route:ActivatedRoute,
+    private configService: ConfigService
   ) {
 
     //get data
@@ -119,9 +121,9 @@ subdepartments: string[] = [''];
 editdepartment(department: any) {
   console.log('Editing department:', department);
   this.dialog.open(DepartmentDialogComponent, {
-    width: '60vw',
-    height: '70vh',
-    maxHeight: '70vh',
+    width: '80vw',
+    height: 'auto',
+    maxHeight: '90vh',
     panelClass: 'custom-dialog',
     data: { department } 
   });
@@ -321,7 +323,7 @@ editdepartment(department: any) {
         if (this.userData.photo.startsWith('http')) {
           this.userData.photoURL = this.userData.photo;
         } else {
-          this.userData.photoURL = `http://localhost:3008/uploads/${this.userData.photo}`;
+          this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
         this.userData.photoURL = 'assets/default-avatar.png';
@@ -355,7 +357,7 @@ editdepartment(department: any) {
       if (processedUser.photo.startsWith('http')) {
         processedUser.photoURL = processedUser.photo;
       } else {
-        processedUser.photoURL = `http://localhost:3008/uploads/${processedUser.photo}`;
+        processedUser.photoURL = this.configService.getUploadUrl(processedUser.photo);
       }
     } else {
       processedUser.photoURL = 'assets/default-avatar.png';

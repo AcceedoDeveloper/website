@@ -6,11 +6,6 @@ import { ConfigService } from './config.service';
   providedIn: 'root'
 })
 export class RoleserviceService {
-  private getroleapi = 'http://localhost:3008/getrole';
-  private saveroleapi = 'http://localhost:3008/createRole';
-  private editroleapi = 'http://localhost:3008/updaterole';
-  private deleteroleapi = 'http://localhost:3008/deleterole'; // Corrected from `:id`
-
   constructor(private http: HttpClient, private config : ConfigService) {}
 
   // // Get roles

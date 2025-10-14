@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssignWorkService, AssignWork } from '../../service/assignwork.service';
+import { ConfigService } from '../../service/config.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -71,6 +72,7 @@ showMonthView = false;
   constructor(
 
       private assignworkService: AssignWorkService,
+      private configService: ConfigService,
       private fb: FormBuilder,
       private snackBar: MatSnackBar,
       private http: HttpClient,
@@ -92,7 +94,7 @@ showMonthView = false;
 
   getFileUrl(file: string): string {
     const cleanFile = file.replace(/^uploads\//, '');
-    const url = file.startsWith('http') ? file : `http://localhost:3008/uploads/${cleanFile.replace(/\\/g, '/')}`;
+    const url = file.startsWith('http') ? file : this.configService.getUploadUrl(cleanFile.replace(/\\/g, '/'));
     console.log(`Generated PDF URL: ${url}`);
     return url;
   }

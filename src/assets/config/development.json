@@ -2,42 +2,45 @@
   "baseUrl": "/",
   "costingUrl": "http://localhost:3008/",
   "backupUrl": "http://20.84.65.155:9011/",
+  "uploadsUrl": "http://localhost:3008/uploads/",
   "urls": [
-
-   
-
-       { "name": "login", "url": "login" },
-       { "name": "getProjects", "url": "getProjects" },
+    { "name": "login", "url": "login" },
+    
+    { "name": "getProjects", "url": "getProjects" },
     { "name": "getProjectsByEmployee", "url": "by-employee" },
     { "name": "createProject", "url": "createProject" },
     { "name": "updateProject", "url": "updateProduct" },
     { "name": "deleteProject", "url": "deleteProduct" },
+    
     { "name": "getDepartment", "url": "getDepartment" },
     { "name": "createDepartment", "url": "createDepartment" },
     { "name": "updateDepartment", "url": "updateDepartment" },
     { "name": "deleteDepartment", "url": "deleteDepartment" },
-
     { "name": "addSubdepartments", "url": "addSubdepartments" },
     { "name": "updateSubdepartments", "url": "updateSubdepartments" },
     { "name": "deleteSubdepartments", "url": "deleteSubdepartments" },
-
-     { "name": "getUser", "url": "getUser" },
+    
+    { "name": "getUser", "url": "getUser" },
     { "name": "createUser", "url": "createUser" },
     { "name": "updateUser", "url": "updateUser" },
     { "name": "deleteUser", "url": "deleteUser" },
-
+    { "name": "GetUsers", "url": "GetUsers" },
+    
     { "name": "getRole", "url": "getrole" },
     { "name": "createRole", "url": "createRole" },
     { "name": "updateRole", "url": "updaterole" },
-    { "name": "deleteRole", "url": "deleterole" }
-
-
-
-
-
-
-
-
-
+    { "name": "deleteRole", "url": "deleterole" },
+    
+    { "name": "CreateAssignWork", "url": "CreateAssignWork" },
+    { "name": "UpdateAssignWork", "url": "UpdateAssignWork" },
+    { "name": "DeleteAssignWork", "url": "DeleteAssignWork" },
+    { "name": "GetAssignWork", "url": "GetAssignWork" },
+    { "name": "getAssignWorkByProject", "url": "getAssignWorkByProject" },
+    
+    { "name": "getDocument", "url": "getDocument" },
+    { "name": "createDocument", "url": "createDocument" },
+    { "name": "updateDocument", "url": "updateDocument" },
+    { "name": "deleteDocument", "url": "deleteDocument" },
+    { "name": "deleteFile", "url": "deleteFile" }
   ]
 }
