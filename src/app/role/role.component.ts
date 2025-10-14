@@ -270,6 +270,7 @@ editroles:any;
    
     height: 'auto',
     maxHeight: 'auto',
+    disableClose:true,
     panelClass: 'custom-dialog',
   });
 
@@ -287,6 +288,7 @@ editrole(role: any) {
     width: 'auto',
     height: 'auto',
     maxHeight: 'auto',
+    disableClose:true,
     panelClass: 'custom-dialog',
     data: { role }  
   });

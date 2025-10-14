@@ -22,8 +22,8 @@
   </div>
 
   <!-- Add Project Modal -->
-  <div class="modal" *ngIf="showCreateProjectBox">
-    <div class="modal-content" [class.loading]="isLoading">
+  <div class="modal" *ngIf="showCreateProjectBox" (click)="closeAllDropdowns()">
+    <div class="modal-content" [class.loading]="isLoading" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Add Project</h3>
         <span class="close-modal" (click)="!isLoading && cancel()">&times;</span>
@@ -36,20 +36,20 @@
         </div>
 
         <!-- Team Leads Selection -->
-        <div class="form-row employees-dropdown-container">
+        <div class="form-row employees-dropdown-container" (click)="closeEmployeeDropdown()">
           <label>Select Team Leads *</label>
           <div class="employees-input-container"
-            (click)="$event.stopPropagation(); showTeamLeadsDropdown = !showTeamLeadsDropdown">
+            (click)="$event.stopPropagation(); toggleTeamLeadsDropdown()">
             <input type="text" placeholder="Search team leads..." [value]="getSelectedTeamLeadsNames()"
-              (click)="$event.stopPropagation(); showTeamLeadsDropdown = true" readonly />
-            <i class="fa fa-chevron-down"></i>
+              (click)="$event.stopPropagation(); toggleTeamLeadsDropdown()" readonly />
+            <i class="fa fa-chevron-down" [class.rotated]="showTeamLeadsDropdown"></i>
           </div>
 
           <div class="employees-dropdown" *ngIf="showTeamLeadsDropdown">
-            <!-- <div class="employee-search">
+            <div class="employee-search">
               <input type="text" placeholder="Search team leads..." [(ngModel)]="teamLeadsSearchText"
                 (click)="$event.stopPropagation()" />
-            </div> -->
+            </div>
             <div class="employee-list">
               <div *ngFor="let employee of getFilteredTeamLeads()" class="employee-item"
                 (click)="$event.stopPropagation(); toggleTeamLeadSelection(employee)" 
@@ -68,20 +68,20 @@
         </div>
 
         <!-- Employees Selection (excluding selected team leads) -->
-        <div class="form-row employees-dropdown-container">
+        <div class="form-row employees-dropdown-container" (click)="closeTeamLeadsDropdown()">
           <label>Select Employees *</label>
           <div class="employees-input-container"
-            (click)="$event.stopPropagation(); showEmployeeDropdown = !showEmployeeDropdown">
-            <input type="text" placeholder="" [value]="getSelectedEmployeesNames()"
-              (click)="$event.stopPropagation(); showEmployeeDropdown = true" readonly />
-            <i class="fa fa-chevron-down"></i>
+            (click)="$event.stopPropagation(); toggleEmployeeDropdown()">
+            <input type="text" placeholder="Search employees..." [value]="getSelectedEmployeesNames()"
+              (click)="$event.stopPropagation(); toggleEmployeeDropdown()" readonly />
+            <i class="fa fa-chevron-down" [class.rotated]="showEmployeeDropdown"></i>
           </div>
 
           <div class="employees-dropdown" *ngIf="showEmployeeDropdown">
-            <!-- <div class="employee-search">
+            <div class="employee-search">
               <input type="text" placeholder="Search employees..." [(ngModel)]="employeeSearchText"
                 (click)="$event.stopPropagation()" />
-            </div> -->
+            </div>
             <div class="employee-list">
               <div *ngFor="let employee of getFilteredEmployees()" class="employee-item"
                 (click)="$event.stopPropagation(); toggleEmployeeSelection(employee)" 
@@ -99,7 +99,7 @@
           </div>
         </div>
 
-        <div class="form-row date-row">
+        <div class="form-row date-row" (click)="closeAllDropdowns()">
           <div class="date-input">
             <label for="startDate">Start Date *</label>
             <input type="date" id="startDate" [(ngModel)]="project.startDate" required [disabled]="isLoading" />

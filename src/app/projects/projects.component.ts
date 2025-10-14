@@ -637,7 +637,8 @@ onDateChange() {
     const dialogRef = this.dialog.open(this.assignmentDialog, {
       width: '1000px',
       maxWidth: '95vw',
-      maxHeight: '90vh'
+      maxHeight: '90vh',
+      disableClose:true,
     });
 
     const afterSub = dialogRef.afterClosed().subscribe(() => {

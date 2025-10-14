@@ -3,7 +3,10 @@ import { Router } from '@angular/router';
 import { UserservicesService } from '../register/services/userservices.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { ConfigService } from '../service/config.service';
+import { RoleserviceService } from '../service/roleservice.service';
+import { DepartmentserviceService } from '../department/service/departmentservice.service';
 import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -13,7 +16,32 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   onSearch() {}
-  onDepartmentChange($event: Event) {}
+  
+  onDepartmentChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const selectedDepartment = target.value;
+    
+    console.log('Department changed to:', selectedDepartment);
+    
+    // Update the form data
+    this.editUserData.departmentName = selectedDepartment;
+    
+    if (selectedDepartment) {
+      // Load sub-departments for the selected department
+      this.loadSubDepartmentsForDepartment(selectedDepartment);
+      
+      // Clear sub-department selection if it doesn't belong to the new department
+      if (this.editUserData.subDepartmentName) {
+        const subDeptExists = this.subDepartmentsData.some((sd: any) => sd.name === this.editUserData.subDepartmentName);
+        if (!subDeptExists) {
+          this.editUserData.subDepartmentName = '';
+        }
+      }
+    } else {
+      this.subDepartmentsData = [];
+      this.editUserData.subDepartmentName = '';
+    }
+  }
   
   @ViewChild('loginDropdown') loginDropdown!: ElementRef;
 
@@ -52,7 +80,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userService: UserservicesService,
     private assignWorkService: AssignWorkService,
     private elementRef: ElementRef,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private roleService: RoleserviceService,
+    private departmentService: DepartmentserviceService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -208,19 +239,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.toggleNotificationPopup();
   }
 
-  onNotificationHover() {
-    if (this.notificationCount > 0) {
-      this.showNotificationPopup = true;
-    }
-  }
-
-  onNotificationLeave() {
-    // Add a small delay to prevent flickering
-    setTimeout(() => {
-      this.showNotificationPopup = false;
-    }, 300);
-  }
-
   private processUserImage(user: any): void {
 
     const timestamp = new Date().getTime();
@@ -261,11 +279,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('document:click', ['$event'])
-  clickOutside(event: MouseEvent) {
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    
+    // Close dropdown when clicking outside
     if (
       this.showDropdown &&
       this.loginDropdown &&
-      !this.loginDropdown.nativeElement.contains(event.target)
+      !this.loginDropdown.nativeElement.contains(target)
     ) {
       this.showDropdown = false;
     }
@@ -275,20 +296,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (
       this.showNotificationPopup &&
       notificationElement &&
-      !notificationElement.contains(event.target)
+      !notificationElement.contains(target)
     ) {
       this.showNotificationPopup = false;
     }
+    
+    // Close sidebar when clicking outside
+    const sidebar = document.querySelector('.sidebar');
+    const toggleButton = document.querySelector('.sidebar-toggle');
+    
+    if (this.sidebarOpen && 
+        !sidebar?.contains(target) && 
+        !toggleButton?.contains(target)) {
+      this.closeSidebar();
+    }
   }
 
-  openEditProfile() {
-    this.editUserData = { ...this.userData };
-
-    this.previewImage = this.getCleanImageUrl(this.userData);
-    this.selectedFile = null;
-    this.selectedFileName = '';
-    this.showEditModal = true;
-  }
 
   private getCleanImageUrl(user: any): string {
     if (user.photoURL) {
@@ -304,22 +327,156 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
+  openEditProfile() {
+    console.log('Opening edit profile for user:', this.userData);
+    
+    // Load roles and departments first
+    this.loadRolesAndDepartments();
+    
+    // Reset form data
+    this.editUserData = {};
+    
+    // Map user data to form fields with comprehensive fallbacks
+    this.editUserData = {
+      name: this.getUserField('name') || this.getUserField('UserName') || this.getUserField('firstName') || '',
+      userName: this.getUserField('userName') || this.getUserField('UserName') || this.getUserField('username') || '',
+      userCode: this.getUserField('userCode') || this.getUserField('UserCode') || '',
+      role: this.getRoleValue(this.userData?.role) || '',
+      emailId: this.getUserField('emailId') || this.getUserField('Email') || this.getUserField('email') || '',
+      phoneNumber: this.getUserField('phoneNumber') || this.getUserField('Phone') || this.getUserField('mobile') || '',
+      departmentName: this.getDepartmentName() || '',
+      subDepartmentName: this.getSubDepartmentName() || '',
+      password: '' // Don't populate password for security
+    };
+
+    console.log('Mapped edit user data:', this.editUserData);
+
+    // Set up image preview
+    this.previewImage = this.getCleanImageUrl(this.userData);
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    
+    // Show modal
+    this.showEditModal = true;
+  }
+
+  private getUserField(fieldName: string): string {
+    if (!this.userData) return '';
+    return this.userData[fieldName] || '';
+  }
+
+  private getDepartmentName(): string {
+    if (!this.userData) return '';
+    
+    // Try different possible department field names
+    if (this.userData.departmentName) return this.userData.departmentName;
+    if (this.userData.department?.departmentName) return this.userData.department.departmentName;
+    if (this.userData.Department) return this.userData.Department;
+    if (this.userData.department) return String(this.userData.department);
+    
+    return '';
+  }
+
+  private getSubDepartmentName(): string {
+    if (!this.userData) return '';
+    
+    // Try different possible sub-department field names
+    if (this.userData.subDepartmentName) return this.userData.subDepartmentName;
+    if (this.userData.subDepartment) return this.userData.subDepartment;
+    if (this.userData.SubDepartment) return this.userData.SubDepartment;
+    if (this.userData.department?.subDepartments?.[0]?.name) return this.userData.department.subDepartments[0].name;
+    
+    return '';
+  }
+
+  loadRolesAndDepartments() {
+    console.log('Loading roles and departments...');
+    
+    // Load roles
+    this.roleService.Loadrole().subscribe({
+      next: (roles: any) => {
+        console.log('Roles loaded:', roles);
+        this.roles = Array.isArray(roles) ? roles : (roles?.roles || []);
+        
+        // If user has a role, ensure it's properly set in editUserData
+        if (this.editUserData.role && this.roles.length > 0) {
+          const userRoleValue = this.getRoleValue(this.userData?.role);
+          if (userRoleValue) {
+            this.editUserData.role = userRoleValue;
+          }
+        }
+      },
+      error: (err: any) => {
+        console.error('Error loading roles:', err);
+        this.roles = [];
+      }
+    });
+
+    // Load departments
+    this.departmentService.loaddm().subscribe({
+      next: (departments: any) => {
+        console.log('Departments loaded:', departments);
+        this.departments = Array.isArray(departments) ? departments : (departments?.departments || []);
+        
+        // Load sub-departments if user has a department selected
+        if (this.editUserData.departmentName && this.departments.length > 0) {
+          this.loadSubDepartmentsForDepartment(this.editUserData.departmentName);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error loading departments:', err);
+        this.departments = [];
+      }
+    });
+  }
+
+  private loadSubDepartmentsForDepartment(departmentName: string) {
+    const department = this.departments.find((dept: any) => dept.departmentName === departmentName);
+    if (department && department.subDepartments) {
+      this.subDepartmentsData = department.subDepartments;
+      console.log('Sub-departments loaded for', departmentName, ':', this.subDepartmentsData);
+    } else {
+      this.subDepartmentsData = [];
+    }
+  }
+
   closeEditModal() {
+    console.log('Closing edit modal');
     this.showEditModal = false;
     this.previewImage = null;
     this.selectedFile = null;
     this.selectedFileName = '';
     this.isLoading = false;
+    
+    // Reset form data
+    this.editUserData = {};
+    this.subDepartmentsData = [];
   }
 
   onPhotoSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
+      console.log('Photo selected:', file.name, 'Size:', file.size);
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file.');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image size should be less than 5MB.');
+        return;
+      }
+      
       this.selectedFile = file;
       this.selectedFileName = file.name;
+      
       const reader = new FileReader();
       reader.onload = () => {
         this.previewImage = reader.result;
+        console.log('Image preview loaded');
       };
       reader.readAsDataURL(file);
     }
@@ -332,6 +489,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   saveProfilePicture() {
+    console.log('Saving profile with data:', this.editUserData);
+    
     if (!this.userData?._id) {
       alert('User not found. Please try logging in again.');
       return;
@@ -346,15 +505,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     const formData = new FormData();
 
-
+    // Handle profile image
     if (this.selectedFile) {
       formData.append('photo', this.selectedFile);
+      console.log('Adding new photo file:', this.selectedFile.name);
     } else if (this.previewImage === 'assets/default-avatar.png') {
       formData.append('removePhoto', 'true');
+      console.log('Removing profile photo');
     } else {
       formData.append('keepExistingImage', 'true');
+      console.log('Keeping existing image');
     }
 
+    // Append user data to form
     this.appendUserDataToForm(formData);
 
     console.log('Updating profile picture for user:', this.userData._id);
@@ -364,40 +527,41 @@ export class HeaderComponent implements OnInit, OnDestroy {
         console.log('Profile picture update response:', res);
         this.isLoading = false;
         
-
+        // Update user data from response
         this.updateUserDataFromResponse(res);
         
- 
+        // Update session storage
         sessionStorage.setItem('user', JSON.stringify(this.userData));
         
-
+        // Refresh user data
         this.refreshUserData();
         
+        // Close modal and reset form
         this.showEditModal = false;
         this.selectedFile = null;
         this.selectedFileName = '';
         
-        alert('Profile picture updated successfully!');
+        this.openSnackBar('Profile updated successfully!', 'Close');
       },
       error: (err: any) => {
         this.isLoading = false;
         console.error('Error updating profile picture:', err);
         
-        let errorMessage = 'Failed to update profile picture.';
+        let errorMessage = 'Failed to update profile.';
         if (err.error && err.error.message) {
           errorMessage = err.error.message;
         } else if (err.message) {
           errorMessage = err.message;
         }
         
-        alert(errorMessage);
+        this.openSnackBar(errorMessage, 'Close', 'error');
       }
     });
   }
 
   updateUserProfile() {
     if (!this.userData?._id) {
-      alert('User not found. Please try logging in again.');
+      this.openSnackBar('User not found. Please try logging in again.', 'Close', 'error');
       return;
     }
 
@@ -433,30 +597,33 @@ export class HeaderComponent implements OnInit, OnDestroy {
    
         this.refreshUserData();
         
-        alert('Profile updated successfully!');
+        this.openSnackBar('Profile updated successfully!', 'Close');
         this.showEditModal = false;
       },
       error: (err: any) => {
         this.isLoading = false;
         console.error('Error updating profile:', err);
-        alert('Failed to update profile. Please try again.');
+        this.openSnackBar('Failed to update profile. Please try again.', 'Close', 'error');
       }
     });
   }
 
   private appendUserDataToForm(formData: FormData): void {
-    formData.append('userCode', this.userData.userCode || '');
-    formData.append('name', this.userData.name || this.userData.UserName || '');
-    formData.append('userName', this.userData.userName || this.userData.UserName || '');
-    formData.append('emailId', this.userData.emailId || this.userData.Email || '');
-    formData.append('phoneNumber', this.userData.phoneNumber || this.userData.Phone || '');
-    formData.append('role', this.userData.role || '');
-    formData.append('department', this.userData.departmentName || this.userData.department?.departmentName || '');
-    formData.append('subDepartment', this.userData.subDepartment || '');
+    formData.append('userCode', this.editUserData.userCode || '');
+    formData.append('name', this.editUserData.name || '');
+    formData.append('userName', this.editUserData.userName || '');
+    formData.append('emailId', this.editUserData.emailId || '');
+    formData.append('phoneNumber', this.editUserData.phoneNumber || '');
+    formData.append('role', this.editUserData.role || '');
+    formData.append('department', this.editUserData.departmentName || '');
+    formData.append('subDepartment', this.editUserData.subDepartmentName || '');
+    if (this.editUserData.password) {
+      formData.append('password', this.editUserData.password);
+    }
   }
 
   private updateUserDataFromResponse(res: any): void {
-
+    // Update photo data
     if (res.photo) {
       this.userData.photo = res.photo;
     }
@@ -464,21 +631,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.userData.photoURL = res.photoURL;
     }
     
-
+    // Handle photo removal
     if (res.removePhoto === true || (!res.photo && !res.photoURL)) {
       this.userData.photo = null;
       this.userData.photoURL = 'assets/default-avatar.png';
     }
 
+    // Update user profile data from editUserData (the form data)
+    if (this.editUserData.name) this.userData.name = this.editUserData.name;
+    if (this.editUserData.userName) this.userData.userName = this.editUserData.userName;
+    if (this.editUserData.userCode) this.userData.userCode = this.editUserData.userCode;
+    if (this.editUserData.emailId) this.userData.emailId = this.editUserData.emailId;
+    if (this.editUserData.phoneNumber) this.userData.phoneNumber = this.editUserData.phoneNumber;
+    if (this.editUserData.role) this.userData.role = this.editUserData.role;
+    if (this.editUserData.departmentName) this.userData.departmentName = this.editUserData.departmentName;
+    if (this.editUserData.subDepartmentName) this.userData.subDepartmentName = this.editUserData.subDepartmentName;
 
-    if (res.name) this.userData.name = res.name;
-    if (res.userName) this.userData.userName = res.userName;
-    if (res.emailId) this.userData.emailId = res.emailId;
-    if (res.phoneNumber) this.userData.phoneNumber = res.phoneNumber;
-    if (res.role) this.userData.role = res.role;
-    if (res.department) this.userData.department = res.department;
-    if (res.subDepartment) this.userData.subDepartment = res.subDepartment;
-
+    // Also update legacy field names for compatibility
+    if (this.editUserData.name) this.userData.UserName = this.editUserData.name;
+    if (this.editUserData.emailId) this.userData.Email = this.editUserData.emailId;
+    if (this.editUserData.phoneNumber) this.userData.Phone = this.editUserData.phoneNumber;
 
     this.processUserImage(this.userData);
   }
@@ -504,6 +676,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   signOut() {
    
+  }
+
+  private openSnackBar(message: string, action: string = 'Close', panelClass: 'success' | 'error' | 'info' = 'success') {
+    this.snackBar.open(message, action, {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+      panelClass: panelClass ? [`snackbar-${panelClass}`] : undefined
+    });
   }
 
   getInitials(name: string): string {
@@ -542,6 +723,34 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return (task as any).priority || null;
   }
 
+  getRoleLabel(role: any): string {
+    if (!role) return '';
+    if (typeof role === 'string') return role;
+    if (Array.isArray(role)) {
+      return role
+        .map((r) => this.getRoleLabel(r))
+        .filter((v) => !!v)
+        .join(', ');
+    }
+    if (typeof role === 'object') {
+      if (role.role) return String(role.role);
+      if (role.name) return String(role.name);
+      if (role.title) return String(role.title);
+    }
+    return String(role);
+  }
+
+  getRoleValue(role: any): string {
+    if (!role) return '';
+    if (typeof role === 'string') return role;
+    if (typeof role === 'object') {
+      if (role.role) return String(role.role);
+      if (role.name) return String(role.name);
+      if (role.title) return String(role.title);
+    }
+    return String(role);
+  }
+
   isAdmin(): boolean {
     const role = sessionStorage.getItem('role') || this.userData?.role || '';
     return role?.toLowerCase() === 'admin';
@@ -549,7 +758,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   removeProfilePicture() {
     if (!this.userData?._id) {
-      alert('User not found.');
+      this.openSnackBar('User not found.', 'Close', 'error');
       return;
     }
 
@@ -577,31 +786,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
           this.refreshUserData();
           
-          alert('Profile picture removed successfully!');
+          this.openSnackBar('Profile picture removed successfully!', 'Close');
         },
         error: (err: any) => {
           this.isLoading = false;
           console.error('Error removing profile picture:', err);
-          alert('Failed to remove profile picture.');
+          this.openSnackBar('Failed to remove profile picture.', 'Close', 'error');
         }
       });
     }
   }
 
 
-  // Close sidebar when clicking outside
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: Event): void {
-    const target = event.target as HTMLElement;
-    const sidebar = document.querySelector('.sidebar');
-    const toggleButton = document.querySelector('.sidebar-toggle');
-    
-    if (this.sidebarOpen && 
-        !sidebar?.contains(target) && 
-        !toggleButton?.contains(target)) {
-      this.closeSidebar();
-    }
-  }
 
   // Close sidebar on escape key
   @HostListener('document:keydown.escape', ['$event'])
@@ -648,28 +844,60 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   // Form validation
   validateForm(): boolean {
+    console.log('Validating form with data:', this.editUserData);
+    
     if (!this.editUserData.name || this.editUserData.name.trim() === '') {
-      alert('Please enter your full name.');
+      this.openSnackBar('Please enter your full name.', 'Close', 'error');
       return false;
     }
 
     if (!this.editUserData.userName || this.editUserData.userName.trim() === '') {
-      alert('Please enter a username.');
+      this.openSnackBar('Please enter a username.', 'Close', 'error');
       return false;
     }
 
     if (!this.editUserData.emailId || this.editUserData.emailId.trim() === '') {
-      alert('Please enter your email address.');
+      this.openSnackBar('Please enter your email address.', 'Close', 'error');
       return false;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.editUserData.emailId)) {
-      alert('Please enter a valid email address.');
+      this.openSnackBar('Please enter a valid email address.', 'Close', 'error');
       return false;
     }
 
+    // Optional: Validate phone number if provided
+    if (this.editUserData.phoneNumber && this.editUserData.phoneNumber.trim() !== '') {
+      const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+      if (!phoneRegex.test(this.editUserData.phoneNumber.replace(/\s/g, ''))) {
+        this.openSnackBar('Please enter a valid phone number.', 'Close', 'error');
+        return false;
+      }
+    }
+
+    // Department and SubDepartment validation - optional for admin users
+    const isAdmin = this.editUserData.role?.toLowerCase() === 'admin';
+    
+    if (!isAdmin) {
+      // For non-admin users, department is required
+      if (!this.editUserData.departmentName || this.editUserData.departmentName.trim() === '') {
+        this.openSnackBar('Please select a department.', 'Close', 'error');
+        return false;
+      }
+      
+      // For non-admin users, sub-department is required if department is selected
+      if (this.editUserData.departmentName && this.editUserData.departmentName.trim() !== '') {
+        if (!this.editUserData.subDepartmentName || this.editUserData.subDepartmentName.trim() === '') {
+          this.openSnackBar('Please select a sub-department.', 'Close', 'error');
+          return false;
+        }
+      }
+    }
+    // For admin users, department and sub-department are optional (no validation needed)
+
+    console.log('Form validation passed');
     return true;
   }
 

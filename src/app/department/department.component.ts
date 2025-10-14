@@ -128,6 +128,7 @@ editdepartment(department: any) {
     height: 'auto',
     maxHeight: '90vh',
     panelClass: 'custom-dialog',
+    disableClose:true,
     data: { department } 
   });
 }
@@ -400,6 +401,7 @@ editdepartment(department: any) {
   showdepartment() {
     this.dialog.open(DepartmentDialogComponent, {
     width: '80vw',
+    disableClose:true,
       // maxHeight: '60vh',
       panelClass: 'custom-dialog',
       data: {} 
