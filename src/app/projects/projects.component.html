@@ -103,7 +103,12 @@
   </div>
 <div class="date-filter-section">
   <label for="task-date" class="form-label">Select Date</label>
-  <input type="date" id="task-date" class="form-control" [(ngModel)]="selectedTaskDate" (change)="onDateChange()">
+  <input type="date" 
+         id="task-date" 
+         class="form-control" 
+         [(ngModel)]="selectedTaskDate" 
+         (change)="onDateChange()"
+         [value]="selectedTaskDate">
 </div>
 
 
@@ -430,7 +435,8 @@
               <input type="date" 
                      formControlName="startDate" 
                      [readonly]="!!editingTask"
-                     class="form-input">
+                     class="form-input"
+                     [value]="assignmentForm.get('startDate')?.value">
             </div>
 
         
@@ -438,7 +444,8 @@
               <label class="form-label">Due Date</label>
               <input type="date" 
                      formControlName="dueDate"
-                     class="form-input">
+                     class="form-input"
+                     [value]="assignmentForm.get('dueDate')?.value">
               <div class="error-message" *ngIf="assignmentForm.get('dueDate')?.hasError('required')">
                 Due date is required
               </div>

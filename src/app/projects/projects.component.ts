@@ -27,7 +27,6 @@ interface Document {
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit{
-removeImage: any;
 cancelEdit: any;
 isLoading = false;
 isDeleting = false;
@@ -112,7 +111,7 @@ todayYear = new Date().getFullYear();
   selectedMonth: number = new Date().getMonth();
   selectedYear: number = new Date().getFullYear();
   days: any[] = [];
-  selectedTaskDate: Date | null = null;
+  selectedTaskDate: string = '';
   private subs = new Subscription();
   private dateIntervalId: any = null;
   searchQuery: any;
@@ -155,7 +154,8 @@ todayYear = new Date().getFullYear();
     this.getDocuments();
 
         const today = new Date();
-  this.selectedTaskDate = today;
+  this.selectedTaskDate = this.getTodayDateString();
+  console.log('Initialized selectedTaskDate with current date:', this.selectedTaskDate);
       this.days = Array.from({ length: 31 }, (_, i) => i + 1);
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
       this.years.push(i);
@@ -209,59 +209,104 @@ todayYear = new Date().getFullYear();
   }
 
   clearDateFilter() {
-    this.selectedTaskDate = null;
+    this.selectedTaskDate = '';
     this.applyDateFilter();
   }
 
   applyDateFilter() {
-  
+    console.log('Applying date filter for date:', this.selectedTaskDate);
+    console.log('Total assignments before filter:', this.allAssignments.length);
+    
     this.todoAssignments = this.getFilteredTasksByStatus('ToDo');
     this.inProgressAssignments = this.getFilteredTasksByStatus('InProgress');
     this.doneAssignments = this.getFilteredTasksByStatus('Done');
+    
+    console.log('Filtered tasks - ToDo:', this.todoAssignments.length);
+    console.log('Filtered tasks - InProgress:', this.inProgressAssignments.length);
+    console.log('Filtered tasks - Done:', this.doneAssignments.length);
   }
 
   getFilteredTasksByStatus(status: string): AssignWork[] {
     let tasks = this.allAssignments;
+    
+    console.log('=== Starting getFilteredTasksByStatus ===');
+    console.log('Status:', status);
+    console.log('selectedProjectId:', this.selectedProjectId);
+    console.log('selectedProjectName:', this.selectedProjectName);
+    console.log('username:', this.username);
+    console.log('Total tasks before any filter:', tasks.length);
   
     if (this.selectedProjectId) {
-      tasks = tasks.filter(a =>
-        String(a.projectId) === String(this.selectedProjectId) ||
-        String(a.projectId || '') === String(this.selectedProjectId) ||
-        String(a.projectName || '').toLowerCase() === String(this.selectedProjectName || '').toLowerCase()
-      );
+      console.log('Filtering by project ID:', this.selectedProjectId);
+      tasks = tasks.filter(a => {
+        const matchesProjectId = String(a.projectId) === String(this.selectedProjectId);
+        const matchesProjectIdAlt = String(a.projectId || '') === String(this.selectedProjectId);
+        const matchesProjectName = String(a.projectName || '').toLowerCase() === String(this.selectedProjectName || '').toLowerCase();
+        
+        const matches = matchesProjectId || matchesProjectIdAlt || matchesProjectName;
+        console.log(`Task "${a.title}" - projectId: ${a.projectId}, projectName: ${a.projectName}, matches: ${matches}`);
+        
+        return matches;
+      });
+      console.log('Tasks after project filter:', tasks.length);
     } else {
-      tasks = tasks.filter(
-        a => String(a.assignedTo) === String(this.username) || String(a.assignee) === String(this.username)
-      );
+      console.log('Filtering by user:', this.username);
+      tasks = tasks.filter(a => {
+        const matchesAssignedTo = String(a.assignedTo) === String(this.username);
+        const matchesAssignee = String(a.assignee) === String(this.username);
+        const matches = matchesAssignedTo || matchesAssignee;
+        
+        console.log(`Task "${a.title}" - assignedTo: ${a.assignedTo}, assignee: ${a.assignee}, matches: ${matches}`);
+        
+        return matches;
+      });
+      console.log('Tasks after user filter:', tasks.length);
     }
 
     if (this.selectedTaskDate) {
       const selectedDate = new Date(this.selectedTaskDate);
       selectedDate.setHours(0, 0, 0, 0);
       
+      console.log('Filtering by date:', this.selectedTaskDate);
+      console.log('Selected date object:', selectedDate);
+      console.log('Tasks before date filter:', tasks.length);
+      
       tasks = tasks.filter(task => {
-        if (!task.dueDate) return false;
+        if (!task.dueDate) {
+          console.log('Task has no dueDate:', task.title);
+          return false;
+        }
         
-        const taskCreatedDate = new Date(task.dueDate);
-        taskCreatedDate.setHours(0, 0, 0, 0);
+        const taskDueDate = new Date(task.dueDate);
+        taskDueDate.setHours(0, 0, 0, 0);
         
-        return taskCreatedDate.getTime() === selectedDate.getTime();
+        const matches = taskDueDate.getTime() === selectedDate.getTime();
+        console.log(`Task "${task.title}" - dueDate: ${task.dueDate}, matches: ${matches}`);
+        
+        return matches;
       });
+      
+      console.log('Tasks after date filter:', tasks.length);
     }
 
     return tasks.filter(assignment => {
       const taskStatus = (assignment.Status || 'ToDo').toLowerCase().trim();
       const targetStatus = status.toLowerCase();
       
+      let matchesStatus = false;
       if (targetStatus === 'inprogress') {
-        return taskStatus.includes('progress');
+        matchesStatus = taskStatus.includes('progress');
       } else if (targetStatus === 'done') {
-        return taskStatus.includes('done') || taskStatus.includes('complete');
+        matchesStatus = taskStatus.includes('done') || taskStatus.includes('complete');
       } else {
-        return !taskStatus.includes('progress') && 
+        matchesStatus = !taskStatus.includes('progress') && 
                !taskStatus.includes('done') && 
                !taskStatus.includes('complete');
       }
+      
+      console.log(`Task "${assignment.title}" - status: ${assignment.Status}, targetStatus: ${targetStatus}, matchesStatus: ${matchesStatus}`);
+      
+      return matchesStatus;
     });
   }
 
@@ -344,6 +389,16 @@ generateDays() {
 onDateChange() {
   console.log('Selected Date:', this.selectedTaskDate);
   this.generateDays();
+  this.applyDateFilter(); // Add this line to trigger task filtering
+}
+
+// Method to get today's date in YYYY-MM-DD format
+getTodayDateString(): string {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 
@@ -354,7 +409,7 @@ onDateChange() {
       assignedTo: ['', Validators.required],
       assignee: ['', Validators.required],
       startDate: [''],
-      dueDate: [this.dateUtils.stringToDate(this.dateUtils.getCurrentDateString()), Validators.required],
+      dueDate: [this.dateUtils.getCurrentDateString(), Validators.required],
       Status: ['ToDo']
     });
   }
@@ -513,8 +568,13 @@ onDateChange() {
     this.uploadedPictures.splice(index, 1);
   }
 
+  removeImage(index: number) {
+    this.uploadedPictures.splice(index, 1);
+  }
+
   viewImage(path: string) {
     const url = this.getImageUrl(path);
+    console.log( "url", url);
     window.open(url, '_blank');
   }
 
@@ -545,38 +605,19 @@ onDateChange() {
   }
 
   private filterAssignmentsByProject() {
-    let filteredAssignments: AssignWork[] = [];
-
-    if (this.selectedProjectId) {
-      filteredAssignments = this.allAssignments.filter(a =>
-        String(a.projectId) === String(this.selectedProjectId) ||
-        String(a.projectId || '') === String(this.selectedProjectId) ||
-        String(a.projectName || '').toLowerCase() === String(this.selectedProjectName || '').toLowerCase()
-      );
-    } else {
-      filteredAssignments = this.allAssignments.filter(
-        a => String(a.assignedTo) === String(this.username) || String(a.assignee) === String(this.username)
-      );
-    }
-
-    this.todoAssignments = [];
-    this.inProgressAssignments = [];
-    this.doneAssignments = [];
-
-    filteredAssignments.forEach(assignment => {
-      const status = (assignment.Status || 'ToDo').toLowerCase().trim();
-      if (status.includes('progress')) {
-        this.inProgressAssignments.push(assignment);
-      } else if (status.includes('done') || status.includes('complete')) {
-        this.doneAssignments.push(assignment);
-      } else {
-        this.todoAssignments.push(assignment);
-      }
-    });
-
-    if (this.selectedTaskDate) {
-      this.applyDateFilter();
-    }
+    console.log('=== filterAssignmentsByProject called ===');
+    console.log('selectedProjectId:', this.selectedProjectId);
+    console.log('selectedTaskDate:', this.selectedTaskDate);
+    
+    // Use the same filtering logic as getFilteredTasksByStatus
+    this.todoAssignments = this.getFilteredTasksByStatus('ToDo');
+    this.inProgressAssignments = this.getFilteredTasksByStatus('InProgress');
+    this.doneAssignments = this.getFilteredTasksByStatus('Done');
+    
+    console.log('Final filtered assignments:');
+    console.log('- ToDo:', this.todoAssignments.length);
+    console.log('- InProgress:', this.inProgressAssignments.length);
+    console.log('- Done:', this.doneAssignments.length);
   }
 
   private clearAssignments() {
@@ -587,6 +628,8 @@ onDateChange() {
   }
 
   openAssignmentDialog(task?: AssignWork) {
+    console.log( "data", task);
+    
     if (!this.selectedProjectId && !task) {
       this.error = "Please select a project first to add tasks";
       this.snackBar.open(this.error, 'Close', { duration: 3000 });
@@ -611,14 +654,42 @@ onDateChange() {
     this.editingTask = task || null;
     this.selectedTask = task || null;
 
+    // Debug date conversion
+    let startDateValue = '';
+    let dueDateValue = '';
+    
+    if (task) {
+      console.log('Original startDate:', task.startDate);
+      console.log('Original dueDate:', task.dueDate);
+      
+      // For HTML date inputs, we need YYYY-MM-DD format strings
+      if (task.startDate) {
+        // Convert to YYYY-MM-DD format for HTML date input
+        const startDate = new Date(task.startDate);
+        if (!isNaN(startDate.getTime())) {
+          startDateValue = task.startDate; // Keep as string in YYYY-MM-DD format
+        }
+        console.log('Formatted startDate:', startDateValue);
+      }
+      
+      if (task.dueDate) {
+        // Convert to YYYY-MM-DD format for HTML date input
+        const dueDate = new Date(task.dueDate);
+        if (!isNaN(dueDate.getTime())) {
+          dueDateValue = task.dueDate; // Keep as string in YYYY-MM-DD format
+        }
+        console.log('Formatted dueDate:', dueDateValue);
+      }
+    }
+
     const formData = task
       ? {
           title: task.title || '',
           description: task.description || '',
           assignedTo: task.assignedTo || this.username,
           assignee: task.assignee || '',
-          startDate: task.startDate ? this.dateUtils.stringToDate(task.startDate) : '',
-          dueDate: task.dueDate ? this.dateUtils.stringToDate(task.dueDate) : this.dateUtils.stringToDate(this.dateUtils.getCurrentDateString()),
+          startDate: startDateValue,
+          dueDate: dueDateValue || this.dateUtils.getCurrentDateString(),
           Status: task.Status || 'ToDo'
         }
       : {
@@ -627,12 +698,21 @@ onDateChange() {
           assignedTo: this.username,
           assignee: '',
           startDate: '',
-          dueDate: this.dateUtils.stringToDate(this.dateUtils.getCurrentDateString()),
+          dueDate: this.dateUtils.getCurrentDateString(),
           Status: 'ToDo'
         };
 
-    this.assignmentForm.reset(formData);
+    console.log('Form data being set:', formData);
+
+    // Use patchValue instead of reset to properly handle Date objects
+    this.assignmentForm.patchValue(formData);
     this.commentForm.reset();
+
+    // Debug form values after patch
+    setTimeout(() => {
+      console.log('Form startDate value:', this.assignmentForm.get('startDate')?.value);
+      console.log('Form dueDate value:', this.assignmentForm.get('dueDate')?.value);
+    }, 100);
 
     const dialogRef = this.dialog.open(this.assignmentDialog, {
       width: '1000px',
@@ -642,13 +722,17 @@ onDateChange() {
     });
 
     const afterSub = dialogRef.afterClosed().subscribe(() => {
-      this.assignmentForm.reset({
+      this.assignmentForm.patchValue({
         assignedTo: this.username,
-        Status: 'ToDo'
+        Status: 'ToDo',
+        startDate: '',
+        dueDate: this.dateUtils.getCurrentDateString()
       });
       this.commentForm.reset();
       this.editingTask = null;
       this.selectedTask = null;
+      this.uploadedPictures = [];
+      this.selectedPictureFiles = [];
       afterSub.unsubscribe();
     });
 

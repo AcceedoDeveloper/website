@@ -2,7 +2,7 @@
   "baseUrl": "/",
   "costingUrl": "http://localhost:3008/",
   "backupUrl": "http://20.84.65.155:9011/",
-  "uploadsUrl": "http://localhost:3009/uploads/",
+  "uploadsUrl": "http://localhost:3008/",
   "urls": [
     { "name": "login", "url": "login" },
     
