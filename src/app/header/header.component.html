@@ -166,14 +166,14 @@
 
         <div class="bottom-row">
           <div class="form-group">
-            <label>Department</label>
+            <label>Department <span *ngIf="editUserData.role?.toLowerCase() === 'admin'" class="optional-text">(Optional)</span></label>
             <select [(ngModel)]="editUserData.departmentName" (change)="onDepartmentChange($event)">
               <option value="">-- Select Department --</option>
               <option *ngFor="let d of departments" [value]="d.departmentName">{{ d.departmentName }}</option>
             </select>
           </div>
           <div class="form-group">
-            <label>SubDepartment</label>
+            <label>SubDepartment <span *ngIf="editUserData.role?.toLowerCase() === 'admin'" class="optional-text">(Optional)</span></label>
             <select [(ngModel)]="editUserData.subDepartmentName">
               <option value="">-- Select SubDepartment --</option>
               <option *ngFor="let sd of subDepartmentsData" [value]="sd.name">{{ sd.name }}</option>

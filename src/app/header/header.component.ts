@@ -877,6 +877,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     }
 
+    // Department and SubDepartment validation - optional for admin users
+    const isAdmin = this.editUserData.role?.toLowerCase() === 'admin';
+    
+    if (!isAdmin) {
+      // For non-admin users, department is required
+      if (!this.editUserData.departmentName || this.editUserData.departmentName.trim() === '') {
+        this.openSnackBar('Please select a department.', 'Close', 'error');
+        return false;
+      }
+      
+      // For non-admin users, sub-department is required if department is selected
+      if (this.editUserData.departmentName && this.editUserData.departmentName.trim() !== '') {
+        if (!this.editUserData.subDepartmentName || this.editUserData.subDepartmentName.trim() === '') {
+          this.openSnackBar('Please select a sub-department.', 'Close', 'error');
+          return false;
+        }
+      }
+    }
+    // For admin users, department and sub-department are optional (no validation needed)
+
     console.log('Form validation passed');
     return true;
   }

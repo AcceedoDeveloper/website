@@ -38,13 +38,15 @@
 
       <!-- Buttons -->
       <div class="form-actions">
+
+        <button type="button" class="btn secondary" (click)="resetForm()" [disabled]="isLoading">
+          Cancel
+        </button>
         <button type="submit" class="btn primary" [disabled]="roleform.invalid || isLoading">
           <span *ngIf="!isLoading">{{ isEdit ? 'Update' : 'Save' }}</span>
           <span *ngIf="isLoading">Saving...</span>
         </button>
-        <button type="button" class="btn secondary" (click)="resetForm()" [disabled]="isLoading">
-          Cancel
-        </button>
+       
       </div>
     </form>
   </div>

@@ -284,6 +284,7 @@ export class RegisterComponent implements OnInit {
       maxWidth: '65vw',
       height: '90vh',
       maxHeight: '90vh',
+      disableClose:true,
       panelClass: 'custom-dialog',
       data: { item }
     });
@@ -454,6 +455,7 @@ export class RegisterComponent implements OnInit {
       height: '90vh',
       maxHeight: '90vh',
       panelClass: 'custom-dialog',
+      disableClose:true,
       data: {}
     });
     
