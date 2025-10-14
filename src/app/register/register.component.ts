@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserservicesService } from './services/userservices.service';
 import { ConfigService } from '../service/config.service';
 import { ActivatedRoute } from '@angular/router';
@@ -47,6 +48,7 @@ export class RegisterComponent implements OnInit {
   tasks: any[] = [];
   users: any[] = [];
   userData: any = null;
+  isDeleting = false;
 
   constructor(
    
@@ -55,6 +57,7 @@ export class RegisterComponent implements OnInit {
     private userserives: UserservicesService,
     private configService: ConfigService,
     private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.getuserdata();
   }
@@ -277,9 +280,10 @@ export class RegisterComponent implements OnInit {
 
   editUser(item: any) {
     const dialogRef = this.dialog.open(RegistermatComponent, {
-      width: '80vw',
-      height: '80vh',
-      maxHeight: '80vh',
+      width: '90vw',
+      maxWidth: '65vw',
+      height: '90vh',
+      maxHeight: '90vh',
       panelClass: 'custom-dialog',
       data: { item }
     });
@@ -347,18 +351,100 @@ export class RegisterComponent implements OnInit {
   }
 
   deleteUser(ID: any) {
-    if (confirm('Are you sure you want to delete this user?')) {
-      this.userserives.deleteuser(ID).subscribe({
-        next: (res) => {
-          console.log('User deleted successfully:', res);
-          this.getuserdata();
-        },
-        error: (err) => {
-          console.error('Error deleting user:', err);
-          alert('Failed to delete user. Please try again.');
+    if (!ID) {
+      console.error('Invalid user ID:', ID);
+      this.snackBar.open('Invalid user ID provided', 'Close', { duration: 3000 });
+      return;
+    }
+
+    // Check if user is currently logged in
+    const currentUser = sessionStorage.getItem('user');
+    if (currentUser) {
+      const user = JSON.parse(currentUser);
+      if (user._id === ID) {
+        this.snackBar.open('Cannot delete your own account', 'Close', { duration: 5000 });
+        return;
+      }
+    }
+
+    // Check if user has any active tasks or projects
+    this.checkUserDependencies(ID).then((hasDependencies) => {
+      if (hasDependencies) {
+        this.snackBar.open('Cannot delete user: User has active tasks or projects', 'Close', { duration: 5000 });
+        return;
+      }
+
+      // Use Material Dialog for confirmation
+      const dialogRef = this.dialog.open(RegistermatComponent, {
+        width: '400px',
+        height: 'auto',
+        data: { 
+          mode: 'delete',
+          userId: ID,
+          title: 'Confirm User Deletion',
+          message: 'Are you sure you want to delete this user? This action cannot be undone and will remove all user data.'
         }
       });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          this.performUserDeletion(ID);
+        }
+      });
+    }).catch((error) => {
+      console.error('Error checking user dependencies:', error);
+      this.snackBar.open('Error checking user dependencies', 'Close', { duration: 3000 });
+    });
+  }
+
+  private async checkUserDependencies(userId: any): Promise<boolean> {
+    try {
+      // Check if user has any active tasks or projects
+      // This is a placeholder - you would implement actual dependency checks based on your business logic
+      // For example, check if user has assigned tasks, projects, etc.
+      return false; // For now, allow deletion
+    } catch (error) {
+      console.error('Error fetching user dependencies:', error);
+      return false; // Allow deletion if check fails
     }
+  }
+
+  private performUserDeletion(ID: any): void {
+    this.isDeleting = true;
+    
+    this.userserives.deleteuser(ID).subscribe({
+      next: (res) => {
+        console.log('User deleted successfully:', res);
+        this.snackBar.open('User deleted successfully!', 'Close', { 
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.getuserdata(); // Refresh users list
+        this.isDeleting = false;
+      },
+      error: (err) => {
+        console.error('Delete operation failed:', err);
+        
+        let errorMessage = 'Failed to delete user';
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 404) {
+          errorMessage = 'User not found';
+        } else if (err.status === 403) {
+          errorMessage = 'You do not have permission to delete this user';
+        } else if (err.status === 409) {
+          errorMessage = 'Cannot delete user: User has active tasks or projects';
+        } else if (err.status === 0) {
+          errorMessage = 'Network error: Please check your connection';
+        }
+        
+        this.snackBar.open(errorMessage, 'Close', { 
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+        this.isDeleting = false;
+      }
+    });
   }
 
   showcreateuserss() {

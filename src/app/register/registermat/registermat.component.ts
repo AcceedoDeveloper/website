@@ -17,6 +17,7 @@ export class RegistermatComponent implements OnInit {
   departments: any[] = [];
   subDepartmentsData: any[] = [];
   isEdit = false;
+  isDeleteMode = false;
   selectedFile: File | null = null;
   selectedFileName: string = '';
   previewImage: string | ArrayBuffer | null = null;
@@ -50,7 +51,10 @@ export class RegistermatComponent implements OnInit {
     this.loadRoles();
     this.loadDepartments();
 
-    if (this.data?.item) {
+    // Detect mode
+    if (this.data?.mode === 'delete') {
+      this.isDeleteMode = true;
+    } else if (this.data?.item) {
       this.isEdit = true;
       this.patchForm(this.data.item);
     }
@@ -128,6 +132,16 @@ export class RegistermatComponent implements OnInit {
 
   cancel() {
     this.dialogRef.close(false);
+  }
+
+  /** Confirm delete action */
+  confirmDelete() {
+    this.dialogRef.close('confirm');
+  }
+
+  /** Cancel delete action */
+  cancelDelete() {
+    this.dialogRef.close('cancel');
   }
 
   onFileSelected(event: any) {

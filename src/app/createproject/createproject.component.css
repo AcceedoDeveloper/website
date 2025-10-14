@@ -1329,11 +1329,11 @@ input:disabled {
   }
 }
 
-/* Medium Screens (992px to 1199px) */
+
 @media (min-width: 992px) and (max-width: 1199px) {
   .main {
     width: 95%;
-    margin-left: 250px; /* Reduced sidebar width on medium screens */
+    margin-left: 250px; 
     padding: 20px;
   }
   

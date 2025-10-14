@@ -13,6 +13,7 @@ export class RoledialogComponent implements OnInit {
   roleform!: FormGroup;
   isEdit = false;
   isLoading = false;
+  isDeleteMode = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,8 +26,10 @@ export class RoledialogComponent implements OnInit {
   ngOnInit() {
     this.initForm();
 
-    // Detect edit mode
-    if (this.data?.role) {
+    // Detect mode
+    if (this.data?.mode === 'delete') {
+      this.isDeleteMode = true;
+    } else if (this.data?.role) {
       this.isEdit = true;
       this.patchForm(this.data.role);
     }
@@ -109,6 +112,16 @@ resetForm() {
   this.dialogRef.close(true);
 }
   
+
+  /** Confirm delete action */
+  confirmDelete() {
+    this.dialogRef.close('confirm');
+  }
+
+  /** Cancel delete action */
+  cancelDelete() {
+    this.dialogRef.close('cancel');
+  }
 
   /** Getter for validation in template */
   get vrole() {

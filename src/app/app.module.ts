@@ -75,6 +75,9 @@ import { DepartmentDialogComponent } from './department/department-dialog/depart
 import { RoledialogComponent } from './role/roledialog/roledialog.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RegistermatComponent } from './register/registermat/registermat.component';
+import { ProjectDeleteConfirmationDialogComponent } from './createproject/project-delete-confirmation-dialog.component';
+import { AssignmentDeleteConfirmationDialogComponent } from './projects/assignment-delete-confirmation-dialog.component';
+import { FileDeleteConfirmationDialogComponent } from './projects/file-delete-confirmation-dialog.component';
 import { HeaderComponent } from './header/header.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatDialog } from '@angular/material/dialog';
@@ -153,6 +156,9 @@ export function loadConfigFactory(configService: ConfigService) {
    DepartmentDialogComponent,
    RoledialogComponent,
    RegistermatComponent,
+   ProjectDeleteConfirmationDialogComponent,
+   AssignmentDeleteConfirmationDialogComponent,
+   FileDeleteConfirmationDialogComponent,
    HeaderComponent,
    TaskComponent,
    CalendarComponent,

@@ -81,28 +81,95 @@ editroles:any;
 
 
 //delete role
+  isDeleting = false;
 
- deleterole(ID: any) {
+  deleterole(ID: any) {
     if (!ID) {
-      console.error(' Invalid role ID:', ID);
-      this.snackBar.open('Invalid role ID', 'Close', { duration: 3000 });
+      console.error('Invalid role ID:', ID);
+      this.snackBar.open('Invalid role ID provided', 'Close', { duration: 3000 });
       return;
     }
 
-    
-    if (confirm('Are you sure you want to delete this role?')) {
-      this.roleservices.deleterole(ID).subscribe({
-        next: (data) => {
-          console.log(' Role deleted:', data);
-          this.snackBar.open('Role deleted successfully!', 'Close', { duration: 3000 });
-          this.Loadroledata(); // Refresh roles list
-        },
-        error: (err) => {
-          console.error('Delete failed:', JSON.stringify(err, null, 2));
-          this.snackBar.open(`Failed to delete role: ${err.error?.message || 'Unknown error'}`, 'Close', { duration: 5000 });
+    // Check if role is being used by any users
+    this.checkRoleUsage(ID).then((isInUse) => {
+      if (isInUse) {
+        this.snackBar.open('Cannot delete role: It is currently assigned to users', 'Close', { duration: 5000 });
+        return;
+      }
+
+      // Use Material Dialog for confirmation
+      const dialogRef = this.dialog.open(RoledialogComponent, {
+        width: '400px',
+        height: 'auto',
+        data: { 
+          mode: 'delete',
+          roleId: ID,
+          title: 'Confirm Role Deletion',
+          message: 'Are you sure you want to delete this role? This action cannot be undone.'
         }
       });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          this.performRoleDeletion(ID);
+        }
+      });
+    }).catch((error) => {
+      console.error('Error checking role usage:', error);
+      this.snackBar.open('Error checking role dependencies', 'Close', { duration: 3000 });
+    });
+  }
+
+  private async checkRoleUsage(roleId: any): Promise<boolean> {
+    try {
+      // Get all users to check if any are using this role
+      const users = await this.userserives.getuser().toPromise();
+      if (Array.isArray(users)) {
+        return users.some((user: any) => user.role === roleId || user.roleId === roleId);
+      }
+      return false;
+    } catch (error) {
+      console.error('Error fetching users for role check:', error);
+      return false; // Allow deletion if check fails
     }
+  }
+
+  private performRoleDeletion(ID: any): void {
+    this.isDeleting = true;
+    
+    this.roleservices.deleterole(ID).subscribe({
+      next: (data) => {
+        console.log('Role deleted successfully:', data);
+        this.snackBar.open('Role deleted successfully!', 'Close', { 
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.Loadroledata(); // Refresh roles list
+        this.isDeleting = false;
+      },
+      error: (err) => {
+        console.error('Delete operation failed:', err);
+        
+        let errorMessage = 'Failed to delete role';
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 404) {
+          errorMessage = 'Role not found';
+        } else if (err.status === 403) {
+          errorMessage = 'You do not have permission to delete this role';
+        } else if (err.status === 409) {
+          errorMessage = 'Cannot delete role: It is currently in use';
+        } else if (err.status === 0) {
+          errorMessage = 'Network error: Please check your connection';
+        }
+        
+        this.snackBar.open(errorMessage, 'Close', { 
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+        this.isDeleting = false;
+      }
+    });
   }
 
 

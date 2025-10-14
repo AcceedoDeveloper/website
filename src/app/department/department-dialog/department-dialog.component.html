@@ -1,5 +1,20 @@
 
-  <div class="form-card" [class.loading]="isLoading">
+  <!-- Delete Confirmation Dialog -->
+  <div class="form-card delete-confirmation" *ngIf="isDeleteMode">
+    <h2>{{ data.title || 'Confirm Deletion' }}</h2>
+    
+    <div class="delete-message">
+      <p>{{ data.message || 'Are you sure you want to delete this department? This action cannot be undone and will remove all department data.' }}</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn secondary" (click)="cancelDelete()">Cancel</button>
+      <button type="button" class="btn danger" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+
+  <!-- Create/Edit Department Dialog -->
+  <div class="form-card" [class.loading]="isLoading" *ngIf="!isDeleteMode">
     <h2>{{ isEdit ? 'Edit Department' : 'Create Department' }}</h2>
 
     <form [formGroup]="dmform" (ngSubmit)="savedmdata()" [class.loading]="isLoading">

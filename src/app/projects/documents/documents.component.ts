@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { AssignWorkService, AssignWork } from '../../service/assignwork.service';
 import { ConfigService } from '../../service/config.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { FileDeleteConfirmationDialogComponent } from '../file-delete-confirmation-dialog.component';
 
 interface Document {
   _id: string;
@@ -21,6 +23,7 @@ interface Document {
 
 export class DocumentsComponent {
   isLoading = false;
+  isDeleting = false;
   
   showmaindocument = false;
   showdocumentpop = false;
@@ -76,7 +79,8 @@ showMonthView = false;
       private fb: FormBuilder,
       private snackBar: MatSnackBar,
       private http: HttpClient,
-      private sanitizer: DomSanitizer
+      private sanitizer: DomSanitizer,
+      private dialog: MatDialog
     ){
       this.documentForm = this.fb.group({
       title: ['', Validators.required],
@@ -298,31 +302,104 @@ showMonthView = false;
     }
 
     deleteFile(documentId: string, fileName: string) {
-      if (!documentId || !fileName) return;
-      if (!confirm(`Are you sure you want to delete "${fileName}"?`)) return;
+    if (!documentId || !fileName) {
+      console.error('Invalid document ID or file name:', { documentId, fileName });
+      this.snackBar.open('Invalid document ID or file name provided', 'Close', { duration: 3000 });
+      return;
+    }
 
-      const s = this.assignworkService.deleteFile(documentId, fileName).subscribe({
-        next: () => {
-          this.snackBar.open('File deleted successfully', 'Close', { duration: 2500 });
-          // Update the document by removing the deleted file
-          const docIndex = this.documents.findIndex(doc => String(doc._id) === String(documentId));
-          if (docIndex !== -1) {
-            this.documents[docIndex].files = this.documents[docIndex].files.filter(file => file !== fileName);
-            // If no files left, remove the entire document
-            if (this.documents[docIndex].files.length === 0) {
-              this.documents.splice(docIndex, 1);
-              this.allTitles = [...new Set(this.documents.map(doc => doc.title))];
-              this.filteredTitles = [...this.allTitles];
-            }
-            this.filterDocuments();
-          }
-        },
-        error: () => {
-          this.snackBar.open('Failed to delete file', 'Close', { duration: 3000 });
+    // Check if file has any dependencies
+    this.checkFileDependencies(documentId, fileName).then((hasDependencies) => {
+      if (hasDependencies) {
+        this.snackBar.open('Cannot delete file: It is referenced by other documents or tasks', 'Close', { duration: 5000 });
+        return;
+      }
+
+      // Use Material Dialog for confirmation
+      const dialogRef = this.dialog.open(FileDeleteConfirmationDialogComponent, {
+        width: '400px',
+        height: 'auto',
+        data: { 
+          mode: 'delete',
+          documentId: documentId,
+          fileName: fileName,
+          title: 'Confirm File Deletion',
+          message: `Are you sure you want to delete "${fileName}"? This action cannot be undone and will permanently remove the file.`
         }
       });
-      this.subs.add(s);
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          this.performFileDeletion(documentId, fileName);
+        }
+      });
+    }).catch((error) => {
+      console.error('Error checking file dependencies:', error);
+      this.snackBar.open('Error checking file dependencies', 'Close', { duration: 3000 });
+    });
+  }
+
+  private async checkFileDependencies(documentId: string, fileName: string): Promise<boolean> {
+    try {
+      // Check if file has any dependencies
+      // This is a placeholder - you would implement actual dependency checks based on your business logic
+      // For example, check if file is referenced by other documents, tasks, comments, etc.
+      return false; // For now, allow deletion
+    } catch (error) {
+      console.error('Error fetching file dependencies:', error);
+      return false; // Allow deletion if check fails
     }
+  }
+
+  private performFileDeletion(documentId: string, fileName: string): void {
+    this.isDeleting = true;
+    
+    const s = this.assignworkService.deleteFile(documentId, fileName).subscribe({
+      next: () => {
+        console.log('File deleted successfully:', fileName);
+        this.snackBar.open('File deleted successfully', 'Close', { 
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        // Update the document by removing the deleted file
+        const docIndex = this.documents.findIndex(doc => String(doc._id) === String(documentId));
+        if (docIndex !== -1) {
+          this.documents[docIndex].files = this.documents[docIndex].files.filter(file => file !== fileName);
+          // If no files left, remove the entire document
+          if (this.documents[docIndex].files.length === 0) {
+            this.documents.splice(docIndex, 1);
+            this.allTitles = [...new Set(this.documents.map(doc => doc.title))];
+            this.filteredTitles = [...this.allTitles];
+          }
+          this.filterDocuments();
+        }
+        this.isDeleting = false;
+      },
+      error: (err) => {
+        console.error('Delete operation failed:', err);
+        
+        let errorMessage = 'Failed to delete file';
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 404) {
+          errorMessage = 'File not found';
+        } else if (err.status === 403) {
+          errorMessage = 'You do not have permission to delete this file';
+        } else if (err.status === 409) {
+          errorMessage = 'Cannot delete file: It is referenced by other documents or tasks';
+        } else if (err.status === 0) {
+          errorMessage = 'Network error: Please check your connection';
+        }
+        
+        this.snackBar.open(errorMessage, 'Close', { 
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+        this.isDeleting = false;
+      }
+    });
+    this.subs.add(s);
+  }
 
       getFileType(file: string): string {
     const extension = file.split('.').pop()?.toLowerCase();

@@ -207,6 +207,39 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.btn.danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.btn.danger:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Delete Confirmation Styles */
+.delete-confirmation {
+  text-align: center;
+}
+
+.delete-message {
+  margin: 20px 0;
+  padding: 16px;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
+}
+
+.delete-message p {
+  margin: 0;
+  color: #7f1d1d;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
 /* ===========================================
    ANIMATIONS - Classy & Smooth Transitions
    =========================================== */

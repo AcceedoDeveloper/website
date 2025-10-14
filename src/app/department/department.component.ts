@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DepartmentDialogComponent } from './department-dialog/department-dialog.component';
 import { UserservicesService } from '../register/services/userservices.service';
 //import service
@@ -94,7 +95,8 @@ subdepartments: string[] = [''];
     private departmentservices:DepartmentserviceService,
     private userserives:UserservicesService,
     private route:ActivatedRoute,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private snackBar: MatSnackBar
   ) {
 
     //get data
@@ -104,6 +106,7 @@ subdepartments: string[] = [''];
   // get department data --> api
 
   showdm:any;
+  isDeleting = false;
 
   getdmdata()
   {
@@ -132,21 +135,114 @@ editdepartment(department: any) {
 
 
   //delete dm data
+  deletedm(ID: any) {
+    if (!ID) {
+      console.error('Invalid department ID:', ID);
+      this.snackBar.open('Invalid department ID provided', 'Close', { duration: 3000 });
+      return;
+    }
 
- deletedm(ID: any) {
-  if (confirm("Are you sure you want to delete this item?")) {
+    // Check if department has any users or sub-departments
+    this.checkDepartmentDependencies(ID).then((hasDependencies) => {
+      if (hasDependencies) {
+        this.snackBar.open('Cannot delete department: It has users or sub-departments', 'Close', { duration: 5000 });
+        return;
+      }
+
+      // Use Material Dialog for confirmation
+      const dialogRef = this.dialog.open(DepartmentDialogComponent, {
+        width: '400px',
+        height: 'auto',
+        data: { 
+          mode: 'delete',
+          departmentId: ID,
+          title: 'Confirm Department Deletion',
+          message: 'Are you sure you want to delete this department? This action cannot be undone and will remove all department data.'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          this.performDepartmentDeletion(ID);
+        }
+      });
+    }).catch((error) => {
+      console.error('Error checking department dependencies:', error);
+      this.snackBar.open('Error checking department dependencies', 'Close', { duration: 3000 });
+    });
+  }
+
+  private async checkDepartmentDependencies(departmentId: any): Promise<boolean> {
+    try {
+      // Check if department has any users
+      const users = await this.userserives.getuser().toPromise();
+      if (Array.isArray(users)) {
+        const hasUsers = users.some((user: any) => 
+          user.department?._id === departmentId || 
+          user.departmentName === departmentId ||
+          user.department === departmentId
+        );
+        if (hasUsers) {
+          return true;
+        }
+      }
+
+      // Check if department has sub-departments
+      const departments = await this.departmentservices.loaddm().toPromise();
+      if (Array.isArray(departments)) {
+        const hasSubDepartments = departments.some((dept: any) => 
+          dept.parentDepartment === departmentId || 
+          dept.parentId === departmentId
+        );
+        if (hasSubDepartments) {
+          return true;
+        }
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Error fetching department dependencies:', error);
+      return false; // Allow deletion if check fails
+    }
+  }
+
+  private performDepartmentDeletion(ID: any): void {
+    this.isDeleting = true;
+    
     this.departmentservices.deletedm(ID).subscribe({
       next: (res) => {
-        console.log("Deleted successfully:", res);
-        this.getdmdata(); 
+        console.log('Department deleted successfully:', res);
+        this.snackBar.open('Department deleted successfully!', 'Close', { 
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+        this.getdmdata(); // Refresh departments list
+        this.isDeleting = false;
       },
       error: (err) => {
-        console.error("Error while deleting:", err);
-        alert("Failed to delete. Please try again.");
+        console.error('Delete operation failed:', err);
+        
+        let errorMessage = 'Failed to delete department';
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 404) {
+          errorMessage = 'Department not found';
+        } else if (err.status === 403) {
+          errorMessage = 'You do not have permission to delete this department';
+        } else if (err.status === 409) {
+          errorMessage = 'Cannot delete department: It has users or sub-departments';
+        } else if (err.status === 0) {
+          errorMessage = 'Network error: Please check your connection';
+        }
+        
+        this.snackBar.open(errorMessage, 'Close', { 
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+        this.isDeleting = false;
       }
     });
   }
-}
 
   ngOnInit(): void {
     this.getCurrentUser();

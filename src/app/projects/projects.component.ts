@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
 import { DateUtilsService } from '../service/date-utils.service';
+import { AssignmentDeleteConfirmationDialogComponent } from './assignment-delete-confirmation-dialog.component';
 
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 interface Document {
@@ -29,6 +30,7 @@ export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit{
 removeImage: any;
 cancelEdit: any;
 isLoading = false;
+isDeleting = false;
 
 showmaintask = false;
 Documents =true;
@@ -751,16 +753,88 @@ onDateChange() {
   }
 
   deleteAssignment(id: string | undefined) {
-    if (!id) return;
-    if (!confirm('Are you sure you want to delete this assignment?')) return;
+    if (!id) {
+      console.error('Invalid assignment ID:', id);
+      this.snackBar.open('Invalid assignment ID provided', 'Close', { duration: 3000 });
+      return;
+    }
 
+    // Check if assignment has any dependencies
+    this.checkAssignmentDependencies(id).then((hasDependencies) => {
+      if (hasDependencies) {
+        this.snackBar.open('Cannot delete assignment: It has related tasks or dependencies', 'Close', { duration: 5000 });
+        return;
+      }
+
+      // Use Material Dialog for confirmation
+      const dialogRef = this.dialog.open(AssignmentDeleteConfirmationDialogComponent, {
+        width: '400px',
+        height: 'auto',
+        data: { 
+          mode: 'delete',
+          assignmentId: id,
+          title: 'Confirm Assignment Deletion',
+          message: 'Are you sure you want to delete this assignment? This action cannot be undone and will remove all assignment data.'
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === 'confirm') {
+          this.performAssignmentDeletion(id);
+        }
+      });
+    }).catch((error) => {
+      console.error('Error checking assignment dependencies:', error);
+      this.snackBar.open('Error checking assignment dependencies', 'Close', { duration: 3000 });
+    });
+  }
+
+  private async checkAssignmentDependencies(assignmentId: string): Promise<boolean> {
+    try {
+      // Check if assignment has any dependencies
+      // This is a placeholder - you would implement actual dependency checks based on your business logic
+      // For example, check if assignment has related tasks, comments, attachments, etc.
+      return false; // For now, allow deletion
+    } catch (error) {
+      console.error('Error fetching assignment dependencies:', error);
+      return false; // Allow deletion if check fails
+    }
+  }
+
+  private performAssignmentDeletion(id: string): void {
+    this.isDeleting = true;
+    
     const s = this.assignworkService.deleteAssignment(id).subscribe({
       next: () => {
-        this.snackBar.open('Task deleted successfully', 'Close', { duration: 2500 });
+        console.log('Assignment deleted successfully');
+        this.snackBar.open('Assignment deleted successfully', 'Close', { 
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
         this.removeAssignmentFromLocal(id);
+        this.isDeleting = false;
       },
-      error: () => {
-        this.snackBar.open('Failed to delete task', 'Close', { duration: 3000 });
+      error: (err) => {
+        console.error('Delete operation failed:', err);
+        
+        let errorMessage = 'Failed to delete assignment';
+        if (err.error?.message) {
+          errorMessage = err.error.message;
+        } else if (err.status === 404) {
+          errorMessage = 'Assignment not found';
+        } else if (err.status === 403) {
+          errorMessage = 'You do not have permission to delete this assignment';
+        } else if (err.status === 409) {
+          errorMessage = 'Cannot delete assignment: It has related tasks or dependencies';
+        } else if (err.status === 0) {
+          errorMessage = 'Network error: Please check your connection';
+        }
+        
+        this.snackBar.open(errorMessage, 'Close', { 
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
+        this.isDeleting = false;
       }
     });
     this.subs.add(s);

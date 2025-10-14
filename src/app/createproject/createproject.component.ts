@@ -1,8 +1,11 @@
 import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreatprojectService } from '../service/creatproject.service';
 import { UserservicesService } from '../register/services/userservices.service';
 import { ConfigService } from '../service/config.service';
 import { DateUtilsService } from '../service/date-utils.service';
+import { ProjectDeleteConfirmationDialogComponent } from './project-delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-createproject',
@@ -29,6 +32,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
   selectedProject: any = null;
   filteredProjects: any[] = [];
   isLoading = false;
+  isDeleting = false;
   
   showTeamLeadsDropdown = false;
   teamLeadsSearchText = '';
@@ -51,6 +55,8 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
     private userserives: UserservicesService,
     private configService: ConfigService,
     private dateUtils: DateUtilsService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     // Bind the method with the correct signature
     this.documentClickListener = this.onDocumentClick.bind(this);
@@ -513,23 +519,91 @@ deleteProject(project: any) {
   const projectId = project?._id || project?.id;
 
   if (!projectId) {
-    alert('Invalid project ID');
+    console.error('Invalid project ID:', projectId);
+    this.snackBar.open('Invalid project ID provided', 'Close', { duration: 3000 });
     return;
   }
 
-  if (confirm('Are you sure you want to delete this project?')) {
-    this.projectService.deleteProject(projectId).subscribe({
-      next: () => {
-        this.projects = this.projects.filter(p => (p._id || p.id) !== projectId);
-        this.filteredProjects = [...this.projects];
-        alert('Project deleted successfully!');
-      },
-      error: (err) => {
-        console.error('Error deleting project:', err);
-        alert('Failed to delete project. Please try again.');
+  // Check if project has any active tasks or assignments
+  this.checkProjectDependencies(projectId).then((hasDependencies) => {
+    if (hasDependencies) {
+      this.snackBar.open('Cannot delete project: It has active tasks or assignments', 'Close', { duration: 5000 });
+      return;
+    }
+
+    // Use Material Dialog for confirmation
+    const dialogRef = this.dialog.open(ProjectDeleteConfirmationDialogComponent, {
+      width: '400px',
+      height: 'auto',
+      data: { 
+        mode: 'delete',
+        projectId: projectId,
+        projectName: project?.projectName || 'Unknown Project',
+        title: 'Confirm Project Deletion',
+        message: `Are you sure you want to delete "${project?.projectName || 'this project'}"? This action cannot be undone and will remove all project data.`
       }
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        this.performProjectDeletion(projectId);
+      }
+    });
+  }).catch((error) => {
+    console.error('Error checking project dependencies:', error);
+    this.snackBar.open('Error checking project dependencies', 'Close', { duration: 3000 });
+  });
+}
+
+private async checkProjectDependencies(projectId: any): Promise<boolean> {
+  try {
+    // Check if project has any active tasks or assignments
+    // This is a placeholder - you would implement actual dependency checks based on your business logic
+    // For example, check if project has assigned tasks, team members, etc.
+    return false; // For now, allow deletion
+  } catch (error) {
+    console.error('Error fetching project dependencies:', error);
+    return false; // Allow deletion if check fails
   }
+}
+
+private performProjectDeletion(projectId: any): void {
+  this.isDeleting = true;
+  
+  this.projectService.deleteProject(projectId).subscribe({
+    next: () => {
+      console.log('Project deleted successfully');
+      this.snackBar.open('Project deleted successfully!', 'Close', { 
+        duration: 3000,
+        panelClass: ['success-snackbar']
+      });
+      this.projects = this.projects.filter(p => (p._id || p.id) !== projectId);
+      this.filteredProjects = [...this.projects];
+      this.isDeleting = false;
+    },
+    error: (err) => {
+      console.error('Delete operation failed:', err);
+      
+      let errorMessage = 'Failed to delete project';
+      if (err.error?.message) {
+        errorMessage = err.error.message;
+      } else if (err.status === 404) {
+        errorMessage = 'Project not found';
+      } else if (err.status === 403) {
+        errorMessage = 'You do not have permission to delete this project';
+      } else if (err.status === 409) {
+        errorMessage = 'Cannot delete project: It has active tasks or assignments';
+      } else if (err.status === 0) {
+        errorMessage = 'Network error: Please check your connection';
+      }
+      
+      this.snackBar.open(errorMessage, 'Close', { 
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      this.isDeleting = false;
+    }
+  });
 }
 
 

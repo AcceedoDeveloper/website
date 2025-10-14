@@ -14,6 +14,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class DepartmentDialogComponent implements OnInit {
   dmform!: FormGroup;
   isEdit = false;
+  isDeleteMode = false;
   isLoading = false;
   animationStates: { [key: string]: string } = {};
 
@@ -23,7 +24,8 @@ export class DepartmentDialogComponent implements OnInit {
     private dmservice: DepartmentserviceService,
     private snackBar: MatSnackBar,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: { department?: Department }
+    @Inject(MAT_DIALOG_DATA) public data: { department?: Department, mode?: string, title?: string, message?: string, departmentId?: any },
+    private dialogRef: MatDialogRef<DepartmentDialogComponent>
   ) {}
 
   ngOnInit(): void {
@@ -32,8 +34,10 @@ export class DepartmentDialogComponent implements OnInit {
       subDepartments: this.fb.array([])
     });
 
-    // Check if editing
-    if (this.data?.department) {
+    // Detect mode
+    if (this.data?.mode === 'delete') {
+      this.isDeleteMode = true;
+    } else if (this.data?.department) {
       this.isEdit = true;
       this.patchForm(this.data.department);
     } else {
@@ -306,5 +310,15 @@ export class DepartmentDialogComponent implements OnInit {
   createcancel(): void {
     this.dialog.closeAll();
     this.router.navigate(['/department']);
+  }
+
+  /** Confirm delete action */
+  confirmDelete() {
+    this.dialogRef.close('confirm');
+  }
+
+  /** Cancel delete action */
+  cancelDelete() {
+    this.dialogRef.close('cancel');
   }
 }
