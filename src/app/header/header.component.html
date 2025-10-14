@@ -14,12 +14,10 @@
     <i class="fa fa-search search-icon"></i>
   </div>
 
-  <div class="right-icons" #loginDropdown>
+  <div class="right-icons">
     <!-- Notification -->
     <div class="notification-icon" 
-         (click)="onNotificationClick()" 
-         (mouseenter)="onNotificationHover()" 
-         (mouseleave)="onNotificationLeave()">
+         (click)="onNotificationClick()">
       <img
         [src]="hasNotification
           ? 'https://cdn-icons-png.flaticon.com/128/594/594838.png'
@@ -75,7 +73,7 @@
     </div>
 
     <!-- Profile Dropdown -->
-    <div class="login-dropdown">
+    <div class="login-dropdown" #loginDropdown>
       <label class="login-icon" (click)="toggleDropdown()">
         <ng-container *ngIf="userData?.photoURL && userData.photoURL !== 'assets/default-avatar.png'; else initialsIcon">
           <img [src]="userData.photoURL" alt="" class="avatar" />
@@ -88,8 +86,8 @@
       <div  class="login-menu" [class.show]="showDropdown" (click)="onOverlayClick($event)">
         <button class="mobile-close-btn" (click)="toggleDropdown()">×</button>
         <div class="mobile-content" (click)="$event.stopPropagation()">
-          <p><strong>{{ userData?.username || 'Username' }}</strong></p>
-          <p>{{ userData?.role || 'Role' }}</p>
+          <p><strong>{{ userData?.userName || userData?.UserName || userData?.username || 'Username' }}</strong></p>
+          <p>{{ getRoleLabel(userData?.role) || 'Role' }}</p>
           <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
           <a href="#" (click)="signOut()">Sign Out</a>
         </div>
@@ -98,6 +96,8 @@
     </div>
     
   </div>
+
+  
 </header>
 
 <!-- Profile Edit Modal  -->
@@ -123,7 +123,9 @@
 
         <div class="file-upload-wrapper">
           <input type="file" id="profileUpload" accept="image/*" (change)="onPhotoSelected($event)" />
-          <label for="profileUpload" class="file-upload-label">Choose File</label>
+          <label for="profileUpload" class="file-upload-label">
+            {{ selectedFileName || 'Choose File' }}
+          </label>
         </div>
       </div>
 
@@ -149,7 +151,7 @@
             <label>Role</label>
             <select [(ngModel)]="editUserData.role">
               <option value="">-- Select Role --</option>
-              <option *ngFor="let r of roles" [value]="r.role">{{ r.role }}</option>
+              <option *ngFor="let r of roles" [value]="getRoleValue(r)">{{ getRoleLabel(r) }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -187,8 +189,11 @@
 
     <!-- Footer Actions -->
     <div class="popup-actions">
-      <button type="button" class="btn cancel" (click)="closeEditModal()">Cancel</button>
-      <button type="button" class="btn save" (click)="saveProfilePicture()">Save</button>
+      <button type="button" class="btn cancel" (click)="closeEditModal()" [disabled]="isLoading">Cancel</button>
+      <button type="button" class="btn save" (click)="saveProfilePicture()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Save</span>
+        <span *ngIf="isLoading">Saving...</span>
+      </button>
     </div>
   </div>
 </div>

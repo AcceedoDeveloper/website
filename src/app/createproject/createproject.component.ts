@@ -121,6 +121,32 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
     }
   }
 
+  // New dropdown control methods
+  closeAllDropdowns() {
+    this.showTeamLeadsDropdown = false;
+    this.showEmployeeDropdown = false;
+    this.showEditTeamLeadsDropdown = false;
+    this.showEditEmployeeDropdown = false;
+  }
+
+  closeTeamLeadsDropdown() {
+    this.showTeamLeadsDropdown = false;
+  }
+
+  closeEmployeeDropdown() {
+    this.showEmployeeDropdown = false;
+  }
+
+  toggleTeamLeadsDropdown() {
+    this.showEmployeeDropdown = false; // Close other dropdown
+    this.showTeamLeadsDropdown = !this.showTeamLeadsDropdown;
+  }
+
+  toggleEmployeeDropdown() {
+    this.showTeamLeadsDropdown = false; // Close other dropdown
+    this.showEmployeeDropdown = !this.showEmployeeDropdown;
+  }
+
   // Rest of the code remains unchanged
   updateTime() {
     const now = new Date();
