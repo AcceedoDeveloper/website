@@ -31,8 +31,8 @@ cancelEdit: any;
 isLoading = false;
 isDeleting = false;
 
-showmaintask = false;
-Documents =true;
+showmaintask = true;
+Documents =false;
 Calendar = false;
 Summary = false;
 showdocumentpop = false;

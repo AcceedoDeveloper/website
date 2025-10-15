@@ -101,7 +101,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
     const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startDay = (firstDay.getDay() + 6) % 7;
+    const startDay = firstDay.getDay(); // Sunday = 0, Monday = 1, etc.
 
     for (let i = 0; i < startDay; i++) {
       this.days.push({ date: '', isSunday: false, tasks: [] });
@@ -154,6 +154,10 @@ export class CalendarComponent implements OnInit, OnChanges {
       this.selectedDay = null;
       this.selectedDayTasks = [];
     }
+  }
+
+  getAssigneeTaskCount(assignee: string): number {
+    return this.filteredAssignments.filter(task => task.assignee === assignee).length;
   }
 
   onAssigneeChange() {
