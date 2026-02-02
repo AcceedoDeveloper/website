@@ -11,8 +11,8 @@ body, html {
 }
 
 h1 {
-  font-family: Arial, sans-serif;
-  font-size: 2rem;
+   font-size: 28px;
+  font-weight: bold;
   color: #333;
 }
 
