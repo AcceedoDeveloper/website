@@ -25,6 +25,7 @@ body {
     overflow: hidden;
     margin-bottom: 2rem;
     transition: all 0.5s ease;
+    position: relative;
 }
 
 .header-bg {
@@ -34,6 +35,15 @@ body {
     object-fit: cover;
     filter: brightness(0.7);
     transition: all 0.5s ease;
+    position: absolute;
+    z-index: 1;
+     top: 0;
+     left: 0;
+  object-fit: cover;
+
+  z-index: 1;            /* background layer */
+  pointer-events: none; /* 👈 idhu romba important */
+
 }
 
 .header-section:hover .header-bg {
@@ -51,8 +61,9 @@ body {
     color: white;
     text-align: center;
     padding: 0 2rem;
-    z-index: 10;
+    z-index: 2;
     transition: all 0.5s ease;
+    position: relative;
 }
 /* Updated Date Display: Fixed Bottom-Left */
 .date-display {
