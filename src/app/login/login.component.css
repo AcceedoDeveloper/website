@@ -2,7 +2,8 @@
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overflow-x: hidden
+   
 }
 
 .login-container {
@@ -239,30 +240,44 @@ input:focus {
 
 body {
   margin: 0;
-  padding-top: 78px; /* This padding matches the height of your fixed nav */
+  padding-top: 90px; /* This padding matches the height of your fixed nav */
   font-family: 'Noto Sans', sans-serif;
 }
 
 .nav-header{
   cursor: pointer;
+ 
 }
 
 /* Navigation Styles */
+body{
+   padding-top: 90px;
+}
 .nav {
   height: 65px;
-  width: 100%;
+  width: 190%;
   background-color: #ffffff;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   border-bottom: 0.3px solid #585656;
-  margin: 0;
+  
 }
 
 .nav > .nav-header {
-  display: inline;
   margin: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 5px
+}
+
+.nav >.nav-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+   padding: 0 30px;
 }
 
 .nav > .nav-header > .nav-title {
@@ -304,7 +319,7 @@ body {
   padding: 10px 15px;
   text-decoration: none;
   margin: 0;
-  padding-top: 15px;
+  padding-top:0px;
   transition: color 0.3s ease;
 }
 
@@ -344,6 +359,16 @@ body {
 
 .nav > #nav-check {
   display: none;
+}
+
+
+.view-more:hover {
+  color: #1e40af;
+  transform: translateX(5px);
+}
+
+.view-more:hover::after {
+  transform: translateX(5px);
 }
 
 /* Dropdown Styles */
@@ -698,6 +723,7 @@ body {
 .nav-icon {
   width: 18px;
   height: 18px;
+  left: auto;
   vertical-align: middle;
 }
 
@@ -707,15 +733,11 @@ body {
   padding: 10px;
   border-radius: 4px;
 }
-.login-dropdown {
-  position: relative;
-  margin-right: -70px;
-  right:-35px /* adjust this value as needed */
-}
+
 .arrow-up {
   position: absolute;
-  top: -8px;
-  right: 16px; /* ✅ Adjust to align arrow with icon */
+  top: -9px;
+  right: 20px; /* ✅ Adjust to align arrow with icon */
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
@@ -824,8 +846,8 @@ nav-links {
   border-radius: 50%;
   display: flex;
   justify-content: center;
-  align-items: center;
-
+  align-items: center; 
+ 
 }
 
 .user-icon {
@@ -833,10 +855,6 @@ nav-links {
   font-size: 16px;
 }
 
-.login-dropdown {
-  position: relative;
-  margin-left: 18rem;
-}
 
 .login-menu {
   
