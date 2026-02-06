@@ -17,24 +17,7 @@
         </div>
       </div>
     
-      <div class="user-icon-wrapper">
-        <svg width="0" height="0">
-          <defs>
-            <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
-              <circle cx="0.5" cy="0.5" r="0.5" />
-            </clipPath>
-          </defs>
-        </svg>
-    
-        <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
-             style="clip-path: url(#circle-shape);" />
-      </div>
-      
-  
-       
-  
-      
-    </div>
+     
     
     <div class="usericonheader">
     
@@ -102,14 +85,20 @@
     </button>
   </div>
 <div class="date-filter-section">
-  <label for="task-date" class="form-label">Select Date</label>
-  <input type="date" 
-         id="task-date" 
-         class="form-control" 
-         [(ngModel)]="selectedTaskDate" 
-         (change)="onDateChange()"
-         [value]="selectedTaskDate">
+  <label class="form-label">Select Date</label>
+  
+  <div class="date-picker-wrapper">
+    <button type="button" class="nav-btn" (click)="prevDay()">&lt;</button>
+    
+    <input type="date" 
+           class="form-control" 
+           [(ngModel)]="selectedTaskDate" 
+           (change)="onDateChange()">
+           
+    <button type="button" class="nav-btn" (click)="nextDay()">&gt;</button>
+  </div>
 </div>
+
 
 
 

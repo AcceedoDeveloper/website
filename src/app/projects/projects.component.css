@@ -11,24 +11,7 @@
   }
   
   /* Welcome Card - Exact Match Design */
-  .welcome-card {
-    background: linear-gradient(135deg, #FFD54F, #FFCA28, #FFC107);
-    color: #333;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    margin: 20px 0;
-    position: relative;
-    /* z-index: 1; */
-    min-height: 150px;
-    overflow: visible;
-    margin-bottom: 80px;
-    width: 100%;
-    
-  }
+  
   
   .welcome-header {
     display: flex;
@@ -49,20 +32,7 @@
     margin-top: 10px;
   }
   
-  .user-icon-wrapper-containerheader{
-    display: flex;
-    align-items: center;
-    justify-content:space-between;
-  }
-
-  
-  .user-icon-wrapper {
-    position: absolute;
-    bottom: -70px;
-    left: 20px;
-    z-index: 10;
-  }
-  
+ 
   .user-welcome span {
     font-size: 32px;
     font-weight: 600;
@@ -74,15 +44,7 @@
     height: 20px;
   }
   
-  .user-icon {
-    width: 140px;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid #FFD54F;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    background-color: white;
-  }
+  
   
   /* ===========================================
      HEADER SECTION - PROPERLY ALIGNED
@@ -93,17 +55,7 @@
       gap: 10px;
      }
   
-  .welcome-header1{
-    display: flex;
-    flex-direction: column;
-   
-  }
-  .usericonheader{
-    display: flex;
-   margin-left: 150px;
-    justify-content:flex-start;
-    flex-wrap: wrap;
-  }
+ 
   
   /* ===========================================
      PILL DROPDOWN STYLES - MINIMAL
@@ -1053,7 +1005,41 @@
     scrollbar-color: #c1c1c1 #f1f1f1;
   }
   
-  
+  .date-filter-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 250px;
+}
+
+.date-picker-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nav-btn {
+  background-color: #eeedec; /* Green button */
+  border: none;
+  color: rgb(15, 0, 0);
+  padding: 6px 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.nav-btn:hover {
+  background-color: #f98533;
+}
+
+.form-control {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
   
   
   
@@ -1281,49 +1267,98 @@
     margin-bottom: 20px;
   }
   
-  
-  .date-filter-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 12px 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-    width: fit-content;
-    margin-bottom: 20px;
-  }
-  
-  .date-filter-section .form-label {
-    font-weight: 500;
-    color: #374151;
-    font-size: 14px;
-    margin: 0;
-    white-space: nowrap;
-  }
-  
-  .date-filter-section .form-control {
-    height: 40px;
-    padding: 0 12px;
-    font-size: 14px;
-    color: #374151;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #ffffff;
-    transition: all 0.2s ease;
-    min-width: 160px;
-  }
-  
-  .date-filter-section .form-control:focus {
-    outline: none;
-    border-color: #6b7280;
-    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.1);
-  }
-  
-  .date-filter-section .form-control:hover {
-    border-color: #9ca3af;
-  }
+  /* Date Filter Container */
+.date-filter-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
+/* Label */
+.date-filter-section .form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Date Navigation Wrapper */
+.date-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Date Input */
+.date-input {
+  height: 38px;
+  min-width: 150px;
+  padding: 0 10px;
+
+  font-size: 13px;
+  text-align: center;
+  color: #111827;
+
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.date-input:hover {
+  border-color: #9ca3af;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* Navigation Buttons */
+.date-btn {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: all 0.2s ease;
+}
+
+.date-btn:hover {
+  background-color: #eef2ff;
+  border-color: #c7d2fe;
+  color: #4338ca;
+}
+
+.date-btn:active {
+  transform: scale(0.95);
+}
+
+
   
   
   .pill-btn {
@@ -3040,31 +3075,10 @@
     }
   }
   
-  @media screen and (max-width: 992px) {
-    .welcome-card {
-      margin-left: 200px;
-      margin-bottom: 50px;
-      min-height: 120px;
-    }
-    
-    .user-icon {
-      width: 120px;
-      height: 120px;
-    }
-    
-    .user-icon-wrapper {
-      bottom: -60px;
-    }
+  @media screen and (max-width: 992px) {  
   }
 
   @media screen and (max-width: 768px) {
-    .welcome-card {
-      margin-left: 0;
-      margin-right: 0;
-      margin-bottom: 40px;
-      min-height: 100px;
-      padding: 15px;
-    }
     
     .welcome-header {
       align-items: center;

@@ -9,10 +9,10 @@
     
 
   <!-- Search Bar -->
-  <div class="search-bar">
-    <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" (input)="onSearch()" />
-    <i class="fa fa-search search-icon"></i>
-  </div>
+ <div class="search-bar">
+  <input type="text" placeholder="Search here..." />
+  <i class="fas fa-search search-icon"></i>
+</div>
 
   <div class="right-icons">
     <!-- Notification -->
@@ -265,39 +265,8 @@
      </div>
   
 
-
-
-
  <div class="wecomemaincontent" *ngIf="!isProjectsRoute()">
 
-  <div class="welcome-card"> 
-    <div  class="welcome-header">
-      <div class="user-welcome">
-        <span>Welcome, {{ userData?.UserName?.toUpperCase() || 'User' }}</span>  
-      </div>
-      <div class="date-time">
-        <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
-        <span>{{ dateTime }}</span>
-      </div>
-      
-  
-    </div>
-  
-    <div class="user-icon-wrapper">
-      <svg width="0" height="0">
-        <defs>
-          <clipPath id="circle-shape" clipPathUnits="objectBoundingBox">
-            <circle cx="0.5" cy="0.5" r="0.5" />
-          </clipPath>
-        </defs>
-      </svg>
-  
-      <img class="user-icon" [src]="userData?.photoURL || ''" alt="" 
-           style="clip-path: url(#circle-shape);" />
-    </div>
-    <!-- add div class="header" -->
-    
-  </div>
   
 
   <!-- because it is header so we can use all the components  -->

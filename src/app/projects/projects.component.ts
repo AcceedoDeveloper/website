@@ -386,12 +386,42 @@ generateDays() {
 
 }
 
-onDateChange() {
-  console.log('Selected Date:', this.selectedTaskDate);
-  this.generateDays();
-  this.applyDateFilter(); // Add this line to trigger task filtering
+
+
+changeDate(days: number) {
+  const currentDate = new Date(this.selectedTaskDate);
+  currentDate.setDate(currentDate.getDate() + days);
+
+  this.selectedTaskDate = this.formatDate(currentDate);
+  this.onDateChange();
 }
 
+formatDate(date: Date): string {
+  return date.toISOString().split('T')[0]; // yyyy-mm-dd
+}
+
+onDateChange() {
+    console.log('Selected Date:', this.selectedTaskDate);
+  }
+
+  // Move to previous day
+  prevDay() {
+    const date = new Date(this.selectedTaskDate);
+    date.setDate(date.getDate() - 1);
+    this.selectedTaskDate = this.formatDate(date);
+    this.onDateChange();
+  }
+
+  // Move to next day
+  nextDay() {
+    const date = new Date(this.selectedTaskDate);
+    date.setDate(date.getDate() + 1);
+    this.selectedTaskDate = this.formatDate(date);
+    this.onDateChange();
+  }
+
+  // Format date as yyyy-MM-dd for <input type="date">
+  
 // Method to get today's date in YYYY-MM-DD format
 getTodayDateString(): string {
   const today = new Date();
