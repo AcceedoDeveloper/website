@@ -16,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   onSearch() {}
+
+  
   
   onDepartmentChange(event: Event) {
     const target = event.target as HTMLSelectElement;
@@ -984,7 +986,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   closeSidebar(): void {
     this.sidebarOpen = false;
   }
-
   // Handle route changes to update navigation state
   onRouteChange(): void {
     this.initializeNavigationState();
