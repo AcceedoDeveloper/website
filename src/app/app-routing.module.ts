@@ -64,7 +64,7 @@ const routes: Routes = [
   { path: 'dwincontant4', component: Dwincontant4Component },
   { path: 'dwincontant5', component: Dwincontant5Component },
   { path: 'dwincontant6', component: Dwincontant6Component },
-  { path: 'dwincontant78', component: Dwincontant7Component },
+  { path: 'dwincontant7', component: Dwincontant7Component },
   { path: 'dwincontant8', component: Dwincontant8Component },
   { path: 'adobe', component: AdobeComponent },
   { path: 'cards', component: CardsComponent },
