@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router ,NavigationEnd} from '@angular/router';
 import { UserservicesService } from '../register/services/userservices.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { ConfigService } from '../service/config.service';
@@ -7,6 +7,7 @@ import { RoleserviceService } from '../service/roleservice.service';
 import { DepartmentserviceService } from '../department/service/departmentservice.service';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { filter } from 'rxjs/operators';
 
 
 @Component({
@@ -15,9 +16,31 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+    currentLabel = '';
+    
   onSearch() {}
 
+     getCurrentGroup() {
+    const url = this.router.url;
+
+    if (this.masterPages.some(p => p.path === url)) return this.masterPages;
+    if (this.frontendPages.some(p => p.path === url)) return this.frontendPages;
+    if (this.backendPages.some(p => p.path === url)) return this.backendPages;
+   
+
+    return [];
+  }
+
+   getAllPages() {
+    return [
+      ...this.masterPages,
+      ...this.frontendPages,
+      ...this.backendPages,
+     
+    ];
+  }
   
+
   
   onDepartmentChange(event: Event) {
     const target = event.target as HTMLSelectElement;
@@ -86,8 +109,59 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private roleService: RoleserviceService,
     private departmentService: DepartmentserviceService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateCurrentLabel();
+      });}
+  updateCurrentLabel() {
+    const url = this.router.url;
 
+    const page = this.getAllPages().find(p => p.path === url);
+    this.currentLabel = page ? page.label : '';
+  }
+
+  // 🔹 Previous button
+  previousPage() {
+    const pages = this.getCurrentGroup();
+    const index = pages.findIndex(p => p.path === this.router.url);
+
+    if (index <= 0) return;
+
+    this.router.navigate([pages[index - 1].path]);
+  }
+
+  // 🔹 Next button
+  nextPage() {
+    const pages = this.getCurrentGroup();
+    const index = pages.findIndex(p => p.path === this.router.url);
+
+    if (index === -1 || index === pages.length - 1) return;
+
+    this.router.navigate([pages[index + 1].path]);
+  }
+
+   masterPages = [
+    { path: '/register', label: 'User' },
+    { path: '/department', label: 'Department' },
+    { path: '/role', label: 'Role' },
+    { path: '/create', label: 'Create Project' }
+  ];
+
+  frontendPages = [
+    { path: '/webdev', label: 'WebDev' },
+    { path: '/angulardeveloper', label: 'Angular' },
+    { path: '/ngrx', label: 'NGRX' }
+  ];
+
+  backendPages = [
+    { path: '/node', label: 'Node.js' },
+    { path: '/api&database', label: 'API & Database' }
+  ];
+
+ 
+
+  
   ngOnInit(): void {
     this.getCurrentUser();
     this.updateTime();

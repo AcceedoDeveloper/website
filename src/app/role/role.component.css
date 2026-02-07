@@ -14,7 +14,7 @@
 }
 
 .maincontent::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #d3ee84;
   border-radius: 4px;
 }
 
@@ -112,7 +112,7 @@
   border-collapse: collapse;
   border-radius: 8px;
   overflow: hidden;
-  background: white;
+  background: rgb(156, 154, 154);
 }
 
 .role-flat-table th,

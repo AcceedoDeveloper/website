@@ -7,6 +7,9 @@ import { ConfigService } from './config.service';
   providedIn: 'root'
 })
 export class AuthService {
+   getRole(): string {
+    return localStorage.getItem('role') || 'USER';
+  }
 
   constructor(private http: HttpClient, private config : ConfigService) {}
 

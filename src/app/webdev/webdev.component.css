@@ -223,7 +223,7 @@
         }
 
         .vision-section {
-         background: linear-gradient(135deg, #3f51b5, #ff4081);
+         background: linear-gradient(135deg, #fbfbfbf5,#fbfbfbf5);
             color: white;
             padding: 100px 20px;
             
@@ -240,7 +240,7 @@
         .vision-section::before {
             content: '';
             position: absolute;
-            top: 0;
+            top: 90px;
             left: 0;
             width: 100%;
             height: 100%;
@@ -327,15 +327,18 @@
             margin-bottom: 30px;
         }
         
-        .section-header h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #4a1f6f;
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-        
+       .section-header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #4a1f6f;
+    margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
+
+    /* 👇 force single line */
+    white-space: nowrap;
+}
+
         .section-header h1:after {
             content: '';
             position: absolute;
@@ -1038,16 +1041,19 @@
         }
 
 .section-header {
- 
- display: flex;
- justify-content:space-between;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-    /* background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364); */
-  color: white;
+
+  width: 75%;              /* ⬅ decrease width */
+  margin: 0 auto 0 -20px;   /* ⬅ move slightly left */
+
+  color: #fff;
   font-size: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 
 .section-header h4 {
   font-size: 14px;
@@ -1065,7 +1071,7 @@
 .maincontent{
 
 width: 100%;
-max-width: 1285px;
+max-width: 1200px;
 height: 100%;
 margin-left: 275px;
 margin-top: -670px;

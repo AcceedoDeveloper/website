@@ -51,13 +51,10 @@
   margin-bottom: 1.5rem;
 }
 
-.department-header h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1f3c88;;
-}
+
 
 .add-department-btn {
+  right:-885px;
   background: #1f3c88;
   color: white;
   border: none;
