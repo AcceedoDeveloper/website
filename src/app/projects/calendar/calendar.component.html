@@ -19,6 +19,26 @@
           </div>
         </div>
       </div>
+
+<div class="month-wrapper">
+  <button class="nav-btn" (click)="prevMonth()">&#10094;</button>
+
+  <span class="month-label">
+    {{ currentDate | date:'MMMM yyyy' }}
+  </span>
+
+  <button class="nav-btn" (click)="nextMonth()">&#10095;</button>
+
+  <input
+    type="month"
+    class="month-input"
+    [(ngModel)]="currentDate"
+    (ngModelChange)="onMonthChange()"
+  />
+</div>
+
+
+
       <div class="legend">
         <div class="legend-item">
           <div class="legend-color red"></div>

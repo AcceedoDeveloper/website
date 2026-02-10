@@ -1237,21 +1237,24 @@
   }
   
   .pill-btn {
-  padding: 12px 24px;
-  border-radius: 12px;
-  border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+ display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
 
-  /* 🔹 Position near top bar + menu */
-  position: absolute;
-  top: 130px;        /* adjust up/down */
-  left: 400px;      /* adjust left/right (after sidebar) */
-  z-index: 1001;    /* above sidebar & navbar */
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+
+  position: static;
+
+  /* 🔼 MOVE UP */
+  margin-top: -250px;  /* adjust: -5px, -15px, -20px */
+  left: 110; 
+  margin-bottom: 20px;
+
 }
 
   
@@ -2446,7 +2449,94 @@
       margin-top: 10px;
     }
   }
-  
+  /* =============================
+   Task Meta Wrapper
+============================= */
+.task-meta {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+}
+
+/* =============================
+   Due Pill (date / today / overdue)
+============================= */
+/* =============================
+   Due Date Pill (Enterprise Grade)
+============================= */
+.due-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  min-height: 28px;                 /* slightly taller = premium feel */
+  padding: 0 12px;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+
+  border-radius: 8px;               /* softer radius */
+  background: #f6f8fa;              /* subtle neutral */
+  color: #37474f;
+
+  border: 1px solid #e3e7eb;
+  white-space: nowrap;
+
+  transition: background-color 0.15s ease,
+              color 0.15s ease,
+              border-color 0.15s ease;
+}
+
+/* Icon */
+.due-date .due-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0.8;
+}
+
+/* =============================
+   Due Today (Attention, not alarm)
+============================= */
+.due-date.today {
+  background: #fff8e6;
+  color: #e65100;
+  border-color: #ffe0b2;
+}
+
+/* =============================
+   Overdue (Clear but professional)
+============================= */
+.due-date.overdue {
+  background: #fff3f3;
+  color: #c62828;
+  border-color: #f4c7c7;
+}
+
+/* =============================
+   Optional: Hover polish
+============================= */
+.due-date:hover {
+  background: #eef2f5;
+}
+
+/* Keep Today / Overdue dominant on hover */
+.due-date.today:hover {
+  background: #fff3d6;
+}
+
+.due-date.overdue:hover {
+  background: #ffeaea;
+}
+
+
+
   .task-controls-container {
     display: flex;
     justify-content: space-between;
@@ -3864,4 +3954,6 @@
       color: #667eea;
     }
   }
+
+  
   

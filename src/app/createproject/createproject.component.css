@@ -612,7 +612,7 @@ button:hover {
    =========================================== */
 .project-card {
   position: relative;
-  background: linear-gradient(145deg, #ffffff, #f8fafc);
+  background: linear-gradient(145deg, #f7f6f7, #f6f5f6);
   border-radius: 20px;
   overflow: hidden;
   padding: 0;
@@ -639,8 +639,8 @@ button:hover {
 /* Hover 3D tilt + glow */
 .project-card:hover {
   transform: rotateY(6deg) translateY(-12px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(31, 60, 136, 0.15), 
-              0 0 30px rgba(31, 60, 136, 0.2);
+  box-shadow: 0 20px 60px rgba(246, 247, 248, 0.941), 
+              0 0 30px rgba(237, 238, 240, 0.956);
 }
 
 /* Animated Gradient Overlay */
@@ -665,12 +665,12 @@ button:hover {
    PROJECT HEADER
    =========================================== */
 .project-header {
-  padding: 18px 20px;
+  padding: 5px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: linear-gradient(135deg, #1a0173 0%, #1c01a1 100%);
+  color: #f9f7f9f9;
   position: relative;
   z-index: 1;
   overflow: hidden;
@@ -687,7 +687,7 @@ button:hover {
 .project-header1 h2 {
   font-size: 1.8rem;
   font-weight: 600;
-  color: #1f3c88;
+  color: #f6f7f9;
   margin: 0;
   padding: 0.5rem 0;
 }
@@ -703,8 +703,8 @@ button:hover {
   top: 0;
   width: 200%;
   height: 100%;
-  background: linear-gradient(120deg, rgba(255,255,255,0.2), transparent, rgba(255,255,255,0.2));
-  animation: shimmer 3s linear infinite;
+  background: linear-gradient(120deg, rgba(130, 155, 228, 0.968), transparent,  rgba(127, 124, 235, 0.968));
+  
 }
 
 @keyframes shimmer {
@@ -718,7 +718,7 @@ button:hover {
   font-weight: 700;
   letter-spacing: 0.5px;
   z-index: 2;
-  color: white;
+  color: rgb(247, 244, 246);
 }
 
 /* ===========================================
@@ -735,19 +735,19 @@ button:hover {
   align-items: center;
   margin-bottom: 14px;
   font-size: 15px;
-  color: #2d3748;
+  color: #0f025a;
   gap: 12px;
   transition: all 0.3s ease;
 }
 
 .detail-item i {
-  color: #667eea;
+  color: #530131;
   font-size: 16px;
   transition: transform 0.3s ease;
 }
 
 .detail-item:hover {
-  color: #667eea;
+  color: #520140;
   transform: translateX(5px);
 }
 
@@ -787,7 +787,7 @@ button:hover {
   border-radius: 50%;
   width: 0;
   height: 0;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255, 255, 255, 0.963);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

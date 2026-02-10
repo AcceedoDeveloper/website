@@ -19,6 +19,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
     currentLabel = '';
     
   onSearch() {}
+  
+  
+  private getCurrentIndex(): number {
+    const pages = this.getCurrentGroup();
+    return pages.findIndex(p => p.path === this.router.url);
+  }
+
+  get isFirstPage(): boolean {
+    return this.getCurrentIndex() === 0;
+  }
+
+  get isLastPage(): boolean {
+    const pages = this.getCurrentGroup();
+    const index = this.getCurrentIndex();
+    return index === pages.length - 1;
+  }
+
+ 
 
      getCurrentGroup() {
     const url = this.router.url;
@@ -123,23 +141,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   // 🔹 Previous button
   previousPage() {
-    const pages = this.getCurrentGroup();
-    const index = pages.findIndex(p => p.path === this.router.url);
+  if (this.isFirstPage) {
+    return; // 🚫 do nothing
+  }
 
-    if (index <= 0) return;
+  const pages = this.getCurrentGroup();
+  const index = pages.findIndex(p => p.path === this.router.url);
 
+  if (index > 0) {
     this.router.navigate([pages[index - 1].path]);
   }
+}
 
-  // 🔹 Next button
-  nextPage() {
-    const pages = this.getCurrentGroup();
-    const index = pages.findIndex(p => p.path === this.router.url);
 
-    if (index === -1 || index === pages.length - 1) return;
+nextPage() {
+  if (this.isLastPage) {
+    return; // 🚫 do nothing
+  }
 
+  const pages = this.getCurrentGroup();
+  const index = pages.findIndex(p => p.path === this.router.url);
+
+  if (index !== -1 && index < pages.length - 1) {
     this.router.navigate([pages[index + 1].path]);
   }
+}
 
    masterPages = [
     { path: '/register', label: 'User' },

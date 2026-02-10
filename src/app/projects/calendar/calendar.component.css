@@ -475,6 +475,65 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
+.month-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+  width: fit-content;
+  flex-wrap: wrap; /* responsive */
+}
+
+.nav-btn {
+  border: none;
+  background-color: #1f3c88;
+  color: white;
+
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.nav-btn:hover {
+  background-color: #162a5e;
+  transform: scale(1.05);
+}
+
+.month-label {
+  min-width: 120px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.month-input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.month-input:focus {
+  border-color: #1f3c88;
+  box-shadow: 0 0 0 2px rgba(31, 60, 136, 0.15);
+  outline: none;
+}
+
 
 .assignee-filter {
   display: flex;

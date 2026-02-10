@@ -135,6 +135,8 @@ todayYear = new Date().getFullYear();
     });
   }
 
+  
+
   ngOnInit(): void {
     this.initForm();
     this.initCommentForm();
@@ -227,88 +229,85 @@ todayYear = new Date().getFullYear();
   }
 
   getFilteredTasksByStatus(status: string): AssignWork[] {
-    let tasks = this.allAssignments;
-    
-    console.log('=== Starting getFilteredTasksByStatus ===');
-    console.log('Status:', status);
-    console.log('selectedProjectId:', this.selectedProjectId);
-    console.log('selectedProjectName:', this.selectedProjectName);
-    console.log('username:', this.username);
-    console.log('Total tasks before any filter:', tasks.length);
-  
-    if (this.selectedProjectId) {
-      console.log('Filtering by project ID:', this.selectedProjectId);
-      tasks = tasks.filter(a => {
-        const matchesProjectId = String(a.projectId) === String(this.selectedProjectId);
-        const matchesProjectIdAlt = String(a.projectId || '') === String(this.selectedProjectId);
-        const matchesProjectName = String(a.projectName || '').toLowerCase() === String(this.selectedProjectName || '').toLowerCase();
-        
-        const matches = matchesProjectId || matchesProjectIdAlt || matchesProjectName;
-        console.log(`Task "${a.title}" - projectId: ${a.projectId}, projectName: ${a.projectName}, matches: ${matches}`);
-        
-        return matches;
-      });
-      console.log('Tasks after project filter:', tasks.length);
-    } else {
-      console.log('Filtering by user:', this.username);
-      tasks = tasks.filter(a => {
-        const matchesAssignedTo = String(a.assignedTo) === String(this.username);
-        const matchesAssignee = String(a.assignee) === String(this.username);
-        const matches = matchesAssignedTo || matchesAssignee;
-        
-        console.log(`Task "${a.title}" - assignedTo: ${a.assignedTo}, assignee: ${a.assignee}, matches: ${matches}`);
-        
-        return matches;
-      });
-      console.log('Tasks after user filter:', tasks.length);
-    }
+  let tasks = [...this.allAssignments];
 
-    if (this.selectedTaskDate) {
-      const selectedDate = new Date(this.selectedTaskDate);
-      selectedDate.setHours(0, 0, 0, 0);
-      
-      console.log('Filtering by date:', this.selectedTaskDate);
-      console.log('Selected date object:', selectedDate);
-      console.log('Tasks before date filter:', tasks.length);
-      
-      tasks = tasks.filter(task => {
-        if (!task.dueDate) {
-          console.log('Task has no dueDate:', task.title);
-          return false;
-        }
-        
-        const taskDueDate = new Date(task.dueDate);
-        taskDueDate.setHours(0, 0, 0, 0);
-        
-        const matches = taskDueDate.getTime() === selectedDate.getTime();
-        console.log(`Task "${task.title}" - dueDate: ${task.dueDate}, matches: ${matches}`);
-        
-        return matches;
-      });
-      
-      console.log('Tasks after date filter:', tasks.length);
-    }
-
-    return tasks.filter(assignment => {
-      const taskStatus = (assignment.Status || 'ToDo').toLowerCase().trim();
-      const targetStatus = status.toLowerCase();
-      
-      let matchesStatus = false;
-      if (targetStatus === 'inprogress') {
-        matchesStatus = taskStatus.includes('progress');
-      } else if (targetStatus === 'done') {
-        matchesStatus = taskStatus.includes('done') || taskStatus.includes('complete');
-      } else {
-        matchesStatus = !taskStatus.includes('progress') && 
-               !taskStatus.includes('done') && 
-               !taskStatus.includes('complete');
-      }
-      
-      console.log(`Task "${assignment.title}" - status: ${assignment.Status}, targetStatus: ${targetStatus}, matchesStatus: ${matchesStatus}`);
-      
-      return matchesStatus;
-    });
+  /* =============================
+     PROJECT / USER FILTER
+  ============================== */
+  if (this.selectedProjectId) {
+    tasks = tasks.filter(a =>
+      String(a.projectId) === String(this.selectedProjectId) ||
+      String(a.projectName || '').toLowerCase() ===
+        String(this.selectedProjectName || '').toLowerCase()
+    );
+  } else {
+    tasks = tasks.filter(a =>
+      String(a.assignedTo) === String(this.username) ||
+      String(a.assignee) === String(this.username)
+    );
   }
+
+  /* =============================
+     DATE FILTER → ONLY FOR TODO
+  ============================== */
+  if (this.selectedTaskDate && status.toLowerCase() === 'todo') {
+  const selectedDate = new Date(this.selectedTaskDate);
+  selectedDate.setHours(0, 0, 0, 0);
+
+  tasks = tasks.filter(task => {
+    if (!task.createdAt) return true; // IMPORTANT
+
+    const created = new Date(task.createdAt);
+    created.setHours(0, 0, 0, 0);
+
+    return created.getTime() === selectedDate.getTime();
+  });
+}
+
+
+  /* =============================
+     STATUS FILTER
+  ============================== */
+  return tasks.filter(task => {
+    const taskStatus = (task.Status || 'ToDo').toLowerCase().trim();
+
+    if (status.toLowerCase() === 'inprogress') {
+      return taskStatus.includes('progress');
+    }
+
+    if (status.toLowerCase() === 'done') {
+      return taskStatus.includes('done') || taskStatus.includes('complete');
+    }
+
+    // ToDo
+    return (
+      !taskStatus.includes('progress') &&
+      !taskStatus.includes('done') &&
+      !taskStatus.includes('complete')
+    );
+  });
+}
+
+getDueLabel(task: AssignWork): string {
+  if (!task?.dueDate) return '';
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const due = new Date(task.dueDate);
+  due.setHours(0, 0, 0, 0);
+
+  const diffDays = Math.floor(
+    (due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  if (diffDays < 0) return 'Overdue';
+  if (diffDays === 0) return 'Due Today';
+  if (diffDays === 1) return 'Due Tomorrow';
+
+  return `Due in ${diffDays} days`;
+}
+
 
   getFilteredTasksCount(): number {
     if (!this.selectedTaskDate) return this.allAssignments.length;
@@ -325,17 +324,50 @@ todayYear = new Date().getFullYear();
       return taskCreatedDate.getTime() === selectedDate.getTime();
     }).length;
   }
+isDueToday(task: AssignWork): boolean {
+  if (!task?.dueDate) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const due = new Date(task.dueDate);
+  due.setHours(0, 0, 0, 0);
+
+  return due.getTime() === today.getTime();
+}
+
+getDueText(task: AssignWork): string {
+  if (!task?.dueDate) return 'No due date';
+
+  if (this.isOverdue(task)) return 'Overdue';
+  if (this.isDueToday(task)) return 'Due Today';
+
+  return `Due ${new Date(task.dueDate).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  })}`;
+}
 
  isOverdue(task: AssignWork): boolean {
-    if (!task.dueDate || task.Status?.toLowerCase().includes('done')) return false;
+  if (!task?.dueDate) return false;
 
-    const dueDate = new Date(task.dueDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    dueDate.setHours(0, 0, 0, 0);
-
-    return dueDate < today;
+  const status = (task.Status || '').toLowerCase();
+  if (status.includes('done') || status.includes('complete')) {
+    return false;
   }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const dueDate = new Date(task.dueDate);
+  dueDate.setHours(0, 0, 0, 0);
+
+  return dueDate < today;
+}
+
+
+
  private updateDateTime() {
     this.dateIntervalId = setInterval(() => {
       const now = new Date();
