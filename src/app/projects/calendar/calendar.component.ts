@@ -33,7 +33,52 @@ export class CalendarComponent implements OnInit, OnChanges {
   filteredAssignments: AssignWork[] = [];
 
   constructor(private assignWorkService: AssignWorkService) {}
-currentDate: Date = new Date();
+   
+  currentMonth: Date = new Date();
+selectedDate: Date = new Date();
+
+
+changeMonth(offset: number) {
+  const year = this.currentMonth.getFullYear();
+  const month = this.currentMonth.getMonth() + offset;
+
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  const newDay = Math.min(this.selectedDate.getDate(), lastDay);
+
+  this.currentMonth = new Date(year, month, 1);
+  this.selectedDate = new Date(year, month, newDay);
+
+  this.buildCalendar();
+}
+
+buildCalendar() {
+  this.days = [];
+
+  const year = this.currentMonth.getFullYear();
+  const month = this.currentMonth.getMonth();
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+
+  // Empty cells before month start
+  for (let i = 0; i < firstDay; i++) {
+    this.days.push({ date: null });
+  }
+
+  // Month days
+  for (let d = 1; d <= totalDays; d++) {
+    const dateObj = new Date(year, month, d);
+
+    this.days.push({
+      date: d,
+      fullDate: dateObj,
+      isSunday: dateObj.getDay() === 0,
+      isSelected:
+        dateObj.toDateString() ===
+        this.selectedDate.toDateString(),
+    });
+  }
+}
   ngOnInit(): void {
     const currentYear = new Date().getFullYear();
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
@@ -42,21 +87,7 @@ currentDate: Date = new Date();
     this.loadAssignments();
   }
 
- prevMonth() {
-  const d = new Date(this.currentDate);
-  d.setMonth(d.getMonth() - 1);
-  this.currentDate = d;
-}
-
-nextMonth() {
-  const d = new Date(this.currentDate);
-  d.setMonth(d.getMonth() + 1);
-  this.currentDate = d;
-}
-
-onMonthChange() {
-  console.log('Month changed:', this.currentDate);
-}
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedProjectId'] || changes['selectedProjectName'] || changes['username']) {
@@ -180,10 +211,11 @@ onMonthChange() {
     this.generateCalendar();
   }
 
- 
-  onYearChange() {
+  onMonthChange() {
     this.generateCalendar();
   }
 
-  
+  onYearChange() {
+    this.generateCalendar();
+  }
 }
