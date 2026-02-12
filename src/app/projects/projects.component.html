@@ -106,12 +106,6 @@
      (cdkDropListDropped)="drop($event, 'ToDo')"
      id="todo-list">
   <h3>To Do <span class="task-count">{{ todoAssignments.length }}</span></h3>
-
-
-
-
-  
-  
   
   <div *ngFor="let task of todoAssignments"
        class="kanban-card"
@@ -125,8 +119,21 @@
   <div class="task-info-clean">
     <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
   </div>
-  </div>
   
+  </div>
+  <div class="task-meta">
+  <span class="due-date"
+        [class.overdue]="isOverdue(task)">
+    <mat-icon class="due-icon">schedule</mat-icon>
+    {{ task.dueDate | date:'dd MMM yyyy' }}
+  </span>
+
+  <span *ngIf="isOverdue(task)" class="overdue-label">
+    Overdue
+  </span>
+</div>
+
+
   
     <div class="task-footer">
       <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
@@ -166,10 +173,16 @@
            class="kanban-card"
            cdkDrag
            [cdkDragData]="task">
+           
     <div class="task-header-clean">
     <div class="task-info-clean">
       <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
     </div>
+   <span class="due-date"
+      [class.overdue]="isOverdue(task)">
+  {{ getDueLabel(task) }}
+</span>
+
     <div class="task-info-clean">
       <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
     </div>

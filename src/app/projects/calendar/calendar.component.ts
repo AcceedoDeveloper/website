@@ -33,7 +33,7 @@ export class CalendarComponent implements OnInit, OnChanges {
   filteredAssignments: AssignWork[] = [];
 
   constructor(private assignWorkService: AssignWorkService) {}
-
+currentDate: Date = new Date();
   ngOnInit(): void {
     const currentYear = new Date().getFullYear();
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
@@ -41,6 +41,22 @@ export class CalendarComponent implements OnInit, OnChanges {
     }
     this.loadAssignments();
   }
+
+ prevMonth() {
+  const d = new Date(this.currentDate);
+  d.setMonth(d.getMonth() - 1);
+  this.currentDate = d;
+}
+
+nextMonth() {
+  const d = new Date(this.currentDate);
+  d.setMonth(d.getMonth() + 1);
+  this.currentDate = d;
+}
+
+onMonthChange() {
+  console.log('Month changed:', this.currentDate);
+}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedProjectId'] || changes['selectedProjectName'] || changes['username']) {
@@ -164,11 +180,10 @@ export class CalendarComponent implements OnInit, OnChanges {
     this.generateCalendar();
   }
 
-  onMonthChange() {
-    this.generateCalendar();
-  }
-
+ 
   onYearChange() {
     this.generateCalendar();
   }
+
+  
 }

@@ -273,13 +273,30 @@
  </div>
 
  
-<div class="page-nav-header" *ngIf="currentLabel">
-  <button class="nav-arrow" (click)="previousPage()">◀</button>
+<<div class="page-nav-header" *ngIf="currentLabel">
+
+  <!-- Previous -->
+  <button
+    class="nav-arrow"
+    [disabled]="isFirstPage"
+    (click)="previousPage()">
+    &lt;
+  </button>
 
   <h4 class="page-title">{{ currentLabel }}</h4>
 
-  <button class="nav-arrow" (click)="nextPage()">▶</button>
+  <!-- Next -->
+  <button
+    class="nav-arrow"
+    [disabled]="isLastPage"
+    (click)="nextPage()">
+    &gt;
+  </button>
+
 </div>
+
+
+
 
 
 
