@@ -46,7 +46,7 @@
 
 .department-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 1.5rem;
 }
@@ -54,7 +54,6 @@
 
 
 .add-department-btn {
-  right:-885px;
   background: #1f3c88;
   color: white;
   border: none;

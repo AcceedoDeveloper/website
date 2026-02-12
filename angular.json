@@ -31,7 +31,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-             "src/favicon.ico",
+             "src/violet3.png",
              "src/assets"
             ],
            "styles": [

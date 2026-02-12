@@ -1,10 +1,10 @@
 <app-header></app-header>
 
 
-<div class="mainproject">
+
 
  
-  <div class="welcome-usericon">
+  <div class="wecomemaincontent">
 
     <div class="welcome-card"> 
      
@@ -67,16 +67,13 @@
   <!-- <app-task *ngIf="mainTask"></app-task> -->
    <div class="maintask" *ngIf="showmaintask">
 
-<div class="task-controls-container">
-
-  <div class="task-controls">
+      <div class="task-controls">
     <!-- Add Task Button -->
     <button class="pill-btn" (click)="openAssignmentDialog()" [disabled]="!selectedProjectId">
       + Add Task
     </button>
-  </div>
-<div class="date-filter-section">
-  <label class="form-label">Select Date</label>
+    <div class="date-filter-section">
+  
   
   <div class="date-picker-wrapper">
     <button type="button" class="nav-btn" (click)="prevDay()">&lt;</button>
@@ -88,7 +85,14 @@
            
     <button type="button" class="nav-btn" (click)="nextDay()">&gt;</button>
   </div>
+
 </div>
+  </div>
+<div class="task-controls-container">
+
+
+
+
 
 
 

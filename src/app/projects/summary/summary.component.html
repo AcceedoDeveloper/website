@@ -38,7 +38,7 @@
           <option value="">All Assignees</option>
           <option *ngFor="let employee of employees" [value]="employee._id">{{employee.name || employee.username || employee._id}}</option>
         </select>
-        <small *ngIf="!employees.length" class="text-muted">No employees available. Using assignment IDs.</small>
+        <small *ngIf="!employees.length" class="text-muted"></small>
       </div>
       <div class="col-md-3">
         <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
