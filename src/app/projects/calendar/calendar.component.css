@@ -475,29 +475,75 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
+
+/* ================================
+   MONTH WRAPPER - MINIMAL CLEAN
+================================ */
 .month-wrapper {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-end;
 
-  background: #ffffff;
-  padding: 10px 14px;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-
-  width: fit-content;
-  flex-wrap: wrap; /* responsive */
+  margin-left: auto;
+  margin-top: 10px;   
+  margin-bottom: 20px;
 }
 
+
+/* ================================
+   MONTH DROPDOWN STYLE
+================================ */
+.month-wrapper select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #d1d5db;
+
+  padding: 6px 24px 6px 4px;
+
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+
+  cursor: pointer;
+  outline: none;
+
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+
+/* Hover Effect */
+.month-wrapper select:hover {
+  border-bottom-color: #3b82f6;
+}
+
+/* Focus Effect */
+.month-wrapper select:focus {
+  border-bottom-color: #2563eb;
+  color: #111827;
+}
+
+/* Optional: Remove default dropdown arrow (if needed) */
+.month-wrapper select::-ms-expand {
+  display: none;
+}
+
+
+
+/* Navigation buttons */
 .nav-btn {
   border: none;
   background-color: #1f3c88;
-  color: white;
+  color: #ffffff;
 
   width: 34px;
   height: 34px;
   border-radius: 50%;
+
   font-size: 16px;
+  font-weight: 600;
 
   display: flex;
   align-items: center;
@@ -512,20 +558,21 @@
   transform: scale(1.05);
 }
 
-.month-label {
-  min-width: 120px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #333;
-}
-
+/* Month display (single source of truth) */
 .month-input {
+  min-width: 130px;
+  text-align: center;
+
   padding: 6px 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 0.9rem;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333;
+
   cursor: pointer;
+  background-color: #fff;
 }
 
 .month-input:focus {
@@ -533,6 +580,42 @@
   box-shadow: 0 0 0 2px rgba(31, 60, 136, 0.15);
   outline: none;
 }
+.month-label {
+  min-width: 140px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.day-cell.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.day-cell.selected {
+  background: #1f3c88;
+  color: white;
+  border-radius: 8px;
+}
+
+/* Responsive safety */
+@media (max-width: 480px) {
+  .month-wrapper {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .month-input {
+    min-width: 110px;
+    font-size: 0.9rem;
+  }
+
+  .nav-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+}
+
 
 
 .assignee-filter {
