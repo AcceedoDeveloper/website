@@ -69,7 +69,7 @@ input, select, textarea, button {
    =========================================== */
 .project-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 2rem;
   padding: 1.5rem 0;
@@ -90,6 +90,13 @@ input, select, textarea, button {
    SEARCH CONTAINER - Classy & Perfect Design
    =========================================== */
 
+.top-actions {
+  display: flex;
+  justify-content: flex-end;   /* 🔥 Move everything to right */
+  align-items: center;
+  gap: 15px;                   /* Space between search & button */
+  margin-bottom: 20px;
+}
 
 .search-container input {
   width: 300px;
@@ -118,6 +125,7 @@ input, select, textarea, button {
 
 .search-container i {
   position: absolute;
+  justify-content: flex-end;
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
@@ -160,26 +168,20 @@ input, select, textarea, button {
    }
 .section-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
-  width: auto;
   max-width: 200px;
   background: linear-gradient(135deg, #1f3c88 0%, #667eea 100%);
   color: white;
   border-radius: 25px;
-  margin: 0;
   font-size: 14px;
   font-weight: 600;
   box-shadow: 0 4px 15px rgba(31, 60, 136, 0.3);
-  border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: inherit;
-  position: relative;
-  overflow: hidden;
-  letter-spacing: 0.5px;
+  margin-left: auto;  
 }
+
 
 .section-header::before {
   content: '';
@@ -624,232 +626,447 @@ button:hover {
 /* ===========================================
    PROJECTS GRID LAYOUT - Classy Design
    =========================================== */
-.projects-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-  margin: 24px 0;
-  perspective: 1200px;
+/* ==============================
+   TABLE WRAPPER
+============================== */
+.projects-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
   width:100%;
   
 }
 
-/* ===========================================
-   PROJECT CARD STYLES - Classy Design
-   =========================================== */
-.project-card {
-  position: relative;
-  background: linear-gradient(145deg, #f7f6f7, #f6f5f6);
-  border-radius: 20px;
-  overflow: hidden;
-  padding: 0;
-  box-shadow: 0 8px 32px rgba(31, 60, 136, 0.08);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-  animation: floatUp 0.8s ease forwards;
-  opacity: 0;
-  border: 1px solid rgba(31, 60, 136, 0.1);
-  backdrop-filter: blur(10px);
+/* ==============================
+   MAIN TABLE
+============================== */
+.projects-table {
   width: 100%;
-  max-width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
-/* Stagger animation for cards */
-.project-card:nth-child(1) { animation-delay: 0.1s; }
-.project-card:nth-child(2) { animation-delay: 0.2s; }
-.project-card:nth-child(3) { animation-delay: 0.3s; }
-.project-card:nth-child(4) { animation-delay: 0.4s; }
-
-@keyframes floatUp {
-  0% { transform: translateY(40px) scale(0.95); opacity: 0; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
+/* ==============================
+   TABLE HEADER
+============================== */
+.projects-table thead {
+  background: linear-gradient(135deg, #d1d5db, #d1d5db);
+  color: #030202;
+  border-color: #4a0121;
 }
 
-/* Hover 3D tilt + glow */
-.project-card:hover {
-  transform: rotateY(6deg) translateY(-12px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(246, 247, 248, 0.941), 
-              0 0 30px rgba(237, 238, 240, 0.956);
-}
-
-/* Animated Gradient Overlay */
-.project-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(120deg, #1f3c88, #667eea, #4cafeb, #1f3c88);
-  background-size: 300% 300%;
-  z-index: 0;
-  opacity: 0.05;
-  animation: gradientFlow 8s ease infinite;
-}
-
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* ===========================================
-   PROJECT HEADER
-   =========================================== */
-.project-header {
-  padding: 18px 20px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(135deg, #1a0173 0%, #1c01a1 100%);
-  color: #f9f7f9f9;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-}
-
-.project-header1 {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem 0;
-}
-
-.project-header1 h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #f6f7f9;
-  margin: 0;
-  padding: 0.5rem 0;
-}
-
-.project-header1 .search-container {
-  margin-bottom: 0;
-}
-
-.project-header::after {
-  content: "";
-  position: absolute;
-  left: -50%;
-  top: 0;
-  width: 200%;
-  height: 100%;
-  background: linear-gradient(120deg, rgba(130, 155, 228, 0.968), transparent,  rgba(127, 124, 235, 0.968));
-  
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.project-header h4 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  z-index: 2;
-  color: rgb(247, 244, 246);
-}
-
-/* ===========================================
-   PROJECT DETAILS
-   =========================================== */
-.project-details {
-  padding: 20px;
-  position: relative;
-  z-index: 2;
-}
-
-.detail-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 14px;
+.projects-table th {
+  padding: 14px 16px;
+  text-align: left;
   font-size: 15px;
-  color: #0f025a;
-  gap: 12px;
-  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
-.detail-item i {
-  color: #530131;
-  font-size: 16px;
-  transition: transform 0.3s ease;
+
+.projects-table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #0c0c0c;
 }
 
-.detail-item:hover {
-  color: #520140;
-  transform: translateX(5px);
+/* Hover Effect */
+.projects-table tbody tr {
+  transition: background 0.3s ease;
 }
 
-.detail-item:hover i {
-  transform: scale(1.3);
+.projects-table tbody tr:hover {
+  background-color: #f5f8ff;
 }
 
-/* ===========================================
-   PROJECT ACTIONS
-   =========================================== */
-.project-actions {
-  padding: 15px 20px;
+/* Project Name Highlight */
+.project-name {
+  font-weight: 600;
+  color: #4b011f;
+}
+
+/* ==============================
+   ACTION BUTTONS
+============================== */
+.actions-column {
+  text-align: center;
+}
+
+.actions-cell {
   display: flex;
-  gap: 12px;
-  border-top: 1px solid #eee;
-  position: relative;
-  z-index: 2;
+  gap: 10px;
+  justify-content: center;
 }
 
-.project-actions button {
+.edit-btn,
+.delete-btn {
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Edit Button */
+.edit-btn {
+  background: #e3f2fd;
+  color: #1e88e5;
+}
+
+.edit-btn:hover {
+  background: #1e88e5;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* Delete Button */
+.delete-btn {
+  background: #ffebee;
+  color: #e53935;
+}
+
+.delete-btn:hover {
+  background: #e53935;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* Overlay */
+.side-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;   /* Full screen */
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+
+.side-panel {
+  width: 420px;
+  height: 100vh;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
+  border-left: 1px solid #e5e7eb;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.panel-header {
+  padding-bottom: 18px;
+  margin-bottom: 20px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+ 
+  background: #eaf340;  
+  padding: 20px;
+  margin: -30px -30px 20px -30px;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+
+.panel-content {
   flex: 1;
-  padding: 12px 18px;
+  overflow-y: auto;
+  padding-right: 8px;
+  font-family: "Segoe UI", Roboto, sans-serif;
+}
+
+/* Custom Scroll */
+.panel-content::-webkit-scrollbar {
+  width: 6px;
+}
+.panel-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.panel-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ================================
+   SECTION TITLE
+================================ */
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 20px 0 12px 0;
+}
+
+/* ================================
+   TWO COLUMN GRID
+================================ */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 30px;
+}
+
+/* ================================
+   INFO BLOCK
+================================ */
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-group label i {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.info-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* ================================
+   STATUS BADGE
+================================ */
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.completed {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.status-badge.delayed {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* ================================
+   EMPLOYEE TAGS
+================================ */
+.employee-list {
+  margin-top: 10px;
+}
+
+.employee-list span {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #1e293b;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 6px 6px 0 0;
+  transition: 0.2s ease;
+}
+
+.employee-list span:hover {
+  background: #e2e8f0;
+}
+
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+.header-btn {
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
   border: none;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-/* Ripple Effect */
-.project-actions button::after {
-  content: "";
-  position: absolute;
+.header-btn.edit {
+  background: rgba(30, 136, 229, 0.15);
+  color: #47011d;
+}
+
+.header-btn.edit:hover {
+  background: #1e88e5;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.header-btn.delete {
+  background: rgba(229, 57, 53, 0.15);
+  color: #47011d;
+}
+
+.header-btn.delete:hover {
+  background: #e53935;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.header-btn.close {
+  background: rgba(100, 116, 139, 0.15);
+  color: #47011d;
+}
+
+.header-btn.close:hover {
+  background: #475569;
+  color: white;
+}
+
+
+.panel-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.panel-content p {
+  margin: 14px 0;
+  font-size: 15px;
+  color: #1e293b;
+}
+
+.employee-list {
+  margin-top: 10px;
+}
+
+.employee-list li {
+  padding: 6px 0;
+  list-style: none;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.avatar-group {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  width: 0;
-  height: 0;
-  background: rgba(255, 255, 255, 0.963);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease, height 0.4s ease;
-  z-index: -1;
-}
-
-.project-actions button:active::after {
-  width: 200%;
-  height: 200%;
-}
-
-/* Button Styles */
-.edit-btn {
-  background: linear-gradient(135deg, #4cafeb, #1e88e5);
+  background: #3624d4;
   color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
+  border: 2px solid #ffffff;
+  cursor: pointer;
 }
 
-.edit-btn:hover { 
-  transform: scale(1.08); 
+.avatar:first-child {
+  margin-left: 0;
 }
 
+.more-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #333;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
+  border: 2px solid #fff;
+}
+.action-column {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.edit-btn,
 .delete-btn {
-  background: linear-gradient(135deg, #e53e3e, #c53030);
-  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.delete-btn:hover { 
-  transform: scale(1.08); 
+/* Edit */
+.edit-btn {
+  background: #fcfcfb;
+  color: #050505;
 }
+
+.edit-btn:hover {
+  background: #1e88e5;
+  color: white;
+  transform: scale(1.1);
+}
+
+/* Delete */
+.delete-btn {
+  background: #fcfcfa;
+  color: #030303;
+}
+
+.delete-btn:hover {
+  background: #e53935;
+  color: white;
+  transform: scale(1.1);
+}
+
 
 /* ===========================================
    NO PROJECTS MESSAGE

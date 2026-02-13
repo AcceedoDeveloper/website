@@ -7,13 +7,9 @@
 <div class="main">
 
   <div class="project-header1">
-
-    <h2></h2>
-
+    <div class="top-actions">
     <div class="search-btn">
       <div class="search-container">
-  
-     
         <input type="text" placeholder="Search projects.." [(ngModel)]="searchQuery" (input)="filterprojects()" />
         <i class="fa fa-search"></i>
       </div>
@@ -22,6 +18,7 @@
         <i class="fa fa-plus add-task-icon" ></i>
       </button>
 
+    </div>
     </div>
   </div>
 
@@ -131,45 +128,166 @@
   </div>
 
   <!-- Projects List -->
-  <div class="projects-list">
-    <div *ngFor="let project of filteredProjects" class="project-card">
-      <div class="project-header">
-        <h4>{{ project.projectName }}</h4>
+  <div class="projects-table-wrapper">
+
+  <table class="projects-table">
+    <thead>
+      <tr>
+        <th>Project Name</th>
+        <th>Employees</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Status</th>
+        <th class="action-column">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let project of filteredProjects"
+          (click)="selectProject(project)"
+          class="table-row">
+
+        <!-- Project Name -->
+        <td class="project-name">
+          {{ project.projectName }}
+        </td>
+
+        <td class="employee-cell">
+  <div class="avatar-group">
+
+    <ng-container *ngFor="let emp of project.employees.slice(0,5)">
+      <div class="avatar"
+           [title]="emp">
+        {{ getInitial(emp) }}
       </div>
-      <div class="project-details">
-        <div class="detail-item">
-          <i class="fa fa-user-tie"></i>
-          <span>Team Leads: {{ getTeamLeadsNames(project.teamLeads) }}</span>
-        </div>
-        <div class="detail-item">
-          <i class="fa fa-users"></i>
-          <span>Employees: {{ getEmployeeNames(project.employees) }}</span>
-        </div>
-        <div class="detail-item">
-          <i class="fa fa-calendar-check start-icon"></i>
-          <span> startDate: {{ project.startDate | date:'mediumDate' }}</span>
-        </div>
-        <div class="detail-item">
-          <i class="fa fa-calendar-times end-icon"></i>
-          <span>EndDate:
-            {{ project.expectedEndDate | date:'mediumDate' }}</span>
-        </div>
-      </div>
-      <div class="project-actions">
-        <!-- Edit Button -->
-        <button mat-raised-button color="primary" (click)="openEditModal(project)">
+    </ng-container>
+
+    <div class="more-avatar"
+         *ngIf="project.employees.length > 5">
+      +{{ project.employees.length - 5 }}
+    </div>
+
+  </div>
+</td>
+
+        <!-- Dates -->
+        <td>
+          {{ project.startDate | date:'mediumDate' }}
+        </td>
+
+        <td>
+          {{ project.expectedEndDate | date:'mediumDate' }}
+        </td>
+
+        <!-- Status -->
+        <td>
+          <span class="status-badge"
+            [ngClass]="getStatusClass(project)">
+            {{ getProjectStatus(project) }}
+          </span>
+        </td>
+
+         <td class="action-buttons">
+         <button class="edit-btn"
+          (click)="openEditModal(project); $event.stopPropagation()">
           <mat-icon>edit</mat-icon>
-          Edit
+         </button>
+
+         <button class="delete-btn"
+          (click)="deleteProject(project); $event.stopPropagation()">
+         <mat-icon>delete</mat-icon>
+         </button>
+         </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<div class="side-overlay" *ngIf="selectedProject"
+     (click)="closePanel()">
+
+  <div class="side-panel"
+       (click)="$event.stopPropagation()">
+
+    <!-- HEADER -->
+    <div class="panel-header">
+      <h3>{{ selectedProject?.projectName }}</h3>
+
+      <div class="header-actions">
+        <button class="header-btn edit"
+                (click)="openEditModal(selectedProject)">
+          <i class="fa fa-pen"></i>
         </button>
 
-        <!-- Delete Button -->
-        <button mat-raised-button style="color: rgb(10, 10, 10);" (click)="deleteProject(project)">
-          <mat-icon>delete</mat-icon>
-          Delete
+        <button class="header-btn delete"
+                (click)="deleteProject(selectedProject)">
+          <i class="fa fa-trash"></i>
         </button>
+
+        <button class="header-btn close"
+                (click)="closePanel()">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    
+    <div class="panel-content">
+      <div class="section-title">Overview</div>
+
+      <div class="info-grid">
+
+        <div class="info-group">
+          <label><i class="fa fa-calendar"></i> Start Date</label>
+          <div class="info-value">
+            {{ selectedProject?.startDate | date:'mediumDate' }}
+          </div>
+        </div>
+
+        <div class="info-group">
+          <label><i class="fa fa-flag-checkered"></i> End Date</label>
+          <div class="info-value">
+            {{ selectedProject?.expectedEndDate | date:'mediumDate' }}
+          </div>
+        </div>
+
+        <div class="info-group">
+          <label><i class="fa fa-user-tie"></i> Team Leads</label>
+          <div class="info-value">
+            {{ selectedProject?.teamLeads?.join(', ') }}
+          </div>
+        </div>
+
+        <div class="info-group">
+          <label><i class="fa fa-signal"></i> Status</label>
+          <div class="info-value">
+            <span class="status-badge active">Active</span>
+          </div>
+        </div>
+
+      </div> 
+
+    
+      <div class="section-title">Employees</div>
+
+      <div class="employee-list">
+        <span *ngFor="let emp of selectedProject?.employees || []">
+          {{ emp }}
+        </span>
       </div>
 
     </div>
+  </div>
+</div> 
+
+
+
+
+
+
     <div *ngIf="filteredProjects.length === 0" class="no-projects">
       <i class="fa fa-folder-open"></i>
       <p>No projects found. Create your first project!</p>
@@ -275,6 +393,6 @@
     </div>
   </div>
 </div>
-</div>
+
 
 <app-footer></app-footer>

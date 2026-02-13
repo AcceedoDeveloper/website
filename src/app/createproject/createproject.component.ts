@@ -6,12 +6,23 @@ import { UserservicesService } from '../register/services/userservices.service';
 import { ConfigService } from '../service/config.service';
 import { DateUtilsService } from '../service/date-utils.service';
 import { ProjectDeleteConfirmationDialogComponent } from './project-delete-confirmation-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+
+interface Employee {
+  id: number;
+  name: string;
+}
+
+
 
 @Component({
   selector: 'app-createproject',
   templateUrl: './createproject.component.html',
-  styleUrls: ['./createproject.component.css']
+  styleUrls: ['./createproject.component.css'],
+   
 })
+
 export class CreateprojectComponent implements OnInit, OnDestroy {
   projects: any[] = [];
   employees: any[] = [];
@@ -20,7 +31,7 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
   project: any = {
     projectName: '',
     teamLeads: [],
-    employees: [],
+    employees:[],
     startDate: '',
     expectedEndDate: ''
   };
@@ -61,6 +72,35 @@ export class CreateprojectComponent implements OnInit, OnDestroy {
     // Bind the method with the correct signature
     this.documentClickListener = this.onDocumentClick.bind(this);
   }
+
+// Select project (for sidebar)
+selectProject(project: any) {
+  this.selectedProject = project;
+}
+
+// Close sidebar
+closePanel() {
+  this.selectedProject = null;
+}
+
+// Get first letter safely
+getInitial(name: string): string {
+  return name ? name.charAt(0).toUpperCase() : '';
+}
+
+// Project status
+getProjectStatus(project: any): string {
+  const today = new Date();
+  const endDate = new Date(project.expectedEndDate);
+  return endDate < today ? 'Completed' : 'Active';
+}
+
+getStatusClass(project: any): string {
+  return this.getProjectStatus(project) === 'Completed'
+    ? 'completed'
+    : 'active';
+}
+
 
   ngOnInit(): void {
     this.getCurrentUser();
