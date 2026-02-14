@@ -499,7 +499,8 @@ updateAssigneeChart(): void {
                   const value = context.parsed.x;
                   const dataset = context.dataset.data as number[];
                   const total = dataset.reduce((a, b) => a + b, 0);
-                  const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                  let percentage = total > 0 ? (((value ?? 0) / total) * 100) : 0;
+
                   return ` ${percentage}%  |  ${value} tasks`;
                 }
               }

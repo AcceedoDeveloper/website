@@ -16,6 +16,3 @@ export class AppComponent {
     this.location.back();
   }
 }
-
-
-
