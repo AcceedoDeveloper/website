@@ -17,12 +17,8 @@
   padding: 20px;
 }
 
-.submain{
-  display: flex;
-  flex-direction: row;
- 
-  
-} 
+
+
 
 .sidebarothercontent {
   flex: 0 0 300px; /* Fixed width for sidebar */

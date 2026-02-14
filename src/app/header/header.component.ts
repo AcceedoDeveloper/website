@@ -8,7 +8,7 @@ import { DepartmentserviceService } from '../department/service/departmentservic
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter } from 'rxjs/operators';
-
+import { Meta,Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-header',
@@ -126,7 +126,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private configService: ConfigService,
     private roleService: RoleserviceService,
     private departmentService: DepartmentserviceService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private meta: Meta, private title: Title
   ) {this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -139,10 +140,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.currentLabel = page ? page.label : '';
   }
 
-  // 🔹 Previous button
   previousPage() {
   if (this.isFirstPage) {
-    return; // 🚫 do nothing
+    return; 
   }
 
   const pages = this.getCurrentGroup();
@@ -156,7 +156,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 nextPage() {
   if (this.isLastPage) {
-    return; // 🚫 do nothing
+    return;
   }
 
   const pages = this.getCurrentGroup();
@@ -194,12 +194,10 @@ nextPage() {
     this.getUserInitial()
     setInterval(() => this.updateTime(), 60000);
     
-    // Load tasks after a short delay to ensure user data is loaded
     setTimeout(() => {
       this.loadTodaysTasks();
     }, 1000);
 
-    // Start auto-refresh for notifications
     this.startNotificationAutoRefresh();
   }
 
@@ -269,7 +267,6 @@ nextPage() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    // Get all possible user identifiers
     const userIdentifiers = [
       this.userData?.username,
       this.userData?.UserName,
@@ -277,10 +274,9 @@ nextPage() {
       this.userData?.email,
       this.userData?.emailId,
       this.userData?.userCode
-    ].filter(Boolean); // Remove null/undefined values
+    ].filter(Boolean);
     
     return allAssignments.filter(task => {
-      // Check if task is assigned to current user - focus on assignee field
       const isAssignedToUser = userIdentifiers.some(userId => {
         return String(task.assignee) === String(userId);
       });
@@ -289,7 +285,6 @@ nextPage() {
         return false;
       }
 
-      // Check if task is due today, was created today, or is active
       const isTodayTask = this.isTaskForToday(task, today);
       
       return isTodayTask;
@@ -297,7 +292,6 @@ nextPage() {
   }
 
   private isTaskForToday(task: AssignWork, today: Date): boolean {
-    // Check if task is due today
     if (task.dueDate) {
       const dueDate = new Date(task.dueDate);
       dueDate.setHours(0, 0, 0, 0);
@@ -306,7 +300,7 @@ nextPage() {
       }
     }
 
-    // Check if task was created today
+
     if (task.createdAt) {
       const createdDate = new Date(task.createdAt);
       createdDate.setHours(0, 0, 0, 0);
@@ -315,7 +309,6 @@ nextPage() {
       }
     }
 
-    // Check if task has start date today
     if (task.startDate) {
       const startDate = new Date(task.startDate);
       startDate.setHours(0, 0, 0, 0);
@@ -324,8 +317,6 @@ nextPage() {
       }
     }
 
-    // Only show tasks that have a specific date assigned for today
-    // Don't show all active tasks - only those specifically assigned for today
     return false;
   }
 
@@ -407,7 +398,6 @@ nextPage() {
   }
 
   onOverlayClick(event: MouseEvent) {
-    // Only close if clicking on the overlay background (not on the content)
     if (event.target === event.currentTarget) {
       this.showDropdown = false;
     }
@@ -417,7 +407,6 @@ nextPage() {
   onDocumentClick(event: Event): void {
     const target = event.target as HTMLElement;
     
-    // Close dropdown when clicking outside
     if (
       this.showDropdown &&
       this.loginDropdown &&
@@ -426,7 +415,6 @@ nextPage() {
       this.showDropdown = false;
     }
     
-    // Close notification popup when clicking outside
     const notificationElement = this.elementRef.nativeElement.querySelector('.notification-icon');
     if (
       this.showNotificationPopup &&
@@ -436,7 +424,6 @@ nextPage() {
       this.showNotificationPopup = false;
     }
     
-    // Close sidebar when clicking outside
     const sidebar = document.querySelector('.sidebar');
     const toggleButton = document.querySelector('.sidebar-toggle');
     
@@ -465,13 +452,10 @@ nextPage() {
   openEditProfile() {
     console.log('Opening edit profile for user:', this.userData);
     
-    // Load roles and departments first
     this.loadRolesAndDepartments();
     
-    // Reset form data
     this.editUserData = {};
     
-    // Map user data to form fields with comprehensive fallbacks
     this.editUserData = {
       name: this.getUserField('name') || this.getUserField('UserName') || this.getUserField('firstName') || '',
       userName: this.getUserField('userName') || this.getUserField('UserName') || this.getUserField('username') || '',
@@ -481,12 +465,11 @@ nextPage() {
       phoneNumber: this.getUserField('phoneNumber') || this.getUserField('Phone') || this.getUserField('mobile') || '',
       departmentName: this.getDepartmentName() || '',
       subDepartmentName: this.getSubDepartmentName() || '',
-      password: '' // Don't populate password for security
+      password: '' 
     };
 
     console.log('Mapped edit user data:', this.editUserData);
 
-    // Set up image preview
     this.previewImage = this.getCleanImageUrl(this.userData);
     this.selectedFile = null;
     this.selectedFileName = '';

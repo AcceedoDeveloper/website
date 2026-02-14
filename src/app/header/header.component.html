@@ -57,14 +57,14 @@
               </div> -->
             </div>
             
-            <!-- <div class="task-footer">
+             <div class="task-footer">
               <div class="task-status" [class]="'status-' + (task.Status || 'pending').toLowerCase()">
                 {{ task.Status || 'Pending' }}
               </div>
               <div class="task-time" *ngIf="task.createdAt">
                 Created: {{ formatDate(task.createdAt) }}
               </div>
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -279,7 +279,7 @@
     class="nav-arrow"
     [disabled]="isFirstPage"
     (click)="previousPage()">
-    &lt;
+     &#10094;
   </button>
 
   <h4 class="page-title">{{ currentLabel }}</h4>
@@ -289,7 +289,7 @@
     class="nav-arrow"
     [disabled]="isLastPage"
     (click)="nextPage()">
-    &gt;
+     &#10095;
   </button>
 
 </div>
