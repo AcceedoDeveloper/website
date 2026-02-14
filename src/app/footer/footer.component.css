@@ -1,126 +1,226 @@
+
 .footer-custom {
-  background: linear-gradient(135deg, #0a2540 0%, #020617 100%);
-  color: #ffffff;
-  padding: 2rem 0;
+
+  background: linear-gradient(135deg, #020617 0%, #0a2540 50%, #020617 100%);
+  color: #e5e7eb;
+
+  padding-top: 55px;
+  padding-bottom: 20px;
+
   font-family: 'Inter', sans-serif;
-  width: 100%;
-  box-sizing: border-box;
+  font-size: 14px;
+
 }
+
+
+.footer-custom .fw-bold {
+
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: #cbd5e1;
+
+}
+
+.footer-custom .row.py-3 p {
+
+  margin-bottom: 6px;
+  color: #94a3b8;
+
+}
+
+
 
 .footer-custom h4 {
-  color: #e2e8f0;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
+
+  color: #ffffff;
+  font-size: 16px;
   font-weight: 600;
+  margin-bottom: 18px;
+
 }
 
-.footer-custom .follow-title {
-  position: relative;
-  left: -100px;
+
+
+.footer-custom .col-md-3.text-md-end {
+
+  text-align: left !important;
+
 }
 
 .footer-custom ul {
-  list-style: none;
-  padding-left: 0;
+
+  padding: 0;
+  margin: 0;
+
 }
 
 .footer-custom ul li {
-  padding: 8px 0;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: #cbd5e0;
+
+  padding: 7px 0;
+
 }
 
-.footer-custom ul li:hover {
-  color: #ffffff;
-  transform: translateX(4px);
-}
 
-.footer-custom a {
-  color: #cbd5e0;
+.footer-custom ul li a {
+
+  color: #94a3b8;
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+
 }
 
-.footer-custom a:hover {
-  color: #ffffff;
+
+.footer-custom ul li a:hover {
+
+  color: #38bdf8;
+  padding-left: 6px;
+
 }
 
-/* Social Media Icons */
 
-.footer-custom .social-media a img {
+.footer-custom .social-media {
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  gap: 14px;
+  margin-top: 10px;
+
+}
+
+
+.footer-custom .social-media img {
+
   width: 32px;
   height: 32px;
-  margin-right: 12px;
-  border-radius: 8px;
+
+  border-radius: 6px;
+
   filter: brightness(0) invert(1);
+
   transition: all 0.3s ease;
+
+  cursor: pointer;
+
 }
 
-.footer-custom .social-media a:hover img {
-  transform: scale(1.1) translateY(-2px);
-  filter: brightness(0) invert(0.9);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+
+.footer-custom .social-media img:hover {
+
+  transform: translateY(-5px);
+
+  filter: brightness(0) invert(1)
+          drop-shadow(0 0 8px rgba(56,189,248,0.8));
+
 }
 
 .footer-custom hr {
-  border-color: rgba(255, 255, 255, 0.15);
-  margin: 2rem 0;
+
+  border: none;
+  height: 1px;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    #38bdf8,
+    transparent
+  );
+
+  margin: 30px 0;
+
 }
+
+
+.footer-custom .d-sm-flex {
+
+  padding-left: 20px;
+  padding-right: 20px;
+
+}
+
 
 .footer-copyright {
-  color: #a0aec0;
-  font-size: 0.9rem;
-  margin: 0;
+
+  font-size: 13px;
+  color: #64748b;
+
 }
 
 
-/* RESPONSIVE */
+@media (max-width: 992px) {
+
+
+.footer-custom {
+
+text-align: center;
+
+}
+
+
+.footer-custom .text-lg-end {
+
+text-align: center !important;
+
+}
+
+
+.footer-custom .social-media {
+
+justify-content: center;
+
+}
+
+
+}
+
+
 
 @media (max-width: 768px) {
 
-  .footer-custom .text-md-end {
-    text-align: left !important;
-  }
 
-  .footer-custom .mt-md-0 {
-    margin-top: 1rem !important;
-  }
+.footer-custom {
 
-  .footer-custom .social-media a img {
-    width: 28px;
-    height: 28px;
-    margin-right: 10px;
-  }
-
-  .footer-custom .d-sm-flex {
-    flex-direction: column !important;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .footer-custom .d-sm-flex > p {
-    text-align: center;
-    width: 100%;
-  }
+padding-top: 40px;
 
 }
+
+
+.footer-custom h4 {
+
+margin-top: 20px;
+
+}
+
+
+}
+
 
 
 @media (max-width: 480px) {
 
-  .footer-custom .social-media a img {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-  }
 
-  .footer-custom h4 {
-    font-size: 1rem;
-  }
+.footer-custom {
 
-  .footer-custom ul li {
-    font-size: 0.85rem;
-  }
+font-size: 13px;
+
+}
+
+
+.footer-custom h4 {
+
+font-size: 15px;
+
+}
+
+
+.footer-custom .social-media img {
+
+width: 28px;
+height: 28px;
+
+}
+
 
 }
