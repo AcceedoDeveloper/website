@@ -992,7 +992,6 @@ button:hover {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #3624d4;
   color: #fff;
   font-size: 13px;
   font-weight: 600;
@@ -1002,6 +1001,7 @@ button:hover {
   margin-left: -8px;
   border: 2px solid #ffffff;
   cursor: pointer;
+  background: var(--avatar-color); 
 }
 
 .avatar:first-child {

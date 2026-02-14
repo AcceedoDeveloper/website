@@ -134,6 +134,21 @@ todayYear = new Date().getFullYear();
       file: [null]
     });
   }
+getInitials(name: string): string {
+  if (!name) return '';
+
+  const words = name.trim().split(' ').filter(w => w.length > 0);
+
+  if (words.length === 1) {
+    return words[0].charAt(0).toUpperCase();   // Anbu → A
+  }
+
+  // First + Last name initials
+  return (
+    words[0].charAt(0) + 
+    words[words.length - 1].charAt(0)
+  ).toUpperCase(); // Anbu Arasan → AA
+}
 
   
 

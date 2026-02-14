@@ -267,6 +267,60 @@ getStatusClass(project: any): string {
     }
   }
 
+  avatarColors: string[] = [
+  '#3624d4', // blue
+  '#e11d48', // red
+  '#16a34a', // green
+  '#f59e0b', // orange
+  '#0ea5e9', // sky blue
+  '#9333ea', // purple
+  '#14b8a6', // teal
+  '#db2777', // pink
+  '#65a30d', // lime
+  '#475569'  // slate
+];
+
+private usedInitialsMap: Record<string, number> = {};
+
+
+getUserInitials(fullName: string): string {
+  if (!fullName || typeof fullName !== 'string') return '';
+
+  const parts = fullName
+    .trim()
+    .split(' ')
+    .filter(p => p.length > 0);
+
+  // Single word → A
+  if (parts.length === 1) {
+    return parts[0].charAt(0).toUpperCase();
+  }
+
+  // Two or more words → AA
+  return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+}
+
+
+// Avatar color (unchanged logic, but safe)
+getAvatarColor(fullName: string): string {
+  const initials = this.getUserInitials(fullName);
+
+  let hash = 0;
+  for (let i = 0; i < initials.length; i++) {
+    hash = initials.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const index = Math.abs(hash) % this.avatarColors.length;
+  return this.avatarColors[index];
+}
+
+
+
+// Function to get avatar color
+
+
+
+
   getuserdata() {
     this.userserives.getuser().subscribe({
       next: (data: any) => {

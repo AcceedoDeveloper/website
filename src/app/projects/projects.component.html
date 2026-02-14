@@ -116,8 +116,11 @@
   <div class="task-info-clean">
     <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
   </div>
-  <div class="task-info-clean">
-    <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
+ <div class="task-info-clean assignee-avatar-container">
+  <div class="avatar-circle">
+    {{ getInitials(task.assignee) }}
+  </div>
+    <!--<span class="point-clean">{{ task.assignee }}</span>-->
   </div>
   
   </div>
@@ -173,20 +176,31 @@
            class="kanban-card"
            cdkDrag
            [cdkDragData]="task">
+         
            
+      <div class="task-main">
+
+          
     <div class="task-header-clean">
     <div class="task-info-clean">
       <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
     </div>
-   <span class="due-date"
+
+
+    <div class="task-info-clean assignee-avatar-container">
+  <div class="avatar-circle">
+    {{ getInitials(task.assignee) }}
+  </div>
+  
+</div>
+
+    </div>
+       <span class="due-date"
       [class.overdue]="isOverdue(task)">
   {{ getDueLabel(task) }}
 </span>
 
-    <div class="task-info-clean">
-      <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
-    </div>
-    </div>
+ </div>
 
       <div class="task-footer">
         <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
@@ -226,9 +240,12 @@
     <div class="task-info-clean">
       <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
     </div>
-    <div class="task-info-clean">
-      <span class="heading-clean">Assigned To:</span> <span class="point-clean">{{ task.assignee }}</span>
-    </div>
+   <div class="task-info-clean assignee-avatar-container">
+  <div class="avatar-circle">
+    {{ getInitials(task.assignee) }}
+  </div>
+  
+</div>
     </div>
     
       <div class="task-footer">
@@ -470,6 +487,7 @@
     </div>
   </div>
   </ng-template>
+
 
   
 </div>

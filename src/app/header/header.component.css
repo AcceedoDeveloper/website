@@ -1461,8 +1461,8 @@
   background: rgba(229, 62, 62, 0.1);
 }
 
-.login-icon {
-  display: flex;
+.user-icon {
+  /*display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -1477,8 +1477,17 @@
   text-transform: uppercase;
   transition: all 0.3s ease;
   border: 2px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);*/
+
+  width: 35px;
+    height: 35px;
+    background-color: #0052a3;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center
 }
+
 
 .login-icon:hover {
   transform: scale(1.05);
@@ -1664,13 +1673,15 @@
 }
 
 .user-icon {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid #FFD54F;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  background-color: white;
+ 
+    width: 35px;
+    height: 35px;
+    background-color: #0052a3;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -5027,4 +5038,19 @@
     margin-left: auto;
     text-align: right;
   }
+}
+
+.user-circle{
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #3b82f6);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }

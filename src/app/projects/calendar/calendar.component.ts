@@ -33,52 +33,23 @@ export class CalendarComponent implements OnInit, OnChanges {
   filteredAssignments: AssignWork[] = [];
 
   constructor(private assignWorkService: AssignWorkService) {}
-   
+
   currentMonth: Date = new Date();
-selectedDate: Date = new Date();
+  selectedDate: Date = new Date();
 
+  changeMonth(offset: number) {
+    const year = this.currentMonth.getFullYear();
+    const month = this.currentMonth.getMonth() + offset;
 
-changeMonth(offset: number) {
-  const year = this.currentMonth.getFullYear();
-  const month = this.currentMonth.getMonth() + offset;
+    const lastDay = new Date(year, month + 1, 0).getDate();
+    const newDay = Math.min(this.selectedDate.getDate(), lastDay);
 
-  const lastDay = new Date(year, month + 1, 0).getDate();
-  const newDay = Math.min(this.selectedDate.getDate(), lastDay);
+    this.currentMonth = new Date(year, month, 1);
+    this.selectedDate = new Date(year, month, newDay);
 
-  this.currentMonth = new Date(year, month, 1);
-  this.selectedDate = new Date(year, month, newDay);
-
-  this.buildCalendar();
-}
-
-buildCalendar() {
-  this.days = [];
-
-  const year = this.currentMonth.getFullYear();
-  const month = this.currentMonth.getMonth();
-
-  const firstDay = new Date(year, month, 1).getDay();
-  const totalDays = new Date(year, month + 1, 0).getDate();
-
-  // Empty cells before month start
-  for (let i = 0; i < firstDay; i++) {
-    this.days.push({ date: null });
+    this.buildCalendar();
   }
 
-  // Month days
-  for (let d = 1; d <= totalDays; d++) {
-    const dateObj = new Date(year, month, d);
-
-    this.days.push({
-      date: d,
-      fullDate: dateObj,
-      isSunday: dateObj.getDay() === 0,
-      isSelected:
-        dateObj.toDateString() ===
-        this.selectedDate.toDateString(),
-    });
-  }
-}
   ngOnInit(): void {
     const currentYear = new Date().getFullYear();
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
@@ -87,12 +58,10 @@ buildCalendar() {
     this.loadAssignments();
   }
 
-  
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedProjectId'] || changes['selectedProjectName'] || changes['username']) {
       this.filterAssignmentsByProject();
-      this.generateCalendar();
+      this.buildCalendar();
     }
   }
 
@@ -107,13 +76,13 @@ buildCalendar() {
 
         this.filterAssignmentsByProject();
         this.updateAssignees();
-        this.generateCalendar();
+        this.buildCalendar();
       },
       error: () => {
         this.allAssignments = [];
         this.filteredAssignments = [];
         this.allAssignees = [];
-        this.generateCalendar();
+        this.buildCalendar();
       }
     });
   }
@@ -140,50 +109,67 @@ buildCalendar() {
     );
   }
 
-  generateCalendar() {
+  buildCalendar() {
     this.days = [];
     this.selectedDay = null;
     this.selectedDayTasks = [];
 
-    const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
-    const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startDay = firstDay.getDay(); // Sunday = 0, Monday = 1, etc.
+    const year = this.currentMonth.getFullYear();
+    const month = this.currentMonth.getMonth();
+    const today = new Date();
 
-    for (let i = 0; i < startDay; i++) {
-      this.days.push({ date: '', isSunday: false, tasks: [] });
+    const firstDay = new Date(year, month, 1).getDay();
+    const totalDays = new Date(year, month + 1, 0).getDate();
+
+    // Empty cells before month start
+    for (let i = 0; i < firstDay; i++) {
+      this.days.push({ date: null, isSunday: false, tasks: [], isSelected: false });
     }
 
-   
-    for (let d = 1; d <= daysInMonth; d++) {
-      const dateObj = new Date(this.selectedYear, this.selectedMonth, d);
-      const isSunday = dateObj.getDay() === 0;
-      
-      let tasksForDay = this.filteredAssignments.filter(task => {
+    // Month days
+    for (let d = 1; d <= totalDays; d++) {
+      const dateObj = new Date(year, month, d);
+
+      const tasksForDay = this.filteredAssignments.filter(task => {
         if (!task.dueDate) return false;
-        
+
         const taskDate = new Date(task.dueDate);
-        const matchDate =
+
+        return (
           taskDate.getDate() === d &&
-          taskDate.getMonth() === this.selectedMonth &&
-          taskDate.getFullYear() === this.selectedYear;
-
-        const matchAssignee = !this.selectedAssignee || task.assignee === this.selectedAssignee;
-
-        return matchDate && matchAssignee;
+          taskDate.getMonth() === month &&
+          taskDate.getFullYear() === year
+        );
       });
 
-      this.days.push({ date: d, isSunday, tasks: tasksForDay });
+      const isToday =
+        dateObj.getDate() === today.getDate() &&
+        dateObj.getMonth() === today.getMonth() &&
+        dateObj.getFullYear() === today.getFullYear();
+
+      const isCurrentMonth =
+        this.currentMonth.getMonth() === today.getMonth() &&
+        this.currentMonth.getFullYear() === today.getFullYear();
+
+      this.days.push({
+        date: d,
+        fullDate: dateObj,
+        isSunday: dateObj.getDay() === 0,
+        tasks: tasksForDay,
+
+        // ✅ Highlight only if: current month + today + task exists
+        isSelected: isToday && isCurrentMonth && tasksForDay.length > 0
+      });
     }
 
-   
+    // Fill remaining cells to complete rows
     while (this.days.length % 7 !== 0) {
-      this.days.push({ date: '', isSunday: false, tasks: [] });
+      this.days.push({ date: null, isSunday: false, tasks: [], isSelected: false });
     }
   }
 
   selectDay(day: any) {
-    if (day.tasks.length > 0) {
+    if (day.tasks && day.tasks.length > 0) {
       this.selectedDay = day;
       if (this.selectedAssignee) {
         this.selectedDayTasks = day.tasks.map((task: AssignWork) => ({ 
@@ -208,14 +194,14 @@ buildCalendar() {
   }
 
   onAssigneeChange() {
-    this.generateCalendar();
+    this.buildCalendar();
   }
 
   onMonthChange() {
-    this.generateCalendar();
+    this.buildCalendar();
   }
 
   onYearChange() {
-    this.generateCalendar();
+    this.buildCalendar();
   }
 }

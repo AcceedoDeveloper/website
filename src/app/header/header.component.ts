@@ -191,6 +191,7 @@ nextPage() {
   ngOnInit(): void {
     this.getCurrentUser();
     this.updateTime();
+    this.getUserInitial()
     setInterval(() => this.updateTime(), 60000);
     
     // Load tasks after a short delay to ensure user data is loaded
@@ -332,6 +333,38 @@ nextPage() {
     this.notificationCount = this.todaysTasks.length;
     this.hasNotification = this.notificationCount > 0;
   }
+
+  getUserInitial(): string {  
+  if (!this.userData) return '';
+
+  // try all possible name fields safely
+  const fullName =
+    this.userData.name ||
+    this.userData.userName ||
+    this.userData.UserName ||
+    this.userData.username ||
+    '';
+
+  if (!fullName || typeof fullName !== 'string') return '';
+
+  const cleanName = fullName.trim();
+
+  if (!cleanName) return '';
+
+  const nameParts = cleanName.split(/\s+/);
+
+  // Single name → A
+  if (nameParts.length === 1) {
+    return nameParts[0].charAt(0).toUpperCase();
+  }
+
+  // Multiple names → AA
+  return (
+    nameParts[0].charAt(0) +
+    nameParts[nameParts.length - 1].charAt(0)
+  ).toUpperCase();
+}
+
 
   toggleNotificationPopup() {
     this.showNotificationPopup = !this.showNotificationPopup;
@@ -789,14 +822,6 @@ nextPage() {
     });
   }
 
-  getInitials(name: string): string {
-    if (!name) return 'U';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
-  }
 
   formatDate(dateString: string | Date): string {
     if (!dateString) return '';

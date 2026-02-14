@@ -1254,11 +1254,14 @@ padding-left: 20%;
 
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 
-  position: static;
+  position: relative;
+
+   /* 🔼 move up */
+left: -450px;
+top:+20px;
 
   /* 🔼 MOVE UP */
   margin-top: -250px;  /* adjust: -5px, -15px, -20px */
-  left: 110; 
   margin-bottom: 20px;
 
 }
@@ -2283,16 +2286,9 @@ padding-left: 20%;
     font-size: 14px;
     margin-top: 10px;
   }
-  .task-header-clean {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
+
   
-  .task-info-clean {
-    font-size: 15px;
-  }
+
   
   .heading-clean {
     color: #1976d2; 
@@ -2308,10 +2304,7 @@ padding-left: 20%;
     margin-bottom: 5px;
   }
   
-  .task-info-clean {
-    font-size: 14px;
-  }
-  
+
   
   #todo-list .heading-clean {
     color: #1e88e5; 
@@ -2465,29 +2458,7 @@ padding-left: 20%;
 /* =============================
    Due Date Pill (Enterprise Grade)
 ============================= */
-.due-date {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
 
-  min-height: 28px;                 /* slightly taller = premium feel */
-  padding: 0 12px;
-
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1;
-
-  border-radius: 8px;               /* softer radius */
-  background: #f6f8fa;              /* subtle neutral */
-  color: #37474f;
-
-  border: 1px solid #e3e7eb;
-  white-space: nowrap;
-
-  transition: background-color 0.15s ease,
-              color 0.15s ease,
-              border-color 0.15s ease;
-}
 
 /* Icon */
 .due-date .due-icon {
@@ -2834,7 +2805,7 @@ padding-left: 20%;
     display: flex;
     align-items: center;
     gap: 5px;
-    max-width: 52%;
+   font-size: 10px;
   }
   
   .point-clean {
@@ -3912,6 +3883,9 @@ padding-left: 20%;
       font-size: 12px;
     }
     
+
+    
+
     .welcome-card {
       display: flex;
       flex-direction:row-reverse;
@@ -4013,7 +3987,6 @@ padding-left: 20%;
   flex-wrap: wrap;               /* 🔥 allow wrapping */
   gap: 8px;                      /* small gap for zoom safety */
   padding: 8px 12px;
-
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 10px;
@@ -4049,3 +4022,45 @@ padding-left: 20%;
 
 }
 
+.due-row{
+  display: flex;
+  justify-content: flex-start;   /* 👈 left side */
+  margin-top: 4px;
+}
+
+.due-date{
+  font-size: 10px;
+   padding: 4px 10px;
+  border-radius: 5px;
+  background: #f1f3f9;
+  white-space: nowrap;
+}
+
+.due-date.overdue{
+  background: #ffe5e5;
+  color: #c62828;
+}
+
+
+.assignee-avatar-container{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-circle{
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}

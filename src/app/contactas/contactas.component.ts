@@ -18,24 +18,26 @@ export class ContactasComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
 submitForm(): void {
- 
 
   if (this.contactForm.valid) {
     const name = this.contactForm.value.name;
     const email = this.contactForm.value.email;
     const message = this.contactForm.value.message;
 
-    const fullMessage = `Hello, my name is ${name}%0AEmail: ${email}%0AMessage: ${message}`;
-    const whatsappUrl = `https://wa.me/919994111214?text=${encodeURIComponent(fullMessage)}`;
+    const whatsappUrl =
+      "https://wa.me/919994111214?text=" +
+      "Hello, my name is " + encodeURIComponent(name) +
+      "%0A" +
+      "Email: " + encodeURIComponent(email) +
+      "%0A" +
+      "Message: " + encodeURIComponent(message);
 
     window.open(whatsappUrl, '_blank');
+
   } else {
     console.warn('Form is invalid:', this.contactForm);
     this.contactForm.markAllAsTouched();
   }
 }
-
-
 }

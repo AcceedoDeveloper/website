@@ -1,9 +1,6 @@
 <app-header></app-header>
 <div id="yy">
 
-
-
-
 <div class="main">
 
   <div class="project-header1">
@@ -156,10 +153,13 @@
   <div class="avatar-group">
 
     <ng-container *ngFor="let emp of project.employees.slice(0,5)">
-      <div class="avatar"
-           [title]="emp">
-        {{ getInitial(emp) }}
-      </div>
+  <div
+  class="avatar"
+  [style.--avatar-color]="getAvatarColor(emp)"
+  [title]="emp">
+  {{ getUserInitials(emp) }}
+</div>
+
     </ng-container>
 
     <div class="more-avatar"
@@ -203,8 +203,6 @@
     </tbody>
   </table>
 </div>
-
-
 
 <div class="side-overlay" *ngIf="selectedProject"
      (click)="closePanel()">
@@ -283,11 +281,6 @@
   </div>
 </div> 
 
-
-
-
-
-
     <div *ngIf="filteredProjects.length === 0" class="no-projects">
       <i class="fa fa-folder-open"></i>
       <p>No projects found. Create your first project!</p>
@@ -351,10 +344,6 @@
           </div>
 
           <div class="edit-employees-dropdown" *ngIf="showEditEmployeeDropdown">
-            <!-- <div class="employee-search">
-              <input type="text" placeholder="Search employees..." [(ngModel)]="editEmployeeSearchText"
-                (click)="$event.stopPropagation()" />
-            </div> -->
             <div class="employee-list">
               <div *ngFor="let employee of getEditFilteredEmployees()" class="employee-item"
                 (click)="$event.stopPropagation(); toggleEditEmployeeSelection(employee)" 
@@ -393,6 +382,5 @@
     </div>
   </div>
 </div>
-
 
 <app-footer></app-footer>

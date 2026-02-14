@@ -74,19 +74,18 @@
 
     <!-- Profile Dropdown -->
     <div class="login-dropdown" #loginDropdown>
-      <label class="login-icon" (click)="toggleDropdown()">
-        <ng-container *ngIf="userData?.photoURL && userData.photoURL !== 'assets/default-avatar.png'; else initialsIcon">
-          <img [src]="userData.photoURL" alt="" class="avatar" />
-        </ng-container>
-        <ng-template #initialsIcon>
-          <div class="user-initial">{{ getInitials(userData?.username || userData?.email || '') }}</div>
-        </ng-template>
+      <label class="user-icon" (click)="toggleDropdown()">
+        <div>
+          {{ getUserInitial() }}
+        </div>
+       
+       
       </label>
 
       <div  class="login-menu" [class.show]="showDropdown" (click)="onOverlayClick($event)">
-        <button class="mobile-close-btn" (click)="toggleDropdown()">×</button>
+        <button class="mobile-close-btn" (click)="toggleDropdown()"></button>
         <div class="mobile-content" (click)="$event.stopPropagation()">
-          <p><strong>{{ userData?.userName || userData?.UserName || userData?.username || 'Username' }}</strong></p>
+          <p><strong>{{ userData?.userName ||  'Username' }}</strong></p>
           <p>{{ getRoleLabel(userData?.role) || 'Role' }}</p>
           <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
           <a href="#" (click)="signOut()">Sign Out</a>
@@ -273,7 +272,7 @@
  </div>
 
  
-<<div class="page-nav-header" *ngIf="currentLabel">
+<div class="page-nav-header" *ngIf="currentLabel">
 
   <!-- Previous -->
   <button
