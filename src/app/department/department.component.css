@@ -93,47 +93,121 @@
   box-shadow: 0 2px 8px rgba(31, 60, 136, 0.2);
 }
 
+/* WRAPPER */
+
 .department-table-wrapper {
+
+  width: 100%;
+  height: 400px;          /* FIXED height required for vertical scroll */
+
   overflow-x: auto;
+  overflow-y: auto;      /* vertical scroll */
+
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  background: white;
+  background: #ffffff;
   border: 1px solid #e9ecef;
 }
 
+
+
+/* TABLE */
+
 .department-table {
+
   width: 100%;
+  min-width: 700px;      /* enables horizontal scroll */
+
   border-collapse: collapse;
-  border-radius: 8px;
-  overflow: hidden;
   background: white;
 }
 
-.department-table th,
-.department-table td {
-  padding: 0.75rem 1rem;
+
+
+/* HEADER */
+
+.department-table th {
+
+  padding: 12px 16px;
   text-align: left;
-  font-size: 0.9rem;
-  background-color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  background: #cbcdcd;
+  color: #2c3e50;
+
+  border-bottom: 2px solid #1f3c88;
+
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+
+
+/* BODY */
+
+.department-table td {
+
+  padding: 12px 16px;
+  font-size: 14px;
+
   color: #333;
+
   border-bottom: 1px solid #e0e0e0;
 }
 
-.department-table th {
-  background: #cbcdcd;
-  font-weight: 600;
-  color: #2c3e50;
-  border-bottom: 2px solid #1f3c88;
-}
 
-.department-table tbody tr {
-  transition: all 0.2s ease;
-}
+
+/* HOVER */
 
 .department-table tbody tr:hover {
+
   background: #f8f9fa;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
+
+
+
+/* SCROLLBAR DESIGN */
+
+.department-table-wrapper::-webkit-scrollbar {
+
+  width: 10px;      /* vertical */
+  height: 10px;     /* horizontal */
+}
+
+
+.department-table-wrapper::-webkit-scrollbar-track {
+
+  background: #f1f1f1;
+}
+
+
+.department-table-wrapper::-webkit-scrollbar-thumb {
+
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+
+.department-table-wrapper::-webkit-scrollbar-thumb:hover {
+
+  background: #a8a8a8;
+}
+
+
+
+/* Firefox */
+
+.department-table-wrapper {
+
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+
+
 
 .sub-list {
   list-style: none;

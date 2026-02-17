@@ -623,12 +623,6 @@ button:hover {
   border-left: 4px solid #4CAF50;
 }
 
-/* ===========================================
-   PROJECTS GRID LAYOUT - Classy Design
-   =========================================== */
-/* ==============================
-   TABLE WRAPPER
-============================== */
 .projects-table-wrapper {
   width: 100%;
   overflow-x: auto;

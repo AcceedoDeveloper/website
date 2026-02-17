@@ -69,7 +69,7 @@
 
       <div class="task-controls">
     <!-- Add Task Button -->
-    <button class="pill-btn" (click)="openAssignmentDialog()" [disabled]="!selectedProjectId">
+    <button class="pill-btn" (click)="openAssignmentDialog()">
       + Add Task
     </button>
     <div class="date-filter-section">
@@ -89,15 +89,6 @@
 </div>
   </div>
 <div class="task-controls-container">
-
-
-
-
-
-
-
-
-
   <div class="kanban-board" *ngIf="!loading && !error" cdkDropListGroup>
     
   <div class="kanban-column"
@@ -418,10 +409,13 @@
           <div class="right-column">
             
   
-            <div class="form-group">
-              <label class="form-label">Project</label>
-              <input type="text" [value]="selectedProjectName" readonly class="form-input readonly">
-            </div>
+ <div class="form-group">
+ <label class="form-label">Projects</label>
+ <select formControlName="projectId" class="form-select">
+ <option value="">Select Project</option>
+ <option *ngFor="let project of projects" [value]="project._id"> {{ project.projectName }}</option>
+ </select>
+ </div>
             
      
             <div class="form-group">

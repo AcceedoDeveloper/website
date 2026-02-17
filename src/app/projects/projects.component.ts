@@ -704,22 +704,54 @@ getTodayDateString(): string {
     this.doneAssignments = [];
   }
 
-  openAssignmentDialog(task?: AssignWork) {
-    console.log( "data", task);
-    
-    if (!this.selectedProjectId && !task) {
-      this.error = "Please select a project first to add tasks";
-      this.snackBar.open(this.error, 'Close', { duration: 3000 });
-      this.error = '';
-      return;
-    }
 
-    if (!this.isCurrentUserTeamLead() && !task) {
-      this.error = "Only team leads can assign tasks to this project";
-      this.snackBar.open(this.error, 'Close', { duration: 3000 });
-      this.error = '';
+isAdmin(): boolean {
+
+  return localStorage.getItem('role') === 'Admin';
+
+}
+
+
+
+  openAssignmentDialog(task?: AssignWork) {
+  console.log("data", task);
+
+  // 1. Check for Unauthorized Users (Neither Admin nor Team Lead)
+  if (!this.isAdmin() && !this.isCurrentUserTeamLead()) {
+    this.showError("Only Admin and Team Lead can add tasks");
+    return;
+  }
+
+  // 2. Handle Admin Logic: Direct access, no project selection required
+  if (this.isAdmin()) {
+    this.proceedToOpenDialog(task); // Direct call to your dialog logic
+    return;
+  }
+
+  // 3. Handle Team Lead Logic: Must have a project/task context
+  if (this.isCurrentUserTeamLead()) {
+    if (!task) {
+      this.showError("Only team leads can assign tasks to this project");
       return;
     }
+    this.proceedToOpenDialog(task);
+  }
+}
+
+/** * Helper to reduce code repetition for snackbars 
+ */
+private showError(message: string) {
+  this.error = message;
+  this.snackBar.open(this.error, 'Close', { duration: 3000 });
+  this.error = '';
+}
+
+/**
+ * Move your actual MatDialog opening logic here
+ */
+private proceedToOpenDialog(task?: AssignWork) {
+  // Your existing dialog.open(...) code goes here
+
 
     if (task && task.pictures?.length) {
       this.uploadedPictures = [...task.pictures];
