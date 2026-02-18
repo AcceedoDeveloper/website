@@ -112,7 +112,7 @@
       <div class="form-buttons">
         <button class="create-button" (click)="createProject()" [disabled]="isLoading">
           <i class="fa fa-plus"></i> 
-          <span *ngIf="!isLoading">Create Project</span>
+          <span *ngIf="!isLoading">Save</span>
           <span *ngIf="isLoading">Creating...</span>
         </button>
         <button class="cancel-button" (click)="cancel()" [disabled]="isLoading">Cancel</button>

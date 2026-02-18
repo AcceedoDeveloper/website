@@ -231,72 +231,52 @@ input, select, textarea, button {
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(3px);
   background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
   overflow:auto;
-  animation: backdropFadeIn 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 20px;
 }
 
 .modal-content {
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 20px;
+  border-radius: 16px;
   width: 90%;
-  max-width: 800px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  animation: dialogSlideIn 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  max-width: 600px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
   position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 28px;
-  border-bottom: 1px solid rgba(233, 236, 239, 0.5);
+  padding: 5px 24px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  position: relative;
-  overflow: hidden;
-  animation: headerSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.05s both;
-}
-
-.modal-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-  transform: translateX(-50%) scaleX(0);
-  animation: underlineExpand 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s both;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px 16px 0 0;
 }
 
 .modal-header h3 {
   margin: 0;
-  color: #ffffff;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  animation: titleSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both;
 }
 
 .close-modal {
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
-  color: #ffffff;
-  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  padding: 8px;
+  padding: 6px;
   border-radius: 50%;
-  animation: closeBtnSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+  transition: all 0.2s;
 }
 
 .close-modal:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
   transform: scale(1.1);
 }
 
@@ -304,52 +284,49 @@ input, select, textarea, button {
    FORM STYLES - Enhanced with Color Palette
    =========================================== */
 .form-body {
-  padding: 28px;
-  background: #ffffff;
-  animation: formBodySlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.25s both;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columns */
+  gap: 20px;
+  padding: 20px;
+  background: #fff;
 }
 
 .form-row {
-  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  animation: formRowSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  margin-bottom: 16px;
 }
-
-.form-row:nth-child(1) { animation-delay: 0.3s; }
-.form-row:nth-child(2) { animation-delay: 0.35s; }
-.form-row:nth-child(3) { animation-delay: 0.4s; }
-.form-row:nth-child(4) { animation-delay: 0.45s; }
 
 .form-row label {
   font-weight: 600;
-  margin-bottom: 10px;
+  font-size: 13px;
   color: #667eea;
+  margin-bottom: 6px;
+}
+
+.form-row input,
+.form-row select {
+  padding: 10px 12px;
   font-size: 14px;
-  letter-spacing: 0.3px;
-  animation: labelSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-}
-
-.form-row input {
-  padding: 14px 18px;
+  border-radius: 8px;
   border: 1px solid #e9ecef;
-  border-radius: 12px;
-  outline: none;
-  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  font-size: 15px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: all 0.2s;
 }
 
-.form-row input:focus {
+.form-row input:focus,
+.form-row select:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(102, 126, 234, 0.15);
-  transform: translateY(-1px);
+  box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+  outline: none;
 }
 
-.form-row input:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+/* ================================
+   FULL-WIDTH ELEMENTS
+   ================================ */
+.full-width {
+  grid-column: 1 / -1; /* span both columns */
 }
 
 .date-row {
@@ -534,62 +511,42 @@ input, select, textarea, button {
 .form-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
-  padding: 24px 28px;
-  border-top: 1px solid rgba(233, 236, 239, 0.5);
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e9ecef;
   background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-  animation: formButtonsSlideIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
 }
 
 button {
-  padding: 14px 24px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
+  padding: 10px 18px;
   font-weight: 600;
-  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  letter-spacing: 0.3px;
-  position: relative;
-  overflow: hidden;
-}
-
-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-button:hover::before {
-  left: 100%;
-}
-
-button i {
-  font-size: 16px;
-}
-
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
 }
 
 .create-button {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .create-button:hover {
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(102,126,234,0.3);
 }
+
+.cancel-button {
+  background: #f0f0f0;
+  color: #6c757d;
+  border: 1px solid #ddd;
+}
+
+.cancel-button:hover {
+  background: #e2e6ea;
+}
+
+
 
 .cancel-button {
   background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
@@ -601,6 +558,13 @@ button:hover {
 .cancel-button:hover {
   background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+@media (max-width: 600px) {
+  .form-body {
+    grid-template-columns: 1fr; /* stack columns on mobile */
+  }
 }
 
 .save-btn {

@@ -161,7 +161,7 @@ getInitials(name: string): string {
     this.updateDateTime();
     this.getDocuments();
     this.ngAfterViewInit()
-    
+    this.isAdmin();
     const currentYear = new Date().getFullYear();
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
       this.years.push(i);
@@ -705,148 +705,92 @@ getTodayDateString(): string {
   }
 
 
-isAdmin(): boolean {
+  isAdmin(): boolean {
+  // roleObj could be undefined or an object
+  const roleObj: any = this.userData?.role || localStorage.getItem('role');
+  
+  // extract role string safely
+  const roleStr = typeof roleObj === 'string' 
+    ? roleObj 
+    : roleObj?.role ?? ''; // get .role if object, else empty string
 
-  return localStorage.getItem('role') === 'Admin';
-
+  console.log('roleStr:', roleStr);  // should print 'admin'
+  return roleStr.toLowerCase() === 'admin';
 }
 
 
 
-  openAssignmentDialog(task?: AssignWork) {
+
+
+openAssignmentDialog(task?: AssignWork) {
   console.log("data", task);
 
-  // 1. Check for Unauthorized Users (Neither Admin nor Team Lead)
-  if (!this.isAdmin() && !this.isCurrentUserTeamLead()) {
-    this.showError("Only Admin and Team Lead can add tasks");
+  // If user is NOT admin and no project selected -> block
+  if (!this.isAdmin() && !this.selectedProjectId && !task) {
+    this.error = "Please select a project first to add tasks";
+    this.snackBar.open(this.error, 'Close', { duration: 3000 });
+    this.error = '';
     return;
   }
 
-  // 2. Handle Admin Logic: Direct access, no project selection required
-  if (this.isAdmin()) {
-    this.proceedToOpenDialog(task); // Direct call to your dialog logic
+  // If user is NOT admin and not team lead -> block
+  if (!this.isAdmin() && !this.isCurrentUserTeamLead() && !task) {
+    this.error = "Only team leads can assign tasks to this project";
+    this.snackBar.open(this.error, 'Close', { duration: 3000 });
+    this.error = '';
     return;
   }
 
-  // 3. Handle Team Lead Logic: Must have a project/task context
-  if (this.isCurrentUserTeamLead()) {
-    if (!task) {
-      this.showError("Only team leads can assign tasks to this project");
-      return;
-    }
-    this.proceedToOpenDialog(task);
-  }
-}
+  // Prepare uploaded pictures
+  this.uploadedPictures = task?.pictures?.length ? [...task.pictures] : [];
+  this.selectedPictureFiles = [];
 
-/** * Helper to reduce code repetition for snackbars 
- */
-private showError(message: string) {
-  this.error = message;
-  this.snackBar.open(this.error, 'Close', { duration: 3000 });
-  this.error = '';
-}
+  this.editingTask = task || null;
+  this.selectedTask = task || null;
 
-/**
- * Move your actual MatDialog opening logic here
- */
-private proceedToOpenDialog(task?: AssignWork) {
-  // Your existing dialog.open(...) code goes here
+  // Prepare form data
+  const formData = {
+    title: task?.title || '',
+    description: task?.description || '',
+    assignedTo: task?.assignedTo || this.username,
+    assignee: task?.assignee || '',
+    startDate: task?.startDate || '',
+    dueDate: task?.dueDate || this.dateUtils.getCurrentDateString(),
+    Status: task?.Status || 'ToDo',
+    projectId: task?.projectId || '' // leave empty for admin
+  };
 
+  this.assignmentForm.patchValue(formData);
+  this.commentForm.reset();
 
-    if (task && task.pictures?.length) {
-      this.uploadedPictures = [...task.pictures];
-    } else {
-      this.uploadedPictures = [];
-    }
-    this.selectedPictureFiles = [];
+  // Open dialog
+  const dialogRef = this.dialog.open(this.assignmentDialog, {
+    width: '700px',
+    maxWidth: '95vw',
+    maxHeight: '70vh',
+    disableClose: false,
+  });
 
-    this.editingTask = task || null;
-    this.selectedTask = task || null;
-
-    // Debug date conversion
-    let startDateValue = '';
-    let dueDateValue = '';
-    
-    if (task) {
-      console.log('Original startDate:', task.startDate);
-      console.log('Original dueDate:', task.dueDate);
-      
-      // For HTML date inputs, we need YYYY-MM-DD format strings
-      if (task.startDate) {
-        // Convert to YYYY-MM-DD format for HTML date input
-        const startDate = new Date(task.startDate);
-        if (!isNaN(startDate.getTime())) {
-          startDateValue = task.startDate; // Keep as string in YYYY-MM-DD format
-        }
-        console.log('Formatted startDate:', startDateValue);
-      }
-      
-      if (task.dueDate) {
-        // Convert to YYYY-MM-DD format for HTML date input
-        const dueDate = new Date(task.dueDate);
-        if (!isNaN(dueDate.getTime())) {
-          dueDateValue = task.dueDate; // Keep as string in YYYY-MM-DD format
-        }
-        console.log('Formatted dueDate:', dueDateValue);
-      }
-    }
-
-    const formData = task
-      ? {
-          title: task.title || '',
-          description: task.description || '',
-          assignedTo: task.assignedTo || this.username,
-          assignee: task.assignee || '',
-          startDate: startDateValue,
-          dueDate: dueDateValue || this.dateUtils.getCurrentDateString(),
-          Status: task.Status || 'ToDo'
-        }
-      : {
-          title: '',
-          description: '',
-          assignedTo: this.username,
-          assignee: '',
-          startDate: '',
-          dueDate: this.dateUtils.getCurrentDateString(),
-          Status: 'ToDo'
-        };
-
-    console.log('Form data being set:', formData);
-
-    // Use patchValue instead of reset to properly handle Date objects
-    this.assignmentForm.patchValue(formData);
+  const afterSub = dialogRef.afterClosed().subscribe(() => {
+    this.assignmentForm.patchValue({
+      assignedTo: this.username,
+      Status: 'ToDo',
+      startDate: '',
+      dueDate: this.dateUtils.getCurrentDateString(),
+      projectId: ''
+    });
     this.commentForm.reset();
+    this.editingTask = null;
+    this.selectedTask = null;
+    this.uploadedPictures = [];
+    this.selectedPictureFiles = [];
+    afterSub.unsubscribe();
+  });
 
-    // Debug form values after patch
-    setTimeout(() => {
-      console.log('Form startDate value:', this.assignmentForm.get('startDate')?.value);
-      console.log('Form dueDate value:', this.assignmentForm.get('dueDate')?.value);
-    }, 100);
+  this.subs.add(afterSub);
+}
 
-    const dialogRef = this.dialog.open(this.assignmentDialog, {
-      width: '1000px',
-      maxWidth: '95vw',
-      maxHeight: '90vh',
-      disableClose:true,
-    });
-
-    const afterSub = dialogRef.afterClosed().subscribe(() => {
-      this.assignmentForm.patchValue({
-        assignedTo: this.username,
-        Status: 'ToDo',
-        startDate: '',
-        dueDate: this.dateUtils.getCurrentDateString()
-      });
-      this.commentForm.reset();
-      this.editingTask = null;
-      this.selectedTask = null;
-      this.uploadedPictures = [];
-      this.selectedPictureFiles = [];
-      afterSub.unsubscribe();
-    });
-
-    this.subs.add(afterSub);
-  }
+ 
 
   addComment() {
     if (this.commentForm.invalid || !this.selectedTask) return;
@@ -1385,7 +1329,11 @@ getFileUrl(file: string): string {
     this.loadError[file] = true;
   }
 
-  closeDialog() {
+  closeDialog():void {
+    this.dialog.closeAll();
+  }
+
+   close():void {
     this.dialog.closeAll();
   }
 

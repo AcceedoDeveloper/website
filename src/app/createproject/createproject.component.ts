@@ -729,6 +729,7 @@ private performProjectDeletion(projectId: any): void {
 
 
   openEditModal(project: any) {
+     
     console.log('Opening edit modal for project:', project);
     console.log('Original project startDate:', project.startDate);
     console.log('Original project expectedEndDate:', project.expectedEndDate);

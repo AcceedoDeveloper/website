@@ -308,18 +308,23 @@
 <ng-template #assignmentDialog>
   <div class="dialog-container" [class.loading]="isLoading">
     <div class="dialog-header">
-      <h2 class="dialog-title">{{ editingTask ? 'Edit Task' : 'Add Task' }}</h2>
+      
+      <h2 class="dialog-title">
+  {{ editingTask ? 'Edit Task' : 'Add Task' }}
+</h2>
+ <button type="button" class="btn btn-cancel dialog-close-btn" (click)="close()">×</button>
     </div>
 
     <div class="dialog-content">
       <form [formGroup]="assignmentForm" class="dialog-form" [class.loading]="isLoading">
         <div class="form-columns">
           
-     
+          
           <div class="left-column scrollable-section">
             
         
             <div class="section-block">
+              
               <h3 class="section-title">• Task Title</h3>
               <div class="form-group">
                 <input 
@@ -421,7 +426,7 @@
             <div class="form-group">
               <label class="form-label">Assigner (work giver)</label>
               <input type="text" [value]="username" readonly class="form-input readonly">
-              <input type="hidden" formControlName="assignedTo" [value]="username">
+              <input type="hidden" formControlName="assignedTo" assignmentForm.patchValue>
             </div>
 
       
