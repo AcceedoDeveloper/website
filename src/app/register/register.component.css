@@ -35,7 +35,7 @@
 
 
 .user-container {
-  width: 90%;
+  width: 100%;
   max-width: 90%;
   margin: 0 auto;
   padding: 1.5rem;
@@ -107,7 +107,11 @@
 }
 
 .user-table-wrapper {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: auto;
+  box-sizing: border-box;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   background: white;
@@ -120,12 +124,17 @@
 }
 /* User Table */
 .user-table {
-  width: 100%;
-  border-collapse: separate;
+  width: 200%;
+  min-width: 1200px;       
+  border-collapse:  collapse;
   border-spacing: 0;
   background: #ffffff;
   border-radius: 8px;
   overflow: hidden;
+   table-layout: fixed;  
+   width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; 
 }
 
 
@@ -138,7 +147,11 @@
   letter-spacing: 0.05em;
   padding: 1rem;
   text-align: left;
-  border-bottom: 2px solid #1f3c88;
+  white-space: nowrap;     /* 🔥 text wrap stop */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  padding: 12px 10px;
 }
 
 
@@ -147,6 +160,11 @@
   font-size: 0.95rem;
   color: #1a1a1a;
   border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;     /* 🔥 text wrap stop */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  padding: 12px 10px;
 }
 
 
@@ -166,6 +184,8 @@
 
 
 .user-table .action-col {
+  width: 110px;
+  min-width: 110px;
   text-align: center;
   white-space: nowrap;
 }
@@ -466,6 +486,62 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
+/* ========================= */
+/* ZOOM SAFE FIX */
+/* ========================= */
+
+/* Browser zoom 110% - 125% */
+@media (max-width: 1400px) {
+  .user-table {
+    min-width: 1150px;
+  }
+}
+
+/* Zoom 125% - 150% */
+@media (max-width: 1200px) {
+  .user-table {
+    min-width: 1100px;
+  }
+}
+
+/* Zoom 150% - 175% */
+@media (max-width: 1000px) {
+  .user-table {
+    min-width: 1050px;
+  }
+}
+
+/* Zoom 175%+ */
+@media (max-width: 900px) {
+  .user-table {
+    min-width: 1000px;
+  }
+}
+
+/* ========================= */
+/* SMALL SCREENS (RESPONSIVE) */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .user-table-wrapper {
+    overflow-x: auto;   /* horizontal scroll only */
+  }
+
+  .pagination-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* Ultra small screens */
+@media (max-width: 480px) {
+  .pagination-buttons {
+    flex-wrap: wrap;
+  }
+}
+
+
 /* Responsive design for search container */
 @media (max-width: 768px) {
   .search-container {
@@ -497,19 +573,25 @@
 }
 
 .user-table-wrapper.scrollable {
-  max-height: 450px;  
+  max-height: 450px; 
+  display: flex; 
   overflow-y: auto;
   overflow-x: auto;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
+  width: 100%;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+
 }
 
 
 .user-table-wrapper.scrollable table thead th {
   position: sticky;
-  top: 0;
+  top: -1px;
   background: #cbcdcd;
-  z-index: 10;
+  z-index: 20;
 }
 
 
@@ -533,8 +615,8 @@
 
 @media (max-width: 768px) {
   .maincontent {
-    width: 100%;
-    margin-left: 0;
+    width: 100% !important;
+    margin-left: 0 !important;
     padding: 10px;
   }
   

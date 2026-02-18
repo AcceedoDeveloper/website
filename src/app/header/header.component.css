@@ -1678,6 +1678,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(31, 60, 136, 0.2);
+}
+.user-icon:hover {
+    background-color: #003d7a;
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(31, 60, 136, 0.35);
+}
+
+/* Click */
+.user-icon:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 4px rgba(31, 60, 136, 0.2);
 }
 
 
@@ -1686,7 +1702,7 @@
   position: absolute;
  
   width: 50px;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 200px);
   background: #fafbfc;
   border-right: 1px solid #e8eaed;
   padding: 20px;
@@ -5049,4 +5065,5 @@
   justify-content: center;
   text-transform: uppercase;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  cursor: pointer;
 }

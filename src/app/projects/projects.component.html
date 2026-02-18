@@ -6,16 +6,31 @@
  
   <div class="wecomemaincontent">
 
-    <div class="welcome-card"> 
-     
-     
-    
-    <div class="usericonheader">
-    
 
 
-      <div class="header">
-       <!-- Project Dropdown -->
+  
+ 
+
+  <div class="content-wrapper">
+  
+
+
+
+
+  <!-- <app-task *ngIf="mainTask"></app-task> -->
+   <div class="maintask" *ngIf="showmaintask">
+
+      <div class="task-controls">
+    <!-- Add Task Button 1 -->
+    <button class="pill-btn" (click)="openAssignmentDialog()">
+      + Add Task
+    </button>
+
+
+    <!-- project 2 -->
+    <div class="header">
+     
+                   <!-- Project Dropdown -->
        <div class="pill-dropdown">
          <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
            <option value="">All Projects</option>
@@ -46,32 +61,11 @@
          <div class="pill-dropdown">
            <button (click)="opendoc()">Documents</button>
          </div>
-
        </div>
      </div>
 
-    </div>
 
-
-  </div>
-
-  
- 
-
-  <div class="content-wrapper">
-  
-
-
-
-
-  <!-- <app-task *ngIf="mainTask"></app-task> -->
-   <div class="maintask" *ngIf="showmaintask">
-
-      <div class="task-controls">
-    <!-- Add Task Button -->
-    <button class="pill-btn" (click)="openAssignmentDialog()">
-      + Add Task
-    </button>
+  <!-- filter 3 -->
     <div class="date-filter-section">
   
   
