@@ -1,11 +1,12 @@
 .maincontent {
-  width: calc(100% - 280px);
-  margin-left: 280px;
+  width: 80%;
+  margin-left: 20%;
   padding: 20px;
   min-height: calc(100vh - 80px);
- 
   overflow-y: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  box-sizing: border-box;
 }
 
 /* Custom scrollbar for Webkit browsers (Chrome, Safari, Edge) */
@@ -36,12 +37,14 @@
 
 .user-container {
   width: 100%;
-  max-width: 90%;
+  max-width: 96%;
   margin: 0 auto;
+  margin-left: 10px;
   padding: 1.5rem;
   border-radius: 12px;
   font-family: 'Inter', sans-serif;
   transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
 }
 
 .user-header {
@@ -78,6 +81,7 @@
 .user-header-right{
   display: flex;
   justify-content: flex-start;
+  margin-right: 20px;
   gap: 30px;
 }
 
@@ -112,10 +116,10 @@
   overflow-x: auto;
   overflow-y: auto;
   box-sizing: border-box;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   background: white;
-  border: 1px solid #e9ecef;
+  border: 1px solid #e0e4e8;
 }
 
 .img{
@@ -124,18 +128,36 @@
 }
 /* User Table */
 .user-table {
-  width: 200%;
-  min-width: 1200px;       
-  border-collapse:  collapse;
+  width: 100%;
+  border-collapse: collapse;
   border-spacing: 0;
   background: #ffffff;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-   table-layout: fixed;  
-   width: 100%;
-  border-collapse: collapse;
-  min-width: 600px; 
+  table-layout: fixed;
 }
+
+/* 🔥 Column width distribution - centered & professional */
+.user-table th:nth-child(1),
+.user-table td:nth-child(1) { width: 14%; }  /* USERNAME */
+
+.user-table th:nth-child(2),
+.user-table td:nth-child(2) { width: 16%; }  /* DEPARTMENT */
+
+.user-table th:nth-child(3),
+.user-table td:nth-child(3) { width: 13%; }  /* SUB-DEPARTMENT */
+
+.user-table th:nth-child(4),
+.user-table td:nth-child(4) { width: 12%; }  /* ROLE */
+
+.user-table th:nth-child(5),
+.user-table td:nth-child(5) { width: 16%; }  /* EMAIL */
+
+.user-table th:nth-child(6),
+.user-table td:nth-child(6) { width: 14%; }  /* PHONE NUMBER */
+
+.user-table th:nth-child(7),
+.user-table td:nth-child(7) { width: 15%; }  /* ACTION */
 
 
 .user-table th {
@@ -143,28 +165,25 @@
   color: black;
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.85rem;
   letter-spacing: 0.05em;
-  padding: 1rem;
-  text-align: left;
-  white-space: nowrap;     /* 🔥 text wrap stop */
+  text-align: center;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 14px;
-  padding: 12px 10px;
+  padding: 14px 12px;
 }
 
 
 .user-table td {
-  padding: 1rem;
-  font-size: 0.95rem;
+  font-size: 14px;
   color: #1a1a1a;
   border-bottom: 1px solid #e5e7eb;
-  white-space: nowrap;     /* 🔥 text wrap stop */
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 14px;
-  padding: 12px 10px;
+  padding: 14px 12px;
+  text-align: center;
 }
 
 
@@ -184,10 +203,11 @@
 
 
 .user-table .action-col {
-  width: 110px;
-  min-width: 110px;
+  width: 15%;
+  min-width: 100px;
   text-align: center;
   white-space: nowrap;
+  overflow: visible;
 }
 
 
@@ -492,29 +512,33 @@
 
 /* Browser zoom 110% - 125% */
 @media (max-width: 1400px) {
-  .user-table {
-    min-width: 1150px;
+  .user-table th, .user-table td {
+    padding: 12px 8px;
+    font-size: 13px;
   }
 }
 
 /* Zoom 125% - 150% */
 @media (max-width: 1200px) {
-  .user-table {
-    min-width: 1100px;
+  .user-table th, .user-table td {
+    padding: 10px 6px;
+    font-size: 12px;
   }
 }
 
 /* Zoom 150% - 175% */
 @media (max-width: 1000px) {
-  .user-table {
-    min-width: 1050px;
+  .user-table th, .user-table td {
+    padding: 8px 5px;
+    font-size: 12px;
   }
 }
 
 /* Zoom 175%+ */
 @media (max-width: 900px) {
-  .user-table {
-    min-width: 1000px;
+  .user-table th, .user-table td {
+    padding: 6px 4px;
+    font-size: 11px;
   }
 }
 
@@ -524,7 +548,7 @@
 
 @media (max-width: 768px) {
   .user-table-wrapper {
-    overflow-x: auto;   /* horizontal scroll only */
+    overflow-x: auto;
   }
 
   .pagination-controls {
@@ -580,7 +604,7 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   width: 100%;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+  -webkit-overflow-scrolling: touch;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 

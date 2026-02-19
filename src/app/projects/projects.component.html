@@ -102,9 +102,7 @@
     <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
   </div>
  <div class="task-info-clean assignee-avatar-container">
-  <div class="avatar-circle">
-    {{ getInitials(task.assignee) }}
-  </div>
+
     <!--<span class="point-clean">{{ task.assignee }}</span>-->
   </div>
   
@@ -115,6 +113,24 @@
     <mat-icon class="due-icon">schedule</mat-icon>
     {{ task.dueDate | date:'dd MMM yyyy' }}
   </span>
+    <div class="task-footer">
+        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
+          <small><strong>Comments: {{ task.comment.length }}</strong></small>
+        </div>
+       <div class="actions">
+          <div class="avatar-circle">
+    {{ getInitials(task.assignee) }}
+  </div>
+      <button mat-icon-button color="accent"
+              (click)="openAssignmentDialog(task); $event.stopPropagation()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn"
+              (click)="deleteAssignment(task._id); $event.stopPropagation()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+      </div>
 
   <span *ngIf="isOverdue(task)" class="overdue-label">
     Overdue
@@ -128,21 +144,7 @@
         <small><strong>Comments: {{ task.comment.length }}</strong></small>
       </div>
     </div>
-      <div class="task-footer">
-        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-          <small><strong>Comments: {{ task.comment.length }}</strong></small>
-        </div>
-       <div class="actions">
-      <button mat-icon-button color="accent"
-              (click)="openAssignmentDialog(task); $event.stopPropagation()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button color="warn"
-              (click)="deleteAssignment(task._id); $event.stopPropagation()">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-      </div>
+    
     </div>
     
     <div *ngIf="getFilteredTasksByStatus('ToDo').length === 0" class="empty-state">
