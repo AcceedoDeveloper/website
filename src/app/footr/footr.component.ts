@@ -6,15 +6,18 @@ import { Component, HostListener } from '@angular/core';
   styleUrl: './footr.component.css'
 })
 export class FootrComponent {
-  isDropdownOpen = false;
+  
   isNavOpen = false;
-
+  isDropdownOpen = false;
+  
   toggleDropdown(event: Event) {
-    event.preventDefault();
-    console.log('Dropdown toggle clicked, current state:', this.isDropdownOpen);
-    this.isDropdownOpen = !this.isDropdownOpen;
-    console.log('Dropdown toggle new state:', this.isDropdownOpen);
-  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  this.isDropdownOpen = !this.isDropdownOpen;
+
+}
 
   onNavCheckChange(event: Event) {
     const target = event.target as HTMLInputElement;

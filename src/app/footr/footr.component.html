@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <div class="nav">
 
   <input type="checkbox" id="nav-check">
@@ -30,10 +31,14 @@
         <li><a routerLink="/acceedo">Our Company</a></li>
 
         <!-- PRODUCT DROPDOWN -->
-        <li class="nav-item dropdown">
-         <a href="#" class="nav-link">
-           Solutions
-         </a>
+       <li class="nav-item dropdown"
+    [class.active]="isDropdownOpen">
+  <a href="#"
+  class="nav-link"
+  (click)="toggleDropdown($event)">
+  Solutions
+  <mat-icon>expand_more</mat-icon>
+  </a>
           
 
           <div class="dropdown-menu">

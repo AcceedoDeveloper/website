@@ -805,30 +805,87 @@ html, body {
 }
 
 .dialog-header {
+
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 16px 24px;
+
+  padding: 10px 15px;
+
   border-radius: 12px 12px 0 0;
+
   position: relative;
+
   overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
 }
 
+
+/* underline animation */
 .dialog-header::after {
+
   content: '';
+
   position: absolute;
+
   bottom: 0;
+
   left: 50%;
+
   width: 100%;
+
   height: 3px;
+
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+
   transform: translateX(-50%) scaleX(0);
-  animation: underlineExpand 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s both;
+
+  animation: underlineExpand 0.4s ease 0.15s both;
+
 }
 
 .dialog-title {
+
   color: white;
+
   margin: 0;
+
   font-weight: 500;
+
   font-size: 1.25rem;
+
+}
+
+
+.dialog-close-btn {
+  background: transparent;          /* no box */
+  border: none;                     /* no border */
+  color: white;                     /* white X */
+  font-size: 20px;                  /* small, professional */
+  width: auto;                       /* fit content */
+  height: auto;                      /* fit content */
+  cursor: pointer;                  
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+.dialog-close-btn:hover {
+  color: #ffebeb;                   /* subtle highlight */
+  transform: scale(1.2) rotate(90deg); /* small pop + rotation */
+}
+
+/* Click effect */
+.dialog-close-btn:active {
+  transform: scale(0.9);
 }
 
 .dialog-content {
