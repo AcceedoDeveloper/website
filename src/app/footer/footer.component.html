@@ -1,3 +1,59 @@
+<div class="main">
+
+
+ <!-- CHATBOT -->
+<div class="chatbot-container" [class.open]="isChatOpen">
+
+  <!-- Chat Toggle Button -->
+  <button class="chat-toggle" *ngIf="!isChatOpen" (click)="toggleChat()">
+    💬
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isChatOpen">
+    
+    <div class="chat-header">
+      <span>Acceedo Assistant</span>
+      <button (click)="toggleChat()">✖</button>
+    </div>
+
+<div class="chat-body">
+
+  <div *ngFor="let msg of messages">
+
+    <!-- TEXT MESSAGE -->
+    <div *ngIf="msg.type === 'text'" [ngClass]="msg.from">
+      {{ msg.text }}
+    </div>
+
+    <!-- PRODUCT MESSAGE -->
+    <div *ngIf="msg.type === 'products'" class="bot products-box">
+      <div class="product-title">Our Products:</div>
+
+      <a *ngFor="let p of products"
+         [routerLink]="p.link"
+         class="product-item">
+        {{ p.name }}
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+
+    <div class="chat-input">
+      <input [(ngModel)]="userInput"
+             placeholder="Ask about IoT, services..."
+             (keyup.enter)="sendMessage()" />
+      <button (click)="sendMessage()">Send</button>
+    </div>
+
+  </div>
+</div>
+
+
+
 <footer class="footer-custom">
   <div class="container px-4">
 
@@ -87,3 +143,4 @@
     </div>
 
 </footer>
+</div>
