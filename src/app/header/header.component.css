@@ -52,7 +52,7 @@
 */
   /* 🔹 Center top positioning */
   position: absolute;
-  top: 95px;            /* adjust for your top bar */
+  top: 90px;            /* adjust for your top bar */
   left: 30%;
   transform: translateX(-50%);
   z-index: 900;
