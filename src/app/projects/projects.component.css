@@ -40,7 +40,7 @@ html, body {
   flex: 1;
   margin-left: 240px;
   width: calc(100% - 240px);
-  max-width: calc(100% - 240px);   /* 🔥 prevent overflow */
+  max-width: calc(100% - 240px);
   min-height: 100vh;
   padding: 0;
   overflow-x: hidden;
@@ -72,7 +72,7 @@ html, body {
   max-width: 100%;
   padding: 16px 24px;
   min-height: calc(100vh - 60px);
-  overflow-x: hidden;              /* 🔥 no horizontal overflow */
+  overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
   display: flex;
@@ -87,7 +87,7 @@ html, body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;              /* 🔥 safety */
+  overflow-x: hidden;
 }
 
 /* =============================================
@@ -101,7 +101,7 @@ html, body {
   flex-wrap: nowrap;
   margin-bottom: 20px;
   width: 100%;
-  max-width: 100%;                 /* 🔥 */
+  max-width: 100%;
   padding: 8px 0;
   overflow-x: auto;
   overflow-y: hidden;
@@ -258,7 +258,7 @@ html, body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 16px;
+  padding: 7px 16px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
@@ -422,9 +422,7 @@ html, body {
    ============================================= */
 .wecomemaincontent {
   width: 80%;
- 
   margin-left: 18%;
- 
 }
 
 .welcome-header {
@@ -457,20 +455,20 @@ html, body {
 }
 
 /* =============================================
-   🔥🔥🔥 KANBAN BOARD - CENTERED & FITS SCREEN
+   KANBAN BOARD - CENTERED & FITS SCREEN
    ============================================= */
 .kanban-board {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);   /* 🔥 3 equal columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 20px 0;
-  width: 100%;                              /* 🔥 full available width */
-  max-width: 100%;                          /* 🔥 never exceed parent */
-  margin: 0 auto;                           /* 🔥 CENTER horizontally */
-  box-sizing: border-box;                   /* 🔥 include padding in width */
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-/* 🔥🔥🔥 KANBAN COLUMN - Fits within grid cell */
+/* KANBAN COLUMN */
 .kanban-column {
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border-radius: 12px;
@@ -478,12 +476,10 @@ html, body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   max-height: 70vh;
   overflow-y: auto;
-  overflow-x: hidden;                       /* 🔥 no horizontal overflow */
+  overflow-x: hidden;
   min-height: 500px;
   border: 1px solid rgba(226, 232, 240, 0.8);
-                              /* 🔥 fill grid cell */
-                            /* 🔥 KEY: allow shrinking below content */
-  box-sizing: border-box;                   /* 🔥 padding included */
+  box-sizing: border-box;
 }
 
 .kanban-column h3 {
@@ -495,7 +491,7 @@ html, body {
   color: #2d3748;
   border-bottom: 2px solid rgba(102, 126, 234, 0.1);
   font-weight: 600;
-  font-size: clamp(16px, 1.4vw, 22px);     /* 🔥 responsive font */
+  font-size: clamp(16px, 1.4vw, 22px);
 }
 
 .task-count {
@@ -514,13 +510,12 @@ html, body {
 }
 
 /* =============================================
-   🔥 KANBAN CARDS - Fit within column
+   KANBAN CARDS - Identical in all columns
    ============================================= */
 .kanban-card {
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border-radius: 12px;
-  padding: 16px;
-  padding-right: 60px;
+  padding: 4px;
   margin-bottom: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border-left: 4px solid #667eea;
@@ -530,7 +525,7 @@ html, body {
   flex-direction: column;
   font-size: 14px;
   min-height: 90px;
-  overflow: visible;
+  overflow: hidden;
   transition: all 0.3s ease;
   width: 100%;
   max-width: 100%;
@@ -544,10 +539,13 @@ html, body {
 }
 
 .kanban-card .task-content {
-  margin-top: 28px;
+  margin-top: 8px;
   margin-bottom: 10px;
-  overflow: hidden;                         /* 🔥 */
+  overflow: hidden;
   text-overflow: ellipsis;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .kanban-card strong {
@@ -582,7 +580,7 @@ html, body {
 }
 
 /* =============================================
-   TASK INFO
+   TASK INFO - Same layout for ALL columns
    ============================================= */
 .task-info-clean {
   display: flex;
@@ -590,21 +588,39 @@ html, body {
   gap: 5px;
   font-size: 10px;
   overflow: hidden;
+  flex: 1;
+  min-width: 0;
 }
-.task-footer{
 
+.task-footer {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-
+  min-width: 0;
 }
+
 .task-header-clean {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 5px;
+  width: 100%;
+  min-width: 0;
+  gap: 8px;
+  box-sizing: border-box;
 }
 
-.heading-clean { color: #1976d2; }
+/* Remove the extra task-main wrapper styling */
+.task-main {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.heading-clean {
+  color: #1976d2;
+  flex-shrink: 0;
+}
 
 .point-clean {
   color: #e53935;
@@ -623,21 +639,25 @@ html, body {
 #done-list .point-clean { color: #000; }
 
 /* =============================================
-   DUE DATE / META
+   DUE DATE / META - Same row in ALL columns
    ============================================= */
 .task-meta {
   margin-top: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 30px
-  ;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
 }
 
 .due-row {
   display: flex;
   justify-content: flex-start;
-  margin-top: 4px;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .due-date {
@@ -646,6 +666,10 @@ html, body {
   border-radius: 5px;
   background: #f1f3f9;
   white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .due-date .due-icon {
@@ -665,12 +689,14 @@ html, body {
 .due-date.overdue:hover { background: #ffeaea; }
 
 /* =============================================
-   AVATAR
+   AVATAR - Same in all columns
    ============================================= */
 .assignee-avatar-container {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
+  flex: 0 0 auto;
 }
 
 .avatar-circle {
@@ -684,28 +710,31 @@ html, body {
   justify-content: center;
   font-weight: 600;
   font-size: 14px;
+  margin-left: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   text-transform: uppercase;
   flex-shrink: 0;
 }
 
 /* =============================================
-   ACTIONS
+   ACTIONS - Same style for .actions AND .actions1
    ============================================= */
-.actions {
-  /* position: absolute; */
-
-
+.actions,
+.actions1 {
   display: flex;
   gap: 6px;
-  align-items: flex-end;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-bottom: 10px;
 }
 
-.actions button {
-   width: 28px;
+.actions button,
+.actions1 button {
+  width: 28px;
   height: 26px;
   padding: 0;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
@@ -714,7 +743,17 @@ html, body {
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 12px;
+  flex-shrink: 0;
+  min-width: 28px;
+  box-sizing: border-box;
+}
 
+.actions button:hover,
+.actions1 button:hover {
+  background: #f8fafc;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 /* =============================================
@@ -1378,10 +1417,9 @@ html, body {
 img, table, input, button, select { max-width: 100%; }
 
 /* =============================================
-   🔥 RESPONSIVE - Keeps board centered & fitted
+   RESPONSIVE
    ============================================= */
 
-/* Large screens with sidebar hidden */
 @media (max-width: 1024px) {
   .sidebar {
     position: fixed;
@@ -1408,7 +1446,6 @@ img, table, input, button, select { max-width: 100%; }
     min-width: max-content;
   }
 
-  /* 🔥 Board stays 3 columns, centered */
   .kanban-board {
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
@@ -1418,7 +1455,6 @@ img, table, input, button, select { max-width: 100%; }
   }
 }
 
-/* Tablet */
 @media (max-width: 768px) {
   .maincontent {
     width: 100%;
@@ -1445,7 +1481,6 @@ img, table, input, button, select { max-width: 100%; }
   .header { flex-wrap: nowrap; gap: 8px; }
   .pill-dropdown-containermv1 { flex-wrap: nowrap; gap: 8px; }
 
-  /* 🔥 Stack columns on small screens */
   .kanban-board {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -1478,7 +1513,6 @@ img, table, input, button, select { max-width: 100%; }
   .document-container { grid-template-columns: 1fr; }
 }
 
-/* Mobile */
 @media (max-width: 480px) {
   .maincontent { padding: 8px; }
   .mainproject { padding: 8px; }
@@ -1498,7 +1532,6 @@ img, table, input, button, select { max-width: 100%; }
   .pill-dropdown select { padding: 8px 12px; font-size: 13px; min-width: 100px; }
   .pill-btn { padding: 8px 12px; font-size: 13px; }
 
-  /* 🔥 Single column, centered */
   .kanban-board {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -1520,7 +1553,6 @@ img, table, input, button, select { max-width: 100%; }
   .upload-form { width: 95%; padding: 20px; }
 }
 
-/* Zoom safety */
 @media (min-resolution: 120dpi) {
   .app-layout,
   .mainproject,
@@ -1534,13 +1566,11 @@ img, table, input, button, select { max-width: 100%; }
   }
 }
 
-/* Print */
 @media print {
   .header, .sidebar, .task-controls-container { display: none; }
   .maincontent { margin-left: 0; width: 100%; }
 }
 
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

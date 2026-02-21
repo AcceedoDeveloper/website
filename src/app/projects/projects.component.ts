@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef ,AfterViewInit} from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -30,7 +30,8 @@ export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit{
 cancelEdit: any;
 isLoading = false;
 isDeleting = false;
-
+showtask=true;
+datefiltersection=true;
 showmaintask = true;
 Documents =false;
 Calendar = false;
@@ -116,7 +117,6 @@ todayYear = new Date().getFullYear();
   private dateIntervalId: any = null;
   searchQuery: any;
   isDragActive: any;
-  cd: any;
   constructor(
     private projectService: CreatprojectService,
     private assignworkService: AssignWorkService,
@@ -127,7 +127,8 @@ todayYear = new Date().getFullYear();
     private snackBar: MatSnackBar,
     private http: HttpClient,
     private sanitizer: DomSanitizer,
-    private dateUtils: DateUtilsService
+    private dateUtils: DateUtilsService,
+    private cd: ChangeDetectorRef
   ) {
     this.documentForm = this.fb.group({
       title: ['', Validators.required],
@@ -159,8 +160,6 @@ getInitials(name: string): string {
     this.loadUserFromSession();
     this.loadEmployees();
     this.updateDateTime();
-    this.getDocuments();
-    this.ngAfterViewInit()
     this.isAdmin();
     const currentYear = new Date().getFullYear();
     for (let i = currentYear - 5; i <= currentYear + 5; i++) {
@@ -170,16 +169,12 @@ getInitials(name: string): string {
     this.generateCalendar();
     this.getDocuments();
 
-        const today = new Date();
-  this.selectedTaskDate = this.getTodayDateString();
-  console.log('Initialized selectedTaskDate with current date:', this.selectedTaskDate);
-      this.days = Array.from({ length: 31 }, (_, i) => i + 1);
-    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
-      this.years.push(i);
-    }
+    const today = new Date();
+    this.selectedTaskDate = this.getTodayDateString();
+    console.log('Initialized selectedTaskDate with current date:', this.selectedTaskDate);
+    this.days = Array.from({ length: 31 }, (_, i) => i + 1);
 
     this.generateCalendar();
-    this.getDocuments();
    
   }
 
@@ -487,7 +482,8 @@ getTodayDateString(): string {
       assignee: ['', Validators.required],
       startDate: [''],
       dueDate: [this.dateUtils.getCurrentDateString(), Validators.required],
-      Status: ['ToDo']
+      Status: ['ToDo'],
+      projectId: ['']
     });
   }
 
@@ -526,10 +522,22 @@ getTodayDateString(): string {
   img.src = this.userData.photoURL;
   img.onload = () => {
     this.userData.photoURL = this.userData.photoURL + '?t=' + new Date().getTime();
-    this.cd.detectChanges(); 
+    try {
+      this.cd.detectChanges();
+    } catch (e) {
+      // View may already be destroyed or not yet initialized
+    }
+  };
+  img.onerror = () => {
+    this.userData.photoURL = 'assets/default-avatar.png';
+    try {
+      this.cd.detectChanges();
+    } catch (e) {
+      // View may already be destroyed or not yet initialized
+    }
   };
 
-  if (this.assignmentForm) {
+  if (this.assignmentForm && this.username && this.username !== 'User') {
     this.assignmentForm.patchValue({ assignedTo: this.username });
   }
   if (this.username && this.username !== 'User') {
@@ -757,7 +765,7 @@ openAssignmentDialog(task?: AssignWork) {
     startDate: task?.startDate || '',
     dueDate: task?.dueDate || this.dateUtils.getCurrentDateString(),
     Status: task?.Status || 'ToDo',
-    projectId: task?.projectId || '' // leave empty for admin
+    projectId: task?.projectId || this.selectedProjectId || ''
   };
 
   this.assignmentForm.patchValue(formData);
@@ -834,11 +842,19 @@ openAssignmentDialog(task?: AssignWork) {
       return;
     }
 
+    const projectId = this.selectedProjectId || this.editingTask?.projectId || this.assignmentForm.get('projectId')?.value || '';
+    const projectName = this.selectedProjectName || this.editingTask?.projectName || '';
+
+    if (!this.isAdmin() && !projectId) {
+      this.snackBar.open('Please select a project first', 'Close', { duration: 3000 });
+      return;
+    }
+
     this.isLoading = true;
     const formValue = this.assignmentForm.value;
     const formData = new FormData();
 
-    formData.append('projectName', this.selectedProjectName || (this.editingTask?.projectName || ''));
+    formData.append('projectName', projectName);
     formData.append('title', formValue.title);
     formData.append('description', formValue.description);
     formData.append('assignedTo', formValue.assignedTo || this.username);
@@ -847,7 +863,7 @@ openAssignmentDialog(task?: AssignWork) {
     formData.append('startDate', formValue.startDate ? this.dateUtils.formatDateForBackend(formValue.startDate) : '');
     formData.append('dueDate', formValue.dueDate ? this.dateUtils.formatDateForBackend(formValue.dueDate) : '');
     formData.append('Status', formValue.Status || (this.editingTask ? this.editingTask.Status : 'ToDo'));
-    formData.append('projectId', this.selectedProjectId || (this.editingTask?.projectId || ''));
+    formData.append('projectId', projectId);
 
     if (this.uploadedPictures?.length) {
       formData.append('existingPictures', JSON.stringify(this.uploadedPictures));
@@ -867,9 +883,11 @@ openAssignmentDialog(task?: AssignWork) {
             this.dialog.closeAll();
           }, 300);
         },
-        error: () => {
+        error: (err) => {
           this.isLoading = false;
-          this.snackBar.open('Failed to update task', 'Close', { duration: 3000 });
+          console.error('Update task error:', err, err.error);
+          const msg = err.error?.message || err.error?.error || 'Failed to update task';
+          this.snackBar.open(msg, 'Close', { duration: 5000 });
         }
       });
     } else {
@@ -882,9 +900,11 @@ openAssignmentDialog(task?: AssignWork) {
             this.dialog.closeAll();
           }, 300);
         },
-        error: () => {
+        error: (err) => {
           this.isLoading = false;
-          this.snackBar.open('Failed to create task', 'Close', { duration: 3000 });
+          console.error('Create task error:', err, err.error);
+          const msg = err.error?.message || err.error?.error || 'Failed to create task';
+          this.snackBar.open(msg, 'Close', { duration: 5000 });
         }
       });
     }
@@ -1047,14 +1067,20 @@ this.showmaintask = true;
 this.Documents =false;
 this.Calendar = false;
 this.Summary = false;
+this.showtask=true;
+this.datefiltersection=true;
   }
 
   openuv() {
-    this.ngAfterViewInit()
+    setTimeout(() => {
+      this.ngAfterViewInit();
+    }, 100);
 this.showmaintask = false;
 this.Documents =false;
 this.Calendar = false;
 this.Summary = true;
+this.showtask=false;
+this.datefiltersection=false;
     
 }
 
@@ -1063,6 +1089,8 @@ this.showmaintask = false;
 this.Documents =true;
 this.Calendar = false;
 this.Summary = false;
+this.showtask=false;
+this.datefiltersection=false;
   }
 
   openMonthView() {
@@ -1070,6 +1098,8 @@ this.showmaintask = false;
 this.Documents =false;
 this.Calendar = true;
 this.Summary = false;
+this.showtask=false;
+this.datefiltersection=false;
   }
 
   opendocpop(doc?: any) {

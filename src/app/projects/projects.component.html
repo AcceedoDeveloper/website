@@ -6,23 +6,9 @@
  
   <div class="wecomemaincontent">
 
-
-
-  
- 
-
-  <div class="content-wrapper">
-  
-
-
-
-
-  <!-- <app-task *ngIf="mainTask"></app-task> -->
-   <div class="maintask" *ngIf="showmaintask">
-
-      <div class="task-controls">
+   <div class="task-controls">
     <!-- Add Task Button 1 -->
-    <button class="pill-btn" (click)="openAssignmentDialog()">
+    <button class="pill-btn" (click)="openAssignmentDialog()" *ngIf="showtask">
       + Add Task
     </button>
 
@@ -66,7 +52,7 @@
 
 
   <!-- filter 3 -->
-    <div class="date-filter-section">
+    <div class="date-filter-section" *ngIf="datefiltersection">
   
   
   <div class="date-picker-wrapper">
@@ -81,7 +67,25 @@
   </div>
 
 </div>
+
+
+
+
   </div>
+
+  
+ 
+
+  <div class="content-wrapper">
+  
+
+
+
+
+  <!-- <app-task *ngIf="mainTask"></app-task> -->
+   <div class="maintask" *ngIf="showmaintask">
+
+   
 <div class="task-controls-container">
   <div class="kanban-board" *ngIf="!loading && !error" cdkDropListGroup>
     
@@ -102,7 +106,9 @@
     <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
   </div>
  <div class="task-info-clean assignee-avatar-container">
-
+                <div class="avatar-circle">
+    {{ getInitials(task.assignee) }}
+  </div>
     <!--<span class="point-clean">{{ task.assignee }}</span>-->
   </div>
   
@@ -117,10 +123,11 @@
         <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
           <small><strong>Comments: {{ task.comment.length }}</strong></small>
         </div>
+
+      
+
        <div class="actions">
-          <div class="avatar-circle">
-    {{ getInitials(task.assignee) }}
-  </div>
+  
       <button mat-icon-button color="accent"
               (click)="openAssignmentDialog(task); $event.stopPropagation()">
         <mat-icon>edit</mat-icon>
@@ -130,6 +137,8 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
+
+    
       </div>
 
   <span *ngIf="isOverdue(task)" class="overdue-label">
@@ -193,7 +202,7 @@
         <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
           <small><strong>Comments: {{ task.comment.length }}</strong></small>
         </div>
-       <div class="actions">
+       <div class="actions1">
       <button mat-icon-button color="accent"
               (click)="openAssignmentDialog(task); $event.stopPropagation()">
         <mat-icon>edit</mat-icon>
