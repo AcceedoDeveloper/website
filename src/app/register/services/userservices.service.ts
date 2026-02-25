@@ -5,8 +5,9 @@ import { ConfigService } from '../../service/config.service';
 
 interface User {
   _id?: string;
-  userCode?: string;
-  name?: string;
+ UserCode?: string;
+
+UserName?: string;
   userName?: string;
   emailId?: string;
   phoneNumber?: string;

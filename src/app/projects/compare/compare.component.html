@@ -1,0 +1,208 @@
+<div class="container">
+
+  <div class="compare-card">
+
+    <h2>User Task Compare</h2>
+
+    <!-- FORM GRID -->
+    <div class="form-grid">
+
+      <!-- USER DROPDOWN WITH CHECKBOX -->
+      <div>
+
+        <label>Select Users</label>
+
+        <div class="dropdown">
+
+          <!-- BUTTON -->
+          <button
+            class="dropdown-btn"
+            (click)="toggleDropdown()">
+
+            {{ selectedUsers.length > 0 ? selectedUsers.join(', ') : 'Select Users' }}
+
+            <span class="arrow">▼</span>
+
+          </button>
+
+
+          <!-- DROPDOWN LIST -->
+          <div
+            class="dropdown-content"
+            *ngIf="showDropdown">
+
+
+            <!-- HEADER -->
+            <div class="dropdown-header">
+
+              <span>Select Users</span>
+
+              <button
+                class="close-btn"
+                (click)="toggleDropdown()">
+
+                ✖
+
+              </button>
+
+            </div>
+
+
+            <!-- USER LIST -->
+            <label *ngFor="let u of users">
+
+              <input
+                type="checkbox"
+                [value]="u.userName"
+                [checked]="selectedUsers.includes(u.userName)"
+                (change)="onUserChange($event)" />
+
+              <span>
+
+                {{u.userName}}
+
+                <span
+                  class="tick"
+                  *ngIf="selectedUsers.includes(u.userName)">
+
+                  ✔
+
+                </span>
+
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- MONTH -->
+      <div>
+
+        <label>Month</label>
+
+        <select [(ngModel)]="selectedMonth">
+
+          <option value="">Select Month</option>
+
+          <option
+            *ngFor="let m of months"
+            [value]="m">
+
+            {{m}}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+
+      <!-- PROJECT -->
+      <div>
+
+        <label>Project</label>
+
+        <select [(ngModel)]="selectedProject">
+
+          <option value="">
+
+            All Project
+
+          </option>
+
+          <option
+            *ngFor="let p of projects"
+            [value]="p">
+
+            {{p}}
+
+          </option>
+
+        </select>
+
+      </div>
+
+
+
+      <!-- COMPARE BUTTON (MOVED INSIDE GRID) -->
+      <div>
+
+        <button
+          class="compare-btn"
+          (click)="compare()">
+
+          Compare
+
+        </button>
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- TABLE -->
+    <div
+      class="compare-table"
+      *ngIf="compareData.length > 0">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>User</th>
+
+            <th>Total</th>
+
+            <th>Completed</th>
+
+            <th>Pending</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr *ngFor="let user of compareData">
+
+            <td>{{user.name}}</td>
+
+            <td>{{user.total}}</td>
+
+            <td>{{user.completed}}</td>
+
+            <td>{{user.pending}}</td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+
+    <!-- CHART -->
+    <div class="chartBox">
+
+      <canvas #chart></canvas>
+
+    </div>
+
+
+  </div>
+
+</div>

@@ -6,7 +6,7 @@
  
   <div class="wecomemaincontent">
 
-   <div class="task-controls">
+      <div class="task-controls">
     <!-- Add Task Button 1 -->
     <button class="pill-btn" (click)="openAssignmentDialog()" *ngIf="showtask">
       + Add Task
@@ -18,22 +18,38 @@
      
                    <!-- Project Dropdown -->
        <div class="pill-dropdown">
-         <select [(ngModel)]="selectedProjectId" (change)="onProjectSelect()">
-           <option value="">All Projects</option>
-           <option *ngFor="let project of projects" [value]="project._id || project.id">
-             {{ project.projectName || project.name || 'Untitled Project' }}
-           </option>
-         </select>
-       </div>
+
+<!-- project selector; calls onProjectSelect when changed -->
+<select
+  [(ngModel)]="selectedProjectId"
+  (change)="onProjectSelect()"
+  class="form-select"
+  name="selectedProjectId"
+>
+
+  <option value="">All Projects</option>
+
+  <option
+    *ngFor="let project of projects; trackBy: trackById"
+    [ngValue]="project._id"
+  >
+
+    {{ project?.projectName || project?.name }}
+
+  </option>
+
+</select>
+
+</div>
 
        
        <div class="pill-dropdown-containermv1">
          <div class="pill-dropdown">
-           <button (click)="opentask()">Task</button>
+           <button [class.active]="currentPage === 'task'" (click)="opentask()">Task</button>
          </div>
          
          <div class="pill-dropdown">     
-           <button (click)="openMonthView()">Calendar</button>
+           <button [class.active]="currentPage === 'calendar'" (click)="openMonthView()">Calendar</button>
          </div>
          
 
@@ -41,12 +57,17 @@
 
        <div class="pill-dropdown-containermv1">
          <div class="pill-dropdown">
-           <button (click)="openuv()">Summary</button>
+           <button [class.active]="currentPage === 'summary'" (click)="openuv()">Summary</button>
          </div>
          
          <div class="pill-dropdown">
-           <button (click)="opendoc()">Documents</button>
+           <button [class.active]="currentPage === 'documents'" (click)="opendoc()">Documents</button>
          </div>
+
+         <div class="pill-dropdown">
+           <button [class.active]="currentPage === 'compare'" (click)="opencom()">Compare</button>
+         </div>
+
        </div>
      </div>
 
@@ -114,6 +135,11 @@
   
   </div>
   <div class="task-meta">
+    <span class="start-date">
+  <mat-icon class="start-icon">schedule</mat-icon>
+  {{ task.startDate | date:'dd MMM yyyy' }}
+</span>
+
   <span class="due-date"
         [class.overdue]="isOverdue(task)">
     <mat-icon class="due-icon">schedule</mat-icon>
@@ -292,6 +318,12 @@
 
 </div>
 
+
+
+ <app-compare 
+  *ngIf="compare"
+  (back)="closeCompare()">
+</app-compare>
   <app-documents *ngIf="Documents"></app-documents>
 <app-summary *ngIf="Summary" [selectedProjectId]="selectedProjectId" [projects]="projects"></app-summary> 
 
@@ -420,12 +452,25 @@
             
   
  <div class="form-group">
- <label class="form-label">Projects</label>
- <select formControlName="projectId" class="form-select">
- <option value="">Select Project</option>
- <option *ngFor="let project of projects" [value]="project._id"> {{ project.projectName }}</option>
- </select>
- </div>
+
+<label class="form-label">Projects</label>
+
+<select formControlName="projectId" class="form-select">
+
+<option value="">Select Project</option>
+
+<option
+  *ngFor="let project of projects; trackBy: trackById"
+  [ngValue]="project._id"
+>
+
+{{ project?.projectName || project?.name }}
+
+</option>
+
+</select>
+
+</div>
             
      
             <div class="form-group">

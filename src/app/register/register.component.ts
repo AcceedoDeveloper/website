@@ -352,51 +352,44 @@ export class RegisterComponent implements OnInit {
   }
 
   deleteUser(ID: any) {
-    if (!ID) {
-      console.error('Invalid user ID:', ID);
-      this.snackBar.open('Invalid user ID provided', 'Close', { duration: 3000 });
-      return;
-    }
 
-    // Check if user is currently logged in
-    const currentUser = sessionStorage.getItem('user');
-    if (currentUser) {
-      const user = JSON.parse(currentUser);
-      if (user._id === ID) {
-        this.snackBar.open('Cannot delete your own account', 'Close', { duration: 5000 });
-        return;
-      }
-    }
+if (!ID) {
 
-    // Check if user has any active tasks or projects
-    this.checkUserDependencies(ID).then((hasDependencies) => {
-      if (hasDependencies) {
-        this.snackBar.open('Cannot delete user: User has active tasks or projects', 'Close', { duration: 5000 });
-        return;
-      }
+this.snackBar.open('Invalid user ID', 'Close', { duration: 3000 });
 
-      // Use Material Dialog for confirmation
-      const dialogRef = this.dialog.open(RegistermatComponent, {
-        width: '400px',
-        height: 'auto',
-        data: { 
-          mode: 'delete',
-          userId: ID,
-          title: 'Confirm User Deletion',
-          message: 'Are you sure you want to delete this user? This action cannot be undone and will remove all user data.'
-        }
-      });
+return;
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (result === 'confirm') {
-          this.performUserDeletion(ID);
-        }
-      });
-    }).catch((error) => {
-      console.error('Error checking user dependencies:', error);
-      this.snackBar.open('Error checking user dependencies', 'Close', { duration: 3000 });
-    });
-  }
+}
+
+const dialogRef = this.dialog.open(RegistermatComponent, {
+
+width: '400px',
+
+data: {
+
+isDeleteMode: true,   // ✅ FIXED
+
+item: { _id: ID },
+
+title: 'Confirm User Deletion',
+
+message: 'Are you sure you want to delete this user?'
+
+}
+
+});
+
+dialogRef.afterClosed().subscribe(result => {
+
+if (result === 'confirm') {
+
+this.performUserDeletion(ID);
+
+}
+
+});
+
+}
 
   private async checkUserDependencies(userId: any): Promise<boolean> {
     try {

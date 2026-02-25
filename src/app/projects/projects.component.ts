@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule,Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -36,6 +36,7 @@ showmaintask = true;
 Documents =false;
 Calendar = false;
 Summary = false;
+compare = false;
 showdocumentpop = false;
  currentDate!: string;
   currentTime!: string;
@@ -58,14 +59,14 @@ todayYear = new Date().getFullYear();
   selectedFile: File | null = null;
   uploadedPictures: string[] = [];
   selectedPictureFiles: File[] = [];
- 
+
 
 
   // User View
   showinuserview = false;
 
 
-
+ currentPage:string = 'task';
   userViewAssignments: AssignWork[] = [];
   
 
@@ -77,12 +78,21 @@ todayYear = new Date().getFullYear();
   username = '';
   displayName = 'User';
   dateTime: string = new Date().toLocaleString();
-  
+
+
+openCompare() {
+  this.compare = true;
+}
+
+closeCompare() {
+  this.compare = false;
+}
  
   projects: any[] = [];
-  selectedProjectId = '';
-  selectedProjectName = '';
-  selectedProjectTeamLeads: string[] = [];
+
+selectedProjectId: string = '';
+selectedProjectName: string = '';
+selectedProjectTeamLeads: string[] = [];
 
 
   allAssignments: AssignWork[] = [];
@@ -128,7 +138,8 @@ todayYear = new Date().getFullYear();
     private http: HttpClient,
     private sanitizer: DomSanitizer,
     private dateUtils: DateUtilsService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private fm:FormsModule
   ) {
     this.documentForm = this.fb.group({
       title: ['', Validators.required],
@@ -154,6 +165,7 @@ getInitials(name: string): string {
   
 
   ngOnInit(): void {
+    this.loadProjects();
     this.initForm();
     this.initCommentForm();
     this.getCurrentUser();
@@ -168,7 +180,6 @@ getInitials(name: string): string {
 
     this.generateCalendar();
     this.getDocuments();
-
     const today = new Date();
     this.selectedTaskDate = this.getTodayDateString();
     console.log('Initialized selectedTaskDate with current date:', this.selectedTaskDate);
@@ -238,64 +249,84 @@ getInitials(name: string): string {
     console.log('Filtered tasks - Done:', this.doneAssignments.length);
   }
 
-  getFilteredTasksByStatus(status: string): AssignWork[] {
+ getFilteredTasksByStatus(status: string): AssignWork[] {
+
   let tasks = [...this.allAssignments];
 
-  /* =============================
-     PROJECT / USER FILTER
-  ============================== */
+
+  /* PROJECT / USER FILTER */
+
   if (this.selectedProjectId) {
+
     tasks = tasks.filter(a =>
       String(a.projectId) === String(this.selectedProjectId) ||
       String(a.projectName || '').toLowerCase() ===
-        String(this.selectedProjectName || '').toLowerCase()
+      String(this.selectedProjectName || '').toLowerCase()
     );
-  } else {
+
+  }
+  else {
+
     tasks = tasks.filter(a =>
       String(a.assignedTo) === String(this.username) ||
       String(a.assignee) === String(this.username)
     );
+
   }
 
-  /* =============================
-     DATE FILTER → ONLY FOR TODO
-  ============================== */
-  if (this.selectedTaskDate && status.toLowerCase() === 'todo') {
-  const selectedDate = new Date(this.selectedTaskDate);
-  selectedDate.setHours(0, 0, 0, 0);
-
-  tasks = tasks.filter(task => {
-    if (!task.createdAt) return true; // IMPORTANT
-
-    const created = new Date(task.createdAt);
-    created.setHours(0, 0, 0, 0);
-
-    return created.getTime() === selectedDate.getTime();
-  });
-}
 
 
-  /* =============================
-     STATUS FILTER
-  ============================== */
+   if (this.selectedTaskDate && status.toLowerCase() === 'todo') {
+
+    const selectedDate = new Date(this.selectedTaskDate);
+
+    selectedDate.setHours(0,0,0,0);
+
+
+    tasks = tasks.filter(task => {
+
+      if (!task.createdAt) return true;
+
+      const createdDate = new Date(task.createdAt);
+
+      createdDate.setHours(0,0,0,0);
+
+
+      // ✅ PROFESSIONAL FIX
+
+      return createdDate.getTime() <= selectedDate.getTime();
+
+    });
+
+  }
+
+
+
+
+  /* STATUS FILTER */
+
   return tasks.filter(task => {
+
     const taskStatus = (task.Status || 'ToDo').toLowerCase().trim();
 
     if (status.toLowerCase() === 'inprogress') {
+
       return taskStatus.includes('progress');
+
     }
 
     if (status.toLowerCase() === 'done') {
-      return taskStatus.includes('done') || taskStatus.includes('complete');
+
+      return taskStatus.includes('done') ||
+             taskStatus.includes('complete');
+
     }
 
-    // ToDo
-    return (
-      !taskStatus.includes('progress') &&
-      !taskStatus.includes('done') &&
-      !taskStatus.includes('complete')
-    );
+    return !taskStatus.includes('progress') &&
+           !taskStatus.includes('done');
+
   });
+
 }
 
 getDueLabel(task: AssignWork): string {
@@ -318,6 +349,27 @@ getDueLabel(task: AssignWork): string {
   return `Due in ${diffDays} days`;
 }
 
+loadProjects(): void {
+  this.projectService.getProjects().subscribe({
+    next: (res: any[]) => {
+      console.log("Projects:", res);
+      this.projects = res;
+      console.log('this.projects', this.projects);
+
+      // re-evaluate the selection in case the list changed
+      this.onProjectSelect();
+      
+      // ──────────────── Add this ────────────────
+      this.cd.detectChanges();           // ← important
+    },
+    error: (err) => {
+      console.error("Error loading projects:", err);
+    }
+  });
+}
+trackById(index: number, project: any): string {
+  return project._id || project.id || index;
+}
 
   getFilteredTasksCount(): number {
     if (!this.selectedTaskDate) return this.allAssignments.length;
@@ -442,9 +494,16 @@ formatDate(date: Date): string {
   return date.toISOString().split('T')[0]; // yyyy-mm-dd
 }
 
-onDateChange() {
-    console.log('Selected Date:', this.selectedTaskDate);
-  }
+onDateChange(): void {
+
+  console.log("Date Changed:", this.selectedTaskDate);
+
+  // force Angular to update view
+  this.todoAssignments = this.getFilteredTasksByStatus('todo');
+
+  this.cd.detectChanges();
+
+}
 
   // Move to previous day
   prevDay() {
@@ -541,7 +600,12 @@ getTodayDateString(): string {
     this.assignmentForm.patchValue({ assignedTo: this.username });
   }
   if (this.username && this.username !== 'User') {
-    this.fetchProjectsByEmployee(this.username);
+    // when the component first loads we already call loadProjects() in ngOnInit.
+    // fetchProjectsByEmployee was overwriting that list with a user-specific
+    // array (often empty).  comment it out unless you really want the
+    // dropdown restricted to the current user.
+    // this.fetchProjectsByEmployee(this.username);
+
     this.getAssignments();
   }
 }
@@ -589,42 +653,75 @@ getTodayDateString(): string {
     return typeof emp === 'string' ? emp : emp.username || emp.UserName || emp.name || emp.email || '';
   }
 
+  /**
+   * Load projects that are assigned to a particular user.  If the
+   * employee-specific call returns an empty array we fall back to
+   * loading *all* projects so that the dropdown never stays blank.
+   */
   fetchProjectsByEmployee(userName: string) {
     const s = this.projectService.getProjectsByEmployee(userName).subscribe({
       next: (res: any) => {
-        if (Array.isArray(res)) {
-          this.projects = res;
-        } else if (res?.data && Array.isArray(res.data)) {
-          this.projects = res.data;
-        } else if (res?.projects && Array.isArray(res.projects)) {
-          this.projects = res.projects;
+        const arr = this._normalizeProjectsResponse(res);
+
+        if (arr.length === 0) {
+          console.warn('No projects returned for user', userName, ', loading all projects instead');
+          this.loadProjects();
         } else {
-          this.projects = [];
+          this.projects = arr;
+          this.onProjectSelect(); // update selection info if necessary
         }
       },
       error: () => {
+        console.warn('Error fetching projects by employee, loading all projects');
         this.projects = [];
+        this.loadProjects();
       }
     });
     this.subs.add(s);
   }
 
-  onProjectSelect() {
-    const selectedProject = this.projects.find(p =>
-      String(p._id) === String(this.selectedProjectId) ||
-      String(p.id) === String(this.selectedProjectId)
-    );
-
-    if (!selectedProject && this.selectedProjectId) {
-      this.selectedProjectName = '';
-      this.selectedProjectTeamLeads = [];
-    } else {
-      this.selectedProjectName = selectedProject?.projectName || selectedProject?.name || '';
-      this.selectedProjectTeamLeads = selectedProject?.teamLeads || [];
-    }
-
-    this.filterAssignmentsByProject();
+  /**
+   * Convert various shapes of response into a plain project array.
+   */
+  private _normalizeProjectsResponse(res: any): any[] {
+    if (Array.isArray(res)) return res;
+    if (res?.data && Array.isArray(res.data)) return res.data;
+    if (res?.projects && Array.isArray(res.projects)) return res.projects;
+    return [];
   }
+
+
+
+  onProjectSelect(): void {
+
+  if (!this.selectedProjectId) {
+
+    this.selectedProjectName = '';
+    this.selectedProjectTeamLeads = [];
+    this.filterAssignmentsByProject();
+    return;
+
+  }
+
+  const selectedProject = this.projects.find(project =>
+    String(project._id) === String(this.selectedProjectId) ||
+    String(project.id) === String(this.selectedProjectId)
+  );
+
+  this.selectedProjectName =
+    selectedProject?.projectName ||
+    selectedProject?.name ||
+    '';
+
+  this.selectedProjectTeamLeads =
+    selectedProject?.teamLeads || [];
+
+  console.log("Selected ID:", this.selectedProjectId);
+  console.log("Selected Name:", this.selectedProjectName);
+
+  this.filterAssignmentsByProject();
+
+}
 
   isCurrentUserTeamLead(): boolean {
     if (!this.selectedProjectTeamLeads.length) return false;
@@ -836,79 +933,66 @@ openAssignmentDialog(task?: AssignWork) {
     }
   }
 
-  saveAssignment() {
+ saveAssignment() {
     if (this.assignmentForm.invalid) {
       this.snackBar.open('Please fill required fields', 'Close', { duration: 2500 });
       return;
     }
 
-    const projectId = this.selectedProjectId || this.editingTask?.projectId || this.assignmentForm.get('projectId')?.value || '';
-    const projectName = this.selectedProjectName || this.editingTask?.projectName || '';
-
-    if (!this.isAdmin() && !projectId) {
+    const projectId = this.selectedProjectId || this.editingTask?.projectId || this.assignmentForm.get('projectId')?.value;
+    if (!projectId) {
       this.snackBar.open('Please select a project first', 'Close', { duration: 3000 });
       return;
     }
 
-    this.isLoading = true;
+    const selectedProject = this.projects.find(p => String(p._id) === String(projectId) || String(p.id) === String(projectId));
+    const projectName = selectedProject?.projectName || selectedProject?.name;
+    if (!projectName) {
+      this.snackBar.open('Invalid project selected', 'Close', { duration: 3000 });
+      return;
+    }
+
+    this.isLoading = true; // set AFTER validation
+
     const formValue = this.assignmentForm.value;
     const formData = new FormData();
 
     formData.append('projectName', projectName);
-    formData.append('title', formValue.title);
-    formData.append('description', formValue.description);
+    formData.append('projectId', projectId);
+    formData.append('title', formValue.title || '');
+    formData.append('description', formValue.description || '');
     formData.append('assignedTo', formValue.assignedTo || this.username);
-    formData.append('assignee', formValue.assignee);
-    // Fix date conversion to avoid timezone issues
+    formData.append('assignee', formValue.assignee || '');
     formData.append('startDate', formValue.startDate ? this.dateUtils.formatDateForBackend(formValue.startDate) : '');
     formData.append('dueDate', formValue.dueDate ? this.dateUtils.formatDateForBackend(formValue.dueDate) : '');
     formData.append('Status', formValue.Status || (this.editingTask ? this.editingTask.Status : 'ToDo'));
-    formData.append('projectId', projectId);
 
     if (this.uploadedPictures?.length) {
       formData.append('existingPictures', JSON.stringify(this.uploadedPictures));
     }
+    this.selectedPictureFiles.forEach(file => formData.append('pictures', file));
 
-    this.selectedPictureFiles.forEach(file => {
-      formData.append('pictures', file);
+    const request$ = this.editingTask && this.editingTask._id
+      ? this.assignworkService.updateAssignment(this.editingTask._id, formData)
+      : this.assignworkService.createAssignment(formData);
+
+    const sub = request$.subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.snackBar.open(this.editingTask ? 'Task updated successfully' : 'Task created successfully', 'Close', { duration: 2500 });
+        this.getAssignments();
+        setTimeout(() => this.dialog.closeAll(), 300);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Save task error:', err);
+        const msg = err.error?.message || err.error?.error || 'Failed to save task';
+        this.snackBar.open(msg, 'Close', { duration: 5000 });
+      }
     });
 
-    if (this.editingTask && this.editingTask._id) {
-      this.assignworkService.updateAssignment(this.editingTask._id, formData).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.snackBar.open('Task updated successfully', 'Close', { duration: 2500 });
-          this.getAssignments();
-          setTimeout(() => {
-            this.dialog.closeAll();
-          }, 300);
-        },
-        error: (err) => {
-          this.isLoading = false;
-          console.error('Update task error:', err, err.error);
-          const msg = err.error?.message || err.error?.error || 'Failed to update task';
-          this.snackBar.open(msg, 'Close', { duration: 5000 });
-        }
-      });
-    } else {
-      this.assignworkService.createAssignment(formData).subscribe({
-        next: () => {
-          this.isLoading = false;
-          this.snackBar.open('Task created successfully', 'Close', { duration: 2500 });
-          this.getAssignments();
-          setTimeout(() => {
-            this.dialog.closeAll();
-          }, 300);
-        },
-        error: (err) => {
-          this.isLoading = false;
-          console.error('Create task error:', err, err.error);
-          const msg = err.error?.message || err.error?.error || 'Failed to create task';
-          this.snackBar.open(msg, 'Close', { duration: 5000 });
-        }
-      });
-    }
-  }
+    this.subs.add(sub);
+}
 
   deleteAssignment(id: string | undefined) {
     if (!id) {
@@ -1063,10 +1147,12 @@ openAssignmentDialog(task?: AssignWork) {
 
   // Navigation Methods
   opentask() {
+this.currentPage = 'task';
 this.showmaintask = true;
 this.Documents =false;
 this.Calendar = false;
 this.Summary = false;
+this.compare =false;
 this.showtask=true;
 this.datefiltersection=true;
   }
@@ -1075,32 +1161,47 @@ this.datefiltersection=true;
     setTimeout(() => {
       this.ngAfterViewInit();
     }, 100);
+ this.currentPage = 'summary';    
 this.showmaintask = false;
 this.Documents =false;
 this.Calendar = false;
 this.Summary = true;
+this.compare =false;
 this.showtask=false;
 this.datefiltersection=false;
     
 }
 
   opendoc() {
+ this.currentPage = 'documents';    
 this.showmaintask = false;
 this.Documents =true;
 this.Calendar = false;
 this.Summary = false;
+this.compare =false;
 this.showtask=false;
 this.datefiltersection=false;
   }
 
   openMonthView() {
+ this.currentPage = 'calendar';    
 this.showmaintask = false;
 this.Documents =false;
 this.Calendar = true;
 this.Summary = false;
+this.compare =false;
 this.showtask=false;
 this.datefiltersection=false;
   }
+
+  opencom() {
+     this.currentPage = 'compare';
+  this.showmaintask = false;
+this.Documents =false;
+this.Calendar = false;
+this.Summary = false;
+this.compare = true;
+}
 
   opendocpop(doc?: any) {
     this.editingDocument = doc || null;

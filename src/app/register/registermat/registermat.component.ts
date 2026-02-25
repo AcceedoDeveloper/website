@@ -12,17 +12,23 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./registermat.component.css']
 })
 export class RegistermatComponent implements OnInit {
-  registerForm: FormGroup;
+
+  registerForm!: FormGroup;
+
   roles: any[] = [];
   departments: any[] = [];
   subDepartmentsData: any[] = [];
+
   isEdit = false;
   isDeleteMode = false;
+
   selectedFile: File | null = null;
-  selectedFileName: string = '';
+  selectedFileName = '';
+
   previewImage: string | ArrayBuffer | null = null;
   existingImageUrl: string | null = null;
   existingPhotoField: string | null = null;
+
   isLoading = false;
 
   constructor(
@@ -31,246 +37,298 @@ export class RegistermatComponent implements OnInit {
     private httprole: RoleserviceService,
     private departmentservices: DepartmentserviceService,
     private configService: ConfigService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private dialogRef: MatDialogRef<RegistermatComponent>
+    private dialogRef: MatDialogRef<RegistermatComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+
     this.registerForm = this.fb.group({
+
       userCode: ['', Validators.required],
+
       name: ['', Validators.required],
+
       userName: ['', Validators.required],
+
       emailId: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(5)]],
-      phoneNumber: ['', [Validators.required]],
+
+      password: ['', Validators.minLength(5)],
+
+      phoneNumber: ['', Validators.required],
+
       role: ['', Validators.required],
+
       departmentName: ['', Validators.required],
+
       subDepartmentName: ['', Validators.required]
+
     });
+
   }
 
+  // ✅ INIT
   ngOnInit(): void {
+
     this.loadRoles();
+
     this.loadDepartments();
 
-    // Detect mode
-    if (this.data?.mode === 'delete') {
-      this.isDeleteMode = true;
-    } else if (this.data?.item) {
+
+    // ✅ DELETE MODE
+    this.isDeleteMode = this.data?.isDeleteMode || false;
+
+
+    // ✅ EDIT MODE
+    if (this.data?.item && !this.isDeleteMode) {
+
       this.isEdit = true;
+
       this.patchForm(this.data.item);
+
     }
+
   }
 
+
+  // ✅ PATCH FORM
   patchForm(item: any) {
+
     this.registerForm.patchValue({
-      userCode: item.userCode || item.UserCode || '',
-      name: item.name || item.UserName || '',
-      userName: item.userName || item.userName || '',
-      emailId: item.emailId || item.Email || '',
-      phoneNumber: item.phoneNumber || item.Phone || '',
+
+      userCode: item.userCode || '',
+
+      name: item.name || '',
+
+      userName: item.userName || '',
+
+      emailId: item.emailId || '',
+
+      phoneNumber: item.phoneNumber || '',
+
       role: item.role?.role || item.role || '',
-      departmentName: item.department?.departmentName || item.departmentName || '',
+
+      departmentName: item.department?.departmentName || '',
+
       subDepartmentName: item.subDepartment || ''
+
     });
+
 
     this.existingPhotoField = item.photo || null;
-    
 
-    if (item.photoURL) {
-      this.existingImageUrl = item.photoURL;
-      this.previewImage = item.photoURL;
-    } else if (item.photo) {
-      if (item.photo.startsWith('http')) {
-        this.existingImageUrl = item.photo;
-        this.previewImage = item.photo;
-      } else {
-        this.existingImageUrl = this.configService.getUploadUrl(item.photo);
-        this.previewImage = this.existingImageUrl;
-      }
-    } else {
+
+    if (item.photo) {
+
+      this.previewImage = this.configService.getUploadUrl(item.photo);
+
+    }
+    else {
+
       this.previewImage = 'assets/default-avatar.png';
-    }
 
-    if (item.department && item.department.subDepartments) {
-      this.subDepartmentsData = item.department.subDepartments;
-    } else {
-      this.subDepartmentsData = [];
     }
 
 
-    if (this.isEdit) {
-      this.registerForm.get('password')?.clearValidators();
-      this.registerForm.get('password')?.updateValueAndValidity();
-    }
+    // password optional in edit
 
-    this.registerForm.get('password')?.reset('');
+    this.registerForm.get('password')?.clearValidators();
+
+    this.registerForm.get('password')?.updateValueAndValidity();
+
   }
 
+
+  // ✅ LOAD ROLES
   loadRoles() {
+
     this.httprole.Loadrole().subscribe({
-      next: (data: any) => {
-        this.roles = data;
-      },
-      error: (err) => console.error('Error loading roles:', err)
+
+      next: (res: any) => this.roles = res,
+
+      error: err => console.log(err)
+
     });
+
   }
 
+
+  // ✅ LOAD DEPT
   loadDepartments() {
+
     this.departmentservices.loaddm().subscribe({
-      next: (data: any) => {
-        this.departments = data;
-      },
-      error: (err) => console.error('Error loading departments:', err)
+
+      next: (res: any) => this.departments = res,
+
+      error: err => console.log(err)
+
     });
+
   }
 
+
+  // ✅ DEPT CHANGE
   onDepartmentChange(event: any) {
+
     const deptName = event.target.value;
-    const dept = this.departments.find(d => d.departmentName === deptName);
+
+    const dept = this.departments.find(x => x.departmentName === deptName);
+
     this.subDepartmentsData = dept ? dept.subDepartments : [];
-    this.registerForm.patchValue({ subDepartmentName: '' });
+
   }
 
-  cancel() {
-    this.dialogRef.close(false);
-  }
 
-  /** Confirm delete action */
-  confirmDelete() {
-    this.dialogRef.close('confirm');
-  }
-
-  /** Cancel delete action */
-  cancelDelete() {
-    this.dialogRef.close('cancel');
-  }
-
+  // ✅ FILE SELECT
   onFileSelected(event: any) {
+
     const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      this.selectedFileName = file.name;
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewImage = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    this.selectedFile = file;
+
+    this.selectedFileName = file.name;
+
+
+    const reader = new FileReader();
+
+    reader.onload = e => this.previewImage = reader.result;
+
+    reader.readAsDataURL(file);
+
   }
 
-  removeImage() {
-    this.selectedFile = null;
-    this.selectedFileName = '';
-    this.previewImage = this.existingImageUrl || 'assets/default-avatar.png';
+
+  // ✅ CANCEL
+  cancel() {
+
+    this.dialogRef.close(false);
+
   }
 
+
+  // ✅ DELETE CONFIRM
+  confirmDelete() {
+
+    this.dialogRef.close('confirm');
+
+  }
+
+
+  // ✅ DELETE CANCEL
+  cancelDelete() {
+
+    this.dialogRef.close('cancel');
+
+  }
+
+
+  // ✅ SUBMIT
   onSubmit() {
+
     if (this.registerForm.invalid) {
+
       this.registerForm.markAllAsTouched();
-      Object.keys(this.registerForm.controls).forEach(key => {
-        const control = this.registerForm.get(key);
-        if (control?.invalid) {
-          console.log(`Invalid control: ${key}`, control.errors);
-        }
-      });
+
       return;
+
     }
+
 
     this.isLoading = true;
 
-    const formValue = this.registerForm.value;
+
+    const value = this.registerForm.value;
+
     const formData = new FormData();
 
-  
-    formData.append('userCode', formValue.userCode);
-    formData.append('name', formValue.name);
-    formData.append('userName', formValue.userName);
-    formData.append('emailId', formValue.emailId);
-    formData.append('phoneNumber', formValue.phoneNumber);
-    formData.append('role', formValue.role);
-    formData.append('department', formValue.departmentName);
-    formData.append('subDepartment', formValue.subDepartmentName);
 
- 
-    if (formValue.password) {
-      formData.append('password', formValue.password);
-    }
+    formData.append('userCode', value.userCode);
 
- 
-    if (this.selectedFile) {
+    formData.append('name', value.name);
+
+    formData.append('userName', value.userName);
+
+    formData.append('emailId', value.emailId);
+
+    formData.append('phoneNumber', value.phoneNumber);
+
+    formData.append('role', value.role);
+
+    formData.append('department', value.departmentName);
+
+    formData.append('subDepartment', value.subDepartmentName);
+
+
+    if (value.password)
+
+      formData.append('password', value.password);
+
+
+    if (this.selectedFile)
+
       formData.append('photo', this.selectedFile);
-    } else if (this.previewImage === 'assets/default-avatar.png' || !this.previewImage) {
 
-      formData.append('removeImage', 'true');
-    } else {
 
-      formData.append('keepExistingImage', 'true');
-    }
+    if (this.isEdit)
 
-    if (this.isEdit) {
       this.updateUser(formData);
-    } else {
+
+    else
+
       this.createUser(formData);
-    }
+
   }
 
-  private updateUser(formData: FormData) {
-    this.userservice.edituser(this.data.item._id, formData).subscribe({
-      next: (response: any) => {
-        this.isLoading = false;
-        console.log('User updated successfully:', response);
-        const updatedUser = this.processUserResponse(response);        
-        setTimeout(() => {
-          this.dialogRef.close(updatedUser);
-        }, 300);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Error updating user:', err);
-        alert('Failed to update user. Please try again.');
-      }
-    });
-  }
 
-  private createUser(formData: FormData) {
+  // ✅ CREATE
+  createUser(formData: FormData) {
+
     this.userservice.saveuser(formData).subscribe({
-      next: (response: any) => {
+
+      next: res => {
+
         this.isLoading = false;
-        console.log('User created successfully:', response);
-        const newUser = this.processUserResponse(response);
-        
-        this.registerForm.reset();
-        this.previewImage = null;
-        this.selectedFile = null;
-        setTimeout(() => {
-          this.dialogRef.close(newUser);
-        }, 300);
+
+        this.dialogRef.close(res);
+
       },
-      error: (err) => {
+
+      error: err => {
+
         this.isLoading = false;
-        console.error('Error saving user:', err);
-        alert('Failed to create user. Please try again.');
+
+        alert("Create Failed");
+
       }
+
     });
+
   }
 
-  private processUserResponse(response: any): any {
-    let photoURL = response.photoURL;
-    
-    if (!photoURL && response.photo) {
-      if (response.photo.startsWith('http')) {
-        photoURL = response.photo;
-      } else {
-        photoURL = this.configService.getUploadUrl(response.photo);
+
+  // ✅ UPDATE
+  updateUser(formData: FormData) {
+
+    this.userservice.edituser(this.data.item._id, formData).subscribe({
+
+      next: res => {
+
+        this.isLoading = false;
+
+        this.dialogRef.close(res);
+
+      },
+
+      error: err => {
+
+        this.isLoading = false;
+
+        alert("Update Failed");
+
       }
-    } else if (!photoURL && !response.photo) {
-      photoURL = 'assets/default-avatar.png';
-    }
 
-    return {
-      ...response,
-      photoURL: photoURL,
-      photo: response.photo || this.existingPhotoField
-    };
+    });
+
   }
+
 }

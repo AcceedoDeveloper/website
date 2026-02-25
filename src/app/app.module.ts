@@ -95,6 +95,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { TaskComponent } from './projects/task/task.component';
 import { CalendarComponent } from './projects/calendar/calendar.component';
 import { SummaryComponent } from './projects/summary/summary.component';
+import { CompareComponent } from './projects/compare/compare.component';
 import { DocumentsComponent } from './projects/documents/documents.component';
 import { SharedComponent } from './shared/shared.component';
 
@@ -163,6 +164,7 @@ export function loadConfigFactory(configService: ConfigService) {
    TaskComponent,
    CalendarComponent,
    SummaryComponent,
+   CompareComponent,
    DocumentsComponent,
    SharedComponent
   ],

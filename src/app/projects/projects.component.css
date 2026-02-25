@@ -179,6 +179,7 @@ html, body {
   border-top-color: #6b7280;
 }
 
+
 .pill-dropdown select {
   padding: 10px 16px;
   font-size: 14px;
@@ -209,46 +210,66 @@ html, body {
   font-weight: 400;
 }
 
+/* Base button style */
 .pill-dropdown button {
+  font-family: "Inter", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  line-height: 1.4;
   background: #ffffff;
-  color: #6b7280 !important;
+  color: #374151 !important;   /* Dark gray text */
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 400;
+  padding: 10px 18px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  position: relative;
-  overflow: hidden;
-  text-decoration: none;
   display: inline-flex;
   align-items: center;
-  min-width: auto;
   white-space: nowrap;
-  flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
 }
 
+/* Hover effect */
 .pill-dropdown button:hover {
-  background: #f8fafc;
-  color: #374151 !important;
+  background: #f9fafb;
+  color: #111827 !important;
   border-color: #d1d5db;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(16, 24, 40, 0.08);
 }
 
-.pill-dropdown button:active {
-  background: #f1f5f9;
-  color: #1f2937 !important;
-  transform: translateY(0);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+/* Active page style */
+.pill-dropdown button.active {
+  background-color: #dfe2ea;    /* Professional blue */
+  color: #ffffff !important;    /* White text */
+  border-color: #1d4ed8;        /* Darker blue border */
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+  position: relative;
 }
 
+/* Optional: subtle underline for active page */
+.pill-dropdown button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 10%;
+  width: 80%;
+  height: 3px;
+  background-color: #1d4ed8; /* Darker blue underline */
+  border-radius: 2px;
+}
+
+/* Slight hover effect for active button */
+.pill-dropdown button.active:hover {
+  background-color: #f0f1f4;
+  border-color: #1e40af;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgba(29, 78, 216, 0.35);
+}
+
+/* Header specific fix */
 .header .pill-dropdown button {
-  color: #6b7280 !important;
-  font-weight: 400 !important;
+  color: #374151 !important;
 }
 
 /* =============================================
@@ -586,7 +607,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 10px;
+  font-size: 13px;
   overflow: hidden;
   flex: 1;
   min-width: 0;
@@ -653,35 +674,138 @@ html, body {
   box-sizing: border-box;
 }
 
+
+
+/* ===============================
+   DATE ROW CONTAINER
+================================= */
+
 .due-row {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  flex-shrink: 0;
+  gap: 8px;
+  margin-top: 6px;
 }
 
+
+/* ===============================
+   DATE CHIP BASE STYLE
+================================= */
+
+.start-date,
 .due-date {
-  font-size: 10px;
-  padding: 4px 10px;
-  border-radius: 5px;
-  background: #f1f3f9;
-  white-space: nowrap;
-  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+
+  padding: 4px 10px;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  border-radius: 6px;
+
+  background: #f8fafc;
+
+  color: #334155;
+
+  border: 1px solid #e2e8f0;
+
+  transition: all 0.2s ease;
+
+  cursor: default;
 }
 
-.due-date .due-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
+
+/* ===============================
+   ICON STYLE
+================================= */
+
+.start-date mat-icon,
+.due-date mat-icon {
+
+  font-size: 12px;
+
+  width: 15px;
+  height: 15px;
+
+  display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.8;
+
+  opacity: 0.85;
 }
 
+
+/* ===============================
+   START DATE COLOR
+================================= */
+
+.start-date {
+
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+
+}
+
+.start-date mat-icon {
+  color: #2563eb;
+}
+
+
+/* ===============================
+   DUE DATE COLOR
+================================= */
+
+.due-date {
+
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #c2410c;
+
+}
+
+.due-date mat-icon {
+  color: #ea580c;
+}
+
+
+/* ===============================
+   OVERDUE STATE
+================================= */
+
+.due-date.overdue {
+
+  background: #fef2f2;
+
+  border-color: #fecaca;
+
+  color: #dc2626;
+
+  font-weight: 600;
+
+}
+
+.due-date.overdue mat-icon {
+
+  color: #dc2626;
+
+}
+
+
+/* ===============================
+   HOVER EFFECT (PROFESSIONAL)
+================================= */
+
+.start-date:hover,
+.due-date:hover {
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+
+}
 .due-date.today { background: #fff8e6; color: #e65100; }
 .due-date.overdue { background: #fff3f3; color: #c62828; }
 .due-date:hover { background: #eef2f5; }
