@@ -135,6 +135,7 @@
   
   </div>
   <div class="task-meta">
+    
     <span class="start-date">
   <mat-icon class="start-icon">schedule</mat-icon>
   {{ task.startDate | date:'dd MMM yyyy' }}
@@ -145,6 +146,7 @@
     <mat-icon class="due-icon">schedule</mat-icon>
     {{ task.dueDate | date:'dd MMM yyyy' }}
   </span>
+
     <div class="task-footer">
         <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
           <small><strong>Comments: {{ task.comment.length }}</strong></small>
@@ -284,6 +286,14 @@
     </div>
 
     <div class="task-meta">
+     <div class="task-status-badge" [ngClass]="getStatusClass(task.Status)">
+{{ 
+  task.Status?.toLowerCase() === 'done' ? 'Completed' :
+
+  task.Status || 'To Do'
+}}
+
+</div>
       <!-- <span class="due-date"
             [class.overdue]="isOverdue(task)">
         <mat-icon class="due-icon">schedule</mat-icon>
@@ -295,7 +305,7 @@
           <small><strong>Comments: {{ task.comment.length }}</strong></small>
         </div>
 
-        <div class="actions2">
+        <div class="actions">
           <button mat-icon-button color="accent"
                   (click)="openAssignmentDialog(task); $event.stopPropagation()">
             <mat-icon>edit</mat-icon>

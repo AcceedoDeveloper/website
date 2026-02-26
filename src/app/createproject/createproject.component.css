@@ -951,8 +951,7 @@ button {
 }
 
 .header-btn.close {
-  background: rgba(100, 116, 139, 0.15);
-  color: #47011d;
+ 
 }
 
 .header-btn.close:hover {

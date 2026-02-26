@@ -694,26 +694,21 @@ html, body {
 
 .start-date,
 .due-date {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+display: flex;
+  gap: 1px;
 
-  padding: 4px 1px;
+
 
   font-size: 10px;
   font-weight: 500;
-
-  border-radius: 6px;
-
-  background: #f8fafc;
-
   color: #334155;
 
-  border: 1px solid #e2e8f0;
 
   transition: all 0.2s ease;
 
   cursor: default;
+  margin-top: 20px;
+
 }
 
 
@@ -727,7 +722,7 @@ html, body {
   font-size: 12px;
 
   width: 15px;
-  height: 15px;
+
 
   display: flex;
   align-items: center;
@@ -743,8 +738,7 @@ html, body {
 
 .start-date {
 
-  background: #eff6ff;
-  border-color: #bfdbfe;
+  
   color: #1d4ed8;
 
 }
@@ -760,8 +754,7 @@ html, body {
 
 .due-date {
 
-  background: #fff7ed;
-  border-color: #fed7aa;
+  
   color: #c2410c;
 
 }
@@ -777,10 +770,7 @@ html, body {
 
 .due-date.overdue {
 
-  background: #fef2f2;
-
-  border-color: #fecaca;
-
+ 
   color: #dc2626;
 
   font-weight: 600;
@@ -801,16 +791,10 @@ html, body {
 .start-date:hover,
 .due-date:hover {
 
-  transform: translateY(-1px);
-
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-
 }
-.due-date.today { background: #fff8e6; color: #e65100; }
-.due-date.overdue { background: #fff3f3; color: #c62828; }
-.due-date:hover { background: #eef2f5; }
-.due-date.today:hover { background: #fff3d6; }
-.due-date.overdue:hover { background: #ffeaea; }
+.due-date.today {  color: #e65100; }
+.due-date.overdue { color: #c62828; }
+
 
 /* =============================================
    AVATAR - Same in all columns
@@ -835,7 +819,6 @@ html, body {
   font-weight: 600;
   font-size: 14px;
   margin-left: 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   text-transform: uppercase;
   flex-shrink: 0;
 }
@@ -845,11 +828,12 @@ html, body {
    ============================================= */
 .actions {
   display: flex;
-  gap: 6px;
+  gap: 3px;
   align-items: center;
   flex-shrink: 0;
   margin-left: auto;
   margin-bottom: 10px;
+
 }
 
 .actions button,
@@ -860,15 +844,15 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+
+
   cursor: pointer;
-  transition: all 0.2s ease;
+ 
   font-size: 12px;
-  flex-shrink: 0;
+
   min-width: 28px;
   box-sizing: border-box;
+  top: 15px;
 }
 
 .actions button:hover,
@@ -1730,11 +1714,44 @@ img, table, input, button, select { max-width: 100%; }
   60% { transform: translateY(-5px); }
 }
 
-.actions2{
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  /* background-color: #10b981//; */
-  margin-left: 200px !important;
-  gap: 7px;
+
+
+
+/* DONE TASK CARD */
+.done-card {
+  border-left: 5px solid #28a745;   /* green line */
+}
+
+/* COMPLETED BADGE */
+.status-badge.completed {
+  background-color: #e6f7ed;
+  color: #28a745;
+  border: 1px solid #28a745;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  width: fit-content;
+  margin-top: 10px;
+}
+
+/* USER CIRCLE GREEN */
+.user-circle.green {
+  background-color: #28a745;
+  color: white;
+}
+
+.task-status-badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 20px;
+
+}
+
+
+.status-done {
+ color: #2e7d32;
 }

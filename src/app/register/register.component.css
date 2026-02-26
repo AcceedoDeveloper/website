@@ -597,7 +597,7 @@
 }
 
 .user-table-wrapper.scrollable {
-  max-height: 450px; 
+  max-height: 437px !important; 
   display: flex; 
   overflow-y: auto;
   overflow-x: auto;

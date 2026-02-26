@@ -1382,6 +1382,15 @@ this.compare = true;
     }
   }
 
+  getStatusClass(status: string): string {
+  if (!status) return 'status-todo';
+  
+  const s = status.toLowerCase().trim();
+  if (s.includes('done') || s.includes('complete')) return 'status-done';
+  if (s.includes('progress') || s.includes('inprogress')) return 'status-progress';
+  return 'status-todo';
+}
+
   getDocuments() {
     const s = this.assignworkService.getDocument().subscribe({
       next: (res) => {
