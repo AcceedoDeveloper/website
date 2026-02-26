@@ -262,7 +262,10 @@
         <div class="info-group">
           <label><i class="fa fa-signal"></i> Status</label>
           <div class="info-value">
-            <span class="status-badge active">Active</span>
+           <span class="status-badge"
+      [ngClass]="getStatusClass(selectedProject)">
+  {{ getProjectStatus(selectedProject) }}
+</span>
           </div>
         </div>
 

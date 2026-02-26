@@ -90,15 +90,26 @@ getInitial(name: string): string {
 
 // Project status
 getProjectStatus(project: any): string {
+  if (!project?.expectedEndDate) return 'Active';
+
   const today = new Date();
   const endDate = new Date(project.expectedEndDate);
-  return endDate < today ? 'Completed' : 'Active';
+
+  // remove time part
+  today.setHours(0,0,0,0);
+  endDate.setHours(0,0,0,0);
+
+  if (endDate < today) {
+    return 'Completed';
+  } else {
+    return 'Active';
+  }
 }
 
 getStatusClass(project: any): string {
-  return this.getProjectStatus(project) === 'Completed'
-    ? 'completed'
-    : 'active';
+  const status = this.getProjectStatus(project);
+
+  return status === 'Completed' ? 'completed' : 'active';
 }
 
 
@@ -318,7 +329,23 @@ getAvatarColor(fullName: string): string {
 
 // Function to get avatar color
 
+status: string = '';
 
+openProject(project: any) {
+  this.selectedProject = project;
+  this.calculateStatus(project.expectedEndDate);
+}
+
+calculateStatus(endDate: string) {
+  const today = new Date();
+  const end = new Date(endDate);
+
+  if (end < today) {
+    this.status = 'Completed';
+  } else {
+    this.status = 'Active';
+  }
+}
 
 
   getuserdata() {

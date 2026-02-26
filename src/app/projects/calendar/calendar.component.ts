@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, HostListener } from '@angular/core';
 import { AssignWorkService, AssignWork } from '../../service/assignwork.service';
 
 @Component({
@@ -31,11 +31,19 @@ export class CalendarComponent implements OnInit, OnChanges {
   selectedDay: any = null;
   selectedDayTasks: AssignWork[] = [];
   filteredAssignments: AssignWork[] = [];
+  showTaskOverlay = false;
 
   constructor(private assignWorkService: AssignWorkService) {}
 
   currentMonth: Date = new Date();
   selectedDate: Date = new Date();
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscPress(event: KeyboardEvent) {
+    if (this.showTaskOverlay) {
+      this.closeTaskOverlay();
+    }
+  }
 
   changeMonth(offset: number) {
     const year = this.currentMonth.getFullYear();
@@ -113,6 +121,7 @@ export class CalendarComponent implements OnInit, OnChanges {
     this.days = [];
     this.selectedDay = null;
     this.selectedDayTasks = [];
+    this.showTaskOverlay = false;
 
     const year = this.currentMonth.getFullYear();
     const month = this.currentMonth.getMonth();
@@ -169,24 +178,45 @@ export class CalendarComponent implements OnInit, OnChanges {
   }
 
   selectDay(day: any) {
+    // Mark selected
+    this.days.forEach((d: any) => d.isSelected = false);
+    day.isSelected = true;
+
     if (day.tasks && day.tasks.length > 0) {
       this.selectedDay = day;
       if (this.selectedAssignee) {
-        this.selectedDayTasks = day.tasks.map((task: AssignWork) => ({ 
+        this.selectedDayTasks = day.tasks.map((task: AssignWork) => ({
           title: task.title,
-          status: task.Status 
+          status: task.Status,
+          description: task.description,
+          assignedTo: task.assignedTo,
+          dueDate: task.dueDate,
+          startDate: task.startDate,
+          projectName: task.projectName
         }));
       } else {
-        this.selectedDayTasks = day.tasks.map((task: AssignWork) => ({ 
-          title: task.title, 
+        this.selectedDayTasks = day.tasks.map((task: AssignWork) => ({
+          title: task.title,
           assignee: task.assignee,
-          status: task.Status
+          status: task.Status,
+          assignedTo: task.assignedTo,
+          dueDate: task.dueDate,
+          startDate: task.startDate,
+          projectName: task.projectName
         }));
       }
+
+      // Open the fullscreen overlay
+      this.showTaskOverlay = true;
     } else {
-      this.selectedDay = null;
+      this.selectedDay = day;
       this.selectedDayTasks = [];
+      this.showTaskOverlay = false;
     }
+  }
+
+  closeTaskOverlay() {
+    this.showTaskOverlay = false;
   }
 
   getAssigneeTaskCount(assignee: string): number {

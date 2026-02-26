@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule,Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -89,6 +89,7 @@ closeCompare() {
 }
  
   projects: any[] = [];
+  allProjects: any[] = [];
 
 selectedProjectId: string = '';
 selectedProjectName: string = '';
@@ -186,6 +187,11 @@ getInitials(name: string): string {
     this.days = Array.from({ length: 31 }, (_, i) => i + 1);
 
     this.generateCalendar();
+
+    // Load all projects for admin dropdown
+    if (this.isAdmin()) {
+      this.loadAllProjects();
+    }
    
   }
 
@@ -542,7 +548,8 @@ getTodayDateString(): string {
       startDate: [''],
       dueDate: [this.dateUtils.getCurrentDateString(), Validators.required],
       Status: ['ToDo'],
-      projectId: ['']
+      projectId: [''],
+      projectName: ['']
     });
   }
 
@@ -651,6 +658,89 @@ getTodayDateString(): string {
 
   getEmployeeDisplay(emp: any): string {
     return typeof emp === 'string' ? emp : emp.username || emp.UserName || emp.name || emp.email || '';
+  }
+
+// Load ALL projects (for admin project selector in dialog)
+  // private loadAllProjects() {
+  //   const s = this.projectService.getProjects().subscribe({
+  //     next: (res: any) => {
+  //       if (Array.isArray(res)) {
+  //         this.allProjects = res;
+  //       } else if (res?.data && Array.isArray(res.data)) {
+  //         this.allProjects = res.data;
+  //       } else if (res?.projects && Array.isArray(res.projects)) {
+  //         this.allProjects = res.projects;
+  //       } else {
+  //       this.allProjects = [];
+  //       }
+  //     },
+  //     error: () => {
+  //       this.projects = [];
+  //       this.loadProjects();
+  //     }
+  //   });
+  //   this.subs.add(s);
+  // }
+
+// Handle project selection inside the dialog (for admin)
+  // onDialogProjectSelect() {
+  //   const selectedId = this.assignmentForm.get('projectId')?.value;
+  //   if (!selectedId) {
+  //     this.assignmentForm.patchValue({ projectName: '' });
+  //     return;
+  //   }
+
+  //   const projectList = this.allProjects.length > 0 ? this.allProjects : this.projects;
+  //   const selectedProject = projectList.find(p =>
+  //     String(p._id) === String(selectedId) ||
+  //     String(p.id) === String(selectedId)
+  //   );
+
+  //   if (selectedProject) {
+  //     const name = selectedProject.projectName || selectedProject.name || '';
+  //     this.assignmentForm.patchValue({ projectName: name });
+  //   }
+  // }
+
+  // Load ALL projects (for admin project selector in dialog)
+  private loadAllProjects() {
+    const s = this.projectService.getProjects().subscribe({
+      next: (res: any) => {
+      if (Array.isArray(res)) {
+          this.allProjects = res;
+        } else if (res?.data && Array.isArray(res.data)) {
+          this.allProjects = res.data;
+        } else if (res?.projects && Array.isArray(res.projects)) {
+          this.allProjects = res.projects;
+        } else {
+          this.allProjects = [];
+        }
+      },
+      error: () => {
+        this.allProjects = [];
+      }
+    });
+    this.subs.add(s);
+  }
+
+  // Handle project selection inside the dialog (for admin)
+  onDialogProjectSelect() {
+    const selectedId = this.assignmentForm.get('projectId')?.value;
+    if (!selectedId) {
+      this.assignmentForm.patchValue({ projectName: '' });
+      return;
+    }
+
+    const projectList = this.allProjects.length > 0 ? this.allProjects : this.projects;
+    const selectedProject = projectList.find(p =>
+      String(p._id) === String(selectedId) ||
+      String(p.id) === String(selectedId)
+    );
+
+    if (selectedProject) {
+      const name = selectedProject.projectName || selectedProject.name || '';
+      this.assignmentForm.patchValue({ projectName: name });
+    }
   }
 
   /**
@@ -824,7 +914,13 @@ getTodayDateString(): string {
 }
 
 
-
+  // Get project list for dialog dropdown
+  getDialogProjectList(): any[] {
+    if (this.isAdmin() && this.allProjects.length > 0) {
+      return this.allProjects;
+    }
+    return this.projects;
+  }
 
 
 openAssignmentDialog(task?: AssignWork) {
@@ -853,6 +949,10 @@ openAssignmentDialog(task?: AssignWork) {
   this.editingTask = task || null;
   this.selectedTask = task || null;
 
+  // Determine projectId and projectName
+  const taskProjectId = task?.projectId || this.selectedProjectId || '';
+  const taskProjectName = task?.projectName || this.selectedProjectName || '';
+
   // Prepare form data
   const formData = {
     title: task?.title || '',
@@ -862,7 +962,8 @@ openAssignmentDialog(task?: AssignWork) {
     startDate: task?.startDate || '',
     dueDate: task?.dueDate || this.dateUtils.getCurrentDateString(),
     Status: task?.Status || 'ToDo',
-    projectId: task?.projectId || this.selectedProjectId || ''
+    projectId: taskProjectId,
+    projectName: taskProjectName
   };
 
   this.assignmentForm.patchValue(formData);
@@ -882,7 +983,8 @@ openAssignmentDialog(task?: AssignWork) {
       Status: 'ToDo',
       startDate: '',
       dueDate: this.dateUtils.getCurrentDateString(),
-      projectId: ''
+      projectId: '',
+      projectName: ''
     });
     this.commentForm.reset();
     this.editingTask = null;
@@ -939,28 +1041,33 @@ openAssignmentDialog(task?: AssignWork) {
       return;
     }
 
-    const projectId = this.selectedProjectId || this.editingTask?.projectId || this.assignmentForm.get('projectId')?.value;
-    if (!projectId) {
-      this.snackBar.open('Please select a project first', 'Close', { duration: 3000 });
+    const formValue = this.assignmentForm.value;
+
+    // Resolve projectId and projectName from multiple sources
+    const projectId = formValue.projectId || this.selectedProjectId || this.editingTask?.projectId || '';
+    const projectName = formValue.projectName || this.selectedProjectName || this.editingTask?.projectName || '';
+
+    // Validate: projectName is REQUIRED by backend
+    if (!projectName || projectName.trim() === '') {
+      this.snackBar.open('Please select a project before creating a task', 'Close', { duration: 4000 });
       return;
     }
 
     const selectedProject = this.projects.find(p => String(p._id) === String(projectId) || String(p.id) === String(projectId));
-    const projectName = selectedProject?.projectName || selectedProject?.name;
-    if (!projectName) {
-      this.snackBar.open('Invalid project selected', 'Close', { duration: 3000 });
-      return;
-    }
+    // const projectName = selectedProject?.projectName || selectedProject?.name;
+    // if (!projectName) {
+    //   this.snackBar.open('Invalid project selected', 'Close', { duration: 3000 });
+    //   return;
+    // }
 
     this.isLoading = true; // set AFTER validation
 
-    const formValue = this.assignmentForm.value;
     const formData = new FormData();
 
-    formData.append('projectName', projectName);
+    formData.append('projectName', projectName.trim());
     formData.append('projectId', projectId);
     formData.append('title', formValue.title || '');
-    formData.append('description', formValue.description || '');
+    formData.append('description', formValue.description || '' || '');
     formData.append('assignedTo', formValue.assignedTo || this.username);
     formData.append('assignee', formValue.assignee || '');
     formData.append('startDate', formValue.startDate ? this.dateUtils.formatDateForBackend(formValue.startDate) : '');

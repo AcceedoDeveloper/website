@@ -2,14 +2,13 @@
   <div class="container">
     <!-- Project Info Display -->
 
-
     <div class="data-filter-bar">
       <div class="assignee-filter">
         <div class="custom-dropdown">
           <select [(ngModel)]="selectedAssignee" (change)="onAssigneeChange()" class="modern-select">
-            <option value="">All Assignees </option>
+            <option value="">All Assignees</option>
             <option *ngFor="let assignee of allAssignees" [value]="assignee">
-              {{ assignee }} 
+              {{ assignee }}
             </option>
           </select>
           <div class="dropdown-arrow">
@@ -19,139 +18,158 @@
           </div>
         </div>
       </div>
+
       <div class="legend">
         <div class="legend-item">
           <div class="legend-color red"></div>
           <span>Weekend</span>
         </div>
-       
+
         <div class="legend-item">
-          <div class="legend-color"style="background: hsl(78, 100%, 78%)" ></div>
+          <div class="legend-color" style="background: hsl(78, 100%, 78%)"></div>
           <span>Today</span>
         </div>
-     
-      
+
         <div class="legend-item">
-          <div class="legend-color " style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9) !important;"></div>
+          <div class="legend-color" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9) !important;"></div>
           <span>Has Tasks</span>
         </div>
       </div>
-      
-   <div class="month-wrapper">
-  <button class="nav-btn" (click)="changeMonth(-1)">
-    &#10094;
-  </button>
 
-  <span class="month-label">
-    {{ currentMonth | date:'MMMM yyyy' }}
-  </span>
+      <div class="month-wrapper">
+        <button class="nav-btn" (click)="changeMonth(-1)">&#10094;</button>
+        <span class="month-label">
+          {{ currentMonth | date:'MMMM yyyy' }}
+        </span>
 
-  <button class="nav-btn" (click)="changeMonth(1)">
-    &#10095;
-  </button>
-
-</div>
-
-  </div>
-
-
-
-<!-- CALENDAR -->
-<div class="main-content">
-  <div class="calendar">
-
-    <!-- WEEK HEADER -->
-    <div class="day-header">
-      <div>Sunday</div>
-      <div>Monday</div>
-      <div>Tuesday</div>
-      <div>Wednesday</div>
-      <div>Thursday</div>
-      <div>Friday</div>
-      <div>Saturday</div>
-    </div>
-
-    <!-- CALENDAR GRID -->
-    <div class="calendar-grid">
-      <div
-        class="day-cell"
-        *ngFor="let day of days"
-        [class.empty]="!day.date"
-        [class.sunday]="day.isSunday"
-        [class.selected]="day.isSelected"
-        [class.clickable]="day.tasks?.length > 0"
-        [class.has-tasks]="day.tasks?.length > 0"
-        (click)="day.date && selectDay(day)"
-      >
-
-        <!-- DATE NUMBER -->
-        <div class="day-number" *ngIf="day.date">
-          {{ day.date }}
-        </div>
-
-        <!-- TASK PREVIEW -->
-        <div class="task" *ngIf="day.tasks?.length > 0">
-          <span class="task-title">
-            {{ day.tasks[0]?.title }}
-            <span *ngIf="day.tasks.length > 1">...</span>
-          </span>
-        </div>
-
+        <button class="nav-btn" (click)="changeMonth(1)">&#10095;</button>
       </div>
     </div>
 
+    <!-- CALENDAR -->
+    <div class="main-content">
+      <div class="calendar">
 
+        <!-- WEEK HEADER -->
+        <div class="day-header">
+          <div>Sunday</div>
+          <div>Monday</div>
+          <div>Tuesday</div>
+          <div>Wednesday</div>
+          <div>Thursday</div>
+          <div>Friday</div>
+          <div>Saturday</div>
+        </div>
 
-      <div class="task-details" *ngIf="selectedDayTasks.length > 0" [class.scrollable]="selectedDayTasks.length > 3">
-        <div class="task-details-header">
-          <div class="header-left">
-            <div class="header-icon">
-              <i class="task-icon">📋</i>
+        <!-- CALENDAR GRID -->
+        <div class="calendar-grid">
+          <div
+            class="day-cell"
+            *ngFor="let day of days"
+            [class.empty]="!day.date"
+            [class.sunday]="day.isSunday"
+            [class.selected]="day.isSelected && !showTaskOverlay"
+            [class.clickable]="day.tasks?.length > 0"
+            [class.has-tasks]="day.tasks?.length > 0"
+            (click)="day.date && selectDay(day)"
+          >
+
+            <!-- DATE NUMBER -->
+            <div class="day-number" *ngIf="day.date">
+              {{ day.date }}
             </div>
-            <div class="header-content">
-              <div class="task-details-title">
-                {{ selectedDay?.date }} {{ months[selectedMonth] }} {{ selectedYear }}
+
+            <!-- TASK PREVIEW (now scrollable when > ~3 tasks) -->
+            <div class="task-preview-container" *ngIf="day.tasks?.length > 0">
+              <div class="task-preview-scroll">
+                <div class="task" *ngFor="let task of day.tasks; let i = index">
+                  <span class="task-title">
+                    {{ task.title }}
+                    <span *ngIf="day.tasks.length > 1 && i === day.tasks.length - 1 && day.tasks.length > 3"> +{{ day.tasks.length - 3 }} more</span>
+                  </span>
+                </div>
               </div>
-              <div class="task-subtitle">Task Schedule</div>
             </div>
-          </div>
-          <div class="header-right">
-            <div class="task-count-badge">
-              <span class="count-number">{{ selectedDayTasks.length }}</span>
-              <span class="count-text">task{{ selectedDayTasks.length > 1 ? 's' : '' }}</span>
-            </div>
-            <div class="header-date-badge">
-              <i class="date-icon">📅</i>
-              <span>{{ selectedDay?.date }}</span>
-            </div>
+
           </div>
         </div>
-        <div class="task-list">
-          <div class="task-item" *ngFor="let task of selectedDayTasks; let i = index">
-            <div class="task-item-header">
-              <div class="task-number">{{ i + 1 }}</div>
-              <div class="task-title">{{ task.title }}</div>
-              <div class="task-status" [class]="'status-' + (task.status || 'todo').toLowerCase()">
-                {{ task.status || 'To Do' }}
+
+        <!-- FULLSCREEN TASK OVERLAY -->
+        <div class="task-overlay" *ngIf="showTaskOverlay && selectedDayTasks.length > 0">
+          <div class="task-overlay-backdrop" (click)="closeTaskOverlay()"></div>
+          <div class="task-overlay-content">
+
+            <!-- CLOSE BUTTON -->
+            <button class="task-overlay-close" (click)="closeTaskOverlay()">
+              ×
+            </button>
+
+            <!-- HEADER -->
+            <div class="task-overlay-header">
+              <div class="header-left">
+                <div class="header-icon">
+                  <i class="task-icon">📋</i>
+                </div>
+                <div class="header-content">
+                  <div class="task-details-title">
+                    {{ selectedDay?.date }} {{ months[selectedMonth] }} {{ selectedYear }}
+                  </div>
+                  <div class="task-subtitle">Task Schedule</div>
+                </div>
+              </div>
+              <div class="header-right">
+                <div class="task-count-badge">
+                  <span class="count-text">
+                    <span class="count-number">{{ selectedDayTasks.length }}</span>
+                    task{{ selectedDayTasks.length > 1 ? 's' : '' }}
+                  </span>
+                </div>
+                <div class="header-date-badge">
+                  <i class="date-icon">📅</i>
+                  <span>{{ selectedDay?.date }}</span>
+                </div>
               </div>
             </div>
-            <div class="task-meta" *ngIf="!selectedAssignee">
-              <div class="meta-item">
-                <i class="meta-icon">👤</i>
-                <span class="meta-label">Assignee:</span>
-                <span class="meta-value">{{ task.assignee }}</span>
+
+            <!-- TASK LIST -->
+            <div class="task-overlay-list">
+              <div class="task-item" *ngFor="let task of selectedDayTasks; let i = index">
+                <div class="task-item-header">
+                  <div class="task-number">{{ i + 1 }}</div>
+                  <div class="task-title">Task: {{ task.title }}</div>
+                  <div class="task-status" [ngClass]="'status-' + (task.status || 'todo').toLowerCase()">
+                    {{ task.status || 'To Do' }}
+                  </div>
+                </div>
+                <div class="task-item-body">
+                  <div class="meta-item" *ngIf="task.description">
+                    <i class="meta-icon">📝</i>
+                    <span class="meta-label">Description:</span>
+                    <span class="meta-value">{{ task.description }}</span>
+                  </div>
+                  <div class="meta-item" *ngIf="!selectedAssignee">
+                    <i class="meta-icon">👤</i>
+                    <span class="meta-label">Assignee:</span>
+                    <span class="meta-value">{{ task.assignee }}</span>
+                  </div>
+                 
+                  <div class="meta-item" *ngIf="task.projectName">
+                    <i class="meta-icon">📁</i>
+                    <span class="meta-label">Project:</span>
+                    <span class="meta-value">{{ task.projectName }}</span>
+                  </div>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
-        <div class="scroll-indicator" *ngIf="selectedDayTasks.length > 3">
-          <i class="scroll-icon">⬇️</i>
-          <span>Scroll for more tasks</span>
-        </div>
-      </div>
 
-      <div class="no-tasks-message" *ngIf="selectedDay && selectedDayTasks.length === 0">
-        No tasks found for selected day.
+        <!-- NO TASKS MESSAGE (only when overlay is NOT open) -->
+        <div class="no-tasks-message" *ngIf="selectedDay && selectedDayTasks.length === 0 && !showTaskOverlay">
+          No tasks found for selected day.
+        </div>
+
       </div>
     </div>
   </div>

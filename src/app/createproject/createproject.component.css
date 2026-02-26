@@ -710,162 +710,203 @@ button {
 }
 
 
+/* ===== Premium MNC-Level Side Panel UI ===== */
+
 .side-panel {
-  width: 420px;
+  width: 380px;
   height: 100vh;
-  padding: 30px;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  background: #ffffff;
-  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.12);
-  border-left: 1px solid #e5e7eb;
-  animation: slideIn 0.3s ease;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  position: relative;
+  overflow: hidden;
+  animation: premiumSlide 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+@keyframes premiumSlide {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
+/* ===== Header ===== */
 .panel-header {
-  padding-bottom: 18px;
-  margin-bottom: 20px;
-
-  border-bottom: 1px solid #e5e7eb;
-
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #fff;
+  padding: 22px 22px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
- 
-  background: #eaf340;  
-  padding: 20px;
-  margin: -30px -30px 20px -30px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .panel-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 600;
-  color: #1f2937;
+  letter-spacing: 0.3px;
 }
 
-
-.panel-content {
-  flex: 1;
-  overflow-y: auto;
-  padding-right: 8px;
-  font-family: "Segoe UI", Roboto, sans-serif;
+.header-actions {
+  display: flex;
+  gap: 10px;
 }
 
-/* Custom Scroll */
-.panel-content::-webkit-scrollbar {
-  width: 6px;
-}
-.panel-content::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+.header-btn {
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  padding: 8px 11px;
   border-radius: 10px;
-}
-.panel-content::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
 }
 
-/* ================================
-   SECTION TITLE
-================================ */
+.header-btn:hover {
+  background: rgba(255,255,255,0.22);
+  transform: translateY(-1px);
+}
+
+/* ===== Content ===== */
+.panel-content {
+  padding: 22px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ===== Section Title ===== */
 .section-title {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  color: #1e293b;
+  color: #64748b;
+  margin-bottom: 14px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  margin: 20px 0 12px 0;
 }
 
-/* ================================
-   TWO COLUMN GRID
-================================ */
+/* ===== Info Grid ===== */
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px 30px;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
-/* ================================
-   INFO BLOCK
-================================ */
+/* ===== Info Card ===== */
 .info-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(226,232,240,0.9);
+  border-radius: 16px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  transition: all 0.25s ease;
+}
+
+.info-group:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
 }
 
 .info-group label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
   color: #64748b;
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.info-group label i {
-  font-size: 12px;
-  color: #94a3b8;
+  margin-bottom: 6px;
 }
 
 .info-value {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #0f172a;
 }
 
-/* ================================
-   STATUS BADGE
-================================ */
+/* ===== Status Badge ===== */
 .status-badge {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .status-badge.active {
-  background: #dcfce7;
-  color: #15803d;
+  background: linear-gradient(135deg, #ffedd5, #fed7aa); /* lite orange */
+  color: #9a3412; /* dark orange text */
 }
 
 .status-badge.completed {
-  background: #e0f2fe;
-  color: #0369a1;
+   background: linear-gradient(135deg, #dcfce7, #bbf7d0); /* green */
+  color: #065f46; /* dark green text */
 }
 
-.status-badge.delayed {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-/* ================================
-   EMPLOYEE TAGS
-================================ */
+/* ===== Employees ===== */
 .employee-list {
-  margin-top: 10px;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(226,232,240,0.9);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
 }
 
 .employee-list span {
-  display: inline-block;
-  background: #f1f5f9;
-  color: #1e293b;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  margin: 6px 6px 0 0;
-  transition: 0.2s ease;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  color: #1e3a8a;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
 }
 
 .employee-list span:hover {
-  background: #e2e8f0;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
 }
+
+/* ===== Scrollbar (Premium) ===== */
+.panel-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c7d2fe, #818cf8);
+  border-radius: 10px;
+}
+
+/* ===== Glass Overlay Effect ===== */
+.side-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
+}
+
 
 
 .header-actions {
@@ -2001,3 +2042,5 @@ input:disabled {
    padding-left: 20%;
 
 }
+
+
