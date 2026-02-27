@@ -923,78 +923,53 @@ getTodayDateString(): string {
   }
 
 
-openAssignmentDialog(task?: AssignWork) {
-  console.log("data", task);
+openAssignmentDialog(task?: AssignWork)
+{
 
-  // If user is NOT admin and no project selected -> block
-  if (!this.isAdmin() && !this.selectedProjectId && !task) {
-    this.error = "Please select a project first to add tasks";
-    this.snackBar.open(this.error, 'Close', { duration: 3000 });
-    this.error = '';
-    return;
-  }
+// get project from task OR outside select
+const projectId =
+  task?.projectId ||
+  this.selectedProjectId ||
+  '';
 
-  // If user is NOT admin and not team lead -> block
-  if (!this.isAdmin() && !this.isCurrentUserTeamLead() && !task) {
-    this.error = "Only team leads can assign tasks to this project";
-    this.snackBar.open(this.error, 'Close', { duration: 3000 });
-    this.error = '';
-    return;
-  }
+const projectName =
+  task?.projectName ||
+  this.selectedProjectName ||
+  '';
 
-  // Prepare uploaded pictures
-  this.uploadedPictures = task?.pictures?.length ? [...task.pictures] : [];
-  this.selectedPictureFiles = [];
 
-  this.editingTask = task || null;
-  this.selectedTask = task || null;
+// patch form
+this.assignmentForm.patchValue({
 
-  // Determine projectId and projectName
-  const taskProjectId = task?.projectId || this.selectedProjectId || '';
-  const taskProjectName = task?.projectName || this.selectedProjectName || '';
+title: task?.title || '',
 
-  // Prepare form data
-  const formData = {
-    title: task?.title || '',
-    description: task?.description || '',
-    assignedTo: task?.assignedTo || this.username,
-    assignee: task?.assignee || '',
-    startDate: task?.startDate || '',
-    dueDate: task?.dueDate || this.dateUtils.getCurrentDateString(),
-    Status: task?.Status || 'ToDo',
-    projectId: taskProjectId,
-    projectName: taskProjectName
-  };
+description: task?.description || '',
 
-  this.assignmentForm.patchValue(formData);
-  this.commentForm.reset();
+assignedTo: this.username,
 
-  // Open dialog
-  const dialogRef = this.dialog.open(this.assignmentDialog, {
-    width: '700px',
-    maxWidth: '95vw',
-    maxHeight: '70vh',
-    disableClose: false,
-  });
+assignee: task?.assignee || '',
 
-  const afterSub = dialogRef.afterClosed().subscribe(() => {
-    this.assignmentForm.patchValue({
-      assignedTo: this.username,
-      Status: 'ToDo',
-      startDate: '',
-      dueDate: this.dateUtils.getCurrentDateString(),
-      projectId: '',
-      projectName: ''
-    });
-    this.commentForm.reset();
-    this.editingTask = null;
-    this.selectedTask = null;
-    this.uploadedPictures = [];
-    this.selectedPictureFiles = [];
-    afterSub.unsubscribe();
-  });
+startDate: task?.startDate || '',
 
-  this.subs.add(afterSub);
+dueDate:
+task?.dueDate ||
+this.dateUtils.getCurrentDateString(),
+
+Status: task?.Status || 'ToDo',
+
+projectId: projectId,
+
+projectName: projectName
+
+});
+
+
+// open dialog
+this.dialog.open(this.assignmentDialog,{
+minWidth:'1000px',
+minHeight:'50%',
+});
+
 }
 
  
@@ -1035,70 +1010,251 @@ openAssignmentDialog(task?: AssignWork) {
     }
   }
 
- saveAssignment() {
-    if (this.assignmentForm.invalid) {
-      this.snackBar.open('Please fill required fields', 'Close', { duration: 2500 });
-      return;
-    }
+saveAssignment()
+{
 
-    const formValue = this.assignmentForm.value;
+if(this.assignmentForm.invalid)
+{
+this.snackBar.open(
+'Please fill required fields',
+'Close',
+{duration:2500}
+);
+return;
+}
 
-    // Resolve projectId and projectName from multiple sources
-    const projectId = formValue.projectId || this.selectedProjectId || this.editingTask?.projectId || '';
-    const projectName = formValue.projectName || this.selectedProjectName || this.editingTask?.projectName || '';
 
-    // Validate: projectName is REQUIRED by backend
-    if (!projectName || projectName.trim() === '') {
-      this.snackBar.open('Please select a project before creating a task', 'Close', { duration: 4000 });
-      return;
-    }
+const formValue =
+this.assignmentForm.value;
 
-    const selectedProject = this.projects.find(p => String(p._id) === String(projectId) || String(p.id) === String(projectId));
-    // const projectName = selectedProject?.projectName || selectedProject?.name;
-    // if (!projectName) {
-    //   this.snackBar.open('Invalid project selected', 'Close', { duration: 3000 });
-    //   return;
-    // }
 
-    this.isLoading = true; // set AFTER validation
 
-    const formData = new FormData();
+// projectId resolve
+const projectId =
+formValue.projectId ||
+this.selectedProjectId ||
+this.editingTask?.projectId ||
+'';
 
-    formData.append('projectName', projectName.trim());
-    formData.append('projectId', projectId);
-    formData.append('title', formValue.title || '');
-    formData.append('description', formValue.description || '' || '');
-    formData.append('assignedTo', formValue.assignedTo || this.username);
-    formData.append('assignee', formValue.assignee || '');
-    formData.append('startDate', formValue.startDate ? this.dateUtils.formatDateForBackend(formValue.startDate) : '');
-    formData.append('dueDate', formValue.dueDate ? this.dateUtils.formatDateForBackend(formValue.dueDate) : '');
-    formData.append('Status', formValue.Status || (this.editingTask ? this.editingTask.Status : 'ToDo'));
 
-    if (this.uploadedPictures?.length) {
-      formData.append('existingPictures', JSON.stringify(this.uploadedPictures));
-    }
-    this.selectedPictureFiles.forEach(file => formData.append('pictures', file));
 
-    const request$ = this.editingTask && this.editingTask._id
-      ? this.assignworkService.updateAssignment(this.editingTask._id, formData)
-      : this.assignworkService.createAssignment(formData);
+// find project object
+const selectedProject =
+this.projects.find(
+p =>
+String(p._id) === String(projectId)
+);
 
-    const sub = request$.subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.snackBar.open(this.editingTask ? 'Task updated successfully' : 'Task created successfully', 'Close', { duration: 2500 });
-        this.getAssignments();
-        setTimeout(() => this.dialog.closeAll(), 300);
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Save task error:', err);
-        const msg = err.error?.message || err.error?.error || 'Failed to save task';
-        this.snackBar.open(msg, 'Close', { duration: 5000 });
-      }
-    });
 
-    this.subs.add(sub);
+
+// projectName resolve
+const projectName =
+selectedProject?.projectName ||
+selectedProject?.name ||
+this.selectedProjectName ||
+this.editingTask?.projectName ||
+'';
+
+
+
+
+// validation
+if(!projectId || !projectName)
+{
+
+this.snackBar.open(
+'Please select project',
+'Close',
+{duration:4000}
+);
+
+return;
+
+}
+
+
+
+this.isLoading = true;
+
+
+
+// create formData
+const formData =
+new FormData();
+
+
+
+formData.append(
+'projectId',
+projectId
+);
+
+
+formData.append(
+'projectName',
+projectName
+);
+
+
+formData.append(
+'title',
+formValue.title || ''
+);
+
+
+formData.append(
+'description',
+formValue.description || ''
+);
+
+
+formData.append(
+'assignedTo',
+formValue.assignedTo ||
+this.username
+);
+
+
+formData.append(
+'assignee',
+formValue.assignee || ''
+);
+
+
+
+formData.append(
+'startDate',
+formValue.startDate
+?
+this.dateUtils.formatDateForBackend(
+formValue.startDate
+)
+:
+''
+);
+
+
+formData.append(
+'dueDate',
+formValue.dueDate
+?
+this.dateUtils.formatDateForBackend(
+formValue.dueDate
+)
+:
+''
+);
+
+
+
+formData.append(
+'Status',
+formValue.Status ||
+'ToDo'
+);
+
+
+
+// existing images
+if(this.uploadedPictures?.length)
+{
+
+formData.append(
+'existingPictures',
+JSON.stringify(
+this.uploadedPictures
+)
+);
+
+}
+
+
+
+// new images
+this.selectedPictureFiles
+.forEach(file=>
+{
+
+formData.append(
+'pictures',
+file
+);
+
+});
+
+
+
+// request
+const request$ =
+this.editingTask?._id
+?
+
+this.assignworkService
+.updateAssignment(
+this.editingTask._id,
+formData
+)
+
+:
+
+this.assignworkService
+.createAssignment(
+formData
+);
+
+
+
+
+request$
+.subscribe({
+
+next:()=>
+{
+
+this.isLoading=false;
+
+this.snackBar.open(
+
+this.editingTask
+?
+'Task updated'
+:
+'Task created',
+
+'Close',
+
+{duration:2500}
+
+);
+
+
+this.getAssignments();
+
+
+this.dialog.closeAll();
+
+},
+
+
+error:(err)=>
+{
+
+this.isLoading=false;
+
+this.snackBar.open(
+
+'Save Failed',
+
+'Close',
+
+{duration:4000}
+
+);
+
+}
+
+});
+
 }
 
   deleteAssignment(id: string | undefined) {
@@ -1117,8 +1273,8 @@ openAssignmentDialog(task?: AssignWork) {
 
       // Use Material Dialog for confirmation
       const dialogRef = this.dialog.open(AssignmentDeleteConfirmationDialogComponent, {
-        width: '400px',
-        height: 'auto',
+       width: '800px', 
+       minHeight: '50px',
         data: { 
           mode: 'delete',
           assignmentId: id,

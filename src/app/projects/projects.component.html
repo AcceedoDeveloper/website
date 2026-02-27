@@ -387,7 +387,7 @@
       <h2 class="dialog-title">
   {{ editingTask ? 'Edit Task' : 'Add Task' }}
 </h2>
- <button type="button" class="btn btn-cancel dialog-close-btn" (click)="close()">&#10006;</button>
+ <button type="button" class="dialog-close-btn" (click)="close()">X</button>
     </div>
 
     <div class="dialog-content">
@@ -489,7 +489,7 @@
           <div class="right-column">
             
   
- <div class="form-group">
+<div class="form-group">
 
 <label class="form-label">Projects</label>
 
@@ -499,8 +499,7 @@
 
 <option
   *ngFor="let project of projects; trackBy: trackById"
-  [ngValue]="project._id"
->
+  [value]="project._id">
 
 {{ project?.projectName || project?.name }}
 
