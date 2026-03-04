@@ -31,7 +31,7 @@
     <div class="login-dropdown">
       <input type="checkbox" id="toggle-login" hidden />
       <label for="toggle-login" class="login-icon">
-        <ng-container *ngIf="userData?.photoURL && userData.photoURL !== 'assets/default-avatar.png'; else initialsIcon">
+        <ng-container *ngIf="userData?.photoURL && userData.photoURL ; else initialsIcon">
           <img [src]="userData.photoURL" alt="" class="avatar" />
         </ng-container>
         <ng-template #initialsIcon>

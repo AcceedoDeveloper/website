@@ -75,13 +75,19 @@
     <!-- Profile Dropdown -->
     <div class="login-dropdown" #loginDropdown>
       <label class="user-icon" (click)="toggleDropdown()">
-        <div>
-          {{ getUserInitial() }}
-        </div>
-       
-       
-      </label>
+  <ng-container *ngIf="userData?.photoURL; else initialAvatar">
+    <img
+      [src]="userData.photoURL"
+      class="header-avatar"
+      alt="profile"
+      (error)="onAvatarError()"
+    />
+  </ng-container>
 
+  <ng-template #initialAvatar>
+    <div class="avatar-initial">{{ getUserInitial() }}</div>
+  </ng-template>
+</label>
       <div  class="login-menu" [class.show]="showDropdown" (click)="onOverlayClick($event)">
         <button class="mobile-close-btn" (click)="toggleDropdown()"></button>
         <div class="mobile-content" (click)="$event.stopPropagation()">
@@ -112,22 +118,37 @@
     <div class="popup-body">
       <!-- LEFT: Profile Image -->
       <div class="profile-section">
-        <label>Profile Image</label>
-        <div class="profile-img-wrapper">
-          <img *ngIf="previewImage; else placeholder" [src]="previewImage" alt="profile" class="profile-img" />
-          <ng-template #placeholder>
-            <div class="profile-placeholder">No Image</div>
-          </ng-template>
-        </div>
+  <label>Profile Image</label>
+<div class="profile-img-wrapper">
 
-        <div class="file-upload-wrapper">
-          <input type="file" id="profileUpload" accept="image/*" (change)="onPhotoSelected($event)" />
-          <label for="profileUpload" class="file-upload-label">
-            {{ selectedFileName || 'Choose File' }}
-          </label>
-        </div>
-      </div>
+  <!-- IMAGE -->
+    <ng-container *ngIf="previewImage; else placeholder">
+    <img [src]="previewImage" class="profile-img" (error)="onProfileImageError()">
+    <button class="delete-img-btn" (click)="removeProfilePicture()">✕</button>
+  </ng-container>
 
+  <ng-template #placeholder>
+    <div class="profile-initials">{{ getUserInitial() }}</div>
+  </ng-template>
+
+
+  <!-- INITIAL AVATAR -->
+
+</div>
+
+  <!-- FILE UPLOAD -->
+  <div class="file-upload-wrapper">
+    <input
+      type="file"
+      id="profileUpload"
+      accept="image/*"
+      (change)="onPhotoSelected($event)" />
+
+    <label for="profileUpload" class="file-upload-label">
+      {{ selectedFileName || 'Choose File' }}
+    </label>
+  </div>
+</div>
       <!-- RIGHT: Basic Info  -->
       <div class="info-section">
         <div class="top-row">

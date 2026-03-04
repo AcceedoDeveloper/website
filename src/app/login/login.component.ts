@@ -123,8 +123,23 @@ onSubmit(): void {
       console.log('✅ Raw login response from server:', res);
 
       // Store user data
-      const userRaw = res?.user ?? res?.data?.user ?? null;
+      let userRaw = res?.user ?? res?.data?.user ?? null;
       if (userRaw) {
+        // apply client-side cached photo if available
+        try {
+          const parsed = typeof userRaw === 'string' ? JSON.parse(userRaw) : userRaw;
+          const key =
+            parsed._id || parsed.id || parsed.userCode || parsed.userName || parsed.emailId || '';
+          if (key) {
+            const cached = localStorage.getItem(`cachedPhoto_${key}`);
+            if (cached) {
+              console.log('🔁 Applying cached photo to login user', key, cached);
+              parsed.photoURL = cached;
+              userRaw = parsed; // update the reference
+            }
+          }
+        } catch {}
+
         try {
           sessionStorage.setItem('user', JSON.stringify(userRaw));
         } catch {

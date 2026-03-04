@@ -98,6 +98,10 @@ import { SummaryComponent } from './projects/summary/summary.component';
 import { CompareComponent } from './projects/compare/compare.component';
 import { DocumentsComponent } from './projects/documents/documents.component';
 import { SharedComponent } from './shared/shared.component';
+import { Product4Component } from './product4/product4.component';
+import { Product5Component } from './product5/product5.component';
+import { Product6Component } from './product6/product6.component';
+import { Product7Component } from './product7/product7.component';
 
 
 
@@ -166,7 +170,11 @@ export function loadConfigFactory(configService: ConfigService) {
    SummaryComponent,
    CompareComponent,
    DocumentsComponent,
-   SharedComponent
+   SharedComponent,
+   Product4Component,
+   Product5Component,
+   Product6Component,
+   Product7Component,
   ],
 
   imports: [

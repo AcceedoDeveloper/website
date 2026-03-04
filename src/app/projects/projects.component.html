@@ -287,12 +287,10 @@
 
     <div class="task-meta">
      <div class="task-status-badge" [ngClass]="getStatusClass(task.Status)">
-{{ 
-  task.Status?.toLowerCase() === 'done' ? 'Completed' :
-
-  task.Status || 'To Do'
-}}
-
+  {{ 
+    task.Status.toLowerCase() === 'done' ? 'Completed' : 
+    task.Status || 'To Do' 
+  }}
 </div>
       <!-- <span class="due-date"
             [class.overdue]="isOverdue(task)">

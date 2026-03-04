@@ -18,6 +18,8 @@ import { Meta,Title } from '@angular/platform-browser';
 export class HeaderComponent implements OnInit, OnDestroy {
     currentLabel = '';
     
+
+    
   onSearch() {}
   
   
@@ -91,9 +93,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   userData: any = null;
   editUserData: any = {};
   previewImage: string | ArrayBuffer | null = null;
-  showEditModal = false;
   selectedFile: File | null = null;
   selectedFileName: string = '';
+  showEditModal = false;
 
   searchQuery = '';
   hasNotification = false;
@@ -194,6 +196,7 @@ nextPage() {
     this.getUserInitial()
     setInterval(() => this.updateTime(), 60000);
     
+    
     setTimeout(() => {
       this.loadTodaysTasks();
     }, 1000);
@@ -210,11 +213,48 @@ nextPage() {
     this.dateTime = now.toLocaleString();
   }
 
+  private extractCacheKey(user: any): string {
+    if (!user || typeof user !== 'object') return '';
+    // prefer stable unique identifiers
+    return (
+      user._id ||
+      user.id ||
+      user.userCode ||
+      user.userName ||
+      user.emailId ||
+      ''
+    ).toString();
+  }
+
+  private getCachedPhoto(user: any): string | null {
+    const key = this.extractCacheKey(user);
+    if (!key) return null;
+    const cached = localStorage.getItem(`cachedPhoto_${key}`);
+    if (cached) console.log('🔁 found cache entry for', key, cached);
+    return cached;
+  }
+
+  private applyCachedPhoto(user: any): void {
+    const key = this.extractCacheKey(user);
+    const cached = this.getCachedPhoto(user);
+    if (cached) {
+      console.log('🔁 Applying cached photo for', key, cached);
+      user.photoURL = cached;
+    }
+  }
+
   getCurrentUser() {
     const userStr = sessionStorage.getItem('user');
     if (userStr) {
       this.userData = JSON.parse(userStr);
+      console.log('🔍 getCurrentUser read from sessionStorage', this.userData);
+
+      // apply client-side cache before processing image
+      this.applyCachedPhoto(this.userData);
+      console.log('🔍 after cache lookup userData.photoURL=', this.userData.photoURL);
+
       this.processUserImage(this.userData);
+      console.log('🔍 after processUserImage userData.photoURL=', this.userData.photoURL);
 
       if (typeof this.userData.role === 'object' && this.userData.role?.role) {
         this.userData.role = this.userData.role.role;
@@ -325,34 +365,30 @@ nextPage() {
     this.hasNotification = this.notificationCount > 0;
   }
 
-  getUserInitial(): string {  
-  if (!this.userData) return '';
+ getUserInitial(): string {
 
-  // try all possible name fields safely
   const fullName =
-    this.userData.name ||
-    this.userData.userName ||
-    this.userData.UserName ||
-    this.userData.username ||
+    this.userData?.name ??
+    this.userData?.userName ??
+    this.userData?.UserName ??
+    this.userData?.username ??
     '';
 
-  if (!fullName || typeof fullName !== 'string') return '';
-
-  const cleanName = fullName.trim();
-
-  if (!cleanName) return '';
-
-  const nameParts = cleanName.split(/\s+/);
-
-  // Single name → A
-  if (nameParts.length === 1) {
-    return nameParts[0].charAt(0).toUpperCase();
+  if (!fullName || typeof fullName !== 'string') {
+    return 'U'; // default avatar
   }
 
-  // Multiple names → AA
+  const nameParts = fullName.trim().split(/\s+/);
+
+  // Single name → R
+  if (nameParts.length === 1) {
+    return nameParts[0][0].toUpperCase();
+  }
+
+  // Multiple names → RG
   return (
-    nameParts[0].charAt(0) +
-    nameParts[nameParts.length - 1].charAt(0)
+    nameParts[0][0] +
+    nameParts[nameParts.length - 1][0]
   ).toUpperCase();
 }
 
@@ -369,32 +405,50 @@ nextPage() {
 
     const timestamp = new Date().getTime();
     
-    if (user.photoURL) {
-      if (user.photoURL.startsWith('http')) {
-        user.photoURL = this.addCacheBuster(user.photoURL, timestamp);
+    // Try all possible photo field names
+    let photoField = user.photoURL || user.photo || user.imagePath || user.imageUrl;
+    
+    if (photoField) {
+      if (photoField.startsWith('http')) {
+        user.photoURL = this.addCacheBuster(photoField, timestamp);
       } else {
-        user.photoURL = this.addCacheBuster(this.configService.getUploadUrl(user.photoURL), timestamp);
+        user.photoURL = this.addCacheBuster(this.configService.getUploadUrl(photoField), timestamp);
       }
-    } else if (user.photo) {
-      if (user.photo.startsWith('http')) {
-        user.photoURL = this.addCacheBuster(user.photo, timestamp);
-      } else {
-        user.photoURL = this.addCacheBuster(this.configService.getUploadUrl(user.photo), timestamp);
-      }
+      console.log('✅ Photo field found:', photoField, '-> photoURL:', user.photoURL);
     } else {
-      user.photoURL = 'assets/default-avatar.png';
+      // No photo found - leave photoURL undefined/null so avatar shows initials
+      user.photoURL = null;
+      console.log('⊘ No photo field found - will show initials avatar');
     }
   }
 
   private addCacheBuster(url: string, timestamp: number): string {
-    if (url.includes('assets/default-avatar.png')) {
-      return url;
-    }
+
     return url + (url.includes('?') ? '&' : '?') + `t=${timestamp}`;
   }
 
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
+  }
+
+  /**
+   * Called when avatar image fails to load (404, network error, etc.)
+   * Clears the photoURL so the template will render initials instead.
+   */
+  onAvatarError(): void {
+    console.warn('⚠️ Avatar image failed to load, falling back to initials');
+    if (this.userData) {
+      this.userData.photoURL = null;
+    }
+  }
+
+  /**
+   * Called when modal preview image fails to load.
+   * Clears the preview so initials placeholder is shown.
+   */
+  onProfileImageError(): void {
+    console.warn('⚠️ Profile preview image failed to load, showing initials');
+    this.previewImage = null;
   }
 
   onOverlayClick(event: MouseEvent) {
@@ -445,39 +499,185 @@ nextPage() {
         return this.configService.getUploadUrl(user.photo);
       }
     } else {
-      return 'assets/default-avatar.png';
+      return '';
     }
   }
 
-  openEditProfile() {
-    console.log('Opening edit profile for user:', this.userData);
+ openEditProfile() {
+  console.log('📝 Opening edit profile modal for user:', this.userData);
+  
+  // Show loading state and modal
+  this.isLoading = true;
+  this.showEditModal = true;
+  
+  // Clear previous preview when opening modal
+  this.previewImage = null;
+
+  // Load roles and departments, then populate form
+  this.loadRolesAndDepartmentsIfNeeded().then(() => {
+    console.log('✅ Data ready, populating form...');
+    this.populateEditForm();
     
-    this.loadRolesAndDepartments();
+    // Populate previewImage with existing user photo
+    if (this.userData?.photoURL) {
+      // Use the existing photoURL so we can preview the saved photo
+      this.previewImage = this.userData.photoURL;
+      console.log('📷 Loaded existing photo for preview:', this.previewImage);
+    } else {
+      // No existing photo, show initials placeholder
+      this.previewImage = null;
+    }
     
-    this.editUserData = {};
+    this.isLoading = false;
+  }).catch(err => {
+    console.error('❌ Error loading data:', err);
+    this.populateEditForm();
+    this.previewImage = this.userData?.photoURL || null;
+    this.isLoading = false;
+  });
+}
+
+/**
+ * Load roles and departments if not already loaded
+ */
+private loadRolesAndDepartmentsIfNeeded(): Promise<void> {
+  return new Promise((resolve) => {
+    // If we already have data, resolve immediately
+    if (this.roles.length > 0 && this.departments.length > 0) {
+      console.log('✅ Roles and departments already in memory');
+      resolve();
+      return;
+    }
+
+    let rolesReady = false;
+    let departmentsReady = false;
     
-    this.editUserData = {
-      name: this.getUserField('name') || this.getUserField('UserName') || this.getUserField('firstName') || '',
-      userName: this.getUserField('userName') || this.getUserField('UserName') || this.getUserField('username') || '',
-      userCode: this.getUserField('userCode') || this.getUserField('UserCode') || '',
-      role: this.getRoleValue(this.userData?.role) || '',
-      emailId: this.getUserField('emailId') || this.getUserField('Email') || this.getUserField('email') || '',
-      phoneNumber: this.getUserField('phoneNumber') || this.getUserField('Phone') || this.getUserField('mobile') || '',
-      departmentName: this.getDepartmentName() || '',
-      subDepartmentName: this.getSubDepartmentName() || '',
-      password: '' 
+    const checkAllReady = () => {
+      if (rolesReady && departmentsReady) {
+        resolve();
+      }
     };
 
-    console.log('Mapped edit user data:', this.editUserData);
+    // Load Roles
+    console.log('📥 Fetching roles from server...');
+    this.roleService.Loadrole().subscribe({
+      next: (data: any) => {
+        console.log('✅ Roles fetched:', data);
+        this.roles = Array.isArray(data) ? data : (data?.roles || []);
+        rolesReady = true;
+        checkAllReady();
+      },
+      error: (err) => {
+        console.error('❌ Failed to load roles:', err);
+        this.roles = [];
+        rolesReady = true;
+        checkAllReady();
+      }
+    });
 
-    this.previewImage = this.getCleanImageUrl(this.userData);
-    this.selectedFile = null;
-    this.selectedFileName = '';
-    
-    // Show modal
-    this.showEditModal = true;
+    // Load Departments
+    console.log('📥 Fetching departments from server...');
+    this.departmentService.loaddm().subscribe({
+      next: (data: any) => {
+        console.log('✅ Departments fetched:', data);
+        this.departments = Array.isArray(data) ? data : (data?.departments || []);
+        departmentsReady = true;
+        checkAllReady();
+      },
+      error: (err) => {
+        console.error('❌ Failed to load departments:', err);
+        this.departments = [];
+        departmentsReady = true;
+        checkAllReady();
+      }
+    });
+
+    // Timeout fallback - resolve after 5 seconds anyway
+    setTimeout(() => {
+      console.warn('⏱️ Loading timeout - proceeding with available data');
+      rolesReady = true;
+      departmentsReady = true;
+      checkAllReady();
+    }, 5000);
+  });
+}
+
+/**
+ * Populate the edit form with current user data
+ */
+private populateEditForm() {
+  console.log('📋 Populating form with user data:', this.userData);
+
+  // Helper to extract first non-empty value from multiple possible field names
+  const getFirst = (keys: string[]) => {
+    for (const k of keys) {
+      const val = this.userData?.[k];
+      if (val !== undefined && val !== null && val !== '') return val;
+    }
+    return '';
+  };
+
+  // Extract department and subdepartment
+  const deptName = this.getDepartmentName();
+  const subDeptName = this.getSubDepartmentName();
+  console.log('📍 Extracted - Department:', deptName, 'SubDepartment:', subDeptName);
+
+  // Get the proper role value
+  let initialRole: any = this.userData?.role || '';
+  initialRole = this.getRoleValue(initialRole);
+  console.log('👤 Extracted - Role:', initialRole);
+
+  // Build the edit data object
+  this.editUserData = {
+    name: getFirst(['name', 'Name', 'UserName', 'lowerCaseName']),
+    userName: getFirst(['userName', 'UserName']),
+    userCode: getFirst(['userCode', 'UserCode']),
+    role: initialRole,
+    emailId: getFirst(['emailId', 'email']),
+    phoneNumber: getFirst(['phoneNumber', 'phone']),
+    departmentName: deptName || '',
+    subDepartmentName: subDeptName || '',
+    password: '',
+    removePhoto: false
+  };
+
+  console.log('✏️ Form populated with:', this.editUserData);
+
+  // Load sub-departments for selected department
+  if (deptName && this.departments.length > 0) {
+    console.log('🔄 Loading sub-departments for:', deptName);
+    this.loadSubDepartmentsForDepartment(deptName);
+  } else {
+    console.log('⚠️ No department selected or departments not loaded yet');
+    this.subDepartmentsData = [];
   }
 
+  // Set image preview
+  this.previewImage = this.userData?.photoURL || this.userData?.photo || null;
+  this.selectedFile = null;
+  this.selectedFileName = '';
+  
+  console.log('✅ Form setup complete - ready for editing');
+}
+
+  getProfileImage(): string | null {
+
+  if (!this.userData) return null;
+
+  const image =
+    this.userData.profileImage ||
+    this.userData.photoURL ||
+    this.userData.image ||
+    this.userData.avatar;
+
+  if (!image) return null;
+
+  if (!image.startsWith('http')) {
+    return `http://localhost:3000/${image}`;
+  }
+
+  return image;
+}
   private getUserField(fieldName: string): string {
     if (!this.userData) return '';
     return this.userData[fieldName] || '';
@@ -486,11 +686,12 @@ nextPage() {
   private getDepartmentName(): string {
     if (!this.userData) return '';
     
-    // Try different possible department field names
-    if (this.userData.departmentName) return this.userData.departmentName;
+    // Try all possible field names for department name
+    if (this.userData.departmentName && typeof this.userData.departmentName === 'string') return this.userData.departmentName;
     if (this.userData.department?.departmentName) return this.userData.department.departmentName;
+    if (this.userData.department?.name) return this.userData.department.name;
     if (this.userData.Department) return this.userData.Department;
-    if (this.userData.department) return String(this.userData.department);
+    if (this.userData.department?._id) return this.userData.department._id;
     
     return '';
   }
@@ -498,54 +699,14 @@ nextPage() {
   private getSubDepartmentName(): string {
     if (!this.userData) return '';
     
-    // Try different possible sub-department field names
-    if (this.userData.subDepartmentName) return this.userData.subDepartmentName;
-    if (this.userData.subDepartment) return this.userData.subDepartment;
+    // Try all possible field names for sub-department
+    if (this.userData.subDepartmentName && typeof this.userData.subDepartmentName === 'string') return this.userData.subDepartmentName;
+    if (this.userData.subDepartment && typeof this.userData.subDepartment === 'string') return this.userData.subDepartment;
     if (this.userData.SubDepartment) return this.userData.SubDepartment;
     if (this.userData.department?.subDepartments?.[0]?.name) return this.userData.department.subDepartments[0].name;
+    if (this.userData.department?.subDepartmentName) return this.userData.department.subDepartmentName;
     
     return '';
-  }
-
-  loadRolesAndDepartments() {
-    console.log('Loading roles and departments...');
-    
-    // Load roles
-    this.roleService.Loadrole().subscribe({
-      next: (roles: any) => {
-        console.log('Roles loaded:', roles);
-        this.roles = Array.isArray(roles) ? roles : (roles?.roles || []);
-        
-        // If user has a role, ensure it's properly set in editUserData
-        if (this.editUserData.role && this.roles.length > 0) {
-          const userRoleValue = this.getRoleValue(this.userData?.role);
-          if (userRoleValue) {
-            this.editUserData.role = userRoleValue;
-          }
-        }
-      },
-      error: (err: any) => {
-        console.error('Error loading roles:', err);
-        this.roles = [];
-      }
-    });
-
-    // Load departments
-    this.departmentService.loaddm().subscribe({
-      next: (departments: any) => {
-        console.log('Departments loaded:', departments);
-        this.departments = Array.isArray(departments) ? departments : (departments?.departments || []);
-        
-        // Load sub-departments if user has a department selected
-        if (this.editUserData.departmentName && this.departments.length > 0) {
-          this.loadSubDepartmentsForDepartment(this.editUserData.departmentName);
-        }
-      },
-      error: (err: any) => {
-        console.error('Error loading departments:', err);
-        this.departments = [];
-      }
-    });
   }
 
   private loadSubDepartmentsForDepartment(departmentName: string) {
@@ -565,38 +726,78 @@ nextPage() {
     this.selectedFile = null;
     this.selectedFileName = '';
     this.isLoading = false;
-    
-    // Reset form data
     this.editUserData = {};
     this.subDepartmentsData = [];
   }
 
-  onPhotoSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      console.log('Photo selected:', file.name, 'Size:', file.size);
-      
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('Please select a valid image file.');
-        return;
-      }
-      
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Image size should be less than 5MB.');
-        return;
-      }
-      
-      this.selectedFile = file;
-      this.selectedFileName = file.name;
-      
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewImage = reader.result;
-        console.log('Image preview loaded');
-      };
-      reader.readAsDataURL(file);
+ onPhotoSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.length) {
+    console.warn('⚠️ No files selected');
+    return;
+  }
+
+  const file = input.files[0];
+  
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    console.error('❌ Invalid file type:', file.type);
+    this.openSnackBar('Please select a valid image file (JPG, PNG, GIF, etc)', 'Close', 'error');
+    return;
+  }
+
+  // Validate file size (5MB max)
+  const maxSize = 5 * 1024 * 1024;
+  if (file.size > maxSize) {
+    console.error('❌ File too large:', file.size, 'bytes (max', maxSize, ')');
+    this.openSnackBar(`Image is too large (${Math.round(file.size / 1024 / 1024)}MB). Max 5MB.`, 'Close', 'error');
+    return;
+  }
+
+  console.log('✅ File selected:', {
+    name: file.name,
+    size: file.size,
+    type: file.type
+  });
+
+  // Store the file object for later upload
+  this.selectedFile = file;
+  this.selectedFileName = file.name;
+  this.editUserData.removePhoto = false;
+
+  // Read for preview only
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    this.previewImage = e.target?.result as string;
+    console.log('✅ Preview image loaded');
+  };
+  reader.onerror = (error) => {
+    console.error('❌ Error reading file for preview:', error);
+    this.openSnackBar('Error reading image file', 'Close', 'error');
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.previewImage = null;
+  };
+  
+  reader.readAsDataURL(file);
+}
+
+  removeProfilePicture() {
+    // Clear selected file and preview
+    this.selectedFile = null;
+    this.selectedFileName = '';
+    this.previewImage = null;
+
+    // Mark for backend removal when saving
+    this.editUserData.removePhoto = true;
+
+    // Immediately update header data so initials show
+    if (this.userData) {
+      this.userData.photoURL = null;
+      // also clear any alternate fields that might be used by template
+      this.userData.photo = null;
+      this.userData.imagePath = null;
+      this.userData.imageUrl = null;
     }
   }
 
@@ -606,194 +807,224 @@ nextPage() {
     this.previewImage = this.getCleanImageUrl(this.userData);
   }
 
-  saveProfilePicture() {
-    console.log('Saving profile with data:', this.editUserData);
-    
-    if (!this.userData?._id) {
-      alert('User not found. Please try logging in again.');
+saveProfilePicture() {
+  if (!this.userData?._id) {
+    this.openSnackBar('User not found', 'Close', 'error');
+    return;
+  }
+
+  // Validate required form data
+  if (!this.editUserData.name?.trim()) {
+    this.openSnackBar('Name is required', 'Close', 'error');
+    return;
+  }
+  if (!this.editUserData.userName?.trim()) {
+    this.openSnackBar('Username is required', 'Close', 'error');
+    return;
+  }
+  if (!this.editUserData.emailId?.trim()) {
+    this.openSnackBar('Email is required', 'Close', 'error');
+    return;
+  }
+
+  this.isLoading = true;
+  const formData = new FormData();
+
+  // === APPEND FILE FIRST (IMPORTANT FOR MULTIPART) ===
+  if (this.selectedFile && this.selectedFile.size > 0) {
+    try {
+      console.log('📁 Appending file to FormData:', {
+        name: this.selectedFile.name,
+        size: this.selectedFile.size,
+        type: this.selectedFile.type
+      });
+      formData.append('photo', this.selectedFile, this.selectedFile.name);
+    } catch (e) {
+      console.error('❌ Error appending file:', e);
+      this.isLoading = false;
+      this.openSnackBar('Error processing image file', 'Close', 'error');
       return;
     }
+  } else if (this.editUserData.removePhoto) {
+    console.log('🗑️ Removing photo');
+    formData.append('removePhoto', 'true');
+  } else {
+    console.log('📷 Keeping existing image');
+    formData.append('keepExistingImage', 'true');
+  }
 
-    // Basic form validation
-    if (!this.validateForm()) {
-      return;
-    }
+  // === NORMALIZE AND APPEND TEXT FIELDS ===
+  const normalized = { ...this.editUserData };
+  normalized.role = this.getRoleValue(normalized.role);
+  
+  if (normalized.departmentName && typeof normalized.departmentName !== 'string') {
+    normalized.departmentName = String(normalized.departmentName);
+  }
+  if (normalized.subDepartmentName && typeof normalized.subDepartmentName !== 'string') {
+    normalized.subDepartmentName = String(normalized.subDepartmentName);
+  }
 
-    this.isLoading = true;
+  // Append each field ONCE (lowercase primary key)
+  const fieldsToAppend = [
+    'userCode',
+    'name',
+    'userName',
+    'emailId',
+    'phoneNumber',
+    'role',
+    'departmentName',
+    'subDepartmentName',
+    'password'
+  ];
 
-    const formData = new FormData();
+  console.log('📋 EditUserData before normalization:', this.editUserData);
+  console.log('📋 Normalized values:', normalized);
 
-    // Handle profile image
-    if (this.selectedFile) {
-      formData.append('photo', this.selectedFile);
-      console.log('Adding new photo file:', this.selectedFile.name);
-    } else if (this.previewImage === 'assets/default-avatar.png') {
-      formData.append('removePhoto', 'true');
-      console.log('Removing profile photo');
+  fieldsToAppend.forEach(key => {
+    const value = normalized[key];
+    if (value !== undefined && value !== null && value !== '') {
+      const strVal = String(value).trim();
+      if (strVal && strVal !== 'undefined') {  // Extra check for 'undefined' string
+        // Map field names to match backend expectations
+        let fieldName = key;
+        if (key === 'departmentName') fieldName = 'department';
+        if (key === 'subDepartmentName') fieldName = 'subDepartment';
+        
+        formData.append(fieldName, strVal);
+        console.log(`  ✓ ${fieldName}: ${strVal.substring(0, 50)}${strVal.length > 50 ? '...' : ''}`);
+      } else {
+        console.log(`  ⊘ ${key}: SKIPPED (empty/invalid)`);
+      }
     } else {
-      formData.append('keepExistingImage', 'true');
-      console.log('Keeping existing image');
+      console.log(`  ⊘ ${key}: SKIPPED (null/undefined)`);
     }
+  });
 
-    // Append user data to form
-    this.appendUserDataToForm(formData);
+  // === LOG FINAL FORMDATA ===
+  console.log('📤 === FINAL FORMDATA TO SEND ===');
+  if (this.selectedFile && this.selectedFile.size > 0) {
+    console.log(`  [FILE] photo: ${this.selectedFile.name} (${this.selectedFile.size} bytes)`);
+  }
+  
+  console.log('🔍 === ACTUAL FORMDATA CONTENTS ===');
+  const formDataEntries: any[] = [];
+  fieldsToAppend.forEach(field => {
+    const val = normalized[field];  // Check from normalized, not editUserData
+    if (val !== undefined && val !== null && val !== '') {
+      const strVal = String(val).trim();
+      if (strVal && strVal !== 'undefined') {
+        formDataEntries.push({ field, value: strVal.substring(0, 40) });
+        console.log(`  [ACTUAL] ${field}: ${strVal.substring(0, 40)}`);
+      }
+    }
+  });
+  console.log(`✅ FormData ready: ${formDataEntries.length} fields`);
 
-    console.log('Updating profile picture for user:', this.userData._id);
-
-    this.userService.edituser(this.userData._id, formData).subscribe({
-      next: (res: any) => {
-        console.log('Profile picture update response:', res);
-        this.isLoading = false;
-        
-        // Update user data from response
-        this.updateUserDataFromResponse(res);
-        
-        // Update session storage
-        sessionStorage.setItem('user', JSON.stringify(this.userData));
-        
-        // Refresh user data
-        this.refreshUserData();
-        
-        // Close modal and reset form
-        this.showEditModal = false;
-        this.selectedFile = null;
-        this.selectedFileName = '';
-        
-        this.openSnackBar('Profile updated successfully!', 'Close');
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        console.error('Error updating profile picture:', err);
-        
-        let errorMessage = 'Failed to update profile.';
-        if (err.error && err.error.message) {
-          errorMessage = err.error.message;
-        } else if (err.message) {
-          errorMessage = err.message;
+  // === SEND REQUEST ===
+  console.log('Sending profile update to:', `/updateUser/${this.userData._id}`);
+  console.log('Complete normalized data:', normalized);
+  
+  this.userService.edituser(this.userData._id, formData).subscribe({
+    next: (res: any) => {
+      console.log('✅ Profile update success!');
+      console.log('📦 Response data:', res);
+      this.isLoading = false;
+      
+      // STEP 1: Merge response into existing userData so we don't lose fields
+      const prevPhoto = this.userData?.photoURL || this.userData?.photo || this.userData?.imagePath || this.userData?.imageUrl || null;
+      this.userData = { ...this.userData, ...res };
+      console.log('✏️ userData updated (merged):', this.userData);
+      
+      // STEP 2: Ensure photoURL is set or preserved
+      if (!this.userData.photoURL && !this.userData.photo && !this.userData.imagePath && !this.userData.imageUrl) {
+        // nothing returned from server; preserve previous if not removing
+        if (!this.editUserData.removePhoto && prevPhoto) {
+          console.log('🔒 preserving previous photo URL');
+          this.userData.photoURL = prevPhoto;
         }
-        
-        this.openSnackBar(errorMessage, 'Close', 'error');
       }
-    });
-  }
 
-  updateUserProfile() {
-    if (!this.userData?._id) {
-      this.openSnackBar('User not found. Please try logging in again.', 'Close', 'error');
-      return;
-    }
-
-    this.isLoading = true;
-
-    const formData = new FormData();
-
-
-    if (this.selectedFile) {
-      formData.append('photo', this.selectedFile);
-    } else if (this.previewImage === 'assets/default-avatar.png') {
-      formData.append('removePhoto', 'true');
-    } else {
-      formData.append('keepExistingImage', 'true');
-    }
-
-
-    this.appendUserDataToForm(formData);
-
-    console.log('Updating user profile:', this.userData._id);
-
-    this.userService.edituser(this.userData._id, formData).subscribe({
-      next: (res: any) => {
-        console.log('User profile update response:', res);
-        this.isLoading = false;
-
-
-        this.updateUserDataFromResponse(res);
-        
-
-        sessionStorage.setItem('user', JSON.stringify(this.userData));
-        
-   
-        this.refreshUserData();
-        
-        this.openSnackBar('Profile updated successfully!', 'Close');
-        this.showEditModal = false;
-      },
-      error: (err: any) => {
-        this.isLoading = false;
-        console.error('Error updating profile:', err);
-        this.openSnackBar('Failed to update profile. Please try again.', 'Close', 'error');
-      }
-    });
-  }
-
-  private appendUserDataToForm(formData: FormData): void {
-    formData.append('userCode', this.editUserData.userCode || '');
-    formData.append('name', this.editUserData.name || '');
-    formData.append('userName', this.editUserData.userName || '');
-    formData.append('emailId', this.editUserData.emailId || '');
-    formData.append('phoneNumber', this.editUserData.phoneNumber || '');
-    formData.append('role', this.editUserData.role || '');
-    formData.append('department', this.editUserData.departmentName || '');
-    formData.append('subDepartment', this.editUserData.subDepartmentName || '');
-    if (this.editUserData.password) {
-      formData.append('password', this.editUserData.password);
-    }
-  }
-
-  private updateUserDataFromResponse(res: any): void {
-    // Update photo data
-    if (res.photo) {
-      this.userData.photo = res.photo;
-    }
-    if (res.photoURL) {
-      this.userData.photoURL = res.photoURL;
-    }
-    
-    // Handle photo removal
-    if (res.removePhoto === true || (!res.photo && !res.photoURL)) {
-      this.userData.photo = null;
-      this.userData.photoURL = 'assets/default-avatar.png';
-    }
-
-    // Update user profile data from editUserData (the form data)
-    if (this.editUserData.name) this.userData.name = this.editUserData.name;
-    if (this.editUserData.userName) this.userData.userName = this.editUserData.userName;
-    if (this.editUserData.userCode) this.userData.userCode = this.editUserData.userCode;
-    if (this.editUserData.emailId) this.userData.emailId = this.editUserData.emailId;
-    if (this.editUserData.phoneNumber) this.userData.phoneNumber = this.editUserData.phoneNumber;
-    if (this.editUserData.role) this.userData.role = this.editUserData.role;
-    if (this.editUserData.departmentName) this.userData.departmentName = this.editUserData.departmentName;
-    if (this.editUserData.subDepartmentName) this.userData.subDepartmentName = this.editUserData.subDepartmentName;
-
-    // Also update legacy field names for compatibility
-    if (this.editUserData.name) this.userData.UserName = this.editUserData.name;
-    if (this.editUserData.emailId) this.userData.Email = this.editUserData.emailId;
-    if (this.editUserData.phoneNumber) this.userData.Phone = this.editUserData.phoneNumber;
-
-    this.processUserImage(this.userData);
-  }
-
-  private refreshUserData(): void {
-
-    this.userService.getuser().subscribe({
-      next: (users: any) => {
-        if (Array.isArray(users)) {
-          const updatedUser = users.find((u: any) => u._id === this.userData._id);
-          if (updatedUser) {
-            this.userData = updatedUser;
-            this.processUserImage(this.userData);
-            sessionStorage.setItem('user', JSON.stringify(this.userData));
-          }
+      // convert other fields to photoURL if available
+      if (!this.userData.photoURL) {
+        if (this.userData.photo) {
+          this.userData.photoURL = this.userData.photo;
+        } else if (this.userData.imagePath) {
+          this.userData.photoURL = this.userData.imagePath;
+        } else if (this.userData.imageUrl) {
+          this.userData.photoURL = this.userData.imageUrl;
         }
-      },
-      error: (err) => {
-        console.error('Error refreshing user data:', err);
       }
-    });
-  }
+      console.log('📸 photoURL is now:', this.userData.photoURL);
+
+      // STEP 2a: if we asked to remove the photo, clear it regardless of server response
+      if (this.editUserData.removePhoto) {
+        console.log('🗑️ Removing photo on client after save');
+        this.userData.photoURL = null;
+        this.userData.photo = null;
+        this.userData.imagePath = null;
+        this.userData.imageUrl = null;
+      }
+      
+      // STEP 3: Save to sessionStorage so avatar persists
+      sessionStorage.setItem('user', JSON.stringify(this.userData));
+      console.log('💾 User saved to sessionStorage');
+
+      // also cache the photo separately for long‑term persistence
+      if (this.userData.photoURL) {
+        const key = this.extractCacheKey(this.userData);
+        if (key) {
+          localStorage.setItem(`cachedPhoto_${key}`, this.userData.photoURL);
+          console.log('💾 Cached photo for user', key, this.userData.photoURL);
+        }
+      } else if (this.editUserData.removePhoto) {
+        // clear the cached entry when the user deleted their photo
+        const key = this.extractCacheKey(this.userData);
+        if (key) {
+          localStorage.removeItem(`cachedPhoto_${key}`);
+          console.log('🧹 Removed cached photo for user', key);
+        }
+      }
+
+      // STEP 4: Add cache buster to image URL to refresh display
+      this.processUserImage(this.userData);
+      console.log('🎨 Image processed with cache buster:', this.userData.photoURL);
+      
+      // STEP 5: Close modal and clear form
+      this.showEditModal = false;
+      this.selectedFile = null;
+      this.selectedFileName = '';
+      // reset removal flag so subsequent opens start fresh
+      this.editUserData.removePhoto = false;
+      
+      // STEP 6: Show success message
+      this.openSnackBar('Profile updated successfully!', 'Close');
+      
+      // STEP 7: No reload needed - update is already live in the UI
+      console.log('✅ Profile saved and UI updated immediately (no reload)');
+    },
+    error: (err: any) => {
+      console.error('❌ Profile update failed');
+      console.error('  Status:', err.status);
+      console.error('  Error:', err.error?.message || err.statusText);
+      
+      this.isLoading = false;
+      
+      // Extract error message
+      let msg = 'Failed to save profile';
+      if (err?.error?.message) msg = err.error.message;
+      else if (err?.error?.error) msg = err.error.error;
+      else if (err?.statusText) msg = err.statusText;
+      
+      this.openSnackBar(`Error: ${msg}`, 'Close', 'error');
+    }
+  });
+}
+
+
 
   signOut() {
-   
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
   }
 
   private openSnackBar(message: string, action: string = 'Close', panelClass: 'success' | 'error' | 'info' = 'success') {
@@ -864,47 +1095,6 @@ nextPage() {
   isAdmin(): boolean {
     const role = sessionStorage.getItem('role') || this.userData?.role || '';
     return role?.toLowerCase() === 'admin';
-  }
-
-  removeProfilePicture() {
-    if (!this.userData?._id) {
-      this.openSnackBar('User not found.', 'Close', 'error');
-      return;
-    }
-
-    if (confirm('Are you sure you want to remove your profile picture?')) {
-      this.isLoading = true;
-
-      const formData = new FormData();
-      formData.append('removePhoto', 'true');
-      this.appendUserDataToForm(formData);
-
-      this.userService.edituser(this.userData._id, formData).subscribe({
-        next: (res: any) => {
-          this.isLoading = false;
-          
-
-          this.userData.photo = null;
-          this.userData.photoURL = 'assets/default-avatar.png';
-          sessionStorage.setItem('user', JSON.stringify(this.userData));
-          
-
-          this.previewImage = 'assets/default-avatar.png';
-          this.selectedFile = null;
-          this.selectedFileName = '';
-          
-
-          this.refreshUserData();
-          
-          this.openSnackBar('Profile picture removed successfully!', 'Close');
-        },
-        error: (err: any) => {
-          this.isLoading = false;
-          console.error('Error removing profile picture:', err);
-          this.openSnackBar('Failed to remove profile picture.', 'Close', 'error');
-        }
-      });
-    }
   }
 
 

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { ConfigService } from '../../service/config.service';
 
-interface User {
+export interface User {
   _id?: string;
- UserCode?: string;
-
-UserName?: string;
+  userCode?: string;
   userName?: string;
+  UserName?: string;
   emailId?: string;
   phoneNumber?: string;
   role?: string;
@@ -18,48 +17,71 @@ UserName?: string;
   photoURL?: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class UserservicesService {
-  constructor(private http: HttpClient, private config : ConfigService) {}
 
-  // getuser(): Observable<User[]> {
-  //   const timestamp = new Date().getTime();
-  //   return this.httpuser.get<User[]>(`${this.getuserapi}?t=${timestamp}`);
-  // }
+  // ================= USER STATE =================
+  private userSubject = new BehaviorSubject<User | null>(this.getUserFromStorage());
+  user$ = this.userSubject.asObservable();
 
-  // saveuser(formData: FormData): Observable<any> {
-  //   return this.httpuser.post(this.saveuserapi, formData);
-  // }
+  constructor(
+    private http: HttpClient,
+    private config: ConfigService
+  ) {}
 
-  // edituser(_id: any, formData: FormData): Observable<any> {
-  //   return this.httpuser.put(`${this.edituserapi}/${_id}`, formData);
-  // }
+  // ================= STORAGE =================
+  private getUserFromStorage(): User | null {
+    const user = sessionStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
 
-  // deleteuser(_id: any): Observable<any> {
-  //   return this.httpuser.delete(`${this.deleteuserapi}/${_id}`);
-  // }
+  private saveUserToStorage(user: User) {
+    sessionStorage.setItem('user', JSON.stringify(user));
+  }
 
+  // ================= GLOBAL USER =================
+  setUser(user: User) {
+    this.saveUserToStorage(user);
+    this.userSubject.next(user);
+  }
 
+  getUser(): User | null {
+    return this.userSubject.value;
+  }
+
+  // ================= API CALLS =================
+
+  /** GET ALL USERS */
   getuser(): Observable<User[]> {
     const url = this.config.getWebsiteUrl('getUser');
     const timestamp = new Date().getTime();
+
     return this.http.get<User[]>(`${url}?t=${timestamp}`);
   }
 
+  /** CREATE USER */
   saveuser(formData: FormData): Observable<any> {
     const url = this.config.getWebsiteUrl('createUser');
     return this.http.post(url, formData);
   }
 
-  edituser(_id: any, formData: FormData): Observable<any> {
+  /** UPDATE USER (PROFILE EDIT) */
+  edituser(_id: string, formData: FormData): Observable<User> {
     const url = this.config.getWebsiteUrl('updateUser');
-    return this.http.put(`${url}/${_id}`, formData);
+
+    return this.http.put<User>(`${url}/${_id}`, formData).pipe(
+      tap((updatedUser) => {
+        this.setUser(updatedUser);
+      })
+    );
   }
 
-  deleteuser(_id: any): Observable<any> {
+  /** DELETE USER */
+  deleteuser(_id: string): Observable<any> {
     const url = this.config.getWebsiteUrl('deleteUser');
     return this.http.delete(`${url}/${_id}`);
   }
-
 
 }

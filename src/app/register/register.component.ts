@@ -248,7 +248,7 @@ export class RegisterComponent implements OnInit {
           this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
-        this.userData.photoURL = 'assets/default-avatar.png';
+        // this.userData.photoURL = 'assets/default-avatar.png';
       }
     }
   }

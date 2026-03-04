@@ -92,46 +92,50 @@ export class RegistermatComponent implements OnInit {
   // ✅ PATCH FORM
   patchForm(item: any) {
 
+    const getFirst = (keys: string[]) => {
+      for (const k of keys) {
+        if (item[k] !== undefined && item[k] !== null && item[k] !== '') return item[k];
+      }
+      return '';
+    };
+
     this.registerForm.patchValue({
-
-      userCode: item.userCode || '',
-
-      name: item.name || '',
-
-      userName: item.userName || '',
-
-      emailId: item.emailId || '',
-
-      phoneNumber: item.phoneNumber || '',
-
-      role: item.role?.role || item.role || '',
-
-      departmentName: item.department?.departmentName || '',
-
-      subDepartmentName: item.subDepartment || ''
-
+      userCode: getFirst(['userCode', 'UserCode']),
+      name: getFirst(['name', 'Name', 'lowerCaseName', 'fullName', 'UserName']),
+      userName: getFirst(['userName', 'UserName']),
+      emailId: getFirst(['emailId', 'email']),
+      phoneNumber: getFirst(['phoneNumber', 'phone']),
+      role: item.role?.role || item.role || getFirst(['role']),
+      departmentName: ((): string => {
+        if (item.department && typeof item.department === 'object') {
+          return (item.department.departmentName) || (item.department.departmentname) || '';
+        }
+        // department may be an id string - try to lookup in loaded departments
+        const deptId = item.department && (item.department.$oid || item.department._id || item.department);
+        if (deptId && this.departments && this.departments.length) {
+          const found = this.departments.find((d: any) => d._id == deptId || d._id?.$oid == deptId || d.departmentName == deptId);
+          return found ? (found.departmentName || '') : '';
+        }
+        return getFirst(['departmentName', 'Department']);
+      })(),
+      subDepartmentName: getFirst(['subDepartmentName', 'subDepartment'])
     });
 
+    this.existingPhotoField = item.photo || item.photoURL || null;
 
-    this.existingPhotoField = item.photo || null;
-
-
-    if (item.photo) {
-
-      this.previewImage = this.configService.getUploadUrl(item.photo);
-
-    }
-    else {
-
-      this.previewImage = 'assets/default-avatar.png';
-
+    const photoVal = item.photo || item.photoURL || item.image || null;
+    if (photoVal) {
+      this.previewImage = this.configService.getUploadUrl(photoVal);
     }
 
+    // populate subDepartmentsData if department present
+    const deptName = this.registerForm.get('departmentName')?.value;
+    if (deptName) {
+      this.onDepartmentChange({ target: { value: deptName } });
+    }
 
     // password optional in edit
-
     this.registerForm.get('password')?.clearValidators();
-
     this.registerForm.get('password')?.updateValueAndValidity();
 
   }
@@ -156,7 +160,36 @@ export class RegistermatComponent implements OnInit {
 
     this.departmentservices.loaddm().subscribe({
 
-      next: (res: any) => this.departments = res,
+      next: (res: any) => {
+        this.departments = res;
+
+        // If we are editing, ensure subDepartmentsData and department/subdepartment form values
+        if (this.isEdit && this.data?.item) {
+          const item = this.data.item;
+
+          let deptName = '';
+          if (item.department && typeof item.department === 'object') {
+            deptName = item.department.departmentName || item.department.departmentname || '';
+          } else {
+            const deptId = item.department && (item.department.$oid || item.department._id || item.department);
+            if (deptId) {
+              const found = this.departments.find((d: any) => d._id == deptId || d._id?.$oid == deptId || d.departmentName == deptId);
+              deptName = found ? (found.departmentName || '') : '';
+            }
+          }
+
+          if (deptName) {
+            // set department and populate subDepartments
+            this.registerForm.patchValue({ departmentName: deptName });
+            this.onDepartmentChange({ target: { value: deptName } });
+            // set subDepartment value from item
+            const subDept = item.subDepartmentName || item.subDepartment || '';
+            if (subDept) {
+              this.registerForm.patchValue({ subDepartmentName: subDept });
+            }
+          }
+        }
+      },
 
       error: err => console.log(err)
 

@@ -1,0 +1,320 @@
+<app-footr></app-footr>
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <!-- Floating background objects -->
+  <div class="moving-object"></div>
+  <div class="moving-object" style="top:30%;left:20%;width:150px;height:150px;"></div>
+  <div class="moving-object" style="top:70%;left:80%;width:80px;height:80px;"></div>
+
+  <!-- Hero content -->
+  <div class="container hero-content">
+
+    <!-- Left: Heading -->
+   <p>Streamline Work, Track Progress, Boost Productivity</p>
+
+    <!-- Center: Buttons + Mobile Preview -->
+    <div class="hero-center">
+      <div class="hero-buttons">
+        <button class="btn-primary" (click)="openDemo()">View Demo</button>
+        <button class="btn-secondary">Get Started</button>
+      </div>
+
+      <div class="mobile-preview">
+        <div class="phone">
+          <div class="screen">
+            <div class="swipe-container" [style.transform]="'translateX(-' + (currentPage * 100) + '%)'">
+
+              <!-- HOME PAGE -->
+              <div class="app-page">
+                <div class="app-header"><h3>Task Management System</h3></div>
+                <div class="profile-box">
+                  <img src="assets/user.jpg" class="profile-img" alt="User">
+                  <h4>Helen Collins</h4>
+                  <p>Zylker</p>
+                  <div class="menu-list">
+                    <div class="menu-item">
+                      <i class="fa-regular fa-circle-check"></i>
+                      <span>All tasks</span>
+                    </div>
+                    <div class="menu-item">
+                      <i class="fa-regular fa-user"></i>
+                      <span>My tasks</span>
+                    </div>
+                    <div class="menu-item">
+                      <i class="fa-regular fa-calendar"></i>
+                      <span>Today's tasks</span>
+                    </div>
+                    <div class="menu-item">
+                      <i class="fa-regular fa-hourglass"></i>
+                      <span>Overdue tasks</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PROFILE PAGE -->
+              <div class="app-page center-page">
+                <h3>Profile</h3>
+                <p>User Performance Summary</p>
+              </div>
+
+            </div>
+
+            <!-- BOTTOM NAV -->
+            <div class="bottom-nav">
+              <div class="nav-item" [class.active]="currentPage === 0" (click)="goToPage(0)">
+                <i class="fa-solid fa-house"></i>
+                <p>Home</p>
+              </div>
+              <div class="nav-item" [class.active]="currentPage === 1" (click)="goToPage(1)">
+                <i class="fa-solid fa-user"></i>
+                <p>Profile</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Paragraph -->
+    <p>
+      Manage, assign and track tasks efficiently with role-based workflow.
+      Designed for Admins, Team Leads and Users to improve productivity.
+    </p>
+
+  </div>
+</section>
+
+
+<!-- FULL SCREEN DEMO POPUP -->
+<div class="demo-overlay" *ngIf="showDemo">
+  <div class="demo-modal">
+    <span class="close-btn" (click)="closeDemo()"><i class="fa-solid fa-xmark"></i></span>
+
+    <div class="mobile-preview">
+      <div class="phone">
+        <div class="screen">
+          <div class="swipe-container" [style.transform]="'translateX(-' + (currentPage * 100) + '%)'">
+
+            <!-- HOME PAGE -->
+            <div class="app-page">
+              <div class="app-header"><h1>Task Management System</h1></div>
+              <div class="profile-box">
+                <img src="assets/user.jpg" class="profile-img" alt="User">
+                <h4>Helen Collins</h4>
+                <p>Zylker</p>
+              </div>
+            </div>
+
+            <!-- PROFILE PAGE -->
+            <div class="app-page center-page">
+              <h3>Profile</h3>
+              <p>User Performance Summary</p>
+            </div>
+
+          </div>
+
+          <!-- BOTTOM NAV -->
+          <div class="bottom-nav">
+            <div class="nav-item" [class.active]="currentPage === 0" (click)="goToPage(0)">
+              <i class="fa-solid fa-house"></i>
+            </div>
+            <div class="nav-item" [class.active]="currentPage === 1" (click)="goToPage(1)">
+              <i class="fa-solid fa-user"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- WORKFLOW DEMO -->
+<section class="workflow-demo">
+  <h2>Task Workflow Demo</h2>
+  <p>See how tasks move through the system in real-time</p>
+
+  <div class="board">
+    <div class="column">
+      <h3>Todo</h3>
+      <div class="task" id="taskCard">Design Login Page</div>
+    </div>
+    <div class="column"><h3>In Progress</h3></div>
+    <div class="column"><h3>Done</h3></div>
+  </div>
+</section>
+
+<!-- CAROUSEL -->
+<section class="section">
+
+  <div class="container">
+
+    <div class="carousel-box">
+
+      <h2 class="carousel-title">Application Screens</h2>
+
+      <div class="carousel">
+        <div class="slider">
+          <img src="assets/screen1.png" alt="Screen 1">
+          <img src="assets/screen2.png" alt="Screen 2">
+          <img src="assets/screen3.png" alt="Screen 3">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- WORKFLOW FEATURES -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>Task Workflow Management</h2>
+      <p>Simple workflow from assignment to completion.</p>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-content">
+          <h3>Smart Task Assignment</h3>
+          <p>Admins and Team Leads assign tasks with deadlines, priorities and descriptions.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-content">
+          <h3>Progress Tracking</h3>
+          <p>Tasks move through Todo → In Progress → Done with real-time updates.</p>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-content">
+          <h3>Performance Monitoring</h3>
+          <p>Analyze productivity using dashboard summaries and comparison analytics.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<section class="dashboard-preview">
+  <div class="container dashboard-container">
+    <div class="dashboard-content">
+      <h2>Task Management Summary</h2>
+      <p>View total tasks, completed work, pending items and team productivity in one centralized dashboard.</p>
+      <ul>
+        <li>Total Tasks Overview</li>
+        <li>Completed vs Pending Tasks</li>
+        <li>Team Productivity Metrics</li>
+        <li>Real-time Updates</li>
+      </ul>
+    </div>
+    <div class="dashboard-image">
+      <img src="assets/dashboard.png" alt="Dashboard">
+    </div>
+  </div>
+</section>
+
+<!-- STATS SECTION -->
+<section class="stats-section">
+  <h2>Platform Insights</h2>
+  <div class="stats-grid">
+    <div class="stat-card"><h3>{{totalTasks}}</h3><p>Total Tasks</p></div>
+    <div class="stat-card"><h3>{{completedTasks}}</h3><p>Completed Tasks</p></div>
+    <div class="stat-card"><h3>{{activeUsers}}</h3><p>Active Users</p></div>
+    <div class="stat-card"><h3>{{productivity}}%</h3><p>Productivity</p></div>
+  </div>
+</section>
+
+<!-- REPORTS -->
+<section class="section reports">
+  <div class="container">
+    <div class="section-title">
+      <h2>Performance Comparison & Reports</h2>
+      <p>Track productivity and compare performance easily.</p>
+    </div>
+
+    <div class="report-cards">
+      <div class="report-card">
+        <h3>User Productivity</h3>
+        <ul>
+          <li>Task completion rate</li>
+          <li>Weekly performance tracking</li>
+          <li>Individual analytics</li>
+        </ul>
+      </div>
+      <div class="report-card">
+        <h3>Team Monitoring</h3>
+        <ul>
+          <li>Workload distribution</li>
+          <li>Deadline tracking</li>
+          <li>Active task insights</li>
+        </ul>
+      </div>
+      <div class="report-card">
+        <h3>Task Analytics</h3>
+        <ul>
+          <li>Status analytics</li>
+          <li>Time tracking</li>
+          <li>Productivity trends</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE -->
+<section class="why-section">
+  <div class="container">
+    <h2 class="center">Why Choose Our Task Management System?</h2>
+    <div class="timeline-items">
+      <div class="timeline-item">
+        <i class="fas fa-clock icon"></i>
+        <div>
+          <h3>Real-Time Visibility</h3>
+          <p>Managers monitor progress instantly and prevent delays before deadlines are missed.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <i class="fas fa-users icon"></i>
+        <div>
+          <h3>Better Collaboration</h3>
+          <p>Clear responsibilities reduce confusion and improve teamwork efficiency.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY FEATURES -->
+<section class="section key-features">
+  <div class="container">
+    <div class="section-title">
+      <h2>Key Features</h2>
+      <p>Everything needed for modern team productivity</p>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item"><h3><i class="fas fa-user-shield"></i> Role-Based Access</h3><p>Admin, Team Lead and User permissions.</p></div>
+      <div class="feature-item"><h3><i class="fas fa-tasks"></i> Task Lifecycle</h3><p>Todo → In Progress → Done workflow.</p></div>
+      <div class="feature-item"><h3><i class="fas fa-chart-line"></i> Summary Dashboard</h3><p>Visual analytics for task progress.</p></div>
+      <div class="feature-item"><h3><i class="fas fa-balance-scale"></i> Compare Component</h3><p>Compare performance between users and teams.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION -->
+<section class="cta">
+  <h2>Ready to Improve Team Productivity?</h2>
+  <button class="btn-primary">Request Demo</button>
+</section>
+
+<app-footer></app-footer>

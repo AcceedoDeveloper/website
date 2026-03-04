@@ -40,6 +40,11 @@ import { LoginheaderComponent } from './loginheader/loginheader.component';
 import { DepartmentComponent } from './department/department.component';
 import { RoledialogComponent } from './role/roledialog/roledialog.component';
 import { AuthGuard }from '../../src/app/guard/guards/auth.guard';
+import { Product7Component } from './product7/product7.component';
+import { Product4Component } from './product4/product4.component';
+import { Product5Component } from './product5/product5.component';
+import { Product6Component } from './product6/product6.component';
+
 
 
 
@@ -69,6 +74,11 @@ const routes: Routes = [
   { path: 'adobe', component: AdobeComponent },
   { path: 'cards', component: CardsComponent },
   { path: 'product3', component: Product3Component },
+  { path: 'product4', component: Product4Component },
+  { path: 'product5', component: Product5Component },
+  { path: 'product6', component: Product6Component },
+  { path: 'product7', component: Product7Component },
+
 
   { path: 'login', component: LoginComponent},
   {path:'signin', component:LoginComponent},

@@ -237,6 +237,8 @@ getInitials(name: string): string {
     this.applyDateFilter();
   }
 
+  
+
   clearDateFilter() {
     this.selectedTaskDate = '';
     this.applyDateFilter();
@@ -581,7 +583,7 @@ getTodayDateString(): string {
       ? this.userData.photo
       : this.configService.getUploadUrl(this.userData.photo);
   } else {
-    this.userData.photoURL = 'assets/default-avatar.png';
+    // this.userData.photoURL = 'assets/default-avatar.png';
   }
 
   const img = new Image();
@@ -594,14 +596,14 @@ getTodayDateString(): string {
       // View may already be destroyed or not yet initialized
     }
   };
-  img.onerror = () => {
-    this.userData.photoURL = 'assets/default-avatar.png';
-    try {
-      this.cd.detectChanges();
-    } catch (e) {
-      // View may already be destroyed or not yet initialized
-    }
-  };
+  // img.onerror = () => {
+  //   this.userData.photoURL = 'assets/default-avatar.png';
+  //   try {
+  //     this.cd.detectChanges();
+  //   } catch (e) {
+  //     // View may already be destroyed or not yet initialized
+  //   }
+  // };
 
   if (this.assignmentForm && this.username && this.username !== 'User') {
     this.assignmentForm.patchValue({ assignedTo: this.username });
@@ -647,7 +649,7 @@ getTodayDateString(): string {
           this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
-        this.userData.photoURL = 'assets/default-avatar.png';
+        // this.userData.photoURL = 'assets/default-avatar.png';
       }
     }
   }

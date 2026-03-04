@@ -1560,6 +1560,7 @@
   margin-bottom: 10px;
 }
 
+
 .profile-preview-img {
   width: 100px;
   height: 100px;
@@ -1567,6 +1568,85 @@
   object-fit: cover;
   border: 2px solid #0054b3;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Avatar Container (recommended wrapper) */
+.profile-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+}
+
+/* Profile Initials (Fallback Avatar) */
+.profile-initials {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  /* Modern Gradient */
+  background: linear-gradient(
+    135deg,
+    #6366f1 0%,
+    #8b5cf6 50%,
+    #a855f7 100%
+  );
+
+  /* Text Styling */
+  color: #ffffff;
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  /* Centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Professional UI Effects */
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  user-select: none;
+}
+.user-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  overflow: hidden; /* 🔥 prevents outside overflow */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.delete-img-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 77, 79, 0.9);
+  color: #fff;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.delete-img-btn:hover {
+  background: #d9363e;
 }
 
 .form-buttons {

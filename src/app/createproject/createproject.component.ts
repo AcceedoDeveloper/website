@@ -273,7 +273,7 @@ getStatusClass(project: any): string {
           this.userData.photoURL = this.configService.getUploadUrl(this.userData.photo);
         }
       } else {
-        this.userData.photoURL = 'assets/default-avatar.png';
+        // this.userData.photoURL = 'assets/default-avatar.png';
       }
     }
   }
@@ -383,7 +383,7 @@ calculateStatus(endDate: string) {
         processedUser.photoURL = this.configService.getUploadUrl(processedUser.photo);
       }
     } else {
-      processedUser.photoURL = 'assets/default-avatar.png';
+      // processedUser.photoURL = 'assets/default-avatar.png';
     }
     
     return processedUser;

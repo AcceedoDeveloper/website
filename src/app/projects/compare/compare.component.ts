@@ -291,38 +291,13 @@ this.chart.destroy();
 }
 
 
-
-/* ========================= */
-/* CREATE NEW CHART */
-/* ========================= */
-
-setTimeout(()=>{
-
-
-this.chart=new Chart(this.chartRef.nativeElement,{
-
+setTimeout(()=>{this.chart=new Chart(this.chartRef.nativeElement,{
 type:'bar',
-
-data:{
-
-labels:labels,
-
-datasets:datasets
-
-},
-
-options:{
-
-responsive:true,
-
-maintainAspectRatio:false,
-
+data:{labels:labels,datasets:datasets},
+options:{responsive:true,maintainAspectRatio:false,
 plugins:{
-
 legend:{
-
 position:'top'
-
 },
 
 title:{
@@ -376,12 +351,6 @@ text:'Users'
 
 
 }
-
-
-
-/* ========================= */
-/* BACK */
-/* ========================= */
 
 goBack(){
 

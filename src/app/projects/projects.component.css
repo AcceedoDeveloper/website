@@ -783,22 +783,9 @@ display: flex;
 
 }
 
-
-/* ===============================
-   HOVER EFFECT (PROFESSIONAL)
-================================= */
-
-.start-date:hover,
-.due-date:hover {
-
-}
 .due-date.today {  color: #e65100; }
 .due-date.overdue { color: #c62828; }
 
-
-/* =============================================
-   AVATAR - Same in all columns
-   ============================================= */
 .assignee-avatar-container {
   display: flex;
   align-items: center;
