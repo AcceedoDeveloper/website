@@ -67,6 +67,9 @@
          <div class="pill-dropdown">
            <button [class.active]="currentPage === 'compare'" (click)="opencom()">Compare</button>
          </div>
+         <div class="pill-dropdown">
+           <button [class.active]="currentPage === 'TimeLine'" (click)="openTL()">Time Line</button>
+         </div>
 
        </div>
      </div>
@@ -287,10 +290,12 @@
 
     <div class="task-meta">
      <div class="task-status-badge" [ngClass]="getStatusClass(task.Status)">
-  {{ 
-    task.Status.toLowerCase() === 'done' ? 'Completed' : 
-    task.Status || 'To Do' 
-  }}
+{{ 
+  task.Status.toLowerCase() === 'done' ? 'Completed' :
+
+  task.Status || 'To Do'
+}}
+
 </div>
       <!-- <span class="due-date"
             [class.overdue]="isOverdue(task)">
@@ -356,10 +361,21 @@
 
 
 
- <app-compare 
+<app-compare 
   *ngIf="compare"
+  [selectedProjectId]="selectedProjectId"
+  [selectedProjectName]="selectedProjectName"
+  [projects]="projects"
   (back)="closeCompare()">
 </app-compare>
+<app-timeline
+  *ngIf="TimeLine"
+  [timelineItems]="timelineItems"
+  [selectedProjectId]="selectedProjectId"
+  [selectedProjectName]="selectedProjectName"
+  [months]="months">
+</app-timeline>
+
   <app-documents *ngIf="Documents"></app-documents>
 <app-summary *ngIf="Summary" [selectedProjectId]="selectedProjectId" [projects]="projects"></app-summary> 
 
@@ -370,8 +386,8 @@
     [username]="username"
     [projects]="projects">
   </app-calendar>
+  
 </div>
-
 
 </div>
 
@@ -511,7 +527,7 @@
             <div class="form-group">
               <label class="form-label">Assigner (work giver)</label>
               <input type="text" [value]="username" readonly class="form-input readonly">
-              <input type="hidden" formControlName="assignedTo" assignmentForm.patchValue>
+              <input type="hidden" formControlName="assignedTo">
             </div>
 
       

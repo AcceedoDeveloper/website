@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -13,7 +13,6 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
 import { DateUtilsService } from '../service/date-utils.service';
 import { AssignmentDeleteConfirmationDialogComponent } from './assignment-delete-confirmation-dialog.component';
-
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 interface Document {
   _id: string;
@@ -26,20 +25,25 @@ interface Document {
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
-export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit{
+export class ProjectsComponent implements OnInit, OnDestroy, AfterViewInit {
 cancelEdit: any;
 isLoading = false;
 isDeleting = false;
-showtask=true;
-datefiltersection=true;
+showtask = true;
+datefiltersection = true;
 showmaintask = true;
-Documents =false;
+Documents = false;
 Calendar = false;
 Summary = false;
 compare = false;
+TimeLine = false;
 showdocumentpop = false;
- currentDate!: string;
-  currentTime!: string;
+
+// Timeline data
+timelineItems: AssignWork[] = [];
+
+currentDate!: string;
+currentTime!: string;
 
 
 todayDay = new Date().getDate();  
@@ -129,24 +133,23 @@ selectedProjectTeamLeads: string[] = [];
   searchQuery: any;
   isDragActive: any;
   constructor(
-    private projectService: CreatprojectService,
-    private assignworkService: AssignWorkService,
-    private userService: UserservicesService,
-    private configService: ConfigService,
-    private fb: FormBuilder,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private http: HttpClient,
-    private sanitizer: DomSanitizer,
-    private dateUtils: DateUtilsService,
-    private cd: ChangeDetectorRef,
-    private fm:FormsModule
-  ) {
-    this.documentForm = this.fb.group({
-      title: ['', Validators.required],
-      file: [null]
-    });
-  }
+  private projectService: CreatprojectService,
+  private assignworkService: AssignWorkService,
+  private userService: UserservicesService,
+  private configService: ConfigService,
+  private fb: FormBuilder,
+  private dialog: MatDialog,
+  private snackBar: MatSnackBar,
+  private http: HttpClient,
+  private sanitizer: DomSanitizer,
+  private dateUtils: DateUtilsService,
+  private cd: ChangeDetectorRef
+) {
+  this.documentForm = this.fb.group({
+    title: ['', Validators.required],
+    file: [null]
+  });
+}
 getInitials(name: string): string {
   if (!name) return '';
 
@@ -251,10 +254,14 @@ getInitials(name: string): string {
     this.todoAssignments = this.getFilteredTasksByStatus('ToDo');
     this.inProgressAssignments = this.getFilteredTasksByStatus('InProgress');
     this.doneAssignments = this.getFilteredTasksByStatus('Done');
+
+    // Keep timeline in sync with selected date/project
+    this.updateTimelineItems();
     
     console.log('Filtered tasks - ToDo:', this.todoAssignments.length);
     console.log('Filtered tasks - InProgress:', this.inProgressAssignments.length);
     console.log('Filtered tasks - Done:', this.doneAssignments.length);
+    console.log('Filtered tasks - Timeline:', this.timelineItems.length);
   }
 
  getFilteredTasksByStatus(status: string): AssignWork[] {
@@ -508,6 +515,11 @@ onDateChange(): void {
 
   // force Angular to update view
   this.todoAssignments = this.getFilteredTasksByStatus('todo');
+  this.inProgressAssignments = this.getFilteredTasksByStatus('InProgress');
+  this.doneAssignments = this.getFilteredTasksByStatus('Done');
+
+  // keep timeline in sync
+  this.updateTimelineItems();
 
   this.cd.detectChanges();
 
@@ -887,11 +899,56 @@ getTodayDateString(): string {
     this.todoAssignments = this.getFilteredTasksByStatus('ToDo');
     this.inProgressAssignments = this.getFilteredTasksByStatus('InProgress');
     this.doneAssignments = this.getFilteredTasksByStatus('Done');
+
+    // Update timeline view when the source assignments change
+    this.updateTimelineItems();
     
     console.log('Final filtered assignments:');
     console.log('- ToDo:', this.todoAssignments.length);
     console.log('- InProgress:', this.inProgressAssignments.length);
     console.log('- Done:', this.doneAssignments.length);
+    console.log('- Timeline items:', this.timelineItems.length);
+  }
+
+  private updateTimelineItems() {
+    const tasks = [...this.allAssignments];
+
+    // Apply same project/user filtering rules as the Kanban view
+    let filtered = tasks.filter(a => {
+      if (this.selectedProjectId) {
+        return (
+          String(a.projectId) === String(this.selectedProjectId) ||
+          String(a.projectName || '').toLowerCase() === String(this.selectedProjectName || '').toLowerCase()
+        );
+      }
+
+      return (
+        String(a.assignedTo) === String(this.username) ||
+        String(a.assignee) === String(this.username)
+      );
+    });
+
+    // Optionally apply a date-based constraint (same as the date picker filter)
+    if (this.selectedTaskDate) {
+      const selectedDate = new Date(this.selectedTaskDate);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      filtered = filtered.filter(task => {
+        const dateStr = task.dueDate || task.startDate || task.createdAt;
+        if (!dateStr) return true;
+
+        const taskDate = new Date(dateStr);
+        taskDate.setHours(0, 0, 0, 0);
+        return taskDate.getTime() >= selectedDate.getTime();
+      });
+    }
+
+    // Sort timeline items in ascending order by date (dueDate -> startDate -> createdAt)
+    this.timelineItems = filtered.sort((a, b) => {
+      const aTime = new Date(a.dueDate || a.startDate || a.createdAt || 0).getTime();
+      const bTime = new Date(b.dueDate || b.startDate || b.createdAt || 0).getTime();
+      return aTime - bTime;
+    });
   }
 
   private clearAssignments() {
@@ -1418,6 +1475,7 @@ this.Documents =false;
 this.Calendar = false;
 this.Summary = false;
 this.compare =false;
+this.TimeLine = false;
 this.showtask=true;
 this.datefiltersection=true;
   }
@@ -1432,6 +1490,7 @@ this.Documents =false;
 this.Calendar = false;
 this.Summary = true;
 this.compare =false;
+this.TimeLine = false;
 this.showtask=false;
 this.datefiltersection=false;
     
@@ -1444,6 +1503,7 @@ this.Documents =true;
 this.Calendar = false;
 this.Summary = false;
 this.compare =false;
+this.TimeLine = false;
 this.showtask=false;
 this.datefiltersection=false;
   }
@@ -1455,6 +1515,7 @@ this.Documents =false;
 this.Calendar = true;
 this.Summary = false;
 this.compare =false;
+this.TimeLine = false;
 this.showtask=false;
 this.datefiltersection=false;
   }
@@ -1466,8 +1527,22 @@ this.Documents =false;
 this.Calendar = false;
 this.Summary = false;
 this.compare = true;
+this.TimeLine = false;
+this.datefiltersection=false;
 }
+ openTL() {
+  this.currentPage = 'TimeLine';
+  this.showmaintask = false;
+  this.showtask = false;
+  this.Documents = false;
+  this.Calendar = false;
+  this.Summary = false;
+  this.compare = false;
+  this.TimeLine = true;
+  this.datefiltersection = false;
 
+  this.updateTimelineItems();
+}
   opendocpop(doc?: any) {
     this.editingDocument = doc || null;
     this.showdocumentpop = true;

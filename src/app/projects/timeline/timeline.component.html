@@ -1,0 +1,146 @@
+<div class="timeline-page">
+  <div class="timeline-topbar">
+    <div class="timeline-title-block">
+      <h2 class="timeline-title">Project Timeline</h2>
+      <p class="timeline-subtitle">
+        {{ selectedProjectName || 'All Projects' }} • Month-based roadmap view
+      </p>
+    </div>
+
+    <div class="timeline-top-actions">
+      <div class="timeline-legend">
+        <span class="legend-item">
+          <span class="legend-dot legend-todo"></span>
+          To Do
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-progress"></span>
+          In Progress
+        </span>
+        <span class="legend-item">
+          <span class="legend-dot legend-done"></span>
+          Done
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-summary-cards">
+    <div class="summary-card total-card">
+      <div class="summary-label">Total Tasks</div>
+      <div class="summary-value">{{ groupedTimelineItems.length }}</div>
+    </div>
+
+    <div class="summary-card todo-card">
+      <div class="summary-label">To Do</div>
+      <div class="summary-value">
+        {{ groupedTimelineItems.filter(item => item.statusClass === 'bar-todo').length }}
+      </div>
+    </div>
+
+    <div class="summary-card progress-card">
+      <div class="summary-label">In Progress</div>
+      <div class="summary-value">
+        {{ groupedTimelineItems.filter(item => item.statusClass === 'bar-progress').length }}
+      </div>
+    </div>
+
+    <div class="summary-card done-card">
+      <div class="summary-label">Done</div>
+      <div class="summary-value">
+        {{ groupedTimelineItems.filter(item => item.statusClass === 'bar-done').length }}
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-board">
+    <!-- Header -->
+    <div class="timeline-grid header-grid">
+      <div class="items-col header-cell sticky-left">Items</div>
+
+      <div class="months-col">
+        <div class="months-row">
+          <div
+  *ngFor="let month of months; let i = index"
+  class="month-cell"
+  [class.current-month]="i === currentMonth"
+>
+  {{ getMonthShort(month) }}
+</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="timeline-body" *ngIf="groupedTimelineItems.length > 0; else emptyTimeline">
+      <div
+        class="timeline-grid body-grid"
+        *ngFor="let task of groupedTimelineItems; trackBy: trackByRow"
+      >
+        <!-- Left Details -->
+        <div class="items-col task-info-cell sticky-left">
+          <div class="task-code">TSK-{{ task.rowId }}</div>
+
+          <div class="task-main">
+            <div class="task-name-row">
+              <div class="task-name">{{ task.title }}</div>
+              <div class="status-badge" [ngClass]="task.statusClass">
+                {{
+                  task.statusClass === 'bar-done'
+                    ? 'Done'
+                    : task.statusClass === 'bar-progress'
+                    ? 'In Progress'
+                    : 'To Do'
+                }}
+              </div>
+            </div>
+
+            <div class="task-meta">
+              <span class="task-user">{{ task.assignee || 'Unassigned' }}</span>
+              <span class="task-date">
+                {{ formatDateLabel(task.startDateObj) }} - {{ formatDateLabel(task.endDateObj) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Timeline -->
+        <div class="months-col">
+          <div class="track-area">
+            <div class="month-lines">
+              <div *ngFor="let month of months" class="month-line"></div>
+            </div>
+
+            <div class="today-column" [style.left.%]="todayLeftPercent"></div>
+            <div class="today-line" [style.left.%]="todayLeftPercent"></div>
+
+            <div
+              class="task-bar"
+              [ngClass]="task.statusClass"
+              [style.left.%]="task.startLeft"
+              [style.width.%]="task.width"
+            >
+              <div class="bar-avatar">
+                {{ getInitials(task.assignee) }}
+              </div>
+
+              <div class="bar-content">
+                <span class="bar-title">{{ task.title }}</span>
+              </div>
+
+              <div class="bar-progress-track">
+                <div class="bar-progress-fill" [style.width.%]="task.progressWidth"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyTimeline>
+      <div class="timeline-empty">
+        No timeline data available for this project.
+      </div>
+    </ng-template>
+  </div>
+</div>

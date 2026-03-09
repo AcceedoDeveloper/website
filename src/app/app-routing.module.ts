@@ -44,7 +44,7 @@ import { Product7Component } from './product7/product7.component';
 import { Product4Component } from './product4/product4.component';
 import { Product5Component } from './product5/product5.component';
 import { Product6Component } from './product6/product6.component';
-
+import { TimelineComponent } from './projects/timeline/timeline.component';
 
 
 
@@ -83,6 +83,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   {path:'signin', component:LoginComponent},
   {path:'project', component:ProjectComponent},
+  { path: '', redirectTo: 'projects', pathMatch: 'full' },
+  { path: 'timeline', component: TimelineComponent },
+
 
  {path:'projects',component:ProjectsComponent},
  {path:'role',component:RoleComponent},

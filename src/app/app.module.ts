@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
-
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Angular Material Modules
@@ -102,6 +102,8 @@ import { Product4Component } from './product4/product4.component';
 import { Product5Component } from './product5/product5.component';
 import { Product6Component } from './product6/product6.component';
 import { Product7Component } from './product7/product7.component';
+import { TimelineComponent } from './projects/timeline/timeline.component';
+
 
 
 
@@ -151,6 +153,7 @@ export function loadConfigFactory(configService: ConfigService) {
     ProjectsComponent,
     RoleComponent,
     NgrxComponent,
+    TimelineComponent,
     WebdevComponent,
 
     NodeComponent,
@@ -165,7 +168,8 @@ export function loadConfigFactory(configService: ConfigService) {
    AssignmentDeleteConfirmationDialogComponent,
    FileDeleteConfirmationDialogComponent,
    HeaderComponent,
-   TaskComponent,
+   TaskComponent, 
+   TimelineComponent,
    CalendarComponent,
    SummaryComponent,
    CompareComponent,
@@ -175,10 +179,13 @@ export function loadConfigFactory(configService: ConfigService) {
    Product5Component,
    Product6Component,
    Product7Component,
+   
   ],
 
   imports: [
     BrowserModule,
+    CommonModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     RouterModule,

@@ -694,18 +694,12 @@ html, body {
 
 .start-date,
 .due-date {
-display: flex;
+  display: flex;
   gap: 1px;
-
-  padding: 4px 10px;
-
   font-size: 10px;
   font-weight: 500;
   color: #334155;
-
-
   transition: all 0.2s ease;
-
   cursor: default;
   margin-top: 20px;
 
@@ -1820,6 +1814,8 @@ img, table, input, button, select { max-width: 100%; }
   .sidebar {
     position: fixed;
     left: -100%;
+    margin-left: 220px;
+    min-height: calc(117vh - 80px);
     transition: 0.3s ease;
     z-index: 999;
   }

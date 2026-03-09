@@ -2,147 +2,159 @@
 
   <div class="compare-card">
 
-    <h2>User Task Compare</h2>
+    <div class="header">
 
-    <!-- FORM GRID -->
-    <div class="form-grid">
-
-      <!-- USER DROPDOWN WITH CHECKBOX -->
-      <div>
-
-        <label>Select Users</label>
-
-        <div class="dropdown">
-
-          <!-- BUTTON -->
-          <button
-            class="dropdown-btn"
-            (click)="toggleDropdown()">
-
-            {{ selectedUsers.length > 0 ? selectedUsers.join(', ') : 'Select Users' }}
-
-            <span class="arrow">▼</span>
-
-          </button>
-
-
-          <!-- DROPDOWN LIST -->
-          <div
-            class="dropdown-content"
-            *ngIf="showDropdown">
-
-
-            <!-- HEADER -->
-            <div class="dropdown-header">
-
-              <span>Select Users</span>
-
-              <button
-                class="close-btn"
-                (click)="toggleDropdown()">
-
-                ✖
-
-              </button>
-
-            </div>
-
-
-            <!-- USER LIST -->
-            <label *ngFor="let u of users">
-
-              <input
-                type="checkbox"
-                [value]="u.userName"
-                [checked]="selectedUsers.includes(u.userName)"
-                (change)="onUserChange($event)" />
-
-              <span>
-
-                {{u.userName}}
-
-                <span
-                  class="tick"
-                  *ngIf="selectedUsers.includes(u.userName)">
-
-                  ✔
-
-                </span>
-
-              </span>
-
-            </label>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- MONTH -->
-      <div>
-
-        <label>Month</label>
-
-        <select [(ngModel)]="selectedMonth">
-
-          <option value="">Select Month</option>
-
-          <option
-            *ngFor="let m of months"
-            [value]="m">
-
-            {{m}}
-
-          </option>
-
-        </select>
-
-      </div>
-
-
-
-      <!-- PROJECT -->
-      <div>
-
-        <label>Project</label>
-
-        <select [(ngModel)]="selectedProject">
-
-          <option value="">
-
-            All Project
-
-          </option>
-
-          <option
-            *ngFor="let p of projects"
-            [value]="p">
-
-            {{p}}
-
-          </option>
-
-        </select>
-
-      </div>
-
-
-
-      <!-- COMPARE BUTTON (MOVED INSIDE GRID) -->
-      <div>
+      <h2>Task Comparison</h2>
+       
+ <div>
 
         <button
           class="compare-btn"
-          (click)="compare()">
+          (click)="compare()"
+          [disabled]="!isCompareEnabled"
+  [class.disabled-btn]="!isCompareEnabled">
 
           Compare
 
         </button>
 
       </div>
+
+    </div>
+
+    <!-- FORM GRID -->
+    <div class="form-grid">
+
+      <!-- USER DROPDOWN WITH CHECKBOX -->
+<div class="user-dropdown-wrapper">
+  <label for="userSelect">Select Users</label>
+  <button 
+    type="button"
+    class="dropdown-toggle"
+    (click)="toggleDropdown()">
+    
+    {{ selectedUsers.length === 0 ? 'Choose users...' : '' }}
+      <div class="selected-summary" *ngIf="!showDropdown && selectedUsers.length > 0">
+    <div class="avatar-group">
+      <ng-container *ngFor="let user of selectedUsers.slice(0, 3)">
+        <div class="avatar-pill" [title]="user">
+          {{ getInitials(user) }}
+        </div>
+      </ng-container>
+      <div class="avatar-pill more" *ngIf="selectedUsers.length > 3">
+        +{{ selectedUsers.length - 3 }}
+      </div>
+    </div>
+  </div>
+   
+  </button>
+
+<div class="dropdown-menu" *ngIf="showDropdown && users.length > 0">
+    <div class="dropdown-items">
+      <!-- Select All option -->
+      <label class="dropdown-item select-all">
+        <input
+          type="checkbox"
+          [checked]="isAllSelected"
+          (change)="toggleSelectAll()">
+        <i class="fa fa-check-circle"></i>
+        <span>Select All</span>
+        
+      </label>
+
+      
+      <!-- Divider -->
+      <div class="dropdown-divider"></div>
+
+      <!-- Individual user options -->
+      <label class="dropdown-item" *ngFor="let user of users">
+        <input
+          type="checkbox"
+          [value]="user.userName"
+          [checked]="selectedUsers.includes(user.userName)"
+          (change)="toggleUser(user.userName, $any($event.target).checked)">
+        <i class="fa fa-user"></i>
+        <span>{{ getInitials(user.userName) }} {{ user.userName }}</span>
+      </label>
+    </div>
+
+    <!-- Selected Users Pills -->
+    <!-- <div class="selected-pills" *ngIf="selectedUsers.length > 0">
+      <div class="pill" *ngFor="let user of selectedUsers">
+        <span>{{ user }}</span>
+        <button
+          type="button"
+          class="remove-btn"
+          (click)="removeUser(user)">
+          ✕
+        </button>
+      </div>
+    </div> -->
+
+    <!-- Done Button -->
+    <div class="dropdown-footer">
+      <button
+        type="button"
+        class="done-btn"
+        (click)="doneSelection()">
+        <i class="fa fa-check"></i>
+        Done
+      </button>
+    </div>
+  </div>
+
+  <!-- Show selected users if dropdown is closed -->
+
+</div>
+
+
+      <!-- MONTH -->
+     <div >
+  <label for="dateModeFilter" >Date Filter</label>
+  <select 
+         class="dropdown"
+          [(ngModel)]="dateFilter" 
+          (change)="applyFilters()">
+    <option value="today">Today's Tasks</option>
+    <option value="all">All Tasks</option>
+    <option value="month">By Month</option>
+    <option value="custom">Custom Date</option>
+  </select>
+</div>
+
+<div  *ngIf="dateFilter === 'custom' || dateFilter === 'month'">
+  <label for="dateFilterInput" class="form-label">
+    {{ dateFilter === 'month' ? 'Select Month' : 'Select Date' }}
+  </label>
+  <input [type]="dateFilter === 'month' ? 'month' : 'date'" 
+         id="dateFilterInput" 
+         class="form-control" 
+         [ngModel]="dateFilter === 'month' ? selectedMonth : selectedDate"
+         (ngModelChange)="dateFilter === 'month' ? (selectedMonth = $event) : (selectedDate = $event)"
+         (change)="applyFilters()">
+</div>
+
+
+
+      <!-- PROJECT -->
+ <!-- allow the user to pick a project for comparison; default comes from parent input -->
+<div>
+  <label for="projectSelect">Project</label>
+  <select id="projectSelect" 
+          class="form-control" 
+          [(ngModel)]="projectSelectionId" 
+          (change)="onProjectSelectLocal()">
+    <option value="">All Projects</option>
+    <option *ngFor="let p of projects" [value]="p._id">
+      {{ p.projectName || p.name }}
+    </option>
+  </select>
+</div>
+
+
+
+      <!-- COMPARE BUTTON (MOVED INSIDE GRID) -->
+     
 
 
     </div>
@@ -162,7 +174,7 @@
 
             <th>User</th>
 
-            <th>Total</th>
+            <th>Total tasks</th>
 
             <th>Completed</th>
 
@@ -191,17 +203,34 @@
 
       </table>
 
-    </div>
-
-
-
-    <!-- CHART -->
-    <div class="chartBox">
-
-      <canvas #chart></canvas>
 
     </div>
 
+
+          <div *ngIf="compareData.length > 0">
+  <div class="chart-header">
+  <h2 class="chart-title" *ngIf="getChartTypeLabel() !=='Graph View'">{{ getChartTypeLabel() }}</h2>
+
+  <div class="dropdown1">
+<button class="dropdown1-btn" (click)="toggleChartDropdown()">
+  {{ getChartTypeLabel() }} 👁️‍🗨️
+</button>
+
+    <div class="dropdown1-content" *ngIf="showChartDropdown">
+    
+      <a (click)="setChartType('bar')"><i class="fa fa-bar-chart"></i> Bar Chart</a>
+      <a (click)="setChartType('line')"><i class="fa fa-line-chart"></i> Line Chart</a>
+      <a (click)="setChartType('pie')"><i class="fa fa-pie-chart"></i> Pie Chart</a>
+    </div>
+  </div>
+</div>
+     <!-- CHART -->
+ <div class="chartBox"> <div #chart style="width:100%; height:420px;"></div> </div>
+
+</div>
+
+
+ 
 
   </div>
 

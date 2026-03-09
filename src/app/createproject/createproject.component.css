@@ -29,7 +29,7 @@ input, select, textarea, button {
 
   margin-left:-20px;
   padding: 30px;
-  min-height: calc(100vh - 80px);
+  min-height: calc(117vh - 80px);
   box-sizing: border-box;
   margin-top: 0;
   position: relative;
@@ -950,9 +950,7 @@ button {
   transform: scale(1.1);
 }
 
-.header-btn.close {
- 
-}
+
 
 .header-btn.close:hover {
   background: #475569;
@@ -1622,8 +1620,11 @@ input:disabled {
 @media (min-width: 576px) and (max-width: 767px) {
   .main {
     width: 98%;
-    margin-left: 200px; /* Sidebar width on extra small screens */
+    margin-left: 220px; /* Sidebar width on extra small screens */
     padding: 10px;
+  }
+   .sidebar {
+    width: 220px;
   }
   
   .projects-list {
