@@ -813,7 +813,7 @@ private getCustomChartOption(labels: string[], data: number[]) {
       }
     ],
 
-    animationDuration: 400,
+    animationDuration: 1500,
     animationEasing: 'cubicOut'
   };
 
@@ -874,7 +874,8 @@ private getBarChartOption(labels: string[], data: number[]) {
         radius: [8, 8, 0, 0]
       }
     ],
-    animationDuration: 1600
+    animationDuration: 1500,
+animationEasing: 'cubicOut'
   };
 }
 
@@ -940,7 +941,8 @@ private getLineChartOption(labels: string[], data: number[]) {
         }
       }
     ],
-    animationDuration: 1600
+   animationDuration: 1500,
+animationEasing: 'cubicOut'
   };
 }
 
@@ -992,7 +994,8 @@ private getPieChartOption(labels: string[], data: number[]) {
         }
       }
     ],
-    animationDuration: 1600
+    animationDuration: 1500,
+animationEasing: 'cubicOut'
   };
 }
   goBack() {

@@ -34,50 +34,47 @@
     <div class="summary-card todo-card">
       <div class="summary-label">To Do</div>
       <div class="summary-value">
-        {{ groupedTimelineItems.filter(item => item.statusClass === 'bar-todo').length }}
+        {{ todoCount }}
       </div>
     </div>
 
     <div class="summary-card progress-card">
       <div class="summary-label">In Progress</div>
       <div class="summary-value">
-        {{ groupedTimelineItems.filter(item => item.statusClass === 'bar-progress').length }}
+        {{ progressCount }}
       </div>
     </div>
 
     <div class="summary-card done-card">
       <div class="summary-label">Done</div>
       <div class="summary-value">
-        {{ groupedTimelineItems.filter(item => item.statusClass === 'bar-done').length }}
+        {{ doneCount }}
       </div>
     </div>
   </div>
 
   <div class="timeline-board">
-    <!-- Header -->
     <div class="timeline-grid header-grid">
       <div class="items-col header-cell sticky-left">Items</div>
 
       <div class="months-col">
         <div class="months-row">
           <div
-  *ngFor="let month of months; let i = index"
-  class="month-cell"
-  [class.current-month]="i === currentMonth"
->
-  {{ getMonthShort(month) }}
-</div>
+            *ngFor="let month of months; let i = index"
+            class="month-cell"
+            [class.current-month]="i === currentMonth"
+          >
+            {{ getMonthShort(month) }}
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Body -->
     <div class="timeline-body" *ngIf="groupedTimelineItems.length > 0; else emptyTimeline">
       <div
         class="timeline-grid body-grid"
         *ngFor="let task of groupedTimelineItems; trackBy: trackByRow"
       >
-        <!-- Left Details -->
         <div class="items-col task-info-cell sticky-left">
           <div class="task-code">TSK-{{ task.rowId }}</div>
 
@@ -104,7 +101,6 @@
           </div>
         </div>
 
-        <!-- Right Timeline -->
         <div class="months-col">
           <div class="track-area">
             <div class="month-lines">
