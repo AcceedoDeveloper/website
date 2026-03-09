@@ -7,4 +7,17 @@ import { Component } from '@angular/core';
 })
 export class Product5Component {
 
+  openImage(event: any): void {
+  const modal = document.getElementById("imageModal") as HTMLElement;
+  const fullImage = document.getElementById("fullImage") as HTMLImageElement;
+
+  modal.style.display = "flex";
+  fullImage.src = event.target.src;
+}
+
+closeImage(): void {
+  const modal = document.getElementById("imageModal") as HTMLElement;
+  modal.style.display = "none";
+}
+
 }

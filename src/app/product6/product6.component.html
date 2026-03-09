@@ -1,2 +1,224 @@
+
+
 <app-footr></app-footr>
+
+
+<div class="container">
+<section class="qms-hero">
+
+<div class="hero-container">
+<h1 class="hero-title">Quality Management System</h1>
+
+<p class="hero-sub">
+A Quality Management System (QMS) is a centralized framework that helps organizations monitor, control, and improve product quality through standardized processes, inspections, and operational tracking.
+</p>
+
+</div>
+
+</section>
+
+
+<div class="modules-grid">
+    <h2 class="section-title">QMS Core Modules</h2>
+<!-- JIGS (Image Top) -->
+<div class="module-card card-img-top">
+
+<div class="module-image">
+<img src="assets/jig1.jpeg" alt="Jigs Management">
+</div>
+
+<div class="module-content">
+<h3>JIGS Management</h3>
+<p>
+The JIGS management module helps track jig availability,
+usage history, maintenance schedules, and operational
+status in the production environment.
+</p>
+
+<ul>
+<li>Jig inventory tracking</li>
+<li>Maintenance scheduling</li>
+<li>Usage monitoring</li>
+<li>Operational lifecycle management</li>
+</ul>
+
+</div>
+</div>
+
+
+<!-- JSIR (Horizontal Image Left) -->
+<div class="module-card card-horizontal">
+
+<div class="module-image">
+<img src="assets/jsir1.jpeg" alt="JSIR">
+</div>
+
+<div class="module-content">
+<h3>JSIR – Job Setup Inspection Report</h3>
+<p>
+The JSIR module ensures that the production setup meets quality standards before starting manufacturing processes. It validates machine settings, tools, and setup conditions.
+</p>
+
+<ul>
+<li>Setup inspection checklists</li>
+<li>Process validation</li>
+<li>Quality compliance tracking</li>
+<li>Digital inspection records</li>
+</ul>
+
+</div>
+</div>
+
+
+<!-- PIR (Image Bottom) -->
+<div class="module-card card-img-bottom">
+
+<div class="module-image">
+<img src="assets/pir1.jpeg" alt="PIR">
+</div>
+
+<div class="module-content">
+<h3>PIR – Production Inspection Report</h3>
+
+<p>
+The PIR module captures inspection results during production to ensure product quality is maintained throughout manufacturing operations.
+</p>
+
+<ul>
+<li>Production inspection reports</li>
+<li>Quality deviation tracking</li>
+<li>Inspection history records</li>
+<li>Quality approval workflow</li>
+</ul>
+
+</div>
+</div>
+
+
+<!-- MATERIAL MONITOR (Corner Image) -->
+<div class="module-card card-corner">
+
+<div class="module-image">
+<img src="assets/qms3.jpeg" alt="Material Monitor">
+</div>
+
+<div class="module-content">
+<h3>Material Monitor</h3>
+
+<p>
+The Material Monitor module tracks material consumption, inventory availability, and quality validation across production stages.
+</p>
+
+<ul>
+<li>Material usage tracking</li>
+<li>Inventory monitoring</li>
+<li>Quality verification</li>
+<li>Material traceability</li>
+</ul>
+
+</div>
+</div>
+
+
+<!-- OPERATIONS (Horizontal Reverse) -->
+<div class="module-card card-horizontal reverse">
+
+<div class="module-image">
+<img src="assets/opera1 (1).jpeg" alt="Operations">
+</div>
+
+<div class="module-content">
+<h3>Operations Management</h3>
+
+<p>
+The Operations module coordinates manufacturing activities, machine allocation, and production workflow to ensure smooth operational efficiency.
+</p>
+
+<ul>
+<li>Production workflow control</li>
+<li>Machine allocation</li>
+<li>Process monitoring</li>
+<li>Operational analytics</li>
+</ul>
+
+</div>
+
+</div>
+
+<section class="features-section">
+
+<h2 class="features-title">Key Features</h2>
+
+<div class="features-grid">
+
+<div class="feature-card">
+<div class="feature-icon">✔</div>
+<h3>Centralized Quality Control</h3>
+<p>Manage inspections, reports, and quality data in one unified platform.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">📊</div>
+<h3>Digital Inspection Reports</h3>
+<p>Create and manage JSIR and PIR reports digitally for better tracking.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">⚙</div>
+<h3>Jig Management</h3>
+<p>Track jig usage, maintenance schedules, and equipment availability.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">📦</div>
+<h3>Material Monitoring</h3>
+<p>Monitor raw materials and ensure quality compliance in production.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">📈</div>
+<h3>Real-Time Monitoring</h3>
+<p>Track machine operations and production quality in real time.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">🔍</div>
+<h3>Full Traceability</h3>
+<p>Maintain complete history of inspections and production activities.</p>
+</div>
+
+</div>
+
+</section>
+
+ <div class="container">
+
+    <div class="carousel-box">
+
+      <h2 class="carousel-title">Application Screens</h2>
+
+      <div class="carousel">
+        <div class="slider">
+ <img src="assets/jsir.jpeg" alt="Screen 1" (click)="openImage('assets/jsir.jpeg')">
+<img src="assets/qms1.jpeg" alt="Screen 3" (click)="openImage('assets/qms1.jpeg')">
+<img src="assets/machine.jpeg" alt="Screen 3" (click)="openImage('assets/machine.jpeg')">
+<img src="assets/pir.jpeg" alt="Screen 2" (click)="openImage('assets/pir.jpeg')">
+<img src="assets/qms2.jpeg" alt="Screen 3" (click)="openImage('assets/qms2.jpeg')">
+<img src="assets/opera.jpeg" alt="Screen 3" (click)="openImage('assets/opera.jpeg')">
+<img src="assets/jig1.jpeg" alt="Screen 3" (click)="openImage('assets/jig1.jpeg')">
+<img src="assets/qms3.jpeg" alt="Screen 3" (click)="openImage('assets/qms3.jpeg')">
+
+        </div>
+      </div>
+
+      <!-- IMAGE MODAL -->
+      <div class="image-modal" *ngIf="modalOpen" (click)="closeImage()">
+        <img [src]="modalImage">
+      </div>
+
+    </div>
+
+  </div>
+</div>
+</div>
 <app-footer></app-footer>

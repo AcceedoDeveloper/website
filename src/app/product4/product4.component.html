@@ -13,14 +13,11 @@
   <!-- Hero content -->
   <div class="container hero-content">
 
-    <!-- Left: Heading -->
-   <p>Streamline Work, Track Progress, Boost Productivity</p>
-
     <!-- Center: Buttons + Mobile Preview -->
     <div class="hero-center">
       <div class="hero-buttons">
-        <button class="btn-primary" (click)="openDemo()">View Demo</button>
-        <button class="btn-secondary">Get Started</button>
+        <button class="btn-primary" (click)="openDemo()">View </button>
+         <button class="btn-primary" (click)="openDemo()"> Demo</button>
       </div>
 
       <div class="mobile-preview">
@@ -75,17 +72,14 @@
                 <p>Profile</p>
               </div>
             </div>
-
           </div>
         </div>
+        
       </div>
+      <p>A centralized system designed for Admins, Team Leads, and Users to manage tasks efficiently and improve team performance.</p>
     </div>
-
-    <!-- Right: Paragraph -->
-    <p>
-      Manage, assign and track tasks efficiently with role-based workflow.
-      Designed for Admins, Team Leads and Users to improve productivity.
-    </p>
+      
+   
 
   </div>
 </section>
@@ -136,22 +130,122 @@
   </div>
 </div>
 
-<!-- WORKFLOW DEMO -->
-<section class="workflow-demo">
-  <h2>Task Workflow Demo</h2>
-  <p>See how tasks move through the system in real-time</p>
 
-  <div class="board">
-    <div class="column">
-      <h3>Todo</h3>
-      <div class="task" id="taskCard">Design Login Page</div>
+<!-- DASHBOARD PREVIEW -->
+<section class="dashboard-preview">
+  <div class="dashboard-container">
+
+    <!-- LEFT : MASTER PAGE -->
+    <div class="dashboard-left">
+      <h1>Master Page</h1>
+      <p>
+        The Master Page is accessible only to administrators. 
+        It allows the admin to manage users, control task assignments,
+        and monitor system performance.
+      </p>
+      <ul>
+        <li>User Management</li>
+        <li>Role & Permission Control</li>
+        <li>Task Assignment Management</li>
+        <li>System Monitoring</li>
+      </ul>
     </div>
-    <div class="column"><h3>In Progress</h3></div>
-    <div class="column"><h3>Done</h3></div>
+
+    <!-- CENTER : IMAGE -->
+    <div class="dashboard-center">
+      <img src="assets/Task1.png" alt="Dashboard Preview">
+    </div>
+
+    <!-- RIGHT : TASK MANAGEMENT SUMMARY -->
+    <div class="dashboard-right">
+      <h1>Overview</h1>
+      <p>
+        View and analyze all tasks in a centralized dashboard.
+        Track completed work, pending tasks, and team productivity.
+      </p>
+      <ul>
+        <li>Total Tasks Overview</li>
+        <li>Completed vs Pending Tasks</li>
+        <li>Team Productivity Metrics</li>
+        <li>Real-time Updates</li>
+      </ul>
+    </div>
+
   </div>
 </section>
 
-<!-- CAROUSEL -->
+
+<div class="flow">
+
+<section class="section">
+<div class="container">
+
+<div class="section-title">
+<h2>Workflow</h2>
+<p>Simple workflow from assignment to completion.</p>
+</div>
+
+<div class="workflow-layout">
+
+  <!-- LEFT SIDE : FEATURES -->
+  <div class="features">
+
+    <div class="feature-card">
+      <div class="feature-content">
+        <h3>Smart Task Assignment</h3>
+       <p> Admins and Team Leads can assign tasks efficiently to team members based on their roles, workload, and expertise. Each task includes detailed descriptions, priority levels, and deadlines, ensuring everyone knows what to focus on. Automatic notifications and reminders keep team members informed about new assignments or approaching deadlines, minimizing delays and miscommunication. </p>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-content">
+        <h3>Progress Tracking</h3>
+        <p>
+        Track the status of every task in real time as it moves through the workflow: Todo → In Progress → Done. Visual dashboards, Kanban boards, and activity logs provide instant insights into team performance and bottlenecks. Managers can quickly identify overdue tasks, monitor completion trends, and adjust priorities dynamically to ensure smooth project execution.
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-content">
+        <h3>Performance Monitoring</h3>
+        <p>
+       Measure team productivity with detailed analytics and performance dashboards. Compare task completion rates, track individual contributions, and analyze time spent on tasks. Generate reports for weekly, monthly, or project-based assessments to make data-driven decisions and improve overall efficiency. Visual charts and summaries make performance review intuitive and actionable.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- RIGHT SIDE : WORKFLOW BOARD -->
+  <div class="workflow-demo">
+
+    <p>See how tasks move through the system in real-time</p>
+
+    <div class="board">
+      <div class="column">
+        <h3>Todo</h3>
+        <div class="task">Design Login Page</div>
+      </div>
+
+      <div class="column">
+        <h3>In Progress</h3>
+      </div>
+
+      <div class="column">
+        <h3>Done</h3>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+</section>
+
+</div>        
+
 <section class="section">
 
   <div class="container">
@@ -162,10 +256,17 @@
 
       <div class="carousel">
         <div class="slider">
-          <img src="assets/screen1.png" alt="Screen 1">
-          <img src="assets/screen2.png" alt="Screen 2">
-          <img src="assets/screen3.png" alt="Screen 3">
+
+      <img src="assets/Task4.png" alt="Screen 1" (click)="openImage('assets/Task4.png')">
+<img src="assets/Task2.png" alt="Screen 2" (click)="openImage('assets/Task2.png')">
+<img src="assets/Task3.png" alt="Screen 3" (click)="openImage('assets/Task3.png')">
+
         </div>
+      </div>
+
+      <!-- IMAGE MODAL -->
+      <div class="image-modal" *ngIf="modalOpen" (click)="closeImage()">
+        <img [src]="modalImage">
       </div>
 
     </div>
@@ -174,75 +275,13 @@
 
 </section>
 
-<!-- WORKFLOW FEATURES -->
-<section class="section">
-  <div class="container">
-    <div class="section-title">
-      <h2>Task Workflow Management</h2>
-      <p>Simple workflow from assignment to completion.</p>
-    </div>
 
-    <div class="features">
-      <div class="feature-card">
-        <div class="feature-content">
-          <h3>Smart Task Assignment</h3>
-          <p>Admins and Team Leads assign tasks with deadlines, priorities and descriptions.</p>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-content">
-          <h3>Progress Tracking</h3>
-          <p>Tasks move through Todo → In Progress → Done with real-time updates.</p>
-        </div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-content">
-          <h3>Performance Monitoring</h3>
-          <p>Analyze productivity using dashboard summaries and comparison analytics.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- DASHBOARD PREVIEW -->
-<section class="dashboard-preview">
-  <div class="container dashboard-container">
-    <div class="dashboard-content">
-      <h2>Task Management Summary</h2>
-      <p>View total tasks, completed work, pending items and team productivity in one centralized dashboard.</p>
-      <ul>
-        <li>Total Tasks Overview</li>
-        <li>Completed vs Pending Tasks</li>
-        <li>Team Productivity Metrics</li>
-        <li>Real-time Updates</li>
-      </ul>
-    </div>
-    <div class="dashboard-image">
-      <img src="assets/dashboard.png" alt="Dashboard">
-    </div>
-  </div>
-</section>
-
-<!-- STATS SECTION -->
-<section class="stats-section">
-  <h2>Platform Insights</h2>
-  <div class="stats-grid">
-    <div class="stat-card"><h3>{{totalTasks}}</h3><p>Total Tasks</p></div>
-    <div class="stat-card"><h3>{{completedTasks}}</h3><p>Completed Tasks</p></div>
-    <div class="stat-card"><h3>{{activeUsers}}</h3><p>Active Users</p></div>
-    <div class="stat-card"><h3>{{productivity}}%</h3><p>Productivity</p></div>
-  </div>
-</section>
-
-<!-- REPORTS -->
-<section class="section reports">
   <div class="container">
     <div class="section-title">
       <h2>Performance Comparison & Reports</h2>
       <p>Track productivity and compare performance easily.</p>
     </div>
-
+   
     <div class="report-cards">
       <div class="report-card">
         <h3>User Productivity</h3>
@@ -270,30 +309,18 @@
       </div>
     </div>
   </div>
-</section>
 
-<!-- WHY CHOOSE -->
-<section class="why-section">
-  <div class="container">
-    <h2 class="center">Why Choose Our Task Management System?</h2>
-    <div class="timeline-items">
-      <div class="timeline-item">
-        <i class="fas fa-clock icon"></i>
-        <div>
-          <h3>Real-Time Visibility</h3>
-          <p>Managers monitor progress instantly and prevent delays before deadlines are missed.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <i class="fas fa-users icon"></i>
-        <div>
-          <h3>Better Collaboration</h3>
-          <p>Clear responsibilities reduce confusion and improve teamwork efficiency.</p>
-        </div>
-      </div>
+   
+
+ <div class="compare-info">
+      <h3>Compare Page Analysis</h3>
+      <p>
+        The Compare Page provides a graphical view of productivity data.
+        Administrators can analyze user performance using charts and graphs,
+        making it easier to compare task completion rates, team efficiency,
+        and overall productivity trends.
+      </p>
     </div>
-  </div>
-</section>
 
 <!-- KEY FEATURES -->
 <section class="section key-features">
@@ -311,10 +338,42 @@
   </div>
 </section>
 
-<!-- CALL TO ACTION -->
-<section class="cta">
-  <h2>Ready to Improve Team Productivity?</h2>
-  <button class="btn-primary">Request Demo</button>
+<!-- WHY CHOOSE -->
+<section class="why-section">
+  <div class="container why-layout">
+
+    <!-- LEFT : AI IMAGE -->
+    <div class="why-image">
+      <img src="assets/last.png" alt="AI Task Management">
+    </div>
+
+    <!-- RIGHT : CONTENT -->
+    <div class="why-content">
+      <h2>Why Choose Our Task Management System?</h2>
+
+      <div class="timeline-items">
+
+        <div class="timeline-item">
+          <i class="fas fa-clock icon"></i>
+          <div>
+            <h3>Real-Time Visibility</h3>
+            <p>Managers monitor progress instantly and prevent delays before deadlines are missed.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <i class="fas fa-users icon"></i>
+          <div>
+            <h3>Better Collaboration</h3>
+            <p>Clear responsibilities reduce confusion and improve teamwork efficiency.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </section>
+
 
 <app-footer></app-footer>
