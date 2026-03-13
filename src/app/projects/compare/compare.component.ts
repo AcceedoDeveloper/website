@@ -4,7 +4,7 @@ import { AssignWorkService } from '../../service/assignwork.service';
 import { Chart, registerables } from 'chart.js';
 import { Location } from '@angular/common';
 import * as echarts from 'echarts';
-import { EChartsOption } from 'echarts';
+import type { EChartsOption } from 'echarts';
 
 Chart.register(...registerables);
 
@@ -12,7 +12,6 @@ interface UserViewResponse {
   works?: any[];
   data?: any[];
   assignments?: any[];
-  // Feel free to add more possible shapes if needed
 }
 
 @Component({
@@ -36,8 +35,8 @@ export class CompareComponent implements OnInit, OnChanges, AfterViewChecked {
 
   // Filters
   dateFilter: 'today' | 'all' | 'month' | 'custom' = 'all';
-  selectedDate: string = '';     // yyyy-mm-dd
-  selectedMonth: string = '';    // yyyy-mm
+  selectedDate: string = '';     
+  selectedMonth: string = '';    
 
   selectedUsers: string[] = [];
   showDropdown = false;
@@ -66,7 +65,7 @@ chartType: 'bar' | 'line' | 'pie' = 'bar';   // ← changed
     private userService: UserservicesService,
     private assignService: AssignWorkService,
     private location: Location,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {

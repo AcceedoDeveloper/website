@@ -20,58 +20,81 @@ max-width:1200px;
 margin:auto;
 padding:80px 0;
 }
-
 /* ===== HERO SECTION ===== */
-.qms-hero{
-padding:80px 20px;
+.qms-hero {
+  padding: 100px 20px;
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-image: linear-gradient(rgba(15, 39, 15, 0.5), rgba(32, 67, 41, 0.5)),
+                    url("/assets/qms.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-/* background image */
-background-image:linear-gradient(rgba(15,39,15,0.75),rgba(32,67,41,0.75)),
-url("/assets/qms.png");
-
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
-
-color:white;
-text-align:center;
-
-border-radius:0 0 40px 40px;
+  color: white;
+  text-align: center;
+  border-radius: 0 0 40px 40px;
+  animation: bg-zoom 15s ease-in-out infinite alternate;
+  overflow: hidden;
 }
 
-.hero-container{
-max-width:900px;
-margin:auto;
+@keyframes bg-zoom {
+  0% { background-size: 100% 100%; }
+  50% { background-size: 105% 105%; }
+  100% { background-size: 100% 100%; }
 }
 
-.hero-title{
-font-size:48px;
-font-weight:700;
-margin-bottom:20px;
-letter-spacing:1px;
+.hero-container {
+  max-width: 900px;
+  margin: auto;
+  opacity: 0;
+  transform: translateY(-200px); 
+  animation: fall-down 1s forwards;
+  animation-delay: 0.5s;
 }
 
-.hero-sub{
-font-size:18px;
-line-height:1.8;
-opacity:0.9;
+@keyframes fall-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-200px); 
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(20px); 
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);    
+  }
 }
 
+/* Titles & subtitles */
+.hero-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+.hero-sub {
+  font-size: 18px;
+  line-height: 1.8;
+  opacity: 0.9;
+}
 
 /* ===== MOBILE ===== */
-
 @media(max-width:768px){
+  .hero-title{
+    font-size:34px;
+  }
 
-.hero-title{
-font-size:34px;
+  .hero-sub{
+    font-size:16px;
+  }
 }
-
-.hero-sub{
-font-size:16px;
-}
-
-}
-
 
 /* ===== TITLE ===== */
 
@@ -83,9 +106,7 @@ font-weight:600;
 margin-bottom:10px;
 color: #0e250f;
 }
-/* ============================= */
-/* MODULE GRID */
-/* ============================= */
+
 
 .modules-grid{
   display:flex;
@@ -93,11 +114,6 @@ color: #0e250f;
   gap:40px;
   margin-top:40px;
 }
-
-
-/* ============================= */
-/* MODULE CARD */
-/* ============================= */
 
 .module-card{
   display:flex;
