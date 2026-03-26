@@ -1,0 +1,257 @@
+<div class="premium-timeline-page">
+
+  <!-- Hero Header -->
+  <div class="hero-strip">
+    <div class="hero-left">
+      <h1>Project Timeline</h1>
+      <p>{{ selectedProjectName || 'All Projects' }} • Advanced roadmap view</p>
+    </div>
+
+    <!-- <div class="hero-actions">
+      <button class="new-task-btn" type="button" (click)="onNewTaskClick()">+ New Task</button>
+    </div> -->
+  </div>
+
+  <!-- Filter Chips -->
+  <div class="filter-chip-row">
+    <button class="filter-chip" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
+    <button class="filter-chip" [class.active]="currentFilter === 'mine'" (click)="setFilter('mine')">My Tasks</button>
+    <button class="filter-chip" [class.active]="currentFilter === 'done'" (click)="setFilter('done')">Done</button>
+    <!-- <button class="filter-chip" [class.active]="currentFilter === 'high'" (click)="setFilter('high')">High Priority</button>
+    <button class="filter-chip" [class.active]="currentFilter === 'risk'" (click)="setFilter('risk')">At Risk</button> -->
+
+    <div class="zoom-switch">
+      <button type="button" [class.active]="zoomLevel === 'month'" (click)="setZoomLevel('month')">Month</button>
+      <button type="button" [class.active]="zoomLevel === 'quarter'" (click)="setZoomLevel('quarter')">Quarter</button>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="stats-grid">
+    <div class="stat-card blue">
+      <div class="stat-top">
+        <span>Total Tasks</span>
+        <span class="stat-icon">◷</span>
+      </div>
+      <h2>{{ groupedTimelineItems.length }}</h2>
+      <p>Across the selected project timeline</p>
+    </div>
+
+    <div class="stat-card sky">
+      <div class="stat-top">
+        <span>In Progress</span>
+        <span class="stat-icon">↻</span>
+      </div>
+      <h2>{{ progressCount }}</h2>
+      <p>Currently active work items</p>
+    </div>
+
+    <div class="stat-card green">
+      <div class="stat-top">
+        <span>Completed</span>
+        <span class="stat-icon">✓</span>
+      </div>
+      <h2>{{ doneCount }}</h2>
+      <p>Successfully delivered tasks</p>
+    </div>
+
+    <div class="stat-card red">
+      <div class="stat-top">
+        <span>At Risk</span>
+        <span class="stat-icon">!</span>
+      </div>
+      <h2>{{ riskCount }}</h2>
+      <p>Need immediate schedule attention</p>
+    </div>
+  </div>
+
+  <!-- Top Yellow Toolbar -->
+  <div class="timeline-toolbar top-toolbar">
+    <div class="toolbar-left">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search tasks, owner, status..." [value]="searchText"
+          (input)="searchTasks($any($event.target).value)" />
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      <div class="legend-item">
+        <span class="legend-dot todo-dot"></span>
+        <span>To Do</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot progress-dot"></span>
+        <span>In Progress</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot done-dot"></span>
+        <span>Done</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot risk-dot"></span>
+        <span>At Risk</span>
+      </div>
+      <!-- 
+      <button
+        type="button"
+        class="add-btn"
+        (click)="onNewTaskClick()"
+        title="Add Task"
+      >
+        +
+      </button> -->
+    </div>
+  </div>
+
+  <!-- Timeline Shell -->
+  <div class="timeline-shell" [class.expanded]="isExpanded">
+
+    <!-- Sticky Header -->
+    <div class="timeline-board-wrap">
+      <div class="timeline-board-premium">
+
+        <div class="timeline-grid premium-header">
+          <div class="left-panel header-left">
+            <div class="header-title">TASKS</div>
+          </div>
+
+          <div class="right-panel">
+            <div class="months-header"
+              [style.grid-template-columns]="'repeat(' + visibleTimelineColumns.length + ', 1fr)'">
+              <div class="month-box" *ngFor="let col of visibleTimelineColumns; let i = index"
+                [class.current-month-box]="i === currentColumnIndex">
+                {{ col }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="timeline-body-premium">
+
+          <!-- Today Overlay -->
+          <div class="timeline-right-overlay">
+
+            <div class="today-badge" [style.left.%]="todayLeftPercent">
+              Today • {{ formatTodayLabel() }}
+              <div class="badge-arrow"></div>
+            </div>
+
+            <div class="today-column-highlight" [style.left.%]="todayLeftPercent"></div>
+            <div class="today-line" [style.left.%]="todayLeftPercent"></div>
+
+            <svg class="dependency-svg" *ngIf="dependencyLines.length > 0">
+              <defs>
+                <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 Z" fill="#94a3b8"></path>
+                </marker>
+              </defs>
+
+              <path *ngFor="let dep of dependencyLines" [attr.d]="dep.path" class="dependency-path"
+                marker-end="url(#arrowHead)"></path>
+            </svg>
+          </div>
+
+          <!-- Rows -->
+          <div class="timeline-grid task-line"
+            *ngFor="let item of groupedTimelineItems; let rowIndex = index; trackBy: trackByRow">
+            <div class="left-panel task-card">
+              <div class="task-main-row">
+                <div>
+                  <div class="task-title">{{ item.displayTitle }}</div>
+                  <div class="task-sub">
+                    {{ item.displayOwner }} • {{ formatDateLabel(item.startDateObj) }} - {{
+                    formatDateLabel(item.endDateObj) }}
+                  </div>
+                </div>
+
+                <span class="status-chip" [ngClass]="{
+                    'todo': item.statusClass === 'bar-todo',
+                    'progress': item.statusClass === 'bar-progress',
+                    'done': item.statusClass === 'bar-done',
+                    'risk': item.statusClass === 'bar-risk'
+                  }">
+                  {{ item.displayStatus }}
+                </span>
+              </div>
+
+              <div class="task-bottom-row">
+                <div class="avatar-stack">
+                  <span class="avatar">{{ getInitials(item.displayOwner) }}</span>
+                </div>
+
+                <span class="priority" [ngClass]="{
+                    'low': item.displayPriority === 'Low',
+                    'medium': item.displayPriority === 'Medium',
+                    'high': item.displayPriority === 'High'
+                  }">
+                  {{ item.displayPriority }}
+                </span>
+              </div>
+            </div>
+
+            <div class="right-panel track-area" [attr.data-row]="rowIndex">
+
+              <!-- Start label -->
+              <div class="point-label start-label" [style.left.%]="item.startLeft">
+                Start • {{ formatDateLabel(item.startDateObj) }}
+                <span class="down-arrow"></span>
+              </div>
+
+              <!-- Start dashed line -->
+              <div class="point-dashed start-dashed" [style.left.%]="item.startLeft"></div>
+
+              <!-- Start date chip -->
+              <div class="point-date-chip start-date-chip" [style.left.%]="item.startLeft">
+                {{ formatDateLabel(item.startDateObj) }}
+              </div>
+
+              <!-- End label -->
+              <div class="point-label end-label" [style.left.%]="item.endLeft">
+                End • {{ formatDateLabel(item.endDateObj) }}
+              </div>
+
+              <!-- End dashed line -->
+              <div class="point-dashed end-dashed" [style.left.%]="item.endLeft"></div>
+
+              <!-- End date chip -->
+              <div class="point-date-chip end-date-chip" [style.left.%]="item.endLeft">
+                {{ formatDateLabel(item.endDateObj) }}
+              </div>
+
+              <!-- Main bar -->
+              <div class="premium-bar" [ngClass]="item.statusClass" [style.left.%]="item.startLeft"
+                [style.width.%]="item.width">
+                <div class="bar-start-dot"></div>
+                <div class="bar-fill" [style.width.%]="item.progressWidth"></div>
+
+                <span class="bar-text">
+                  {{ item.displayTitle }}
+                  <small class="bar-percent">{{ item.progressWidth }}%</small>
+                </span>
+
+                <div class="bar-end-dot"></div>
+
+                <div class="bar-tooltip">
+                  <div class="tooltip-title">{{ item.displayTitle }}</div>
+                  <div>Owner: {{ item.displayOwner }}</div>
+                  <div>Start: {{ formatDateLabel(item.startDateObj) }}</div>
+                  <div>End: {{ formatDateLabel(item.endDateObj) }}</div>
+                  <div>Status: {{ item.displayStatus }}</div>
+                  <div>Priority: {{ item.displayPriority }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="empty-state" *ngIf="groupedTimelineItems.length === 0">
+            No timeline items available.
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

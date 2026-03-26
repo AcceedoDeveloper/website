@@ -1,0 +1,30 @@
+<div class="Products">
+  <h1>Our Products</h1>
+</div>
+
+<div class="carousel-wrapper">
+  <button class="nav-btn left" (click)="prevSlide()">‹</button>
+
+  <div class="carousel-track">
+    <div class="carousel-card" *ngFor="let product of visibleSlides">
+      <div class="card shadow-sm">
+        <div class="card-img-top">
+          <img [src]="product.image" class="img-fluid rounded-top" [alt]="product.title" />
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">{{ product.title }}</h3>
+          <ul class="card-text">
+            <li *ngFor="let point of product.points">{{ point }}</li>
+          </ul>
+ <a *ngIf="product.link" (click)="goToProduct(product.link)" class="read-more">
+  Read More <i class="bi bi-arrow-righty
+  "></i>
+</a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="nav-btn right" (click)="nextSlide()">›</button>
+</div>

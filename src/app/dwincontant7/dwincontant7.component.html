@@ -1,0 +1,213 @@
+<app-footr></app-footr>
+<!-- Header Section -->
+<div class="header-section">
+  <img
+    src="assets/motherboard-background (2).jpg" alt="Header Background" class="header-bg"/>
+  <div class="header-overlay">
+    <h1 class="title">
+      <span class="title-text">DwinDisplay</span>
+    </h1>
+    <span class="title-subtext">Sending UART Commands Using Docklight</span>
+    <br>
+    
+      <!-- ✅ Correct placement for calendar/date -->
+  <div class="date-display">
+  <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+  <span>15 Tuesday July , 2025</span>
+</div>
+    <h6 class="title-special-link" [routerLink]="'/adobe'">
+      UI Designs Crafted in Adobe XD for DGUS Software Interfaces
+    </h6>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-container">
+  <div class="guide-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h3 class="sidebar-title">Configuration Steps</h3>
+      <nav class="sidebar-nav">
+               <a [routerLink]="['/dwincontant6']" class="sidebar-link">Image Animation using Dwin DGUS Tool</a> 
+        <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a> 
+        <a [routerLink]="['/dwincontant8']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+      </nav>
+    </aside>
+
+    <!-- Guide Content -->
+    <article class="guide-content">
+      <div class="step">
+        <div class="step-header">
+          <div class="step-number">8</div>
+
+          <strong class="center-title"
+            >Sending UART Commands Using Docklight</strong
+          >
+        </div>
+        <div class="step-content">
+          <p>
+            Using tools like Dock light or any standard serial terminal,
+            developers can send UART commands to interact with the device’s NOR
+            Flash memory. The special VP address 0x0008 is used to trigger Flash
+            operations, allowing data to be written from RAM (VP) to Flash, or
+            read back from Flash into RAM for real-time use.
+          </p>
+
+          <p>
+            Docklight is a powerful serial communication tool widely used for
+            testing and debugging UART (Universal Asynchronous
+            Receiver-Transmitter) interfaces. To send UART commands to a DWIN
+            HMI display using Docklight, first connect your DWIN screen to your
+            PC via a USB-to-TTL converter or serial port. Launch Docklight and
+            create a new project. Configure the correct COM port settings such
+            as baud rate (typically 115200), data bits, parity, and stop bits
+            according to your DWIN device specifications. In Docklight’s
+            interface, you can create predefined transmit sequences to send
+            commands—these can be HEX or ASCII formats depending on your
+            application. Use the “Send Sequence” function to transmit specific
+            commands to control screen elements, trigger pages, or send data
+            inputs. The “Receive Window” displays responses from the device,
+            allowing real-time monitoring of communication. Docklight is
+            especially useful for debugging command syntax and verifying the
+            responsiveness of your HMI during development and testing.
+          </p>
+
+          <div class="sub-step">
+            <h2 class="step-title">
+              Step-by-Step Docklight Setup for Command Frame Transmission:
+            </h2>
+
+            <p>
+              <strong>Step 1:</strong>
+            </p>
+            <div class="image-caption">
+              <strong>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Open the Docklight software
+                </li>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  And verify the Baudrate ,Parity, Databit, Stopbit setup
+                  [15000,None,8,1]
+                </li>
+
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Baud Rate: 115200
+                </li>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Parity: None
+                </li>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Data Bits: 8
+                </li>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Stopbit setup [15000,None,8,1]
+                </li>
+              </strong>
+            </div>
+
+            <img
+              class="image1"
+              style="margin-bottom: 50spx"
+              src="assets/Screenshot 7 (1) - Copy.jpeg"
+            />
+            <img class="image1" src="/assets/Screenshot 7(2).jpeg" />
+
+            <p><strong>Step 2:</strong></p>
+            <div class="image-caption">
+              <strong>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Enter the command frame to write the data into flash memory.
+                </li>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Explanation of command frame is already mentioned. Kindly
+                  refer that.
+                </li>
+              </strong>
+            </div>
+
+            <img class="image1" src="/assets/Screenshot 7 2.jpeg" />
+
+            <p><strong>Step 3:</strong></p>
+            <div class="image-caption">
+              <strong>
+                <li class="pointer-paragraph" style="padding-left: 20px">
+                  Enter the command frame to read the data from flash memory.
+                </li>
+              </strong>
+            </div>
+            <img class="image1" src="/assets/Screenshot 7 3.jpeg" />
+
+            <p>
+              <strong
+                >Step 4: We have already discussed the address of both. Gentle
+                remainder:</strong
+              >
+            </p>
+          </div>
+
+          <div class="image-caption">
+            <strong>
+              <p style="padding-left: 20px; margin-bottom: 0px">
+                1) Server add (vp address) =3006
+              </p>
+              <p style="padding-left: 20px; margin-bottom: 0px">
+                2) Port no (vp address)=3004
+              </p>
+              <p style="padding-left: 20px; margin-bottom: 0px">
+                3) Machine no (vp address) =3002
+              </p>
+            </strong>
+          </div>
+
+          <img class="image2" src="/assets/Screenshot 7 4.jpeg" />
+
+          <p><strong>Step 5:</strong></p>
+          <div class="image-caption">
+            <strong>
+              <li class="pointer-paragraph" style="padding-left: 20px">
+                Run the Write command to store the data into the flash memory.
+              </li>
+              <li class="pointer-paragraph" style="padding-left: 20px">
+                So now it is successfully stored into flash memory.
+              </li>
+              <li class="pointer-paragraph" style="padding-left: 20px">
+                Now restart the display and follow next step.
+              </li>
+            </strong>
+          </div>
+          <img class="image1" src="/assets/Screenshot 7 5.jpeg" />
+
+          <p><strong>Step 6:</strong></p>
+          <div class="image-caption">
+            <strong>
+              <li class="pointer-paragraph" style="padding-left: 20px">
+                Run the Read command to retrieve the data into the flash memory.
+              </li>
+              <li class="pointer-paragraph" style="padding-left: 20px">
+                So now it is successfully Read from flash memory.
+              </li>
+              <li class="pointer-paragraph" style="padding-left: 20px">
+                Let we see Practically.
+              </li>
+            </strong>
+          </div>
+          <img class="image1" src="/assets/Screenshot 7 6.jpeg" />
+        </div>
+      </div>
+    </article>
+    <div class="mobile-nav-buttons">
+      <button class="btn btn-outline" [routerLink]="'/dwincontant4'">
+        Previous
+      </button>
+      <button class="btn btn-primary" [routerLink]="'/dwincontant8'">
+        Next
+      </button>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

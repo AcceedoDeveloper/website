@@ -1,0 +1,161 @@
+<div class="mainuserview">
+  <div class="summary-container">
+    <!-- Filter Section -->
+    <div class="filter-section mb-4">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-3">
+        <label for="projectFilter" class="form-label">Project Name</label>
+        <input id="projectFilter" class="form-control" [value]="getProjectName()" readonly>
+      </div>
+      
+ <div class="col-md-3">
+  <label for="dateModeFilter" class="form-label">Date Filter</label>
+  <select id="dateModeFilter" 
+          class="form-select" 
+          [(ngModel)]="dateFilter" 
+          (change)="applyFilters()">
+    <option value="today">Today's Tasks</option>
+    <option value="all">All Tasks</option>
+    <option value="month">By Month</option>
+    <option value="custom">Custom Date</option>
+  </select>
+</div>
+
+<div class="col-md-3" *ngIf="dateFilter === 'custom' || dateFilter === 'month'">
+  <label for="dateFilterInput" class="form-label">
+    {{ dateFilter === 'month' ? 'Select Month' : 'Select Date' }}
+  </label>
+  <input [type]="dateFilter === 'month' ? 'month' : 'date'" 
+         id="dateFilterInput" 
+         class="form-control" 
+         [(ngModel)]="selectedDate" 
+         (change)="applyFilters()">
+</div>
+
+      
+      <div class="col-md-3">
+        <label for="assigneeFilter" class="form-label">User</label>
+        <select id="assigneeFilter" class="form-select" [(ngModel)]="selectedAssignee" (change)="applyFilters()">
+          <option value="">All Assignees</option>
+          <option *ngFor="let employee of employees" [value]="employee._id">{{employee.name || employee.username || employee._id}}</option>
+        </select>
+        <small *ngIf="!employees.length" class="text-muted"></small>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="row g-6" *ngIf="!isLoading">
+    <!-- Top Summary Cards -->
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card">
+        <div class="icon done"></div>
+        <div>
+          <h4>{{summary.completed}} completed</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card2">
+        <div class="icon updated"></div>
+        <div>
+          <h4>{{summary.updated}} updated</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card3">
+        <div class="icon created"></div>
+        <div>
+          <h4>{{summary.created}} created</h4>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="summary-card4">
+        <div class="icon due"></div>
+        <div>
+          <h4>{{summary.dueSoon}} due soon</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Overview + Recent Activity -->
+    <div class="col-lg-6">
+      <div class="card-box">
+        <h5 class="Status-overView">Status Overview</h5>
+        <div class="chart-container">
+          <canvas id="workItemsChart"></canvas>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color done"></span> Done: {{chartData.done}}
+            </div>
+            <div class="legend-item">
+              <span class="legend-color progress"></span> In Progress: {{chartData.inProgress}}
+            </div>
+            <div class="legend-item">
+              <span class="legend-color todo"></span> To Do: {{chartData.toDo}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card-box2">
+        <h5>Recent Activity</h5>
+        <ul class="activity-list">
+          <li *ngFor="let activity of recentActivities">
+            <b>{{getEmployeeName(activity.assignee) || activity.assignee}}</b> created <span class="tag">{{activity.projectId}}</span>
+            <span class="badge" [ngClass]="{
+              'bg-success': activity.Status === 'Done',
+              'bg-primary': activity.Status === 'InProgress',
+              'bg-secondary': activity.Status === 'ToDo'
+            }">{{activity.Status === 'Done' ? 'Done' : activity.Status === 'InProgress' ? 'In Progress' : 'To Do'}}</span>
+          </li>
+          <li *ngIf="!recentActivities.length">No recent activities found.</li>
+        </ul>
+      </div>
+    </div>
+  <!-- Team Workload -->
+   <!-- Team Workload -->
+    <div class="col-lg-6">
+      <div class="card-box">
+        <h5>Team Workload</h5>
+        <div class="chart-container">
+          <canvas id="priorityChart"></canvas>
+          <div class="chart-legend">
+            <div class="legend-item" *ngFor="let assignee of assigneeData | keyvalue">
+              <span class="legend-color" [ngStyle]="{'background-color': assignee.value.color}"></span>
+              {{getEmployeeName(assignee.key) || assignee.key}}: {{assignee.value.count}} ({{assignee.value.percentage}}%)
+            </div>
+          </div>
+        </div>
+        <!-- <div class="workload-details mt-3">
+          <h6>Workload Details</h6>
+          <ul class="activity-list">
+            <li *ngFor="let assignment of filteredAssignments | slice:0:5">
+              <b>{{assignment.projectName || 'Unknown Project'}}</b> - {{assignment.title || 'No Title'}}
+              <p class="text-muted mb-0">Assigned to: {{getEmployeeName(assignment.assignee) || assignment.assignee}}</p>
+            </li>
+            <li *ngIf="!filteredAssignments.length" class="text-muted">No assignments found.</li>
+          </ul>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- Types of Work -->
+    <div class="col-lg-6">
+      <div class="card-box3">
+        <h5>Types of Work</h5>
+        <div class="progress my-2">
+          <div class="progress-bar bg-info" style="width: 100%">Task 100%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

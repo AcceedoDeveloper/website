@@ -1,0 +1,88 @@
+
+  <!-- Delete Confirmation Dialog -->
+  <div class="form-card delete-confirmation" *ngIf="isDeleteMode">
+    <h2>{{ data.title || 'Confirm Deletion' }}</h2>
+    
+    <div class="delete-message">
+      <p>{{ data.message || 'Are you sure you want to delete this department? This action cannot be undone and will remove all department data.' }}</p>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn secondary" (click)="cancelDelete()">Cancel</button>
+      <button type="button" class="btn danger" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+
+  <!-- Create/Edit Department Dialog -->
+  <div class="form-card" [class.loading]="isLoading" *ngIf="!isDeleteMode">
+    <h2>{{ isEdit ? 'Edit Department' : 'Create Department' }}</h2>
+
+    <form [formGroup]="dmform" (ngSubmit)="savedmdata()" [class.loading]="isLoading">
+      <!-- Department Input -->
+      <div class="form-group">
+        <label for="department">{{ isEdit ? 'Edit Department' : 'Department' }}</label>
+        <input 
+          type="text" 
+          id="department"
+          placeholder="Enter department" 
+          formControlName="departmentName">
+        <div class="error" *ngIf="dmform.get('departmentName')?.hasError('required') && dmform.get('departmentName')?.touched">
+          Department name is required.
+        </div>
+        <div class="error" *ngIf="dmform.get('departmentName')?.hasError('pattern') && dmform.get('departmentName')?.touched">
+          Only letters, numbers, and spaces (max 50 chars).
+        </div>
+        <div class="error" *ngIf="dmform.get('departmentName')?.hasError('minlength') && dmform.get('departmentName')?.touched">
+          Must be at least 1 character.
+        </div>
+      </div>
+
+      <!-- Subdepartment Inputs -->
+      <div class="form-group">
+        <label>Subdepartments</label>
+        <div class="subdept-list" formArrayName="subDepartments">
+          <div *ngFor="let sub of name.controls; let i = index" 
+               [formGroupName]="i" 
+               class="subdept-item"
+               [class]="'subdept-item ' + (animationStates['subdept-' + i] || '')">
+            <input 
+              type="text" 
+              placeholder="Enter subdepartment"
+              formControlName="name">
+            <button 
+              type="button" 
+              (click)="removeSubDepartment(i)" 
+              class="icon-btn remove" 
+              [disabled]="name.length === 1 && !isEdit">
+              ✖
+            </button>
+            <div class="error" *ngIf="sub.get('name')?.hasError('required') && sub.get('name')?.touched">
+              Subdepartment name is required.
+            </div>
+            <div class="error" *ngIf="sub.get('name')?.hasError('pattern') && sub.get('name')?.touched">
+              Only letters, numbers, and spaces (max 50 chars).
+            </div>
+            <div class="error" *ngIf="sub.get('name')?.hasError('minlength') && sub.get('name')?.touched">
+              Must be at least 1 character.
+            </div>
+          </div>
+          <button 
+            type="button" 
+            (click)="addSubDepartment()" 
+            class="icon-btn add">
+            ➕ Add Subdepartment
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Buttons -->
+      <div class="form-actions">
+        <button type="button" class="btn secondary" (click)="createcancel()" [disabled]="isLoading">Cancel</button>
+        <button type="submit" class="btn primary" [disabled]="isLoading">
+          <span *ngIf="!isLoading">{{ isEdit ? 'Update' : 'Save' }}</span>
+          <span *ngIf="isLoading">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+

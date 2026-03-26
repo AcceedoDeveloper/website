@@ -1,0 +1,151 @@
+<app-header></app-header>
+
+  <div class="maincontent">
+    
+
+ 
+
+  <div class="heat-treatment-monitor">
+  <header>
+            <h1>NgRx - State Management for Angular</h1>
+          
+        </header>
+ <div class="ngrxcontainer">
+       
+<div class="component-content">
+            <p>NgRx is RxJS powered global state management for Angular applications, inspired by Redux. It's a controlled state container designed to help write performant, consistent applications on top of Angular.</p>
+            <div class="component-features">
+              <ul>
+                <li>Centralized application state</li>
+                <li>Predictable state container</li>
+                <li>Inspired by Redux pattern</li>
+                <li>Reactive programming with RxJS</li>
+              </ul>
+            </div>
+            <div class="ngrx-image-container">
+              <img src="/assets/NGRX.png" alt="NgRx Store Diagram" class="ngrx-store-image">
+              <div class="ngrx-caption">NgRx State Management Flow</div>
+            </div>
+          </div>
+
+         
+
+        <div class="card-grid">
+            <div class="card">
+                <h2><span>1</span>Actions</h2>
+                <div class="purpose">Define events that can change the state</div>
+                <img src="/assets/ng1.png" alt="ng1" class="ngrx-code-image">
+ 
+                <div class="key-points">
+                    <h3>Key Points:</h3>
+                    <ul>
+                        <li>Each action is like a message that says "this thing happened"</li>
+                        <li>The format <code>[Source] Event</code> helps with debugging</li>
+                        <li>Components or effects dispatch these actions</li>
+                        <li>No logic here - just declarations of what can happen</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span>2</span>Reducer</h2>
+                <div class="purpose">Pure function that determines how state changes</div>
+                <img src="/assets/ng2.png" alt="ng2" class="ngrx-code-image">
+ 
+ 
+                <div class="key-points">
+                    <h3>Key Points:</h3>
+                    <ul>
+                        <li>Reducers must be pure functions (no side effects)</li>
+                        <li>They take current state and return new state</li>
+                        <li>The <code>on()</code> function associates actions with state changes</li>
+                        <li>Initial state defines the starting value (0)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><span>3</span>Selectors</h2>
+                <div class="purpose">Efficiently get specific pieces of state</div>
+                  <img src="/assets/ng3.png" alt="ng3" class="ngrx-code-image">
+                <div class="key-points">
+                    <h3>Why Use Selectors:</h3>
+                    <ul>
+                        <li>Avoid duplicating state access logic</li>
+                        <li>Memoization (cache results until inputs change)</li>
+                        <li>Can compose selectors together</li>
+                        <li>Keep component code clean</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span>4</span>Store Registration</h2>
+            <div class="purpose">Make the store available throughout the app</div>
+            <img src="/assets/ng4.png" alt="ng4" class="ngrx-code-image">
+            <div class="key-points">
+                <h3>What Happens:</h3>
+                <ul>
+                    <li>The reducer is registered with the global store</li>
+                    <li>The state will be accessible at <code>state.counter</code></li>
+                    <li><code>forRoot()</code> sets up the store for the entire app</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="counter-demo">
+            <h2>Counter Demo</h2>
+            <div class="counter-label">Current Value</div>
+            <div class="counter-value">0</div>
+           <div class="counter-actions">
+                <button class="btn btn-increment">Increment</button>
+                <button class="btn btn-decrement">Decrement</button>
+                <button class="btn btn-reset">Reset</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span>5</span>Component Implementation</h2>
+            <div class="purpose">Display and interact with the counter state</div>
+
+            <div class="key-points">
+                <h3>Component Breakdown:</h3>
+                <ul>
+                    <li><strong>State Access:</strong> <code>store.select()</code> gets current value</li>
+                    <li><strong>State Modification:</strong> Methods dispatch actions</li>
+                    <li><strong>Data Flow:</strong> User action → dispatch → reducer → store → selector → component</li>
+                    <li><strong>Async Pipe:</strong> Automatically handles subscriptions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flow-container">
+            <h2>Complete NgRx Lifecycle</h2>
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">User clicks button → Component dispatches Action</div>
+                    <div class="arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Action → Reducer processes it → Updates Store state</div>
+                    <div class="arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">Store → Notifies Selectors → Component receives new state</div>
+                    <div class="arrow"></div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">Component re-renders with updated values</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      </div>
+
+      <app-footer></app-footer>

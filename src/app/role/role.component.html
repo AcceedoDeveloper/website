@@ -1,0 +1,72 @@
+<app-header></app-header>
+
+<div class="maincontent">
+    
+
+
+            <!-- show role -->
+        
+    
+   <div class="role-wrapper">
+  <div class="role-header">
+    <h2></h2>
+    <button class="add-role-btn" (click)="getrole()">+</button>
+  </div>
+
+  <div class="role-table-wrapper">
+    <table class="role-flat-table">
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th class="action-col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let itemrole of roledata">
+          <td>{{ itemrole.role }}</td>
+<td>
+  <button mat-icon-button class="black-btn" (click)="editrole(itemrole)">
+    <mat-icon>edit</mat-icon>
+  </button>
+
+  <button mat-icon-button class="black-btn" (click)="deleterole(itemrole._id)">
+    <mat-icon>delete</mat-icon>
+  </button>
+</td>
+
+
+
+
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="roledata.length === 0" class="empty-state">
+      <p>No roles available. Start by adding one.</p>
+    </div>
+  </div>
+</div>
+
+    
+   
+     
+   
+   
+         
+      
+  
+   
+   
+     
+</div>
+
+<app-footer></app-footer>
+
+
+
+
+
+
+
+
+

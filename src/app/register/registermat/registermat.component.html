@@ -1,0 +1,120 @@
+
+  <!-- Delete Confirmation Dialog -->
+  <div class="popup-card delete-confirmation" *ngIf="isDeleteMode">
+    <!-- Header -->
+    <div class="popup-header">
+      <h2>{{ data?.title || 'Confirm Deletion' }}</h2>
+      <button class="close-btn" (click)="cancelDelete()">&times;</button>
+    </div>
+
+    <div class="delete-message">
+      <p>{{ data?.message || 'Are you sure you want to delete this user? This action cannot be undone and will remove all user data.' }}</p>
+    </div>
+
+    <div class="popup-actions">
+      <button type="button" class="btn cancel" (click)="cancelDelete()">Cancel</button>
+      <button type="button" class="btn danger" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+
+  <!-- Create/Edit User Dialog -->
+  <div class="popup-card" [class.loading]="isLoading" *ngIf="!isDeleteMode">
+    <!-- Header -->
+    <div class="popup-header">
+      <h2>{{ isEdit ? 'Edit User' : 'Create User' }}</h2>
+      <button class="close-btn" (click)="cancel()" [disabled]="isLoading">&times;</button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="popup-form"  autocomplete="off" [class.loading]="isLoading">
+
+      <div class="popup-body">
+        <!-- LEFT: Profile Image -->
+        <div class="profile-section">
+          <label>Profile Image</label>
+          <div class="profile-img-wrapper">
+            <img *ngIf="previewImage; else placeholder" [src]="previewImage" alt="profile" class="profile-img"/>
+            <ng-template #placeholder>
+              <div class="profile-placeholder">No Image</div>
+            </ng-template>
+          </div>
+
+          <!-- File input button with selected file name -->
+          <div class="file-upload-wrapper">
+            <input type="file" id="fileUpload" accept="image/*" (change)="onFileSelected($event)" />
+            <label for="fileUpload" class="file-upload-label">
+              {{ selectedFileName || 'Choose File' }}
+            </label>
+          </div>
+        </div>
+
+        <!-- RIGHT: User Info -->
+        <div class="info-section">
+          <div class="top-row">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" formControlName="name" placeholder="Full name" />
+            </div>
+            <div class="form-group">
+              <label>Username</label>
+              <input type="text" formControlName="userName"  autocomplete="new-password" placeholder="Username" />
+            </div>
+          </div>
+
+          <div class="middle-row">
+            <div class="form-group">
+              <label>User Code</label>
+              <input  formControlName="userCode" placeholder="User Code" type="number" />
+            </div>
+            <div class="form-group">
+  <label>Role</label>
+  <select formControlName="role">
+    <option value="">-- Select Role --</option>
+    <option *ngFor="let r of roles" [value]="r.role">{{ r.role }}</option>
+  </select>
+</div>
+
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" formControlName="emailId" placeholder="Email address" />
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input type="tel" formControlName="phoneNumber" placeholder="Phone number" />
+            </div>
+          </div>
+
+          <div class="bottom-row">
+            <div class="form-group">
+              <label>Department</label>
+              <select formControlName="departmentName" (change)="onDepartmentChange($event)">
+                <option value="">-- Select Department --</option>
+                <option *ngFor="let d of departments" [value]="d.departmentName">{{ d.departmentName }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>SubDepartment</label>
+              <select formControlName="subDepartmentName">
+                <option value="">-- Select SubDepartment --</option>
+                <option *ngFor="let sd of subDepartmentsData" [value]="sd.name">{{ sd.name }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Password</label>
+              <input type="password" formControlName="password"  autocomplete="new-password" placeholder="Password" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="popup-actions">
+        <button type="button" class="btn cancel" (click)="cancel()" [disabled]="isLoading">Cancel</button>
+        <button type="submit" class="btn save" [disabled]="registerForm.invalid || isLoading">
+          <span *ngIf="!isLoading">{{ isEdit ? 'Update' : 'Save' }}</span>
+          <span *ngIf="isLoading">Saving...</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+

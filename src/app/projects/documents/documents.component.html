@@ -1,0 +1,178 @@
+<!-- Documents Section -->
+<div class="task-controls">
+  <button class="pill-btn" (click)="opendocpop()">
+    + Add Documents
+  </button>
+</div>
+
+
+<div class="main1" >
+
+  <!-- Add Document Popup -->
+  <div class="documentpop" *ngIf="showdocumentpop">
+    <div class="upload-form" [formGroup]="documentForm" [class.loading]="isLoading">
+      <!-- Professional Header -->
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <mat-icon>cloud_upload</mat-icon>
+          </div>
+          <div class="header-text">
+            <h2 class="popup-title">{{ editingDocument ? 'Update Document' : 'Add New Document' }}</h2>
+            <p class="popup-subtitle">Upload and organize your project documents</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="showdocumentpop = false" mat-icon-button [disabled]="isLoading">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Form Content -->
+      <div class="form-content">
+        <div class="form-group">
+          <label for="title" class="form-label">
+            <mat-icon class="label-icon">title</mat-icon>
+            Document Title
+          </label>
+          <mat-form-field appearance="outline" class="full-width1">
+            <mat-label>Enter document title</mat-label>
+            <input
+              id="title"
+              type="text"
+              matInput
+              formControlName="title"
+              placeholder="Enter or select title"
+              [matAutocomplete]="auto"
+              (input)="filterTitles()"
+            />
+            <mat-icon matSuffix>edit</mat-icon>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onTitleSelected($event)">
+              <mat-option *ngFor="let title of filteredTitles" [value]="title">
+                {{ title }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="documentForm.get('title')?.hasError('required')">
+              Title is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <mat-icon class="label-icon">attach_file</mat-icon>
+            File Upload
+          </label>
+          <div class="file-upload-area" 
+               [class.dragover]="isDragOver"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)">
+            <div class="upload-content">
+              <mat-icon class="upload-icon">cloud_upload</mat-icon>
+              <div class="upload-text">
+                <p class="upload-primary">Drop your file here or click to browse</p>
+                <p class="upload-secondary">Supports PDF, DOC, DOCX, XLS, XLSX, images</p>
+              </div>
+              <input 
+                id="file" 
+                type="file" 
+                class="file-input"
+                (change)="onFileSelected($event)" 
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
+              />
+            </div>
+            <div class="file-info" *ngIf="selectedFile">
+              <mat-icon class="file-type-icon">description</mat-icon>
+              <span class="file-name">{{ selectedFile.name }}</span>
+              <button class="remove-file" (click)="removeFile()" mat-icon-button>
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="showdocumentpop = false" mat-stroked-button [disabled]="isLoading">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+        <button type="button" class="submit-btn" (click)="submitDocument()" mat-raised-button color="primary" [disabled]="documentForm.invalid || isLoading">
+          <mat-icon>{{ editingDocument ? 'update' : 'cloud_upload' }}</mat-icon>
+          <span *ngIf="!isLoading">{{ editingDocument ? 'Update Document' : 'Upload Document' }}</span>
+          <span *ngIf="isLoading">Uploading...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Document List -->
+  <div class="document-list" *ngIf="documents.length">
+    <div *ngFor="let doc of documents; let docIndex = index">
+      <!-- Section Title -->
+      <h3 class="list-title">{{ doc.title }}</h3>
+
+      <!-- Grid Container -->
+      <div class="document-container">
+        <div class="document-box" *ngFor="let file of doc.files; let fileIndex = index">
+          <div class="document-header">
+            <h6 class="doc-title">{{ file }}</h6>
+            <div class="action-buttons">
+              <!-- Download -->
+              <a mat-icon-button [href]="getFileUrl(file)" target="_blank" aria-label="Download file">
+                <mat-icon>download</mat-icon>
+              </a>
+              <!-- Delete -->
+              <button mat-icon-button color="warn" (click)="deleteFile(doc._id, file)" aria-label="Delete file">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview Section -->
+          <div class="preview-container">
+            <ng-container *ngIf="getFileType(file) === 'pdf'">
+              <div *ngIf="!loadError[file] && isPdfLoaded[file]; else pdfError">
+                <pdf-viewer
+                  [src]="getFileUrl(file)"
+                  [render-text]="false"
+                  [show-all]="false"
+                  [page]="1"
+                  [original-size]="true"
+                  style="width: 100%; height: 200px;"
+                  (after-load-complete)="onPdfLoad(file)"
+                  (error)="onPdfError(file, $event)"
+                ></pdf-viewer>
+              </div>
+              <ng-template #pdfError>
+                <div class="pdf-error-placeholder">
+                  <p>Unable to load PDF preview</p>
+                </div>
+              </ng-template>
+            </ng-container>
+
+            <ng-container *ngIf="getFileType(file) === 'image'">
+              <img [src]="getSafeFileUrl(file)" alt="Image Preview" class="image-preview" />
+            </ng-container>
+
+            <ng-container *ngIf="getFileType(file) === 'excel'">
+              <div class="excel-placeholder">
+                <img src="assets/excel-icon.png" alt="Excel Icon" class="file-icon" />
+                <p>Excel File (Preview not available)</p>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="getFileType(file) === 'other'">
+              <div class="other-placeholder">
+                <p>File Preview not supported</p>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

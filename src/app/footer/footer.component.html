@@ -1,0 +1,146 @@
+<div class="main">
+
+
+ <!-- CHATBOT -->
+<div class="chatbot-container" [class.open]="isChatOpen">
+
+  <!-- Chat Toggle Button -->
+  <button class="chat-toggle" *ngIf="!isChatOpen" (click)="toggleChat()">
+    💬
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isChatOpen">
+    
+    <div class="chat-header">
+      <span>Acceedo Assistant</span>
+      <button class="chatbot-close" (click)="toggleChat()">✖</button>
+    </div>
+
+<div class="chat-body">
+
+  <div *ngFor="let msg of messages">
+
+    <!-- TEXT MESSAGE -->
+    <div *ngIf="msg.type === 'text'" [ngClass]="msg.from">
+      {{ msg.text }}
+    </div>
+
+    <!-- PRODUCT MESSAGE -->
+    <div *ngIf="msg.type === 'products'" class="bot products-box">
+      <div class="product-title">Our Products:</div>
+
+      <a *ngFor="let p of products"
+         [routerLink]="p.link"
+         class="product-item">
+        {{ p.name }}
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+
+    <div class="chat-input">
+      <input [(ngModel)]="userInput"
+             placeholder="Ask about IoT, services..."
+             (keyup.enter)="sendMessage()" />
+      <button (click)="sendMessage()">Send</button>
+    </div>
+
+  </div>
+</div>
+
+
+
+<footer class="footer-custom">
+  <div class="container px-4">
+
+    <!-- TOP SECTION -->
+    <div class="row py-3">
+      <div class="col-lg-8">
+        <p class="fw-bold">
+      ACCEEDO-provides end-to-end Industrial IoT hardware and software solutions
+      including machine monitoring systems,
+      industrial automation platforms, and manufacturing analytics software
+      for industries across Coimbatore, Tamil Nadu, and India.
+        <p>
+          Othakalmandapam, Coimbatore, Tamil Nadu, India
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <p>Serving Industries Across Tamil Nadu & India</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- LINKS SECTION -->
+    <div class="row">
+
+      <!-- COMPANY -->
+      <div class="col-md-3">
+        <h4>Company</h4>
+        <ul class="list-unstyled">
+          <li><a href="/acceedo">Home</a></li>
+          <li><a href="/aboutas">About Us</a></li>
+          <li><a href="/services">Services</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/career">Careers</a></li>
+          <li><a href="/contactas">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="col-md-3">
+        <h4>Services</h4>
+        <ul class="list-unstyled">
+          <li>Industrial IoT Solutions</li>
+          <li>Foundry IoT Automation</li>
+          <li>Embedded Systems Development</li>
+          <li>Energy Intelligence Systems</li>
+          <li>Connected IoT Software Platforms</li>
+        </ul>
+      </div>
+
+      <!-- LEGAL -->
+      <div class="col-md-3">
+        <h4>Legal</h4>
+        <ul class="list-unstyled">
+          <li><a href="/terms">Terms of Use</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- FOLLOW US -->
+      <div class="col-md-3 text-md-end mt-3 mt-md-0">
+         <h4 class="follow-title">Follow Us</h4>
+         <div class="col-7 col-lg-3 text-lg-end">
+                <h4></h4>
+                <div class="social-media pt-2">
+                    <a href="#" class="text-decoration-none text-light " ><img src ="https://cdn-icons-png.flaticon.com/128/2168/2168281.png"></a>
+                    <a href="https://www.instagram.com/acceedo/" ><img src ="https://cdn-icons-png.flaticon.com/128/3670/3670274.png"></a>
+                    <a href="#" class="text-decoration-none text-light " ><img src ="https://cdn-icons-png.flaticon.com/128/2175/2175205.png"></a>
+                    <a href="https://www.linkedin.com/in/acceedo?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" ><img src ="https://cdn-icons-png.flaticon.com/128/1384/1384014.png"></a>
+                  </div>  
+                </div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <!-- COPYRIGHT -->
+    <div class="d-sm-flex justify-content-between pb-2">
+      <p class="footer-copyright">
+        © 2026 Acceedo. All Rights Reserved.
+      </p>
+      <p class="footer-copyright">
+        Industrial IoT Company in Coimbatore | Tamil Nadu
+      </p>
+    </div>
+
+</footer>
+</div>

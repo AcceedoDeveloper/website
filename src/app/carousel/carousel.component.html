@@ -1,0 +1,43 @@
+<div class="carousel-wrapper" (touchstart)="touchStart($event)" (touchend)="touchEnd($event)">
+  <div class="carousel-container">
+    <!-- Previous Arrow -->
+    <div class="carousel-arrow prev" (click)="prevSlide($event)">
+      <svg viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+      </svg>
+    </div>
+
+    <!-- Slides -->
+    <div class="carousel-slide" *ngFor="let slide of slides; let i = index" 
+         [class.active]="currentSlide === i"
+         [class.prev-slide]="getPrevIndex() === i"
+         [class.next-slide]="getNextIndex() === i"
+         (click)="onSlideClick($event, i)">
+      <div class="slide-image" [style.background-image]="'url(' + slide.image + ')'"></div>
+      <div class="slide-overlay"></div>
+      <div class="slide-content" [ngClass]="slide.contentClass">
+        <h2>{{slide.title}}</h2>
+        <p>{{slide.description}}</p>
+        <button class="custom-button">{{slide.buttonText}}</button>
+      </div>
+    </div>
+
+    <!-- Next Arrow -->
+    <div class="carousel-arrow next" (click)="nextSlide($event)">
+      <svg viewBox="0 0 24 24">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+      </svg>
+    </div>
+  </div>
+  
+  <!-- Navigation Dots -->
+  <div class="carousel-nav">
+    <span *ngFor="let slide of slides; let i = index" 
+          class="nav-dot" [class.active]="currentSlide === i"
+          (click)="goToSlide(i, $event)"></span>
+  </div>
+  
+</div>
+<div style="width: 80%;">
+  <app-cards></app-cards>
+</div>

@@ -1,0 +1,160 @@
+<app-header></app-header>
+
+
+  <div class="maincontent">
+    
+       <!-- Welcome Header -->
+       <div class="welcome-card">
+         <div class="date-time">
+           <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+           <span>{{ dateTime }}</span>
+         </div>
+         <div class="user-welcome">
+           <span style="color: aliceblue;">Welcome, {{ userData?.username?.toUpperCase() || 'User' }}</span>
+           <img class="user-icon" [src]="userData?.photoURL || ''" alt="" />
+         </div>
+       </div>
+  
+
+          <div class="form-row">
+  <label for="role">Role</label>
+  <select id="role" required>
+    <option value="" disabled selected>Select Role</option>
+    <option value="Developer">Developer</option>
+    <option value="Manager">Manager</option>
+  </select>
+</div>
+
+
+     <!-- priority -->
+
+             <div class="form-row">
+          <label for="priority">Priority</label>
+          <select id="priority" required>
+            <option value="" disabled selected>Select Priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+
+        <!-- deadline date -->
+
+        <div class="form-row">
+          <label for="deadline">Deadline</label>
+          <input type="datetime-local" id="deadline" required />
+        </div>
+
+   
+     <!-- Task Description -->
+     <input
+       type="text"
+       placeholder="Task Description"
+       [(ngModel)]="task.description"
+     />
+     <!-- File Upload -->
+
+        <div class="form-row">
+          <label for="fileUpload">Attach File (optional)</label>
+          <input type="file" id="fileUpload" />
+          <div class="file-preview" id="filePreview"></div>
+        </div>
+   
+     <!-- Add Button -->
+     <button (click)="addTask()">Add Task</button>
+   <button class="cancel-button" (click)="cancel()">Cancel</button>
+   
+     <!-- Success Message -->
+     <div *ngIf="showSuccessMessage" style="color: green; margin-top: 10px;">
+       ✅ Task added successfully
+     </div>
+   </div>
+   
+         <!-- Card List -->
+       <div class="listscore">
+         <div class="task-card-container">
+           <div *ngFor="let task of tasks" class="task-card">
+              <div class="timestamp">
+       <small>{{ task.createdAt?.toDate?.() | date:'short' }}</small>
+     </div>
+     <div class="taskgg" >
+              <h6 id="taskgiver">Assigned by:  {{ userData?.username?.toUpperCase() || 'User' }}</h6>
+             <h6 id="taskgeter">Assigned to: {{ task.assignee }}</h6>
+           </div>
+         <label for="Description">Description:</label>
+   <textarea  id="Description" rows="4" cols="40">{{ task.description }}</textarea>
+   
+             
+             
+             <div class="task-actions">
+               <button class="edit-btn" (click)="openEditModal(task)">Edit</button>
+               <button class="delete-btn" (click)="deleteTask(task)">Delete</button>
+               
+             </div>
+           </div>
+         </div>
+
+
+
+         <!-- score -->
+    <div class="score">
+   <div class="circle-card">
+     <h3>Total Tasks</h3>
+    <div class="mat-raised-button">Tha ToDo matListItemAvatar</div>
+      <app-blog ngrf="({the load.userData?})"> the main  event</app-blog>
+      <title class="[click event]">  getEmployeeDisplay($user.data.load)</title>
+      <strong>Task Management</strong>
+    
+     <div class="donut-chart">
+       <div class="center-text">50</div>
+     </div>
+   </div>
+   
+   
+   <div class="circle-card">
+     <h3>Completed</h3>
+     <div class="donut-chart completed">
+       <div class="center-text">35</div>
+     </div>
+   </div>
+   
+   <div class="circle-card">
+     <h3>Overdue</h3>
+     <div class="donut-chart overdue">
+       <div class="center-text">5</div>
+     </div>
+   </div>
+   </div>
+   
+   
+         </div>
+         
+      
+       <!-- Modal Section (Outside of <section>) --> 
+       <!-- Hidden Checkbox to Control Modal -->
+       <input type="checkbox" id="modal-toggle" hidden />
+   
+       <!-- Modal -->
+        <!-- Edit Task Modal -->
+   <!-- Edit Task Modal -->
+   <!-- Edit Task Modal -->
+   <div class="edit-task-modal" *ngIf="isModalOpen">
+     <div class="edit-task-content">
+       <h3>Edit Task</h3>
+   
+       <label>Description:</label>
+       <textarea [(ngModel)]="editComment" rows="4" cols="50"></textarea>
+   
+       <label>Upload New File (optional):</label>
+       <input type="file" (change)="onFileSelected($event)" />
+   
+       <div class="edit-task-buttons">
+      <button class="save-btn" (click)="saveEdit()">Save</button>
+     <button class="cancel-btn" (click)="closeModal()">Cancel</button>
+       </div>
+     </div>
+   </div>
+   
+   
+   
+

@@ -1,0 +1,97 @@
+<app-footr></app-footr>
+
+<!-- Header Section with Hover Effects -->
+<div class="header-section">
+  <img src="assets/motherboard-background (2).jpg" alt="Header Background" class="header-bg">
+
+  <div class="header-overlay">
+    <h1 class="title">
+      <span class="title-text">DwinDisplay</span>
+      <span class="title-subtext">Image Integration Using DGUS Editor</span>
+    </h1>
+
+         <!-- ✅ Correct placement for calendar/date -->
+ <div class="date-display">
+  <img src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png" alt="Calendar Icon" class="calendar-icon" />
+  <span>15 Tuesday July , 2025</span>
+</div>
+    <h6 class="title-special-link" [routerLink]="'/adobe'">
+      UI Designs Crafted in Adobe XD for DGUS Software Interfaces
+    </h6>
+  </div>
+</div>
+
+
+
+  <div class="guide-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h3 class="sidebar-title">Configuration Steps</h3>
+      <nav class="sidebar-nav">
+        <a [routerLink]="['/dwincontant6']" class="sidebar-link">Image Animation using Dwin DGUS Tool</a> 
+        <a [routerLink]="['/dwincontant']" class="sidebar-link">Image Integration Using DGUS Editor</a>
+        <a [routerLink]="['/dwincontant3']" class="sidebar-link">Text and ASCII Keyboard Configuration in DGUS Tool</a>
+        <a [routerLink]="['/dwincontant4']" class="sidebar-link">Variable Input Configuration in DGUS Tool</a> 
+        <a [routerLink]="['/dwincontant8']" class="sidebar-link">Reading and Writing Data via UART Command Format</a>
+        <a [routerLink]="['/dwincontant7']" class="sidebar-link">Sending UART Commands Using Docklight</a>
+        <a [routerLink]="['/dwincontant5']" class="sidebar-link">Final Step: Saving and Exporting Project to SD Card</a>
+        
+      </nav>
+    </aside>
+
+    <!-- Guide Content -->
+    <article class="guide-content">
+      <div class="step">
+        <div class="step-header">
+          <h2 class="step-title">How to Integrate Custom Images in DGUS Editor for HMI Design ?</h2>
+        </div>
+        <div class="step-content">
+          <div class="step-image"></div>
+          <p>Enhancing your Human-Machine Interface (HMI) with custom visuals not only improves user experience but also elevates the professionalism of your display. DGUS Editor simplifies this by allowing easy integration of custom images as part of your HMI project.</p>
+
+          <h2 class="sub-step-title">Why Use Custom Images?</h2>
+          <p>Custom images can serve multiple purposes in an HMI system:</p>
+          <li>Buttons and Icons: Use images to create intuitive control buttons or functional icons.</li>
+          <li>Background Elements: Design visually appealing screens with themed or branded backgrounds.</li>
+          <li>Interactive Visuals: Enhance user interaction by linking image elements to touch events.</li>
+
+          <div class="alert">
+            <div class="alert-icon"></div>
+            <div class="alert-content">
+            <div class="sub-step-title shifted-title">Steps to Integrate Images Using DGUS Editor</div>
+
+              <div class="cardd">
+                <div class="step-block">
+                  <div class="alert-content">
+                    <strong>Step 1:</strong>
+                    <ul style="margin: 0.5rem 0 0 1rem;">
+                      <li style="margin-bottom: 0.5;"><strong>Open the DGUS Editor software on your system to start your HMI design project.</strong></li>
+                    </ul>
+                    </div>
+                  <img src="/assets/Image Integration Using DGUS Editor.png" alt="Keyboard Configuration in DGUS" class="step-img">
+                </div>
+                <div class="step-block">
+                   <div class="alert-content">
+                    <strong>Step 2:</strong>
+                    <ul style="margin: 0.5rem 0 0 1rem;">
+                      <li style="margin-bottom: 0.5;"><strong>Navigate to the image library section and import your custom image files (BMP formats are usually supported).</strong></li>
+                    </ul>
+                    </div>
+                 
+                  <img src="/assets/Image Integration Using DGUS Editor 2.png" alt="Keyboard Configuration in DGUS" class="step-img">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+    </article>
+    <div class="mobile-nav-buttons">
+  <button class="btn btn-outline" [routerLink]="'/dwincontant6'">Previous</button>
+  <button class="btn btn-primary" [routerLink]="'/dwincontant3'">Next</button>
+</div>
+  </div>
+
+<app-footer></app-footer>

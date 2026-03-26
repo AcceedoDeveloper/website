@@ -1,0 +1,544 @@
+<app-header></app-header>
+
+  <div class="maincontent">
+
+
+ 
+
+    <div class="angularbloggerdiv">
+      <div class="header-container">
+        <div class="left-content">
+          <h1 role="heading" aria-level="1">How to become an <span class="highlight">Angular Developer?</span></h1>
+          <p>
+            When it comes to programming languages for developers to work with, there's an embarrassment of riches. Whether you're considering a career as a developer or you're already a developer seeking to upskill, you will inevitably need to decide which languages, tools, and apps you want to use in programming.
+          </p>
+          <p>
+            This article focuses on Angular, what it is, who uses it, and most importantly, how to become an Angular developer. Let's get started with the basics.
+          </p>
+        </div>
+        <div class="image-container" role="region" aria-label="Image slideshow">
+          <img src="/assets/sb1.jpg" alt="Angular development">
+          <img src="/assets/sb 2.jpg" alt="Angular code">
+          <img src="/assets/sb 3.jpg" alt="Angular components">
+          <img src="/assets/sb 4.jpg" alt="Web development">
+          <img src="/assets/sb 5.jpg" alt="Programming">
+          <img src="/assets/sb 6.jpg" alt="Coding">
+        </div>
+      </div>
+
+      <section id="start-learning">
+        <div class="vision-section">
+          <div class="vision-content">
+            <h2 class="gradient-text">What is a web page?</h2>
+            <div class="quote">
+              <p>A web page is a digital canvas on the internet, showcasing text, images, videos, or buttons. It's what you see in browsers like Chrome or Safari.</p>
+              <strong>Example:</strong> The search bar and results on www.google.com are a web page.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="requirements-container">
+        <div class="section-header">
+          <h1>Requirements to Create a Web Page</h1>
+          <p>Everything you need to start building your first web page</p>
+        </div>
+        <div class="slides-wrapper" #slidesWrapper>
+          <button class="scroll-btn prev-btn" (click)="scrollSlides('prev', slidesWrapper)" aria-label="Scroll to previous slide">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="slides-track">
+            <div class="slide editor">
+              <div class="slide-icon">
+                <i class="fas fa-code" aria-hidden="true"></i>
+              </div>
+              <h2>Text Editor</h2>
+              <ul>
+                <li>Notepad (Basic)</li>
+                <li>Sublime Text</li>
+                <li>VS Code (Recommended)</li>
+              </ul>
+            </div>
+            <div class="slide languages">
+              <span class="essential-tag">Essential</span>
+              <div class="slide-icon">
+                <i class="fas fa-laptop-code" aria-hidden="true"></i>
+              </div>
+              <h2>Web Languages</h2>
+              <ul>
+                <li>HTML for structure</li>
+                <li>CSS for style</li>
+                <li>JavaScript for interactivity</li>
+              </ul>
+            </div>
+            <div class="slide browser">
+              <div class="slide-icon">
+                <i class="fas fa-globe" aria-hidden="true"></i>
+              </div>
+              <h2>Web Browser</h2>
+              <ul>
+                <li>Google Chrome</li>
+                <li>Mozilla Firefox</li>
+                <li>Safari</li>
+              </ul>
+            </div>
+            <div class="slide computer">
+              <div class="slide-icon">
+                <i class="fas fa-desktop" aria-hidden="true"></i>
+              </div>
+              <h2>Computer</h2>
+              <ul>
+                <li>Any modern computer</li>
+                <li>No internet needed</li>
+                <li>Basic specs sufficient</li>
+              </ul>
+            </div>
+          </div>
+          <button class="scroll-btn next-btn" (click)="scrollSlides('next', slidesWrapper)" aria-label="Scroll to next slide">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <section class="creation-steps">
+        <div class="creation-header">
+          <h1>How to Create a Web Page?</h1>
+          <p>Follow these simple steps to build your first web page from scratch:</p>
+        </div>
+        <div class="steps-container">
+          <div class="step step-1">
+            <div class="step-header">
+              <div class="step-number">1</div>
+              <h2 class="step-title">Open your text editor</h2>
+            </div>
+            <div class="step-content">
+              <p>Begin by opening your preferred text editor. You can use basic editors like Notepad or more advanced ones like VS Code.</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step step-2">
+            <div class="step-header">
+              <div class="step-number">2</div>
+              <h2 class="step-title">Write your HTML code</h2>
+            </div>
+            <div class="step-content">
+              <p>Create the structure of your web page using HTML. Start with basic tags like <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code>.</p>
+              <p>Example of basic HTML structure:</p>
+              <div class="images-container">
+                <img src="/assets/html 1.png" alt="Basic HTML structure example">
+              </div>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step step-3">
+            <div class="step-header">
+              <div class="step-number">3</div>
+              <h2 class="step-title">Save and view your page</h2>
+            </div>
+            <div class="step-content">
+              <p>Save your file with a <code>.html</code> extension (e.g., <code>mypage.html</code>). Then open it in any web browser by double-clicking the file.</p>
+              <p>Congratulations! You've just created your first web page. You can now view it in any browser like Chrome, Firefox, or Safari.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section highlight-section">
+        <h1>Angular Developer: <span class="highlight">Like Building a Digital Human!!!</span></h1>
+        <div class="analogy-grid">
+          <div class="analogy-item">
+            <i class="fas fa-bone" aria-hidden="true"></i>
+            <h3>HTML: The skeleton</h3>
+            <p>Provides the basic structure of your application</p>
+          </div>
+          <div class="analogy-item">
+            <i class="fas fa-tshirt" aria-hidden="true"></i>
+            <h3>CSS: The style</h3>
+            <p>Adds visual appeal and design to your application</p>
+          </div>
+          <div class="analogy-item">
+            <i class="fas fa-running" aria-hidden="true"></i>
+            <h3>JavaScript: The actions</h3>
+            <p>Enables interactivity and dynamic behavior</p>
+          </div>
+          <div class="analogy-item">
+            <i class="fas fa-brain" aria-hidden="true"></i>
+            <h3>TypeScript: The brain</h3>
+            <p>Adds logic and intelligence to your application</p>
+          </div>
+          <div class="analogy-item">
+            <i class="fas fa-globe" aria-hidden="true"></i>
+            <h3>Browser: The stage</h3>
+            <p>Where your application performs for users</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="component-details">
+        <section class="component-section html-section">
+          <div class="component-header">
+            <div class="component-icon">
+              <i class="fas fa-bone" aria-hidden="true"></i>
+            </div>
+            <h1>1. HTML – <span class="highlight">The Skeleton</span></h1>
+          </div>
+          <div class="component-content">
+            <p>HTML forms the structure of your web app, like a skeleton gives shape to a body. It defines the bones and framework that everything else builds upon.</p>
+            <div class="component-features">
+              <ul>
+                <li>Defines document structure</li>
+                <li>Organizes content hierarchy</li>
+                <li>Provides semantic meaning</li>
+              </ul>
+            </div>
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+              <img src="/assets/html 2.png" alt="HTML example">
+            </div>
+            <p>The HTML code above creates the basic structure of a web page with a heading and paragraph.</p>
+          </div>
+        </section>
+
+        <section class="component-section css-section">
+          <div class="component-header">
+            <div class="component-icon">
+              <i class="fas fa-tshirt" aria-hidden="true"></i>
+            </div>
+            <h1>2. CSS – <span class="highlight">The Style</span></h1>
+          </div>
+          <div class="component-content">
+            <p>CSS brings your app to life with colors, fonts, and layouts. It's like the skin and clothing that makes your digital human visually appealing.</p>
+            <div class="component-features">
+              <ul>
+                <li>Customize colors and fonts</li>
+                <li>Style interactive buttons</li>
+                <li>Create stunning visuals</li>
+                <li>Responsive layouts</li>
+              </ul>
+            </div>
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+              <img src="/assets/code 16.png" alt="CSS example">
+            </div>
+            <p>Now you're looking great, like a well-dressed developer!</p>
+          </div>
+        </section>
+
+        <section class="component-section js-section">
+          <div class="component-header">
+            <div class="component-icon">
+              <i class="fas fa-running" aria-hidden="true"></i>
+            </div>
+            <h1>3. JavaScript – <span class="highlight">The Energy</span></h1>
+          </div>
+          <div class="component-content">
+            <p>JavaScript powers interactivity, like clicks and hover effects, making your app dynamic. It's the muscles that enable your digital human to move and interact.</p>
+            <div class="component-features">
+              <ul>
+                <li>Add fun interactions</li>
+                <li>Make buttons responsive</li>
+                <li>Handle user input</li>
+                <li>Dynamic content updates</li>
+              </ul>
+            </div>
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+              <img src="/assets/js.jpg" alt="JavaScript example">
+            </div>
+            <p>Now your app is full of life, like a dancer grooving on the stage, making everyone smile!</p>
+          </div>
+        </section>
+
+        <section class="component-section ts-section">
+          <div class="component-header">
+            <div class="component-icon">
+              <i class="fas fa-brain" aria-hidden="true"></i>
+            </div>
+            <h1>4. TypeScript – <span class="highlight">The Brain</span></h1>
+          </div>
+          <div class="component-content">
+            <p>TypeScript, used in Angular, adds logic and smart reactions to your app. It's the brain that gives your digital human intelligence and decision-making capabilities.</p>
+            <div class="component-features">
+              <ul>
+                <li>Type safety and interfaces</li>
+                <li>Better tooling support</li>
+                <li>Enhanced code organization</li>
+                <li>Advanced features like decorators</li>
+              </ul>
+            </div>
+            <p><strong>Example:</strong></p>
+            <div class="images-container">
+              <img src="/assets/code 14 (1).png" alt="TypeScript example">
+            </div>
+            <p>And connect it in your HTML:</p>
+            <div class="images-container">
+              <img src="/assets/html 3.png" alt="HTML connection example">
+            </div>
+            <p>Now your app comes to life with intelligence!</p>
+          </div>
+        </section>
+
+        <section class="component-section browser-section">
+          <div class="component-header">
+            <div class="component-icon">
+              <i class="fas fa-globe" aria-hidden="true"></i>
+            </div>
+            <h1>5. The Browser – <span class="highlight">The Stage</span></h1>
+          </div>
+          <div class="component-content">
+            <p>Your app performs in the browser, bringing HTML, CSS, and TypeScript together. This is the stage where your digital human comes alive for the world to see.</p>
+            <div class="component-features">
+              <ul>
+                <li>Renders your application</li>
+                <li>Executes JavaScript</li>
+                <li>Provides developer tools</li>
+                <li>Handles network requests</li>
+              </ul>
+            </div>
+            <div class="browser-demo">
+              <div class="browser-header">
+                <div class="browser-controls">
+                  <span class="browser-dot red"></span>
+                  <span class="browser-dot yellow"></span>
+                  <span class="browser-dot green"></span>
+                </div>
+              </div>
+              <div class="browser-content">
+                <h3>Your Angular App Lives Here</h3>
+                <p>All your components work together to create an amazing user experience.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="content-section highlight-section">
+        <h1>Become an <span class="highlight">Angular Developer</span></h1>
+        <p>Create a digital version of yourself that interacts and engages users on the web!</p>
+        <div class="cta-box">
+          <h2>Ready to Start Your Journey?</h2>
+          <p>Follow our day-by-day guide to mastering Angular development</p>
+        </div>
+      </section>
+
+      <div class="wd-slides-container" id="day-guide">
+        <div class="wd-slides-header">
+          <h1>Web Development <span>Learning Path</span></h1>
+          <p>6-day journey to master the fundamentals of web development</p>
+        </div>
+        <div class="wd-slides-wrapper" #wdSlidesWrapper>
+          <button class="scroll-btn prev-btn" (click)="scrollSlides('prev', wdSlidesWrapper)" aria-label="Scroll to previous web development slide">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="wd-slides-track">
+            <div class="wd-slide" id="wd-slide1">
+              <h1>Day 1: <span>First Steps</span></h1>
+              <div class="wd-day-card">
+                <h2><i class="fas fa-shoe-prints" aria-hidden="true"></i> Getting Started</h2>
+                <ul>
+                  <li>Master JavaScript for logic</li>
+                  <li>Build structure with HTML</li>
+                  <li>Add style with CSS</li>
+                </ul>
+                <div class="wd-code-explanations">
+                  <p>Imagine you're born — just a body.</p>
+                  <p>But then JavaScript says: "If someone says 'Hi', I'll say 'Hello!'"</p>
+                  <div class="images-container">
+                    <img src="/assets/htmljs.jpg" alt="HTML and JavaScript example">
+                  </div>
+                  <p>Add this in HTML: ✅Boom! Now your human clone talks!</p>
+                </div>
+              </div>
+            </div>
+            <div class="wd-slide" id="wd-slide2">
+              <h1>Day 2: <span>Guess My Number Game</span></h1>
+              <div class="wd-day-card">
+                <h2><i class="fas fa-gamepad" aria-hidden="true"></i> Build Your First Game</h2>
+                <p>Build a game where users guess a number between 1 and 20.</p>
+                <ul>
+                  <li><strong>Variables:</strong> Store data</li>
+                  <li><strong>Conditions:</strong> Make decisions</li>
+                  <li><strong>Loops:</strong> Repeat actions</li>
+                </ul>
+                <p>Today your brain learns to play! Imagine your digital version is thinking of a number, and someone is trying to guess it. This is like playing with your best friend!</p>
+                <p>👦 Digital You: "Hmm... I picked a number between 1 and 20. Can you guess it?"</p>
+                <p>👧 Your friend: "Is it 7?"</p>
+                <p>👦 You: "Too low! Try again!"</p>
+                <p>This is what the "Guess My Number" game teaches.</p>
+                <p>It's not just fun — it teaches:</p>
+                <ul>
+                  <li>Variables (like your memory)</li>
+                  <li>Conditions (like decision-making)</li>
+                  <li>Loops (keep guessing till it's right)</li>
+                </ul>
+              </div>
+            </div>
+            <div class="wd-slide" id="wd-slide3">
+              <h1>Day 3: <span>Strings & Operators</span></h1>
+              <div class="wd-day-card">
+                <h2><i class="fas fa-quote-right" aria-hidden="true"></i> Working with Text</h2>
+                <p>Learn to combine messages and perform calculations.</p>
+                <p>Example: <code class="wd-code">"My name is Digital Man and I am 10 years old."</code></p>
+                <div class="wd-string-examples">
+                  <div class="wd-example">
+                    <h4>String Concatenation</h4>
+                    <div class="images-container">
+                      <img src="/assets/code 12.png" alt="String concatenation example">
+                    </div>
+                  </div>
+                  <div class="wd-example">
+                    <h4>Template Literals</h4>
+                    <div class="images-container">
+                      <img src="/assets/code 11.png" alt="Template literals example">
+                    </div>
+                  </div>
+                  <p>Imagine Digital You learning to say: "My name is digital man and I am 10 years old." 💬 It's like learning to say smart things at school!</p>
+                  <ul>
+                    <li>Combine messages (strings)</li>
+                    <li>Add numbers</li>
+                    <li>Decide things based on answers</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="wd-slide" id="wd-slide4">
+              <h1>Day 4–5: <span>Functions & Arrays</span></h1>
+              <div class="wd-day-card">
+                <h2><i class="fas fa-tools" aria-hidden="true"></i> Building with Functions</h2>
+                <p>Use functions as tools and arrays to store data.</p>
+                <p>Your digital self packs a school bag:</p>
+                <p>Example: <code class="wd-code">let myBag = ["pencil", "eraser", "notebook"];</code></p>
+                <div class="images-container">
+                  <img src="/assets/code 10.png" alt="Functions and arrays example">
+                </div>
+                <p>Just like a human, you're building habits and memory!</p>
+              </div>
+            </div>
+            <div class="wd-slide" id="wd-slide5">
+              <h1>Day 6: <span>Timers & Dates</span></h1>
+              <div class="wd-day-card">
+                <h2><i class="far fa-clock" aria-hidden="true"></i> Working with Time</h2>
+                <ul>
+                  <li>Display current time</li>
+                  <li>Delay actions</li>
+                  <li>Set alarms</li>
+                </ul>
+                <p>Example:</p>
+                <div class="images-container">
+                  <img src="/assets/code 9.png" alt="Timers example">
+                </div>
+                <div class="wd-timer-examples">
+                  <div class="wd-example">
+                    <h4>setTimeout</h4>
+                    <div class="images-container">
+                      <img src="/assets/code 8.png" alt="setTimeout example">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="scroll-btn next-btn" (click)="scrollSlides('next', wdSlidesWrapper)" aria-label="Scroll to next web development slide">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-header">
+        <div class="hero-content">
+          <h1>Become an <span class="hero-highlight">Angular Superhero</span> ⚡🦸</h1>
+          <p>Embark on a 5-day journey to master Angular and build powerful web applications. Transform into a digital hero with components, databinding, services, and more!</p>
+        </div>
+      </div>
+
+      <div class="angular-path" id="angular-path">
+        <div class="path-title">
+          <h1>Your 5-Day <span class="hero-highlight">Angular Adventure</span></h1>
+        </div>
+        <div class="day-container">
+          <div class="day-card day-1">
+            <h2><i class="fas fa-bolt" aria-hidden="true"></i>Day 1: Birth of a Hero – Angular Basics + Debugging</h2>
+            <p>Begin your journey as a digital hero by mastering the basics of Angular. Think of yourself as Iron Man, building your suit with components.</p>
+            <ul>
+              <li>Components are like pieces of your superhero suit: <code class="day-code">&lt;app-helmet&gt;&lt;/app-helmet&gt;</code></li>
+              <li>Learn to structure your app with components like helmet, hands, and legs 🧩</li>
+              <li>Debugging: Check if your helmet is on backward! 🧐</li>
+            </ul>
+            <p><strong>Example:</strong> Create a basic component to display your hero's name.</p>
+            <div class="images-container">
+              <img src="/assets/code 7.png" alt="Angular component example">
+            </div>
+          </div>
+          <div class="day-card day-2">
+            <h2><i class="fas fa-comments" aria-hidden="true"></i>Day 2: Communication Skills – Databinding + Services</h2>
+            <p>Your digital hero learns to communicate! Databinding displays data dynamically, and services fetch data like grabbing water from the fridge.</p>
+            <ul>
+              <li>Databinding: Type your name, and it appears on screen instantly</li>
+              <li>Services: Fetch data from a database or API</li>
+              <li>Example:</li>
+              <div class="images-container">
+                <img src="/assets/code 6.png" alt="Databinding example">
+              </div>
+              <p>Updates the UI when the data changes</p>
+            </ul>
+            <p><strong>Example:</strong> Bind an input to display your hero's greeting.</p>
+            <div class="images-container">
+              <img src="/assets/code 5.png" alt="Data binding example">
+            </div>
+          </div>
+          <div class="day-card day-3">
+            <h2><i class="fas fa-map-signs" aria-hidden="true"></i>Day 3: Roads & Friends – Routing + Observables</h2>
+            <p>Navigate your app like moving through rooms in a house. Observables keep your app responsive, waiting for data like a friend's text.</p>
+            <ul>
+              <li>Routing: Click "Profile" to enter the "Profile Room" 🏠</li>
+              <li>Observables: React to data updates in real-time</li>
+            </ul>
+            <p><strong>Example:</strong> Set up a route to the profile page.</p>
+            <div class="images-container">
+              <img src="/assets/code 3.png" alt="Routing example">
+            </div>
+          </div>
+          <div class="day-card day-4">
+            <h2><i class="fas fa-file-alt" aria-hidden="true"></i>Day 4: Understanding Others – Forms + Pipes + HTTP</h2>
+            <p>Build forms to collect user info, use pipes to format data, and make HTTP requests to fetch server data.</p>
+            <ul>
+              <li>Forms: Collect name, age, and email 📝</li>
+              <li>Pipes: Format dates like</li>
+              <div class="images-container">
+                <img src="/assets/code 4.png" alt="Pipes example">
+              </div>
+              <li>HTTP: Fetch data from a server</li>
+            </ul>
+            <p><strong>Example:</strong> Create a form and format the date output.</p>
+            <div class="images-container">
+              <img src="/assets/code 2.png" alt="Forms example">
+            </div>
+          </div>
+          <div class="day-card day-5">
+            <h2><i class="fas fa-lock" aria-hidden="true"></i>Day 5: Locking Your Room – Auth + Route Guards 🔐</h2>
+            <p>Secure your app like locking a diary. Use authentication and route guards to protect your routes.</p>
+            <ul>
+              <li>Login: Verify user identity with a password</li>
+              <li>Route Guards: Restrict access to authorized users only</li>
+            </ul>
+            <p><strong>Example:</strong> Implement a route guard.</p>
+            <div class="images-container">
+              <img src="/assets/code 1.png" alt="Route guard example">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="component-details">
+        <section class="component-section ngrx-section">
+          <div class="component-header">
+            <div class="component-icon">
+              <i class="fas fa-database" aria-hidden="true"></i>
+            </div>
+            <h1>NgRx - <span class="highlight">State Management</span></h1>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>

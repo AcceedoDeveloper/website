@@ -1,0 +1,230 @@
+<app-footr></app-footr>
+
+<!-- ================= HERO SECTION ================= -->
+
+<section class="hero">
+
+  <div class="container hero-container">
+
+    <div class="hero-text">
+
+ <h2>QuotePro</h2>
+
+      <p>
+        QuotePro is a modern quotation management system designed to help 
+        businesses generate accurate quotations, manage raw material pricing, 
+        and analyze project costs through real-time dashboards and reports.
+      </p>
+
+    </div>
+
+    <div class="hero-image">
+      <img src="assets/quot.jpeg" alt="QuotePro Dashboard">
+    </div>
+
+  </div>
+
+</section>
+<!-- ================= PROJECT OVERVIEW ================= -->
+<section class="project-overview">
+
+  <div class="container overview-container">
+
+    <!-- LEFT CONTENT -->
+    <div class="overview-text">
+
+      <h2 class="section-title">Overview</h2>
+
+      <p>
+        Our Project Costing System helps organizations estimate project expenses
+        accurately by generating quotations for required raw materials.
+        It simplifies budgeting, vendor comparison, and cost tracking
+        through an intelligent workflow.
+      </p>
+
+      <p>
+        Users can create quotations, modify quotation values, and update
+        raw material rates based on supplier pricing. The system provides
+        real-time dashboards, analytics reports, and cost contribution charts
+        to help businesses make better financial decisions.
+      </p>
+
+      <ul class="project-points">
+        <li>Real-time quotation creation and modification</li>
+        <li>Raw material rate management</li>
+        <li>Customer quotation tracking</li>
+        <li>Material cost estimation</li>
+        <li>Analytics dashboard with charts</li>
+      </ul>
+
+
+    </div>
+
+   <div class="overview-images">
+
+      <div class="image-card">
+        <img src="assets/q1.jpeg" alt="QuotePro Dashboard">
+      </div>
+
+      <div class="image-card">
+        <img src="assets/q2.jpeg" alt="Project Costing System">
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CORE FEATURES ================= -->
+<section class="project-features">
+
+  <div class="container">
+
+    <h2 class="section-title">Core System Features</h2>
+
+    <div class="circle-flow">
+
+      <!-- CENTER CORE -->
+      <div class="core">
+        Core System
+      </div>
+
+      <!-- TOP NODE -->
+      <div class="node node1">
+        <h4>Quotation Generation</h4>
+        <p>
+          Create professional quotations instantly for customers
+          based on project requirements.
+        </p>
+      </div>
+
+      <!-- LEFT NODE -->
+      <div class="node node2">
+        <h4>Raw Material Planning</h4>
+  <p>
+  Estimate raw materials and manage pricing, track inventory, and automatically update project requirements.
+</p>
+     
+      </div>
+
+      <!-- RIGHT NODE -->
+      <div class="node node3">
+        <h4>Cost Analysis</h4>
+        <p>
+          Analyze cost including material, labour,
+          power consumption and overhead.
+        </p>
+      </div>
+
+      <!-- LINES -->
+      <div class="line line1"></div>
+      <div class="line line2"></div>
+      <div class="line line3"></div>
+
+    </div>
+
+  </div>
+
+</section>
+<!-- ================= SYSTEM MODULES ================= -->
+<section class="system-modules">
+
+  <div class="container">
+
+
+
+    <!-- Customer Module -->
+    <div class="module-row">
+
+      <div class="module-image" (click)="openImage($event)">
+        <img src="assets/q3.jpeg" alt="Customer Reports">
+      </div>
+
+      <div class="module-content">
+        <h3>Customer Reports</h3>
+        <p>
+          View detailed reports including customer data,
+          drawing numbers, part names, process counts,
+          and quotation history.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Material Module -->
+    <div class="module-row reverse">
+
+      <div class="module-image" (click)="openImage($event)">
+        <img src="assets/q4.jpeg" alt="Material Management">
+      </div>
+
+      <div class="module-content">
+        <h3>Material Management</h3>
+        <p>
+          Manage raw materials by adding, editing, and updating
+          material costs which automatically affect quotation calculations.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FULLSCREEN MODAL -->
+  <div id="imageModal" class="image-modal" (click)="closeImage()">
+    <img id="fullImage">
+  </div>
+
+</section>
+
+
+<!-- ================= KEY FEATURES ================= -->
+<section class="system-features">
+
+  <div class="container">
+
+    <h2 class="section-title">Key Advantages</h2>
+
+    <div class="features-grid">
+
+      <div class="feature-box">
+        <h4>Editable Quotations</h4>
+        <p>
+          Users can update quotation values anytime to reflect
+          changing market prices or project requirements.
+        </p>
+      </div>
+
+      <div class="feature-box">
+        <h4>Material Rate Control</h4>
+        <p>
+          Admin users can set raw material rates and update
+          pricing to maintain accurate project costing.
+        </p>
+      </div>
+
+      <div class="feature-box">
+        <h4>Real-Time Data Visualization</h4>
+        <p>
+          Graphs and dashboards help visualize cost contribution,
+          material distribution, and monthly quotation trends.
+        </p>
+      </div>
+
+      <div class="feature-box">
+        <h4>Professional Reporting</h4>
+        <p>
+          Export detailed reports for customers, quotations,
+          and materials for project documentation.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<app-footer></app-footer>

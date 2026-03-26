@@ -1,0 +1,40 @@
+import { Component, HostListener } from '@angular/core';
+
+@Component({
+  selector: 'app-footr',
+  templateUrl: './footr.component.html',
+  styleUrl: './footr.component.css'
+})
+export class FootrComponent {
+  
+  isNavOpen = false;
+  isDropdownOpen = false;
+  
+  toggleDropdown(event: Event) {
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  this.isDropdownOpen = !this.isDropdownOpen;
+
+}
+
+  onNavCheckChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isNavOpen = target.checked;
+    console.log('Hamburger menu toggled, nav open:', this.isNavOpen);
+    if (!this.isNavOpen) {
+      this.isDropdownOpen = false; 
+      console.log('Dropdown closed due to hamburger menu closing');
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown') && this.isDropdownOpen) {
+      this.isDropdownOpen = false;
+      console.log('Dropdown closed due to outside click');
+    }
+  }
+}
