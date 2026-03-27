@@ -20,6 +20,10 @@ interface Document {
   files: string[];
 }
 
+interface User {
+  name: string;
+  photo?: string;
+}
 @Component({
   selector: 'app-projects',
   templateUrl: './projects.component.html',
@@ -63,6 +67,8 @@ todayYear = new Date().getFullYear();
   selectedFile: File | null = null;
   uploadedPictures: string[] = [];
   selectedPictureFiles: File[] = [];
+   users: User[] = [];
+
 
 
 
@@ -87,6 +93,7 @@ todayYear = new Date().getFullYear();
 openCompare() {
   this.compare = true;
 }
+
 
 closeCompare() {
   this.compare = false;
@@ -150,21 +157,104 @@ selectedProjectTeamLeads: string[] = [];
     file: [null]
   });
 }
-getInitials(name: string): string {
-  if (!name) return '';
 
-  const words = name.trim().split(' ').filter(w => w.length > 0);
 
-  if (words.length === 1) {
-    return words[0].charAt(0).toUpperCase();   // Anbu → A
+private addCacheBuster(url: string, timestamp: number): string {
+  return url.includes('?') ? `${url}&t=${timestamp}` : `${url}?t=${timestamp}`;
+}
+
+private processUserImage(user: any): void {
+  const timestamp = new Date().getTime();
+
+  const photoField =
+    user.photo ||
+    user.photoURL ||
+    user.imagePath ||
+    user.image ||
+    user.avatar;
+
+  if (photoField) {
+    const baseUrl = 'http://localhost:3008/uploads/';
+
+    if (photoField.startsWith('http')) {
+      user.photoURL = this.addCacheBuster(photoField, timestamp);
+    } else if (photoField.startsWith('/')) {
+      user.photoURL = this.addCacheBuster('http://localhost:3008' + photoField, timestamp);
+    } else {
+      user.photoURL = this.addCacheBuster(baseUrl + photoField, timestamp);
+    }
+
+    console.log('Constructed photo URL:', user.photoURL);
+  } else {
+    user.photoURL = '';
+  }
+}
+private loadEmployees() {
+  const s = this.userService.getuser().subscribe({
+    next: (res: any) => {
+      if (Array.isArray(res)) {
+        this.employees = res;
+      } else if (res?.data && Array.isArray(res.data)) {
+        this.employees = res.data;
+      } else if (res?.users && Array.isArray(res.users)) {
+        this.employees = res.users;
+      } else {
+        this.employees = [];
+      }
+
+      this.employees.forEach((emp: any) => this.processUserImage(emp));
+
+      console.log('employees after image processing:', this.employees);
+    },
+    error: () => {
+      this.employees = [];
+    }
+  });
+
+  this.subs.add(s);
+}
+getUserPhoto(name: string): string {
+  if (!name || !this.employees || this.employees.length === 0) {
+    return '';
   }
 
-  // First + Last name initials
-  return (
-    words[0].charAt(0) + 
-    words[words.length - 1].charAt(0)
-  ).toUpperCase(); // Anbu Arasan → AA
+  const normalizedTaskName = String(name).trim().toLowerCase();
+
+  const user = this.employees.find((u: any) => {
+    const username = String(u.username || '').trim().toLowerCase();
+    const userName = String(u.UserName || '').trim().toLowerCase();
+    const fullName = String(u.name || '').trim().toLowerCase();
+    const displayName = String(u.displayName || '').trim().toLowerCase();
+
+    return (
+      normalizedTaskName === username ||
+      normalizedTaskName === userName ||
+      normalizedTaskName === fullName ||
+      normalizedTaskName === displayName
+    );
+  });
+
+  if (!user) {
+    return '';
+  }
+
+  return user.photoURL || '';
 }
+
+    getInitials(name: string): string {
+    if (!name) return '';
+
+    const words = name.trim().split(' ').filter(w => w.length > 0);
+
+    if (words.length === 1) {
+      return words[0].charAt(0).toUpperCase();
+    }
+
+    return (
+      words[0].charAt(0) +
+      words[words.length - 1].charAt(0)
+    ).toUpperCase();
+  }
 
   
 
@@ -560,7 +650,7 @@ getTodayDateString(): string {
       assignedTo: ['', Validators.required],
       assignee: ['', Validators.required],
       startDate: [''],
-      dueDate: [this.dateUtils.getCurrentDateString(), Validators.required],
+      dueDate: ['', Validators.required],
       Status: ['ToDo'],
       projectId: [''],
       projectName: ['']
@@ -630,25 +720,25 @@ getTodayDateString(): string {
     this.getAssignments();
   }
 }
-  private loadEmployees() {
-    const s = this.userService.getuser().subscribe({
-      next: (res: any) => {
-        if (Array.isArray(res)) {
-          this.employees = res;
-        } else if (res?.data && Array.isArray(res.data)) {
-          this.employees = res.data;
-        } else if (res?.users && Array.isArray(res.users)) {
-          this.employees = res.users;
-        } else {
-          this.employees = [];
-        }
-      },
-      error: () => {
-        this.employees = [];
-      }
-    });
-    this.subs.add(s);
-  }
+  // private loadEmployees() {
+  //   const s = this.userService.getuser().subscribe({
+  //     next: (res: any) => {
+  //       if (Array.isArray(res)) {
+  //         this.employees = res;
+  //       } else if (res?.data && Array.isArray(res.data)) {
+  //         this.employees = res.data;
+  //       } else if (res?.users && Array.isArray(res.users)) {
+  //         this.employees = res.users;
+  //       } else {
+  //         this.employees = [];
+  //       }
+  //     },
+  //     error: () => {
+  //       this.employees = [];
+  //     }
+  //   });
+  //   this.subs.add(s);
+  // }
 
     getCurrentUser() {
     const userStr = sessionStorage.getItem('user');
@@ -673,6 +763,17 @@ getTodayDateString(): string {
   getEmployeeDisplay(emp: any): string {
     return typeof emp === 'string' ? emp : emp.username || emp.UserName || emp.name || emp.email || '';
   }
+
+  onStartDateChange(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const value = input.value; // yyyy-mm-dd
+  console.log('----- START DATE CHANGE EVENT -----');
+  console.log('Selected Date from input:', value);
+  this.assignmentForm.get('startDate')?.setValue(value, { emitEvent: true });
+  console.log('Form Control startDate value after set:', this.assignmentForm.get('startDate')?.value);
+  console.log('Entire Form Value:', this.assignmentForm.value);
+  console.log('-----------------------------------');
+}
 
 // Load ALL projects (for admin project selector in dialog)
   // private loadAllProjects() {
@@ -935,6 +1036,10 @@ getTodayDateString(): string {
 
       filtered = filtered.filter(task => {
         const dateStr = task.dueDate || task.startDate || task.createdAt;
+        console.log('dateStr =',dateStr);
+        
+       
+        
         if (!dateStr) return true;
 
         const taskDate = new Date(dateStr);
@@ -982,53 +1087,51 @@ getTodayDateString(): string {
   }
 
 
-openAssignmentDialog(task?: AssignWork)
-{
+openAssignmentDialog(task?: AssignWork) {
+  this.editingTask = task || null;
 
-// get project from task OR outside select
-const projectId =
-  task?.projectId ||
-  this.selectedProjectId ||
-  '';
+  let startDateStr = '';
+  let dueDateStr = '';
 
-const projectName =
-  task?.projectName ||
-  this.selectedProjectName ||
-  '';
+  // Normalize dates to yyyy-mm-dd
+  if (task?.startDate) {
+    try {
+      const d = new Date(task.startDate);
+      if (!isNaN(d.getTime())) {
+        startDateStr = d.toISOString().split('T')[0];
+      }
+    } catch (e) {
+      console.warn("Invalid startDate format:", task.startDate);
+    }
+  }
 
+  if (task?.dueDate) {
+    try {
+      const d = new Date(task.dueDate);
+      if (!isNaN(d.getTime())) {
+        dueDateStr = d.toISOString().split('T')[0];
+      }
+    } catch (e) {
+      console.warn("Invalid dueDate format:", task.dueDate);
+    }
+  }
 
-// patch form
-this.assignmentForm.patchValue({
+  this.assignmentForm.patchValue({
+    title:       task?.title       || '',
+    description: task?.description || '',
+    assignedTo:  this.username,
+    assignee:    task?.assignee    || '',
+    startDate:   startDateStr,
+    dueDate:     dueDateStr,
+    Status:      task?.Status      || 'ToDo',
+    projectId:   task?.projectId   || this.selectedProjectId || '',
+    projectName: task?.projectName || this.selectedProjectName || ''
+  });
 
-title: task?.title || '',
-
-description: task?.description || '',
-
-assignedTo: this.username,
-
-assignee: task?.assignee || '',
-
-startDate: task?.startDate || '',
-
-dueDate:
-task?.dueDate ||
-this.dateUtils.getCurrentDateString(),
-
-Status: task?.Status || 'ToDo',
-
-projectId: projectId,
-
-projectName: projectName
-
-});
-
-
-// open dialog
-this.dialog.open(this.assignmentDialog,{
-minWidth:'1000px',
-minHeight:'50%',
-});
-
+  this.dialog.open(this.assignmentDialog, {
+    minWidth: '1000px',
+    minHeight: '50%',
+  });
 }
 
  
@@ -1202,6 +1305,7 @@ formValue.dueDate
 )
 :
 ''
+
 );
 
 
@@ -1242,6 +1346,11 @@ file
 });
 
 
+const finalStartDate = formValue.startDate ? this.dateUtils.formatDateForBackend(formValue.startDate) : '';
+console.log('----- SAVING ASSIGNMENT -----');
+console.log('Final Raw startDate:', formValue.startDate);
+console.log('Final Formatted startDate for FormData:', finalStartDate);
+console.log('-----------------------------');
 
 // request
 const request$ =
@@ -1816,6 +1925,25 @@ getFileUrl(file: string): string {
    close():void {
     this.dialog.closeAll();
   }
+handleTimelineTodayClick(): void {
+  this.selectedTaskDate = this.getTodayDateString();
+  this.onDateChange();
+}
 
+handleTimelineFilterClick(): void {
+  this.datefiltersection = true;
+  this.showmaintask = true;
+  this.TimeLine = false;
+  this.currentPage = 'task';
+  this.filterAssignmentsByProject();
+}
+
+handleTimelineMonthViewClick(): void {
+  this.openMonthView();
+}
+
+handleTimelineNewTaskClick(): void {
+  this.openAssignmentDialog();
+}
   
 }

@@ -1,6 +1,3 @@
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -121,15 +118,21 @@ subdepartments: string[] = [''];
   dmformdata:any;
 
   // edit
+// edit
 editdepartment(department: any) {
   console.log('Editing department:', department);
-  this.dialog.open(DepartmentDialogComponent, {
+
+  const dialogRef = this.dialog.open(DepartmentDialogComponent, {
     width: '80vw',
     height: 'auto',
     maxHeight: '90vh',
     panelClass: 'custom-dialog',
-    disableClose:true,
-    data: { department } 
+    disableClose: true,
+    data: { department }
+  });
+
+  dialogRef.afterClosed().subscribe(() => {
+    this.getdmdata();
   });
 }
 
@@ -397,19 +400,22 @@ editdepartment(department: any) {
   {
 
   }
+  
 
-  showdepartment() {
-    this.dialog.open(DepartmentDialogComponent, {
+  showshowdepartment() {
+  const dialogRef = this.dialog.open(DepartmentDialogComponent, {
     width: '80vw',
-    disableClose:true,
-      // maxHeight: '60vh',
-      panelClass: 'custom-dialog',
-      data: {} 
+    disableClose: true,
+    panelClass: 'custom-dialog',
+    data: {}
+  });
 
-
-});
-
-  }
+  dialogRef.afterClosed().subscribe(result => {
+    if (true) {
+      this.getdmdata();
+    }
+  });
+}
 
   getCurrentUser() {
     const userStr = sessionStorage.getItem('user');
@@ -464,25 +470,7 @@ editdepartment(department: any) {
     return processedUser;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  createcancel(){
+createcancel(){
     alert('You dont create department');
   }
 

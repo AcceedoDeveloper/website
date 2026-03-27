@@ -26,7 +26,7 @@
     </div>
 
     <!-- Form -->
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="popup-form" [class.loading]="isLoading">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="popup-form"  autocomplete="off" [class.loading]="isLoading">
 
       <div class="popup-body">
         <!-- LEFT: Profile Image -->
@@ -57,7 +57,7 @@
             </div>
             <div class="form-group">
               <label>Username</label>
-              <input type="text" formControlName="userName" placeholder="Username" />
+              <input type="text" formControlName="userName"  autocomplete="new-password" placeholder="Username" />
             </div>
           </div>
 
@@ -101,7 +101,7 @@
             </div>
             <div class="form-group">
               <label>Password</label>
-              <input type="password" formControlName="password" placeholder="Password" />
+              <input type="password" formControlName="password"  autocomplete="new-password" placeholder="Password" />
             </div>
           </div>
         </div>
@@ -117,4 +117,3 @@
 
     </form>
   </div>
-

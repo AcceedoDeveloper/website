@@ -1,0 +1,500 @@
+<p>uwb works!</p>
+<app-footr></app-footr>
+
+<!-- Header Section -->
+<div class="header-section">
+  <img src="assets/motherboard-background (2).jpg" alt="Header Background" class="header-bg" />
+
+  <div class="header-overlay">
+    <h1 class="title">
+      <span class="title-text">UWB</span>
+      <span class="title-subtext">UWB Position Tracking System</span>
+    </h1>
+
+    <div class="date-display">
+      <img
+        src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png"
+        alt="Calendar Icon"
+        class="calendar-icon"
+      />
+      <span>{{ todayDate }}</span>
+    </div>
+
+    <h6 class="title-special-link" >
+    Real-Time Anchor and Tag Based Distance Monitoring
+    </h6>
+  </div>
+</div>
+
+<div class="doc-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="doc-sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-title">UWB Guide</div>
+
+      <a [routerLink]="[]" fragment="intro">Introduction</a>
+      <a [routerLink]="[]" fragment="components">Components Used</a>
+      <a [routerLink]="[]" fragment="concept">Main Concept</a>
+      <a [routerLink]="[]" fragment="workflow">How It Works</a>
+      <a [routerLink]="[]" fragment="dataflow">Data Flow</a>
+      <a [routerLink]="[]" fragment="code">Node.js Code</a>
+      <a [routerLink]="[]" fragment="graph">Position Graph</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="doc-content">
+
+    <!-- INTRO -->
+    <section class="doc-section intro-premium reveal-up" id="intro">
+      <div class="section-glow"></div>
+
+      <div class="section-head intro-head">
+        <span>01</span>
+        <div class="head-block">
+          <p class="head-kicker">Starter Module</p>
+          <h2>Introduction</h2>
+        </div>
+      </div>
+
+      <div class="intro-content-wrap">
+        <div class="intro-content-card">
+          <p>
+            Ultra-Wideband (UWB) is a high-precision wireless technology used for accurate
+            distance measurement and real-time indoor positioning. It is widely used in
+            industrial environments to track workers, machines, and assets.
+          </p>
+
+          <p>
+            In this system, UWB data is sent to MQTT using Embedded C. Then Node.js
+            processes the data and forwards it to Acceedo Software to display the
+            real-time position of the tag.
+          </p>
+        </div>
+
+        <div class="intro-side-card floating-card">
+          <div class="intro-mini-badge">Learning Page</div>
+          <h3>Why this page matters</h3>
+          <p>
+            This module helps new users understand the full system clearly from
+            sensor data collection to live software output.
+          </p>
+        </div>
+      </div>
+    </section>
+
+<!-- COMPONENTS -->
+<section class="doc-section components-premium reveal-left" id="components">
+  <div class="section-head components-head">
+    <span>02</span>
+    <div class="head-block">
+      <p class="head-kicker">Core Hardware</p>
+      <h2>Components Used</h2>
+    </div>
+  </div>
+
+  <div class="components-image-box">
+    <img src="../../assets/uwb-sensor.png" alt="UWB Sensor" class="components-image-only">
+  </div>
+</section>
+
+    <!-- MAIN CONCEPT -->
+    <section class="doc-section concept-premium reveal-right" id="concept">
+      <div class="section-head concept-head">
+        <span>03</span>
+        <div class="head-block">
+          <p class="head-kicker">Calculation Logic</p>
+          <h2>Main Concept</h2>
+        </div>
+      </div>
+
+      <div class="concept-shell">
+        <div class="concept-main">
+          <p>
+            The distance between <strong>Anchor 1</strong> and
+            <strong>Anchor 2</strong> is fixed and known in advance.
+          </p>
+
+          <p>
+            This known anchor distance becomes the foundation for calculating the
+            tag position. Once the baseline is known, the system can use the live
+            distance values from the tag to each anchor and derive the final
+            coordinate output.
+          </p>
+
+          <p>The distance from the following points changes continuously:</p>
+
+          <ul class="bullet-list">
+            <li>Anchor 1 to Tag</li>
+            <li>Anchor 2 to Tag</li>
+          </ul>
+
+          <p>
+            As the tag moves, these distance values change in real time. Because
+            the movement is dynamic, the system must repeatedly measure and
+            process the values in order to calculate the current location.
+          </p>
+
+          <p>
+            Using these measured values, the system calculates the tag position as
+            <strong>(x, y)</strong>. This means the tag is converted from a
+            simple moving object into a precise coordinate point that can be shown
+            visually inside the application.
+          </p>
+
+          <div class="highlight-box pulse-highlight">
+            <strong>Final Output:</strong> Tag Position = (x, y)
+          </div>
+
+          <p>
+            In simple terms, the concept is based on one fixed reference distance
+            and two changing live distances. By combining these values, the
+            system can estimate the exact location of the moving tag in a 2D
+            coordinate space.
+          </p>
+        </div>
+
+   <div class="concept-side">
+  <div class="concept-orbit-card advanced-concept-card">
+
+    <!-- animated background -->
+    <div class="concept-grid"></div>
+    <div class="radar-pulse radar-pulse-1"></div>
+    <div class="radar-pulse radar-pulse-2"></div>
+    <div class="radar-pulse radar-pulse-3"></div>
+    <div class="radar-scan"></div>
+
+    <!-- top badge -->
+    <div class="concept-card-badge">Real-Time Position Logic</div>
+
+    <!-- SVG curved connection lines -->
+    <svg class="concept-svg" viewBox="0 0 800 420" preserveAspectRatio="none">
+      <path class="curve-path path-left"
+        d="M 110 300 Q 250 210 390 120" pathLength="100"></path>
+      <path class="curve-path path-right"
+        d="M 690 300 Q 550 210 410 120" pathLength="100"></path>
+      <path class="base-path"
+        d="M 120 320 Q 400 345 680 320" pathLength="100"></path>
+    </svg>
+
+    <!-- moving signal particles -->
+    <div class="signal-orb signal-left signal-left-1"></div>
+    <div class="signal-orb signal-left signal-left-2"></div>
+    <div class="signal-orb signal-right signal-right-1"></div>
+    <div class="signal-orb signal-right signal-right-2"></div>
+
+    <!-- anchor 1 -->
+    <div class="concept-node anchor-node anchor-a1">
+      <div class="node-core blue-core"></div>
+      <div class="node-ring ring-blue ring-delay-1"></div>
+      <div class="node-ring ring-blue ring-delay-2"></div>
+      <div class="node-label">Anchor 1</div>
+    </div>
+
+    <!-- anchor 2 -->
+    <div class="concept-node anchor-node anchor-a2">
+      <div class="node-core green-core"></div>
+      <div class="node-ring ring-green ring-delay-1"></div>
+      <div class="node-ring ring-green ring-delay-2"></div>
+      <div class="node-label">Anchor 2</div>
+    </div>
+
+    <!-- tag -->
+    <div class="concept-node tag-node">
+      <div class="tag-halo"></div>
+      <div class="tag-core"></div>
+      <div class="tag-orbit orbit-1"></div>
+      <div class="tag-orbit orbit-2"></div>
+      <div class="tag-label">Tag</div>
+    </div>
+
+    <!-- live metric chips -->
+    <div class="live-chip chip-left">
+      <span class="chip-title">A1 → Tag</span>
+      <strong>{{ displayA1Distance.toFixed(2) }} m</strong>
+    </div>
+
+    <div class="live-chip chip-right">
+      <span class="chip-title">A2 → Tag</span>
+      <strong>{{ displayA2Distance.toFixed(2) }} m</strong>
+    </div>
+
+    <div class="live-chip chip-base">
+      <span class="chip-title">Anchor Distance</span>
+      <strong>{{ baseDistance.toFixed(2) }} m</strong>
+    </div>
+
+    <!-- live output panel -->
+    <div class="live-output-panel">
+      <div class="live-status">
+        <span class="status-dot"></span>
+        <span>Live Calculation Active</span>
+      </div>
+
+      <div class="xy-grid">
+        <div class="xy-box">
+          <label>X Coordinate</label>
+          <strong>{{ displayX.toFixed(2) }}</strong>
+        </div>
+
+        <div class="xy-box">
+          <label>Y Coordinate</label>
+          <strong>{{ displayY.toFixed(2) }}</strong>
+        </div>
+      </div>
+
+      <p class="calc-desc">
+        Position is calculated continuously using fixed anchor distance and live
+        UWB measurements from Anchor 1 and Anchor 2.
+      </p>
+    </div>
+
+  </div>
+</div>
+      </div>
+    </section>
+
+    <!-- WORKFLOW -->
+    <section class="doc-section workflow-premium reveal-up" id="workflow">
+      <div class="workflow-bg"></div>
+
+      <div class="section-head workflow-head">
+        <span>04</span>
+        <div class="head-text">
+          <p class="mini-tag">Learning Flow</p>
+          <h2>How the System Works</h2>
+          <p class="head-desc">
+            A step-by-step overview of how the UWB-based industrial tracking system
+            collects measurements, processes live data, and displays the final tag
+            position in software.
+          </p>
+        </div>
+      </div>
+
+      <div class="workflow-track">
+        <article class="flow-row step-fade-up delay-1">
+          <div class="flow-index">01</div>
+          <div class="flow-content">
+            <h3>Place the Anchors</h3>
+            <p>
+              Anchor 1 and Anchor 2 are placed in fixed positions inside the
+              industrial area. These anchor positions are predefined and remain
+              stable throughout the tracking process.
+            </p>
+          </div>
+        </article>
+
+        <article class="flow-row step-fade-up delay-2">
+          <div class="flow-index">02</div>
+          <div class="flow-content">
+            <h3>Define Anchor Distance</h3>
+            <p>
+              The distance between Anchor 1 and Anchor 2 is measured manually
+              and stored as a constant value. This fixed measurement is one of
+              the key inputs used in the final position calculation.
+            </p>
+          </div>
+        </article>
+
+        <article class="flow-row step-fade-up delay-3">
+          <div class="flow-index">03</div>
+          <div class="flow-content">
+            <h3>Move the Tag</h3>
+            <p>
+              The tag changes position continuously during movement. It may be
+              attached to a worker, asset, or machine, depending on the
+              industrial use case.
+            </p>
+          </div>
+        </article>
+
+        <article class="flow-row step-fade-up delay-1">
+          <div class="flow-index">04</div>
+          <div class="flow-content">
+            <h3>Measure Distances</h3>
+            <p>
+              UWB measures the distance from Anchor 1 to Tag and Anchor 2 to
+              Tag. These values are updated continuously as the tag changes
+              position in the working area.
+            </p>
+          </div>
+        </article>
+
+        <article class="flow-row step-fade-up delay-2">
+          <div class="flow-index">05</div>
+          <div class="flow-content">
+            <h3>Process the Data</h3>
+            <p>
+              The incoming values are received through the system and passed to
+              the Node.js logic. The data is validated to ensure all required
+              measurements are available before the position is calculated.
+            </p>
+          </div>
+        </article>
+
+        <article class="flow-row step-fade-up delay-3">
+          <div class="flow-index">06</div>
+          <div class="flow-content">
+            <h3>Calculate Position</h3>
+            <p>
+              Node.js uses the measured values and calculates the final tag
+              position as <strong>(x, y)</strong>. These coordinates represent
+              the live location of the tag in the system.
+            </p>
+          </div>
+        </article>
+
+        <article class="flow-row step-fade-up delay-1">
+          <div class="flow-index">07</div>
+          <div class="flow-content">
+            <h3>Display in Software</h3>
+            <p>
+              The calculated result is sent to Acceedo Software, where the user
+              can view the tag position, supporting values, and monitoring
+              information in real time.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- DATA FLOW -->
+    <section class="doc-section dataflow-premium reveal-left" id="dataflow">
+        <div class="section-head" id="dataflow"></div>
+      <div class="section-head dataflow-head">
+        <span>05</span>
+        <div class="head-block">
+          <p class="head-kicker">Communication Path</p>
+          <h2>Data Flow</h2>
+        </div>
+      </div>
+
+      <div class="flow-card premium-flow-card">
+        <div class="flow-node glow-node">UWB Sensor</div>
+        <div class="flow-arrow animated-arrow">→</div>
+        <div class="flow-node glow-node">MQTT</div>
+        <div class="flow-arrow animated-arrow">→</div>
+        <div class="flow-node glow-node">Acceedo Software</div>
+      </div>
+
+      <div class="dataflow-explain">
+        <div class="dataflow-line-card">
+          <p>
+            <strong>UWB Sensor:</strong> The hardware layer responsible for generating raw distance measurement data between the anchors and the tags.
+          </p>
+        </div>
+        <div class="dataflow-line-card">
+          <p>
+            <strong>Embedded C:</strong> This programming layer handles the sensor logic and is responsible for publishing the captured UWB data to the MQTT broker.
+          </p>
+        </div>
+        <div class="dataflow-line-card">
+          <p>
+            <strong>MQTT Broker:</strong> Acts as the central communication bridge, efficiently transferring data packets from the hardware layer to the backend services.
+          </p>
+        </div>
+        <div class="dataflow-line-card">
+          <p>
+            <strong>Node.js:</strong> The backend processing layer that subscribes to MQTT topics, validates incoming data, and applies position calculation algorithms.
+          </p>
+        </div>
+        <div class="dataflow-line-card">
+          <p>
+            <strong>Acceedo Software:</strong> The final application layer that receives processed coordinates and displays the real-time position to the end user.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CODE -->
+    <section class="doc-section code-premium reveal-right" id="code">
+      <div class="section-head code-head">
+        <span>07</span>
+        <div class="head-block">
+          <p class="head-kicker">Backend Logic</p>
+          <h2>Node.js Code</h2>
+        </div>
+      </div>
+
+      <div class="code-intro-card">
+        <p>
+          The following Node.js code is used to read the required values and
+          calculate the tag position. The function first gets the fixed anchor
+          distance, then reads the live MQTT values, validates them, and
+          finally calls the position calculation logic.
+        </p>
+      </div>
+
+      <div class="code-wrapper code-glow">
+        <div class="code-topbar">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="file-name">tag-location.ts</span>
+        </div>
+
+        <pre class="code-block"><code [textContent]="nodeCode"></code></pre>
+      </div>
+
+      <div class="code-summary-panel">
+        <p>
+          In this implementation, the function <strong>getTagLocation()</strong>
+          acts as the main entry point. It reads the fixed distance from the
+          company configuration and then checks whether the latest MQTT values
+          are available.
+        </p>
+        <p>
+          Once both updated values are available, the system calls
+          <strong>calculatePosition()</strong>. This second function applies the
+          actual position formula and returns the final output object, which
+          includes the anchor values, coordinate values, and verification
+          results.
+        </p>
+      </div>
+    </section>
+
+    <!-- GRAPH -->
+    <section class="doc-section graph-premium reveal-up" id="graph">
+      <div class="section-head graph-head">
+        <span>08</span>
+        <div class="head-block">
+          <p class="head-kicker">Visual Understanding</p>
+          <h2>Position Graph</h2>
+        </div>
+      </div>
+
+      <div class="graph-layout">
+        <div class="graph-text-panel">
+          <p>
+            The position graph helps users understand how the anchor points and
+            the moving tag are represented visually. It makes the coordinate-based
+            calculation easier to understand for both technical and non-technical
+            users.
+          </p>
+          <p>
+            In a typical graph representation, Anchor 1 and Anchor 2 are placed
+            on fixed points in the coordinate plane. The calculated tag position
+            is then shown as a point based on the derived <strong>(x, y)</strong>
+            values.
+          </p>
+        </div>
+
+        <div class="image-card image-hover-zoom">
+          <img src="../../assets/uwb-graph.jpeg" alt="UWB Position Graph" />
+        </div>
+      </div>
+
+      <div class="graph-bottom-note">
+        <p>
+          This visual representation is very helpful in industrial dashboards
+          because it allows users to understand not only the raw numbers but
+          also the actual location of the tag in a more intuitive way.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<app-footer></app-footer>

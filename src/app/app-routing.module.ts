@@ -32,6 +32,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { RoleComponent } from './role/role.component';
 import { NgrxComponent } from './ngrx/ngrx.component';
 import { WebdevComponent } from './webdev/webdev.component';
+import { UwbComponent } from './uwb/uwb.component';
 
 import { NodeComponent } from './node/node.component';
 import { ApiDatabaseComponent } from './api-database/api-database.component';
@@ -51,6 +52,7 @@ import { TimelineComponent } from './projects/timeline/timeline.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'acceedo', pathMatch: 'full' },
+  { path: 'uwb', component: UwbComponent },
   { path: 'acceedo', component: HomeComponent },
   { path: 'power-metrics', component: PowerMetricsComponent },
   { path: 'heat-treatment', component: HeatTreatmentComponent },
@@ -125,6 +127,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
+     anchorScrolling: 'enabled',
     scrollPositionRestoration: 'enabled'  
   })],
   exports: [RouterModule]

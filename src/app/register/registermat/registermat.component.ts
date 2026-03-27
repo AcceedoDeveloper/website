@@ -78,13 +78,23 @@ export class RegistermatComponent implements OnInit {
 
 
     // ✅ EDIT MODE
-    if (this.data?.item && !this.isDeleteMode) {
-
-      this.isEdit = true;
-
-      this.patchForm(this.data.item);
-
-    }
+if (this.data?.item?._id && !this.isDeleteMode) {
+  this.isEdit = true;
+  this.patchForm(this.data.item);
+} else {
+  this.isEdit = false;
+  this.registerForm.reset({
+    userCode: '',
+    name: '',
+    userName: '',
+    emailId: '',
+    password: '',
+    phoneNumber: '',
+    role: '',
+    departmentName: '',
+    subDepartmentName: ''
+  });
+}
 
   }
 

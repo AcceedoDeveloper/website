@@ -18,6 +18,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
+
 // Owl Carousel
 import { CarouselModule } from 'ngx-owl-carousel-o';
 
@@ -48,6 +49,7 @@ import { BlogComponent } from './blog/blog.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ProjectComponent } from './project/project.component';
+import { UwbComponent } from './uwb/uwb.component';
 
 import { AdobeComponent } from './adobe/adobe.component';
 import { DwincontantComponent } from './dwincontant/dwincontant.component';
@@ -179,6 +181,7 @@ export function loadConfigFactory(configService: ConfigService) {
    Product5Component,
    Product6Component,
    Product7Component,
+   UwbComponent,
    
   ],
 

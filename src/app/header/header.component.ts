@@ -401,26 +401,25 @@ nextPage() {
     this.toggleNotificationPopup();
   }
 
-  private processUserImage(user: any): void {
+// in header.component.ts - processUserImage()
+private processUserImage(user: any): void {
+  const timestamp = new Date().getTime();
 
-    const timestamp = new Date().getTime();
-    
-    // Try all possible photo field names
-    let photoField = user.photoURL || user.photo || user.imagePath || user.imageUrl;
-    
-    if (photoField) {
-      if (photoField.startsWith('http')) {
-        user.photoURL = this.addCacheBuster(photoField, timestamp);
-      } else {
-        user.photoURL = this.addCacheBuster(this.configService.getUploadUrl(photoField), timestamp);
-      }
-      console.log('✅ Photo field found:', photoField, '-> photoURL:', user.photoURL);
+  let photoField = user.photo || user.photoURL || user.imagePath || user.image || user.avatar;
+
+  if (photoField) {
+    // Assume files are in /uploads/
+    let baseUrl = 'http://localhost:3008/uploads/';   
+    if (photoField.startsWith('http')) {
+      user.photoURL = this.addCacheBuster(photoField, timestamp);
+    } else if (photoField.startsWith('/')) {
+      user.photoURL = this.addCacheBuster('http://localhost:3008' + photoField, timestamp);
     } else {
-      // No photo found - leave photoURL undefined/null so avatar shows initials
-      user.photoURL = null;
-      console.log('⊘ No photo field found - will show initials avatar');
+      user.photoURL = this.addCacheBuster(baseUrl + photoField, timestamp);
     }
+    console.log('Constructed photo URL:', user.photoURL);
   }
+}
 
   private addCacheBuster(url: string, timestamp: number): string {
 

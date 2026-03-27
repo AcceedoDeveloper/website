@@ -129,14 +129,45 @@
   <div class="task-info-clean">
     <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
   </div>
- <div class="task-info-clean assignee-avatar-container">
-                <div class="avatar-circle">
-    {{ getInitials(task.assignee) }}
+
+<div class="task-info-clean assignee-avatar-container">
+  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockDone">
+    <img [src]="photo" alt="User Photo" class="avatar-image" />
+  </ng-container>
+
+  <ng-template #initialsBlockDone>
+    <div class="avatar-circle">
+      {{ getInitials(task.assignee) }}
+    </div>
+  </ng-template>
+
+  <!-- <div class="task-info-clean assignee-avatar-container">
+  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockProgress">
+    <img [src]="photo" alt="User Photo" class="avatar-image" />
+  </ng-container>
+
+  <ng-template #initialsBlockProgress>
+    <div class="avatar-circle">
+      {{ getInitials(task.assignee) }}
+    </div>
+  </ng-template>
+</div> -->
+<!-- <div class="task-info-clean assignee-avatar-container">
+  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockTodo">
+    <img [src]="photo" alt="User Photo" class="avatar-image" />
+  </ng-container>
+
+  <ng-template #initialsBlockTodo>
+    <div class="avatar-circle">
+      {{ getInitials(task.assignee) }}
+    </div>
+  </ng-template>
+</div> -->
+</div>
+
   </div>
-    <!--<span class="point-clean">{{ task.assignee }}</span>-->
-  </div>
+
   
-  </div>
   <div class="task-meta">
     
     <span class="start-date">
@@ -212,12 +243,18 @@
         <span class="point-clean">{{ task.title }}</span>
       </div>
 
-      <div class="task-info-clean assignee-avatar-container">
-        <div class="avatar-circle">
-          {{ getInitials(task.assignee) }}
-        </div>
-        <!-- <span class="point-clean">{{ task.assignee }}</span> --> <!-- same as To Do -->
-      </div>
+      
+  <div class="task-info-clean assignee-avatar-container">
+  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockProgress">
+    <img [src]="photo" alt="User Photo" class="avatar-image" />
+  </ng-container>
+
+  <ng-template #initialsBlockProgress>
+    <div class="avatar-circle">
+      {{ getInitials(task.assignee) }}
+    </div>
+  </ng-template>
+</div>
     </div>
 
     <div class="task-meta">
@@ -280,12 +317,17 @@
         <span class="point-clean">{{ task.title }}</span>
       </div>
 
-      <div class="task-info-clean assignee-avatar-container">
-        <div class="avatar-circle">
-          {{ getInitials(task.assignee) }}
-        </div>
-        <!-- <span class="point-clean">{{ task.assignee }}</span> --> <!-- commented like in To Do -->
-      </div>
+     <div class="task-info-clean assignee-avatar-container">
+  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockTodo">
+    <img [src]="photo" alt="User Photo" class="avatar-image" />
+  </ng-container>
+
+  <ng-template #initialsBlockTodo>
+    <div class="avatar-circle">
+      {{ getInitials(task.assignee) }}
+    </div>
+  </ng-template>
+</div>
     </div>
 
     <div class="task-meta">
@@ -369,11 +411,16 @@
   (back)="closeCompare()">
 </app-compare>
 <app-timeline
-  *ngIf="TimeLine"
+ *ngIf="TimeLine"
   [timelineItems]="timelineItems"
   [selectedProjectId]="selectedProjectId"
   [selectedProjectName]="selectedProjectName"
-  [months]="months">
+  [months]="months"
+  [currentUsername]="username"
+  (todayClick)="handleTimelineTodayClick()"
+  (filterClick)="handleTimelineFilterClick()"
+  (monthViewClick)="handleTimelineMonthViewClick()"
+  (newTaskClick)="handleTimelineNewTaskClick()">
 </app-timeline>
 
   <app-documents *ngIf="Documents"></app-documents>
@@ -545,14 +592,14 @@
             </div>
 
          
-            <div class="form-group">
-              <label class="form-label">Start Date</label>
-              <input type="date" 
-                     formControlName="startDate" 
-                     [readonly]="!!editingTask"
-                     class="form-input"
-                     [value]="assignmentForm.get('startDate')?.value">
-            </div>
+      <div class="form-group">
+  <label class="form-label">Start Date</label>
+  <input type="date"
+         formControlName="startDate"
+         #startDateInput
+         (change)="onStartDateChange($event)"
+         class="form-input">
+</div>
 
         
             <div class="form-group">

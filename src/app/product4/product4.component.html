@@ -10,126 +10,99 @@
   <div class="moving-object" style="top:30%;left:20%;width:150px;height:150px;"></div>
   <div class="moving-object" style="top:70%;left:80%;width:80px;height:80px;"></div>
 
-  <!-- Hero content -->
-  <div class="container hero-content">
+ <!-- HERO SECTION -->
+<div class="hero-preview">
 
-    <!-- Center: Buttons + Mobile Preview -->
-    <div class="hero-center">
-      <div class="hero-buttons">
-        <button class="btn-primary" (click)="openDemo()">View </button>
-         <button class="btn-primary" (click)="openDemo()"> Demo</button>
+
+  <div class="laptop-preview">
+    <div class="laptop-frame">
+      <div class="laptop-screen">
+        <div class="screen-content">
+          <h2>Task Management System</h2>
+          <div class="hero-buttons">
+        <button class="btn-primary" (click)="openDemo()">View Demo </button>
+         <!-- <button class="btn-primary" (click)="openDemo()"> Demo</button> -->
       </div>
-
-      <div class="mobile-preview">
-        <div class="phone">
-          <div class="screen">
-            <div class="swipe-container" [style.transform]="'translateX(-' + (currentPage * 100) + '%)'">
-
-              <!-- HOME PAGE -->
-              <div class="app-page">
-                <div class="app-header"><h3>Task Management System</h3></div>
-                <div class="profile-box">
-                  <img src="assets/imman.jpeg" class="profile-img" alt="imman">
-                  <h4>Helen Collins</h4>
-                  <p>Zylker</p>
-                  <div class="menu-list">
-                    <div class="menu-item">
-                      <i class="fa-regular fa-circle-check"></i>
-                      <span>All tasks</span>
-                    </div>
-                    <div class="menu-item">
-                      <i class="fa-regular fa-user"></i>
-                      <span>My tasks</span>
-                    </div>
-                    <div class="menu-item">
-                      <i class="fa-regular fa-calendar"></i>
-                      <span>Today's tasks</span>
-                    </div>
-                    <div class="menu-item">
-                      <i class="fa-regular fa-hourglass"></i>
-                      <span>Overdue tasks</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- PROFILE PAGE -->
-              <div class="app-page center-page">
-                <h3>Profile</h3>
-                <p>User Performance Summary</p>
-              </div>
-
-            </div>
-
-            <!-- BOTTOM NAV -->
-            <div class="bottom-nav">
-              <div class="nav-item" [class.active]="currentPage === 0" (click)="goToPage(0)">
-                <i class="fa-solid fa-house"></i>
-                <p>Home</p>
-              </div>
-              <div class="nav-item" [class.active]="currentPage === 1" (click)="goToPage(1)">
-                <i class="fa-solid fa-user"></i>
-                <p>Profile</p>
-              </div>
-            </div>
-          </div>
+          <p>A centralized system designed for Admins, Team Leads, and Users to manage tasks efficiently and improve team performance.</p>
+          <p></p>
         </div>
-        
       </div>
-      <p>A centralized system designed for Admins, Team Leads, and Users to manage tasks efficiently and improve team performance.</p>
+      <div class="laptop-base"></div>
     </div>
-      
-   
 
+    <p class="preview-label"></p>
   </div>
+</div>
 </section>
 
 
 <!-- FULL SCREEN DEMO POPUP -->
+
 <div class="demo-overlay" *ngIf="showDemo">
   <div class="demo-modal">
     <span class="close-btn" (click)="closeDemo()"><i class="fa-solid fa-xmark"></i></span>
 
-    <div class="mobile-preview">
-      <div class="phone">
-        <div class="screen">
-          <div class="swipe-container" [style.transform]="'translateX(-' + (currentPage * 100) + '%)'">
+    <div class="hero-preview">
+      <div class="laptop-preview">
+        <div class="laptop-frame">
+          <div class="laptop-screen1">
+            <div class="screen-content">
 
-            <!-- HOME PAGE -->
-            <div class="app-page">
-              <div class="app-header"><h1>Task Management System</h1></div>
-              <div class="profile-box">
-               <img src="src/assets/imman.jpeg" class="profile-img" alt="Imman"> 
-                <h4>Helen Collins</h4>
-                <p>Zylker</p>
+              <div
+                class="video-wrapper"
+                tabindex="0"
+                (click)="onVideoAreaClick()"
+              >
+                <video
+                  #laptopVideo
+                  class="laptop-video"
+                  autoplay
+                  muted
+                  playsinline
+                  (timeupdate)="onTimeUpdate()"
+                  (loadedmetadata)="onLoadedMetadata()"
+                >
+                  <source src="assets/demo-video.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+
+                <div
+                  class="video-controls"
+                  *ngIf="showControls"
+                  (click)="$event.stopPropagation()"
+                >
+                  <button class="control-btn" (click)="toggleVideo()">
+                    <i class="fa" [ngClass]="isPaused ? 'fa-play' : 'fa-pause'"></i>
+                  </button>
+
+                  <div class="timeline-wrapper">
+                    <span class="time-text">{{ formatTime(currentTime) }}</span>
+
+                    <input
+                      class="timeline-slider"
+                      type="range"
+                      min="0"
+                      [max]="duration"
+                      [value]="currentTime"
+                      step="0.1"
+                      (input)="seekVideo($event)"
+                    >
+
+                    <span class="time-text">{{ formatTime(duration) }}</span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <!-- PROFILE PAGE -->
-            <div class="app-page center-page">
-              <h3>Profile</h3>
-              <p>User Performance Summary</p>
-            </div>
-
-          </div>
-
-          <!-- BOTTOM NAV -->
-          <div class="bottom-nav">
-            <div class="nav-item" [class.active]="currentPage === 0" (click)="goToPage(0)">
-              <i class="fa-solid fa-house"></i>
-            </div>
-            <div class="nav-item" [class.active]="currentPage === 1" (click)="goToPage(1)">
-              <i class="fa-solid fa-user"></i>
             </div>
           </div>
-
+          <div class="laptop-base1"></div>
         </div>
+
+        <p class="preview-label"></p>
       </div>
     </div>
-
   </div>
 </div>
-
 
 <!-- DASHBOARD PREVIEW -->
 <section class="dashboard-preview">

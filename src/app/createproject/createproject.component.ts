@@ -293,28 +293,29 @@ getStatusClass(project: any): string {
 
 private usedInitialsMap: Record<string, number> = {};
 
+getUserInitials(emp: any): string {
+  const fullName = this.getEmployeeDisplayName(emp);
 
-getUserInitials(fullName: string): string {
-  if (!fullName || typeof fullName !== 'string') return '';
+  if (!fullName) return '';
 
   const parts = fullName
     .trim()
     .split(' ')
-    .filter(p => p.length > 0);
+    .filter((p: string) => p.length > 0);
 
-  // Single word → A
+  if (parts.length === 0) return '';
+
   if (parts.length === 1) {
     return parts[0].charAt(0).toUpperCase();
   }
 
-  // Two or more words → AA
   return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
 }
 
 
 // Avatar color (unchanged logic, but safe)
-getAvatarColor(fullName: string): string {
-  const initials = this.getUserInitials(fullName);
+getAvatarColor(emp: any): string {
+  const initials = this.getUserInitials(emp);
 
   let hash = 0;
   for (let i = 0; i < initials.length; i++) {
@@ -602,17 +603,17 @@ calculateStatus(endDate: string) {
 
     this.isLoading = true;
 
-    const projectData = {
-      projectName: this.project.projectName,
-      teamLeads: this.project.teamLeads.map((emp: any) => 
-        emp.username || emp.displayName || emp.UserName || emp.userName
-      ),
-      employees: this.project.employees.map((emp: any) => 
-        emp.username || emp.displayName || emp.UserName || emp.userName
-      ),
-      startDate: this.dateUtils.formatDateForBackend(this.project.startDate),
-      expectedEndDate: this.dateUtils.formatDateForBackend(this.project.expectedEndDate)
-    };
+   const projectData = {
+  projectName: this.project.projectName,
+  teamLeads: this.project.teamLeads.map((emp: any) =>
+    emp.username || emp.displayName || emp.UserName || emp.userName
+  ),
+  employees: this.project.employees.map((emp: any) =>
+    emp.username || emp.displayName || emp.UserName || emp.userName
+  ),
+  startDate: this.dateUtils.formatDateForBackend(this.project.startDate),
+  expectedEndDate: this.dateUtils.formatDateForBackend(this.project.expectedEndDate)
+};
 
     console.log('Creating project with payload:', projectData);
     console.log('Original startDate:', this.project.startDate);
@@ -903,5 +904,20 @@ saveEdit() {
       );
     }
   }
+getEmployeeDisplayName(emp: any): string {
+  if (!emp) return '';
+
+  if (typeof emp === 'string') return emp;
+
+  return (
+    emp.fullName ||
+    emp.name ||
+    emp.username ||
+    emp.displayName ||
+    emp.UserName ||
+    emp.userName ||
+    ''
+  ).trim();
+}
 
 }

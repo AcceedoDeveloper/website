@@ -4,6 +4,7 @@ import {
   OnDestroy,
   AfterViewInit,
   ViewChild,
+  HostListener,
   ElementRef,
   Renderer2,
   NgZone
@@ -13,6 +14,7 @@ import {
   selector: 'app-product4',
   templateUrl: './product4.component.html',
   styleUrls: ['./product4.component.css']
+  
 })
 export class Product4Component implements OnInit, OnDestroy, AfterViewInit {
 
@@ -31,7 +33,8 @@ export class Product4Component implements OnInit, OnDestroy, AfterViewInit {
 
   currentPage = 0;
   showDemo = false;
-
+showControls=false;
+hideControlsTimeout:any;
   openDemo() {
     this.showDemo = true;
   }
@@ -51,6 +54,82 @@ export class Product4Component implements OnInit, OnDestroy, AfterViewInit {
   /* =====================================
         SWIPE PAGE NAVIGATION
   ====================================== */
+
+@ViewChild('laptopVideo') laptopVideo!: ElementRef<HTMLVideoElement>;
+isPaused = false;
+ currentTime = 0;
+  duration = 0;
+
+toggleVideo() {
+  const video = this.laptopVideo?.nativeElement;
+  if (!video) return;
+
+  if (video.paused) {
+    video.play();
+    this.isPaused = false;
+  } else {
+    video.pause();
+    this.isPaused = true;
+  }
+
+  this.showControlsTemporarily();
+}
+
+onVideoAreaClick() {
+  this.toggleVideo();
+  this.showControlsTemporarily();
+}
+
+ showControlsTemporarily() {
+    this.showControls = true;
+
+    if (this.hideControlsTimeout) {
+      clearTimeout(this.hideControlsTimeout);
+    }
+
+    this.hideControlsTimeout = setTimeout(() => {
+      this.showControls = false;
+    }, 3000);
+  }
+
+
+onLoadedMetadata() {
+    const video = this.laptopVideo?.nativeElement;
+    if (!video) return;
+
+    this.duration = video.duration || 0;
+  }
+
+  onTimeUpdate() {
+    const video = this.laptopVideo?.nativeElement;
+    if (!video) return;
+
+    this.currentTime = video.currentTime || 0;
+    this.duration = video.duration || 0;
+    this.isPaused = video.paused;
+  }
+
+ seekVideo(event: Event) {
+  const input = event.target as HTMLInputElement;
+  const video = this.laptopVideo?.nativeElement;
+  if (!video) return;
+
+  const value = Number(input.value);
+  video.currentTime = value;
+  this.currentTime = value;
+
+  this.showControlsTemporarily();
+}
+
+  formatTime(time: number): string {
+    if (!time || isNaN(time)) return '0:00';
+
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+
+    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  }
+
 
   @ViewChild('swipeArea') swipeArea!: ElementRef;
 
@@ -75,6 +154,7 @@ openImage(img: string): void {
 closeImage(): void {
   this.modalOpen = false;
 }
+
 
   /* =====================================
         DARK MODE
@@ -227,6 +307,23 @@ closeImage(): void {
 
   }
 
-  
+    @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    const activeTag = (document.activeElement?.tagName || '').toLowerCase();
 
+    // don't affect typing inside inputs
+    if (
+      activeTag === 'input' ||
+      activeTag === 'textarea' ||
+      (document.activeElement as HTMLElement)?.isContentEditable
+    ) {
+      return;
+    }
+
+    if (event.code === 'Space') {
+      event.preventDefault();
+      this.toggleVideo();
+    }
+  }
 }
+
