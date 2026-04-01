@@ -1082,25 +1082,6 @@ getTodayDateString(): string {
       );
     });
 
-    // Optionally apply a date-based constraint (same as the date picker filter)
-    if (this.selectedTaskDate) {
-      const selectedDate = new Date(this.selectedTaskDate);
-      selectedDate.setHours(0, 0, 0, 0);
-
-      filtered = filtered.filter(task => {
-        const dateStr = task.dueDate || task.startDate || task.createdAt;
-        console.log('dateStr =',dateStr);
-        
-       
-        
-        if (!dateStr) return true;
-
-        const taskDate = new Date(dateStr);
-        taskDate.setHours(0, 0, 0, 0);
-        return taskDate.getTime() >= selectedDate.getTime();
-      });
-    }
-
     // Sort timeline items in ascending order by date (dueDate -> startDate -> createdAt)
     this.timelineItems = filtered.sort((a, b) => {
       const aTime = new Date(a.dueDate || a.startDate || a.createdAt || 0).getTime();

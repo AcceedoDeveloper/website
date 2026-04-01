@@ -277,12 +277,14 @@ export class TimelineComponent implements OnChanges {
     this.visibleMonthDate = this.getMonthStart(
       new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() - 1, 1)
     );
+    this.refreshSchedule();
   }
 
   goToNextMonth(): void {
     this.visibleMonthDate = this.getMonthStart(
       new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 1)
     );
+    this.refreshSchedule();
   }
 
   clearFilters(): void {
@@ -427,7 +429,7 @@ export class TimelineComponent implements OnChanges {
     targetTask.expanded = true;
     this.selectedTaskId = null;
     this.resetSubtaskForm();
-    this.refreshSchedule();
+    this.rebuildTasks();
   }
 
   deleteTask(taskId: string | number): void {
@@ -439,8 +441,7 @@ export class TimelineComponent implements OnChanges {
       this.persistImportedOverrides();
     }
 
-    this.tasks = this.tasks.filter(task => task.id !== taskId);
-    this.refreshSchedule();
+    this.rebuildTasks();
   }
 
   deleteSubtask(task: TimelineTask, subtaskId: string | number): void {
@@ -459,7 +460,7 @@ export class TimelineComponent implements OnChanges {
       this.persistImportedOverrides();
     }
 
-    this.refreshSchedule();
+    this.rebuildTasks();
   }
 
   toggleTask(task: TimelineTask): void {
@@ -576,6 +577,20 @@ export class TimelineComponent implements OnChanges {
     }
 
     this.persistTasks();
+  }
+
+  private rebuildTasks(): void {
+    const persistedManualTasks = this.loadPersistedTasks();
+    const mappedTimelineTasks = this.mapAssignmentsToTasks(this.timelineItems)
+      .filter(task => !this.deletedImportedTaskIds.has(String(task.id)))
+      .map(task => ({
+        ...task,
+        subtasks: [...task.subtasks, ...(this.importedSubtaskOverrides[String(task.id)] || [])]
+      }));
+
+    const localManualTasks = this.tasks.filter(task => task.source === 'manual');
+    this.tasks = [...localManualTasks, ...persistedManualTasks.filter(task => !localManualTasks.some(local => local.id === task.id)), ...mappedTimelineTasks];
+    this.refreshSchedule();
   }
 
   private hasConflict(taskId: string | number, subtaskId: string | number, assignee: string, startDay: number, endDay: number): boolean {
@@ -903,13 +918,13 @@ export class TimelineComponent implements OnChanges {
 
   private isSubtaskInVisibleMonth(subtask: TimelineSubtask): boolean {
     if (!subtask.startDate) {
-      return true;
+      return false;
     }
 
     const startDate = this.parseDate(subtask.startDate);
     const endDate = this.parseDate(subtask.endDate || subtask.startDate);
     if (!startDate || !endDate) {
-      return true;
+      return false;
     }
 
     const visibleStart = this.getMonthStart(this.visibleMonthDate);
