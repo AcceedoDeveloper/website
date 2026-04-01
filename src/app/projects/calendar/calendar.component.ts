@@ -39,7 +39,7 @@ export class CalendarComponent implements OnInit, OnChanges {
   selectedDate: Date = new Date();
 
   @HostListener('document:keydown.escape', ['$event'])
-  onEscPress(event: KeyboardEvent) {
+  onEscPress(event: Event) {
     if (this.showTaskOverlay) {
       this.closeTaskOverlay();
     }

@@ -614,6 +614,83 @@
             </div>
 
       
+              <!-- <div class="subtask-header">
+                <h3 class="section-title">• Sub Task</h3>
+                <button type="button" class="subtask-add-btn" (click)="addSubTaskRow()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+
+              <div class="subtask-grid" formArrayName="subTask">
+                <div class="subtask-card" *ngFor="let subTaskGroup of subTaskArray.controls; let i = index" [formGroupName]="i">
+                  <div class="subtask-card-head">
+                    <span class="subtask-index">Subtask {{ i + 1 }}</span>
+                    <button type="button" class="subtask-remove-btn" (click)="removeSubTaskRow(i)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Title</label>
+                    <input type="text" formControlName="title" class="form-input" placeholder="Enter subtask title">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Description</label>
+                    <textarea formControlName="description" rows="3" class="form-textarea" placeholder="Enter subtask description"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Start Date</label>
+                    <input
+                      type="date"
+                      formControlName="StartDate"
+                      (change)="onSubTaskStartDateChange(i)"
+                      class="form-input">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask End Date</label>
+                    <input
+                      type="date"
+                      formControlName="EndDate"
+                      (change)="onSubTaskEndDateChange(i)"
+                      class="form-input">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Assigner (work giver)</label>
+                    <input type="text" formControlName="assignedTo" readonly class="form-input readonly">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Assignee (work receiver)</label>
+                    <select formControlName="assignee" class="form-select">
+                      <option value="">Select Assignee</option>
+                      <option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+                        {{ getEmployeeDisplay(emp) }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Status</label>
+                    <select formControlName="Status" class="form-select">
+                      <option value="ToDo">To Do</option>
+                      <option value="InProgress">In Progress</option>
+                      <option value="Done">Done</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Duration (No of Days)</label>
+                    <input type="text" formControlName="NoOfDays" readonly class="form-input readonly">
+                  </div>
+                </div>
+              </div> -->
+         
+
+      
             <div class="form-group" *ngIf="editingTask">
               <label class="form-label">Status</label>
               <input type="text" [value]="assignmentForm.get('Status')?.value" readonly class="form-input readonly">

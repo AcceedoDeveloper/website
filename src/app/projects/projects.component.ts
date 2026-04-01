@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy, ElementRef, AfterViewInit, ChangeDetectorRef, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -653,8 +653,61 @@ getTodayDateString(): string {
       dueDate: ['', Validators.required],
       Status: ['ToDo'],
       projectId: [''],
-      projectName: ['']
+      projectName: [''],
+      subTask: this.fb.array([this.createSubTaskGroup()])
     });
+  }
+
+  get subTaskArray(): FormArray {
+    return this.assignmentForm.get('subTask') as FormArray;
+  }
+
+  private createSubTaskGroup(subTask?: any): FormGroup {
+    return this.fb.group({
+      title: [subTask?.title || ''],
+      description: [subTask?.description || ''],
+      StartDate: [this.normalizeDateInputValue(subTask?.StartDate)],
+      EndDate: [this.normalizeDateInputValue(subTask?.EndDate)],
+      assignedTo: [subTask?.assignedTo || this.username || ''],
+      assignee: [subTask?.assignee || ''],
+      Status: [subTask?.Status || 'ToDo'],
+      NoOfDays: [subTask?.NoOfDays || '']
+    });
+  }
+
+  private normalizeDateInputValue(value: any): string {
+    if (!value) {
+      return '';
+    }
+
+    try {
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.getTime()) ? '' : parsed.toISOString().split('T')[0];
+    } catch {
+      return '';
+    }
+  }
+
+  addSubTaskRow(): void {
+    this.subTaskArray.push(this.createSubTaskGroup());
+  }
+
+  removeSubTaskRow(index: number): void {
+    if (this.subTaskArray.length === 1) {
+      this.subTaskArray.at(0).reset({
+        title: '',
+        description: '',
+        StartDate: '',
+        EndDate: '',
+        assignedTo: this.username || '',
+        assignee: '',
+        Status: 'ToDo',
+        NoOfDays: ''
+      });
+      return;
+    }
+
+    this.subTaskArray.removeAt(index);
   }
 
   private initCommentForm() {
@@ -1116,6 +1169,8 @@ openAssignmentDialog(task?: AssignWork) {
     }
   }
 
+  const resolvedProjectId = this.resolveDialogProjectId(task);
+
   this.assignmentForm.patchValue({
     title:       task?.title       || '',
     description: task?.description || '',
@@ -1124,14 +1179,45 @@ openAssignmentDialog(task?: AssignWork) {
     startDate:   startDateStr,
     dueDate:     dueDateStr,
     Status:      task?.Status      || 'ToDo',
-    projectId:   task?.projectId   || this.selectedProjectId || '',
+    projectId:   resolvedProjectId,
     projectName: task?.projectName || this.selectedProjectName || ''
   });
 
+  const taskSubTasks = task?.subTask?.length ? task.subTask : [null];
+  this.assignmentForm.setControl(
+    'subTask',
+    this.fb.array(taskSubTasks.map(subTask => this.createSubTaskGroup(subTask)))
+  );
+
   this.dialog.open(this.assignmentDialog, {
-    minWidth: '1000px',
-    minHeight: '50%',
+    width: '1200px',
+    maxWidth: '96vw',
+    minWidth: '0',
+    maxHeight: '92vh',
   });
+}
+
+private resolveDialogProjectId(task?: AssignWork): string {
+  const directId = task?.projectId || this.selectedProjectId || '';
+  if (directId) {
+    const matchedById = this.projects.find(project =>
+      String(project?._id || project?.id || '') === String(directId)
+    );
+    if (matchedById) {
+      return String(directId);
+    }
+  }
+
+  const projectName = String(task?.projectName || this.selectedProjectName || '').trim().toLowerCase();
+  if (!projectName) {
+    return '';
+  }
+
+  const matchedProject = this.projects.find(project =>
+    String(project?.projectName || project?.name || '').trim().toLowerCase() === projectName
+  );
+
+  return String(matchedProject?._id || matchedProject?.id || '');
 }
 
  
@@ -1170,7 +1256,47 @@ openAssignmentDialog(task?: AssignWork) {
       this.snackBar.open('Comment added locally (save task to persist)', 'Close', { duration: 3000 });
       this.commentForm.reset();
     }
+}
+
+onSubTaskStartDateChange(index: number): void {
+  this.updateSubTaskDurationAndEndDate(index, 'start');
+}
+
+onSubTaskEndDateChange(index: number): void {
+  this.updateSubTaskDurationAndEndDate(index, 'end');
+}
+
+private updateSubTaskDurationAndEndDate(index: number, changedField: 'start' | 'end'): void {
+  const subTaskGroup = this.subTaskArray.at(index) as FormGroup | null;
+  if (!subTaskGroup) {
+    return;
   }
+
+  const startValue = subTaskGroup.get('StartDate')?.value;
+  const endValue = subTaskGroup.get('EndDate')?.value;
+  const startDate = startValue ? new Date(startValue) : null;
+  const endDate = endValue ? new Date(endValue) : null;
+
+  if (startDate && endDate && endDate < startDate) {
+    if (changedField === 'start') {
+      subTaskGroup.patchValue({ EndDate: startValue }, { emitEvent: false });
+    } else {
+      subTaskGroup.patchValue({ StartDate: endValue }, { emitEvent: false });
+    }
+  }
+
+  const normalizedStart = subTaskGroup.get('StartDate')?.value;
+  const normalizedEnd = subTaskGroup.get('EndDate')?.value;
+  if (!normalizedStart || !normalizedEnd) {
+    subTaskGroup.patchValue({ NoOfDays: '' }, { emitEvent: false });
+    return;
+  }
+
+  const safeStart = new Date(normalizedStart);
+  const safeEnd = new Date(normalizedEnd);
+  const diff = Math.floor((safeEnd.getTime() - safeStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+  subTaskGroup.patchValue({ NoOfDays: diff > 0 ? String(diff) : '1' }, { emitEvent: false });
+}
 
 saveAssignment()
 {
@@ -1238,112 +1364,87 @@ return;
 
 this.isLoading = true;
 
+const subTaskPayload = (formValue.subTask || [])
+  .filter((subTask: any) =>
+    !!subTask?.title ||
+    !!subTask?.description ||
+    !!subTask?.StartDate ||
+    !!subTask?.EndDate ||
+    !!subTask?.assignee
+  )
+  .map((subTask: any) => ({
+    title: subTask.title || '',
+    description: subTask.description || '',
+    StartDate: subTask.StartDate
+      ? this.dateUtils.formatDateForBackend(subTask.StartDate)
+      : '',
+    EndDate: subTask.EndDate
+      ? this.dateUtils.formatDateForBackend(subTask.EndDate)
+      : '',
+    assignedTo: subTask.assignedTo || this.username,
+    assignee: subTask.assignee || '',
+    Status: subTask.Status || 'ToDo',
+    NoOfDays: subTask.NoOfDays || ''
+  }));
 
+const basePayload = {
+  projectId,
+  projectName,
+  title: formValue.title || '',
+  description: formValue.description || '',
+  assignedTo: formValue.assignedTo || this.username,
+  assignee: formValue.assignee || '',
+  startDate: formValue.startDate
+    ? this.dateUtils.formatDateForBackend(formValue.startDate)
+    : '',
+  dueDate: formValue.dueDate
+    ? this.dateUtils.formatDateForBackend(formValue.dueDate)
+    : '',
+  Status: formValue.Status || 'ToDo',
+  subTask: subTaskPayload
+};
 
-// create formData
-const formData =
-new FormData();
+const hasFileUpload = this.selectedPictureFiles.length > 0 || this.uploadedPictures?.length > 0;
+let requestBody: FormData | typeof basePayload = basePayload;
 
+if (hasFileUpload) {
+  const formData = new FormData();
 
+  formData.append('projectId', basePayload.projectId);
+  formData.append('projectName', basePayload.projectName);
+  formData.append('title', basePayload.title);
+  formData.append('description', basePayload.description);
+  formData.append('assignedTo', basePayload.assignedTo);
+  formData.append('assignee', basePayload.assignee);
+  formData.append('startDate', basePayload.startDate);
+  formData.append('dueDate', basePayload.dueDate);
+  formData.append('Status', basePayload.Status);
 
-formData.append(
-'projectId',
-projectId
-);
+  if (subTaskPayload.length > 0) {
+    formData.append('subTask', JSON.stringify(subTaskPayload));
 
+    subTaskPayload.forEach((subTask: any, index: number) => {
+      formData.append(`subTask[${index}][title]`, subTask.title || '');
+      formData.append(`subTask[${index}][description]`, subTask.description || '');
+      formData.append(`subTask[${index}][StartDate]`, subTask.StartDate || '');
+      formData.append(`subTask[${index}][EndDate]`, subTask.EndDate || '');
+      formData.append(`subTask[${index}][assignedTo]`, subTask.assignedTo || '');
+      formData.append(`subTask[${index}][assignee]`, subTask.assignee || '');
+      formData.append(`subTask[${index}][Status]`, subTask.Status || 'ToDo');
+      formData.append(`subTask[${index}][NoOfDays]`, subTask.NoOfDays || '');
+    });
+  }
 
-formData.append(
-'projectName',
-projectName
-);
+  if (this.uploadedPictures?.length) {
+    formData.append('existingPictures', JSON.stringify(this.uploadedPictures));
+  }
 
+  this.selectedPictureFiles.forEach(file => {
+    formData.append('pictures', file);
+  });
 
-formData.append(
-'title',
-formValue.title || ''
-);
-
-
-formData.append(
-'description',
-formValue.description || ''
-);
-
-
-formData.append(
-'assignedTo',
-formValue.assignedTo ||
-this.username
-);
-
-
-formData.append(
-'assignee',
-formValue.assignee || ''
-);
-
-
-
-formData.append(
-'startDate',
-formValue.startDate
-?
-this.dateUtils.formatDateForBackend(
-formValue.startDate
-)
-:
-''
-);
-
-
-formData.append(
-'dueDate',
-formValue.dueDate
-?
-this.dateUtils.formatDateForBackend(
-formValue.dueDate
-)
-:
-''
-
-);
-
-
-
-formData.append(
-'Status',
-formValue.Status ||
-'ToDo'
-);
-
-
-
-// existing images
-if(this.uploadedPictures?.length)
-{
-
-formData.append(
-'existingPictures',
-JSON.stringify(
-this.uploadedPictures
-)
-);
-
+  requestBody = formData;
 }
-
-
-
-// new images
-this.selectedPictureFiles
-.forEach(file=>
-{
-
-formData.append(
-'pictures',
-file
-);
-
-});
 
 
 const finalStartDate = formValue.startDate ? this.dateUtils.formatDateForBackend(formValue.startDate) : '';
@@ -1360,14 +1461,14 @@ this.editingTask?._id
 this.assignworkService
 .updateAssignment(
 this.editingTask._id,
-formData
+requestBody
 )
 
 :
 
 this.assignworkService
 .createAssignment(
-formData
+requestBody
 );
 
 

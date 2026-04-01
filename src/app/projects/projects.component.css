@@ -938,7 +938,9 @@ html, body {
 
   flex-direction: column;
 
-  max-height: 60vh;
+  width: 100%;
+
+  max-height: 82vh;
 
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
 
@@ -1068,11 +1070,13 @@ html, body {
 
 .dialog-content {
 
-  padding: 20px;
+  padding: 24px;
 
   overflow-y: auto;
 
   flex-grow: 1;
+
+  max-height: 70vh;
 
 }
 
@@ -1099,6 +1103,8 @@ html, body {
 
   gap: 20px;
 
+  align-items: flex-start;
+
 }
 
 
@@ -1114,10 +1120,6 @@ html, body {
   flex-direction: column;
 
   gap: 12px;
-
-  max-height: 550px;
-
-  overflow-y: auto;
 
   padding-right: 15px;
 
@@ -1263,6 +1265,12 @@ html, body {
 
 }
 
+.subtask-grid {
+
+  grid-template-columns: 1fr;
+
+}
+
 
 .dialog-actions {
 
@@ -1286,6 +1294,9 @@ html, body {
    ========================================================= */
 
 @media (min-width: 769px) and (max-width: 1024px) {
+.subtask-grid {
+  grid-template-columns: 1fr;
+}
 
 
 .form-columns {
@@ -1294,6 +1305,27 @@ html, body {
 
 }
 
+}
+
+@media (max-width: 1280px) {
+  .form-columns {
+    flex-direction: column;
+  }
+
+  .left-column {
+    border-right: none;
+    padding-right: 0;
+    max-height: unset;
+  }
+
+  .right-column {
+    padding-left: 0;
+    max-height: unset;
+  }
+
+  .subtask-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 
@@ -1442,6 +1474,63 @@ html, body {
   font-weight: 600;
   color: #667eea;
   margin: 0 0 4px;
+}
+
+.subtask-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.subtask-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.subtask-add-btn,
+.subtask-remove-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d7defe;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #eef2ff 0%, #f8faff 100%);
+  color: #5b6ee1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.subtask-add-btn:hover,
+.subtask-remove-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(102, 126, 234, 0.16);
+}
+
+.subtask-card {
+  padding: 16px;
+  border: 1px solid #e7ebff;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+  min-height: 100%;
+  box-shadow: 0 10px 22px rgba(99, 102, 241, 0.08);
+}
+
+.subtask-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.subtask-index {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #5b6ee1;
 }
 
 /* =============================================

@@ -17,8 +17,20 @@ status: any;
   Status: string;    
   projectId: string;
   projectName?: string;
+  subTask?: AssignWorkSubTask[];
   pictures:string;
   createdAt: string;
+}
+
+export interface AssignWorkSubTask {
+  title?: string;
+  description?: string;
+  StartDate?: string | Date;
+  EndDate?: string | Date;
+  assignee?: string;
+  assignedTo?: string;
+  Status?: string;
+  NoOfDays?: string;
 }
 
 export interface Comment {

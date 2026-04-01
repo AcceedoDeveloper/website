@@ -1,258 +1,329 @@
-<div class="premium-timeline-page">
-
-  <!-- Hero Header -->
-  <div class="hero-strip">
-    <div class="hero-left">
-      <h1>Project Timeline</h1>
-      <p>{{ selectedProjectName || 'All Projects' }} • Advanced roadmap view</p>
-    </div>
-
-    <!-- <div class="hero-actions">
-      <button class="new-task-btn" type="button" (click)="onNewTaskClick()">+ New Task</button>
-    </div> -->
-  </div>
-
-  <!-- Filter Chips -->
-  <div class="filter-chip-row">
-    <button class="filter-chip" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
-    <button class="filter-chip" [class.active]="currentFilter === 'mine'" (click)="setFilter('mine')">My Tasks</button>
-    <button class="filter-chip" [class.active]="currentFilter === 'done'" (click)="setFilter('done')">Done</button>
-    <!-- <button class="filter-chip" [class.active]="currentFilter === 'high'" (click)="setFilter('high')">High Priority</button>
-    <button class="filter-chip" [class.active]="currentFilter === 'risk'" (click)="setFilter('risk')">At Risk</button> -->
-
-    <div class="zoom-switch">
-      <button type="button" [class.active]="zoomLevel === 'month'" (click)="setZoomLevel('month')">Month</button>
-      <button type="button" [class.active]="zoomLevel === 'quarter'" (click)="setZoomLevel('quarter')">Quarter</button>
-    </div>
-  </div>
-
-  <!-- Summary Cards -->
-  <div class="stats-grid">
-    <div class="stat-card blue">
-      <div class="stat-top">
-        <span>Total Tasks</span>
-        <span class="stat-icon">◷</span>
+<div class="tm-shell">
+  <div class="tm-card">
+    <div class="tm-topbar">
+      <div class="tm-title-wrap">
+        <input
+          class="project-title-input"
+          type="text"
+          [(ngModel)]="projectTitle"
+          placeholder="Project plan"
+        />
+        <!-- <div class="month-label month-nav">
+          <button class="month-nav-btn" type="button" (click)="goToPreviousMonth()" aria-label="Previous month">
+            &#8249;
+          </button>
+          <span>{{ currentMonthLabel }}</span>
+          <button class="month-nav-btn" type="button" (click)="goToNextMonth()" aria-label="Next month">
+            &#8250;
+          </button>
+        </div> -->
       </div>
-      <h2>{{ groupedTimelineItems.length }}</h2>
-      <p>Across the selected project timeline</p>
-    </div>
 
-    <div class="stat-card sky">
-      <div class="stat-top">
-        <span>In Progress</span>
-        <span class="stat-icon">↻</span>
-      </div>
-      <h2>{{ progressCount }}</h2>
-      <p>Currently active work items</p>
-    </div>
-
-    <div class="stat-card green">
-      <div class="stat-top">
-        <span>Completed</span>
-        <span class="stat-icon">✓</span>
-      </div>
-      <h2>{{ doneCount }}</h2>
-      <p>Successfully delivered tasks</p>
-    </div>
-
-    <div class="stat-card red">
-      <div class="stat-top">
-        <span>At Risk</span>
-        <span class="stat-icon">!</span>
-      </div>
-      <h2>{{ riskCount }}</h2>
-      <p>Need immediate schedule attention</p>
-    </div>
-  </div>
-
-  <!-- Top Yellow Toolbar -->
-  <div class="timeline-toolbar top-toolbar">
-    <div class="toolbar-left">
-      <div class="search-box">
-        <span class="search-icon">⌕</span>
-        <input type="text" placeholder="Search tasks, owner, status..." [value]="searchText"
-          (input)="searchTasks($any($event.target).value)" />
+      <div class="tm-actions">
+        <!-- <button class="btn btn-primary" type="button" (click)="openTaskComposer()">
+          + Create
+        </button> -->
+        <button class="btn btn-light" type="button" (click)="toggleProjectPanel()">
+          Include projects <span>{{ projectCount }}</span>
+        </button>
+        <button class="btn btn-light" type="button" (click)="emitFilter()">
+          Filter <span>{{ subtaskCount }}</span>
+        </button>
+        <button class="btn btn-light" type="button" (click)="emitToday()">
+          {{ showTodayOnly ? 'Today On' : 'Today' }}
+        </button>
+        <button class="btn btn-light" type="button" (click)="emitMonthView()">Month View</button>
       </div>
     </div>
 
-    <div class="toolbar-right">
-      <div class="legend-item">
-        <span class="legend-dot todo-dot"></span>
-        <span>To Do</span>
+    <div class="toolbar-panel" *ngIf="showProjectPanel">
+      <div class="toolbar-panel-title">Projects in current content</div>
+      <div class="chip-row">
+        <button
+          class="chip-btn"
+          type="button"
+          [class.active]="selectedProjectFilter === 'all'"
+          (click)="selectedProjectFilter = 'all'"
+        >
+          All Projects
+        </button>
+        <button
+          class="chip-btn"
+          type="button"
+          *ngFor="let projectName of projectOptions"
+          [class.active]="selectedProjectFilter === projectName"
+          (click)="selectedProjectFilter = projectName"
+        >
+          {{ projectName }}
+        </button>
       </div>
-      <div class="legend-item">
-        <span class="legend-dot progress-dot"></span>
-        <span>In Progress</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot done-dot"></span>
-        <span>Done</span>
-      </div>
-      <div class="legend-item">
-        <span class="legend-dot risk-dot"></span>
-        <span>At Risk</span>
-      </div>
-      <!-- 
-      <button
-        type="button"
-        class="add-btn"
-        (click)="onNewTaskClick()"
-        title="Add Task"
-      >
-        +
-      </button> -->
     </div>
-  </div>
 
-  <!-- Timeline Shell -->
-  <div class="timeline-shell" [class.expanded]="isExpanded">
+    <div class="toolbar-panel" *ngIf="showFilterPanel">
+      <div class="toolbar-panel-head">
+        <div class="toolbar-panel-title">Filter timeline content</div>
+        <button class="clear-btn" type="button" (click)="clearFilters()">Reset</button>
+      </div>
 
-    <!-- Sticky Header -->
-    <div class="timeline-board-wrap">
-      <div class="timeline-board-premium">
+      <div class="filter-grid">
+        <label class="filter-field">
+          <span>Type</span>
+          <select [(ngModel)]="selectedTypeFilter">
+            <option value="all">All</option>
+            <option value="PHASE">Phase</option>
+            <option value="TASK">Task</option>
+            <option value="BUG">Bug</option>
+            <option value="MILESTONE">Milestone</option>
+          </select>
+        </label>
 
-        <div class="timeline-grid premium-header">
-          <div class="left-panel header-left">
-            <div class="header-title">TASKS</div>
+        <label class="filter-field">
+          <span>Resource State</span>
+          <select [(ngModel)]="selectedAllocationFilter">
+            <option value="all">All</option>
+            <option value="available">Available</option>
+            <option value="busy">Busy</option>
+          </select>
+        </label>
+
+        <label class="filter-field">
+          <span>Assignee</span>
+          <select [(ngModel)]="selectedAssigneeFilter">
+            <option value="all">All</option>
+            <option *ngFor="let assignee of assigneeOptions" [value]="assignee">{{ assignee }}</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-modal-backdrop" *ngIf="showTaskForm" (click)="showTaskForm = false">
+      <div class="form-panel form-modal" (click)="$event.stopPropagation()">
+        <div class="form-title">Create new work package</div>
+        <div class="form-grid">
+          <input [(ngModel)]="newTask.title" type="text" placeholder="Task title" />
+
+          <select [(ngModel)]="newTask.type">
+            <option value="PHASE">Phase</option>
+            <option value="TASK">Task</option>
+            <option value="BUG">Bug</option>
+            <option value="MILESTONE">Milestone</option>
+          </select>
+
+          <select [(ngModel)]="newTask.status">
+            <option value="New">To Do</option>
+            <option value="In progress">In progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+
+          <select [(ngModel)]="newTask.priority">
+            <option value="Low">Low</option>
+            <option value="Normal">Normal</option>
+            <option value="High">High</option>
+          </select>
+
+          <input [(ngModel)]="newTask.assignee" type="text" placeholder="Task owner" />
+
+          <mat-form-field class="date-field date-field-start" appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="startPicker"
+              [(ngModel)]="newTask.startDate"
+              (ngModelChange)="onNewTaskStartDateChange($event)"
+              placeholder="Select start date"
+            />
+            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+            <mat-datepicker #startPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="date-field date-field-end" appearance="outline">
+            <mat-label>End Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="endPicker"
+              [(ngModel)]="newTask.endDate"
+              [min]="newTask.startDate"
+              (ngModelChange)="onNewTaskEndDateChange($event)"
+              placeholder="Select end date"
+            />
+            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+
+          <input
+            [(ngModel)]="newTask.duration"
+            (ngModelChange)="onNewTaskDurationChange($event)"
+            type="number"
+            min="1"
+            placeholder="Duration (days)"
+          />
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-light" type="button" (click)="showTaskForm = false">Cancel</button>
+          <button class="btn btn-primary" type="button" (click)="addTask()">Save Task</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-layout">
+      <div class="left-panel">
+        <div class="table-header">
+          <div class="col subject">SUBJECT</div>
+          <div class="col type">TYPE</div>
+          <div class="col status">STATUS</div>
+          <div class="col priority">PRIORITY</div>
+          <div class="col assignee">ASSIGNEE</div>
+        </div>
+
+        <div class="table-body">
+          <ng-container *ngFor="let task of displayTasks; trackBy: trackByTask">
+            <div class="table-row task-row">
+              <div class="col subject subject-cell">
+                <button class="expand-btn" type="button" (click)="toggleTask(task)">
+                  {{ task.expanded ? '▾' : '▸' }}
+                </button>
+                <span class="task-name">{{ task.title }}</span>
+              </div>
+
+              <div class="col type">
+                <span class="type-badge" [ngClass]="getTaskTypeClass(task.type)">{{ task.type }}</span>
+              </div>
+
+              <div class="col status">
+                <span class="dot" [ngClass]="getStatusClass(task.status)"></span>
+                {{ task.status }}
+              </div>
+
+              <div class="col priority">
+                <span class="dot priority-dot" [ngClass]="getPriorityClass(task.priority)"></span>
+                {{ task.priority }}
+              </div>
+
+              <div class="col assignee assignee-cell">
+                <span class="avatar">{{ getInitials(task.assignee) }}</span>
+                <span>{{ task.assignee }}</span>
+              </div>
+            </div>
+
+            <div class="subtask-form-row" *ngIf="selectedTaskId === task.id">
+              <div class="subtask-inline-form">
+                <input [(ngModel)]="newSubtask.title" type="text" placeholder="Subtask title" />
+                <input [(ngModel)]="newSubtask.description" type="text" placeholder="Description" />
+                <input [(ngModel)]="newSubtask.assignee" type="text" placeholder="Assigned person" />
+                <input [(ngModel)]="newSubtask.startDay" type="number" min="1" [max]="totalDays" placeholder="Start day" />
+                <input [(ngModel)]="newSubtask.duration" type="number" min="1" [max]="totalDays" placeholder="Days" />
+                <button class="btn btn-primary small-btn" type="button" (click)="addSubtask(task)">Add</button>
+              </div>
+            </div>
+
+            <ng-container *ngIf="task.expanded">
+              <div class="table-row subtask-row" *ngFor="let subtask of task.subtasks; trackBy: trackBySubtask">
+                <div class="col subject subject-cell subtask-indent">
+                  <span class="subtask-name">{{ subtask.title }}</span>
+                </div>
+
+                <div class="col type">
+                  <span class="type-badge task">{{ task.type === 'BUG' ? 'BUG' : 'TASK' }}</span>
+                </div>
+
+                <div class="col status">
+                  <span class="dot" [ngClass]="subtask.allocation"></span>
+                  {{ subtask.allocation === 'available' ? 'Available' : 'Busy' }}
+                </div>
+
+                <div class="col priority">
+                  <span>{{ subtask.duration }} day{{ subtask.duration > 1 ? 's' : '' }}</span>
+                </div>
+
+                <div class="col assignee assignee-cell">
+                  <span class="avatar muted">{{ getInitials(subtask.assignee) }}</span>
+                  <span>{{ subtask.assignee }}</span>
+                  <!-- <button class="subtask-delete-btn" type="button" (click)="deleteSubtask(task, subtask.id)">
+                    Delete
+                  </button> -->
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- <div class="task-footer">
+              <button class="link-btn" type="button" (click)="openSubtaskComposer(task.id)">+ Create subtask</button>
+              <button class="link-btn danger" type="button" (click)="deleteTask(task.id)">Delete task</button>
+            </div> -->
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="right-panel" #timelineScroller>
+        <div class="gantt-header">
+          <div class="month-title month-nav">
+            <button class="month-nav-btn" type="button" (click)="goToPreviousMonth()" aria-label="Previous month">
+              &#8249;
+            </button>
+            <span>{{ currentMonthLabel }}</span>
+            <button class="month-nav-btn" type="button" (click)="goToNextMonth()" aria-label="Next month">
+              &#8250;
+            </button>
           </div>
 
-          <div class="right-panel">
-            <div class="months-header"
-              [style.grid-template-columns]="'repeat(' + visibleTimelineColumns.length + ', 1fr)'">
-              <div class="month-box" *ngFor="let col of visibleTimelineColumns; let i = index"
-                [class.current-month-box]="i === currentColumnIndex">
-                {{ col }}
-              </div>
+          <div class="days-header" [style.grid-template-columns]="calendarGridTemplate" [style.min-width]="calendarMinWidth">
+            <div class="day-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend">
+              <span class="day-number">{{ day.day }}</span>
+              <span class="day-name">{{ day.label }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Body -->
-        <div class="timeline-body-premium">
+        <div class="gantt-body" [style.min-width]="calendarMinWidth">
+          <div class="today-line" *ngIf="todayLineLeft >= 0" [style.left.%]="todayLineLeft"></div>
 
-          <!-- Today Overlay -->
-          <div class="timeline-right-overlay">
-
-            <div class="today-badge" [style.left.%]="todayLeftPercent">
-              Today • {{ formatTodayLabel() }}
-              <div class="badge-arrow"></div>
-            </div>
-
-            <div class="today-column-highlight" [style.left.%]="todayLeftPercent"></div>
-            <div class="today-line" [style.left.%]="todayLeftPercent"></div>
-
-            <svg class="dependency-svg" *ngIf="dependencyLines.length > 0">
-              <defs>
-                <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                  <path d="M0,0 L10,5 L0,10 Z" fill="#94a3b8"></path>
-                </marker>
-              </defs>
-
-              <path *ngFor="let dep of dependencyLines" [attr.d]="dep.path" class="dependency-path"
-                marker-end="url(#arrowHead)"></path>
-            </svg>
-          </div>
-
-          <!-- Rows -->
-          <div class="timeline-grid task-line"
-            *ngFor="let item of groupedTimelineItems; let rowIndex = index; trackBy: trackByRow">
-            <div class="left-panel task-card">
-              <div class="task-main-row">
-                <div>
-                  <div class="task-title">{{ item.displayTitle }}</div>
-                  <div class="task-sub">
-                    {{ item.displayOwner }} • {{ formatDateLabel(item.startDateObj) }} - {{
-                    formatDateLabel(item.endDateObj) }}
-                  </div>
-                </div>
-
-                <span class="status-chip" [ngClass]="{
-                    'todo': item.statusClass === 'bar-todo',
-                    'progress': item.statusClass === 'bar-progress',
-                    'done': item.statusClass === 'bar-done',
-                    'risk': item.statusClass === 'bar-risk'
-                  }">
-                  {{ item.displayStatus }}
-                </span>
+          <ng-container *ngFor="let task of displayTasks; trackBy: trackByTask">
+            <div class="gantt-row task-gantt-row">
+              <div class="grid-bg" [style.grid-template-columns]="calendarGridTemplate">
+                <div class="grid-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend"></div>
               </div>
 
-              <div class="task-bottom-row">
-                <div class="avatar-stack">
-                  <span class="avatar">{{ getInitials(item.displayOwner) }}</span>
-                </div>
-
-                <span class="priority" [ngClass]="{
-                    'low': item.displayPriority === 'Low',
-                    'medium': item.displayPriority === 'Medium',
-                    'high': item.displayPriority === 'High'
-                  }">
-                  {{ item.displayPriority }}
-                </span>
+              <div
+                class="task-summary-bar"
+                [ngClass]="getTaskBarClass(task)"
+                [style.left.%]="getTaskBarLeft(task)"
+                [style.width.%]="getTaskBarWidth(task)"
+              >
+                <span class="bar-label">{{ task.title }}</span>
               </div>
             </div>
 
-            <div class="right-panel track-area" [attr.data-row]="rowIndex">
+            <ng-container *ngIf="task.expanded">
+              <div class="gantt-row subtask-gantt-row" *ngFor="let subtask of task.subtasks; trackBy: trackBySubtask">
+                <div class="grid-bg" [style.grid-template-columns]="calendarGridTemplate">
+                  <div class="grid-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend"></div>
+                </div>
 
-              <!-- Start label -->
-              <div class="point-label start-label" [style.left.%]="item.startLeft">
-                Start • {{ formatDateLabel(item.startDateObj) }}
-                <span class="down-arrow"></span>
-              </div>
-
-              <!-- Start dashed line -->
-              <div class="point-dashed start-dashed" [style.left.%]="item.startLeft"></div>
-
-              <!-- Start date chip -->
-              <div class="point-date-chip start-date-chip" [style.left.%]="item.startLeft">
-                {{ formatDateLabel(item.startDateObj) }}
-              </div>
-
-              <!-- End label -->
-              <div class="point-label end-label" [style.left.%]="item.endLeft">
-                End • {{ formatDateLabel(item.endDateObj) }}
-              </div>
-
-              <!-- End dashed line -->
-              <div class="point-dashed end-dashed" [style.left.%]="item.endLeft"></div>
-
-              <!-- End date chip -->
-              <div class="point-date-chip end-date-chip" [style.left.%]="item.endLeft">
-                {{ formatDateLabel(item.endDateObj) }}
-              </div>
-
-              <!-- Main bar -->
-              <div class="premium-bar" [ngClass]="item.statusClass" [style.left.%]="item.startLeft"
-                [style.width.%]="item.width">
-                <div class="bar-start-dot"></div>
-                <div class="bar-fill" [style.width.%]="item.progressWidth"></div>
-
-                <span class="bar-text">
-                  {{ item.displayTitle }}
-                  <small class="bar-percent">{{ item.progressWidth }}%</small>
-                </span>
-
-                <div class="bar-end-dot"></div>
-
-                <div class="bar-tooltip">
-                  <div class="tooltip-title">{{ item.displayTitle }}</div>
-                  <div>Owner: {{ item.displayOwner }}</div>
-                  <div>Start: {{ formatDateLabel(item.startDateObj) }}</div>
-                  <div>End: {{ formatDateLabel(item.endDateObj) }}</div>
-                  <div>Status: {{ item.displayStatus }}</div>
-                  <div>Priority: {{ item.displayPriority }}</div>
+                <div
+                  class="subtask-bar"
+                  [ngClass]="subtask.allocation === 'available' ? 'available-bar' : 'busy-bar'"
+                  [style.left.%]="getSubtaskBarLeft(subtask)"
+                  [style.width.%]="getSubtaskBarWidth(subtask)"
+                >
+                  <span class="bar-label">{{ subtask.title }}</span>
                 </div>
               </div>
+            </ng-container>
 
+            <div class="gantt-row footer-spacer-row">
+              <div class="grid-bg" [style.grid-template-columns]="calendarGridTemplate">
+                <div class="grid-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend"></div>
+              </div>
             </div>
-          </div>
-
-          <div class="empty-state" *ngIf="groupedTimelineItems.length === 0">
-            No timeline items available.
-          </div>
-
+          </ng-container>
         </div>
       </div>
+    </div>
+
+    <div class="bottom-create">
+      <button class="create-work-btn" type="button" (click)="openTaskComposer()">
+        + Create new work package
+      </button>
     </div>
   </div>
 </div>
-

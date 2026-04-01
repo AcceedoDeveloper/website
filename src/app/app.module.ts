@@ -16,6 +16,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 
 
 
@@ -82,9 +85,6 @@ import { AssignmentDeleteConfirmationDialogComponent } from './projects/assignme
 import { FileDeleteConfirmationDialogComponent } from './projects/file-delete-confirmation-dialog.component';
 import { HeaderComponent } from './header/header.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
@@ -171,7 +171,6 @@ export function loadConfigFactory(configService: ConfigService) {
    FileDeleteConfirmationDialogComponent,
    HeaderComponent,
    TaskComponent, 
-   TimelineComponent,
    CalendarComponent,
    SummaryComponent,
    CompareComponent,
@@ -187,16 +186,19 @@ export function loadConfigFactory(configService: ConfigService) {
 
   imports: [
     BrowserModule,
-    CommonModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
+    CommonModule,
+    AppRoutingModule,
     RouterModule,
-    FormsModule,           
-    ReactiveFormsModule,    
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
     MatIconModule,
-    MatDialogModule, 
-     MatFormFieldModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatFormFieldModule,
     MatInputModule,
     MatCardModule,
     MatGridListModule,
@@ -204,34 +206,26 @@ export function loadConfigFactory(configService: ConfigService) {
     MatSidenavModule,
     MatButtonModule,
     MatListModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
     CarouselModule,
     DragDropModule,
- MatAutocompleteModule,
+    MatAutocompleteModule,
     MatSelectModule,
-     MatNativeDateModule ,
- MatIconModule,
- FormsModule,
- HttpClientModule,
- MatPaginator,
- MatDatepickerModule,
- MatProgressSpinnerModule,
- MatChipsModule,
-
- 
-
-    PdfViewerModule
-    
+    MatDatepickerModule,
+    MatNativeDateModule,
+    PdfViewerModule,
   ],
-providers: [
-  provideAnimationsAsync(),
-  ConfigService, // make sure ConfigService is provided
-  {
-    provide: APP_INITIALIZER,
-    useFactory: loadConfigFactory,
-    deps: [ConfigService],
-    multi: true
-  }
-],
+  providers: [
+    provideAnimationsAsync(),
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadConfigFactory,
+      deps: [ConfigService],
+      multi: true
+    }
+  ],
 
   bootstrap: [AppComponent],
 

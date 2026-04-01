@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, OnChanges, SimpleChanges, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, Output, EventEmitter, OnChanges, SimpleChanges, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { UserservicesService } from '../../register/services/userservices.service';
 import { AssignWorkService } from '../../service/assignwork.service';
 import { Chart, registerables } from 'chart.js';
@@ -25,6 +25,7 @@ export class CompareComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input() selectedProjectId: string = '';
   @Input() selectedProjectName: string = '';
   @Input() projects: any[] = [];
+  @Output() back = new EventEmitter<void>();
   @ViewChild('userInput') userInput!: ElementRef<HTMLInputElement>;
 
 
@@ -997,6 +998,7 @@ animationEasing: 'cubicInOut'
     };
   }
   goBack() {
+    this.back.emit();
     this.location.back();
   }
 }
