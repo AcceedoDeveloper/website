@@ -950,36 +950,36 @@ getTodayDateString(): string {
 
 
 
-  onProjectSelect(): void {
+  onProjectSelect(projectId?: string): void {
+    const resolvedProjectId =
+      projectId !== undefined ? String(projectId) : String(this.selectedProjectId || '');
 
-  if (!this.selectedProjectId) {
+    this.selectedProjectId = resolvedProjectId;
 
-    this.selectedProjectName = '';
-    this.selectedProjectTeamLeads = [];
+    if (!resolvedProjectId) {
+      this.selectedProjectName = '';
+      this.selectedProjectTeamLeads = [];
+      this.filterAssignmentsByProject();
+      return;
+    }
+
+    const selectedProject = this.projects.find(project =>
+      String(project._id || project.id || '') === resolvedProjectId
+    );
+
+    this.selectedProjectName =
+      selectedProject?.projectName ||
+      selectedProject?.name ||
+      '';
+
+    this.selectedProjectTeamLeads =
+      selectedProject?.teamLeads || [];
+
+    console.log("Selected ID:", this.selectedProjectId);
+    console.log("Selected Name:", this.selectedProjectName);
+
     this.filterAssignmentsByProject();
-    return;
-
   }
-
-  const selectedProject = this.projects.find(project =>
-    String(project._id) === String(this.selectedProjectId) ||
-    String(project.id) === String(this.selectedProjectId)
-  );
-
-  this.selectedProjectName =
-    selectedProject?.projectName ||
-    selectedProject?.name ||
-    '';
-
-  this.selectedProjectTeamLeads =
-    selectedProject?.teamLeads || [];
-
-  console.log("Selected ID:", this.selectedProjectId);
-  console.log("Selected Name:", this.selectedProjectName);
-
-  this.filterAssignmentsByProject();
-
-}
 
   isCurrentUserTeamLead(): boolean {
     if (!this.selectedProjectTeamLeads.length) return false;
@@ -1065,22 +1065,10 @@ getTodayDateString(): string {
   }
 
   private updateTimelineItems() {
-    const tasks = [...this.allAssignments];
-
-    // Apply same project/user filtering rules as the Kanban view
-    let filtered = tasks.filter(a => {
-      if (this.selectedProjectId) {
-        return (
-          String(a.projectId) === String(this.selectedProjectId) ||
-          String(a.projectName || '').toLowerCase() === String(this.selectedProjectName || '').toLowerCase()
-        );
-      }
-
-      return (
-        String(a.assignedTo) === String(this.username) ||
-        String(a.assignee) === String(this.username)
+    const filtered = [...this.todoAssignments, ...this.inProgressAssignments, ...this.doneAssignments]
+      .filter((task, index, tasks) =>
+        index === tasks.findIndex(candidate => String(candidate._id || '') === String(task._id || ''))
       );
-    });
 
     // Sort timeline items in ascending order by date (dueDate -> startDate -> createdAt)
     this.timelineItems = filtered.sort((a, b) => {

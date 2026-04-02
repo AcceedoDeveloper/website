@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AssignWork, AssignWorkSubTask } from '../../service/assignwork.service';
 
-type TaskType = 'PHASE' | 'TASK' | 'BUG' | 'MILESTONE';
+type TaskType = 'PHASE' | 'TASK' | 'BUG';
 type TaskStatus = 'New' | 'In progress' | 'Completed';
 type TaskPriority = 'Low' | 'Normal' | 'High';
 type AllocationState = 'available' | 'busy';
@@ -17,6 +17,7 @@ interface TimelineSubtask {
   allocation: AllocationState;
   startDate?: string;
   endDate?: string;
+  isSynthetic?: boolean;
 }
 
 interface TimelineTask {
@@ -29,6 +30,8 @@ interface TimelineTask {
   priority: TaskPriority;
   assignee: string;
   expanded: boolean;
+  startDate?: string;
+  endDate?: string;
   subtasks: TimelineSubtask[];
 }
 
@@ -85,9 +88,9 @@ export class TimelineComponent implements OnChanges {
   newSubtask = {
     title: '',
     description: '',
-    duration: 3,
     assignee: '',
-    startDay: 1
+    startDate: this.getDefaultTaskStartDate() as Date | null,
+    endDate: this.getDefaultTaskEndDate() as Date | null
   };
 
   tasks: TimelineTask[] = [];
@@ -99,8 +102,14 @@ export class TimelineComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedProjectName'] && this.selectedProjectName?.trim()) {
-      this.projectTitle = this.selectedProjectName.trim();
+    if (changes['selectedProjectName']) {
+      this.syncProjectTitle();
+    }
+
+    const timelineChanged = !!changes['timelineItems'];
+    const projectContextChanged = !!changes['selectedProjectId'];
+    if (!timelineChanged && !projectContextChanged) {
+      return;
     }
 
     this.loadImportedOverrides();
@@ -115,6 +124,10 @@ export class TimelineComponent implements OnChanges {
 
     this.hasManualEdits = persistedManualTasks.length > 0;
     this.tasks = [...persistedManualTasks, ...mappedTimelineTasks];
+    if (this.selectedProjectFilter !== 'all' && !this.projectOptions.includes(this.selectedProjectFilter)) {
+      this.selectedProjectFilter = 'all';
+    }
+    this.syncProjectTitle();
     this.refreshSchedule();
   }
 
@@ -123,7 +136,7 @@ export class TimelineComponent implements OnChanges {
   }
 
   get subtaskCount(): number {
-    return this.displayTasks.reduce((count, task) => count + task.subtasks.length, 0);
+    return this.displayTasks.reduce((count, task) => count + this.getVisibleSubtasks(task).length, 0);
   }
 
   get projectCount(): number {
@@ -173,7 +186,10 @@ export class TimelineComponent implements OnChanges {
             return false;
           }
 
-          if (this.showTodayOnly && todayDay !== null && (todayDay < subtask.startDay || todayDay > subtask.endDay)) {
+          const startDay = this.getSubtaskStartDay(subtask);
+          const endDay = this.getSubtaskEndDay(subtask);
+
+          if (this.showTodayOnly && todayDay !== null && (todayDay < startDay || todayDay > endDay)) {
             return false;
           }
 
@@ -202,11 +218,7 @@ export class TimelineComponent implements OnChanges {
           return false;
         }
 
-        if (task.subtasks.length > 0) {
-          return true;
-        }
-
-        return this.showTodayOnly ? false : this.selectedAllocationFilter === 'all' && this.selectedAssigneeFilter === 'all';
+        return task.subtasks.length > 0;
       });
   }
 
@@ -217,9 +229,22 @@ export class TimelineComponent implements OnChanges {
   get assigneeOptions(): string[] {
     return Array.from(
       new Set(
-        this.tasks.flatMap(task => task.subtasks.map(subtask => subtask.assignee)).filter(Boolean)
+        this.tasks.flatMap(task => this.getVisibleSubtasks(task).map(subtask => subtask.assignee)).filter(Boolean)
       )
     ).sort((left, right) => left.localeCompare(right));
+  }
+
+  hasVisibleSubtasks(task: TimelineTask): boolean {
+    return this.getVisibleSubtasks(task).length > 0;
+  }
+
+  getVisibleSubtasks(task: TimelineTask): TimelineSubtask[] {
+    return task.subtasks.filter(subtask => !subtask.isSynthetic);
+  }
+
+  selectProjectFilter(projectName: string): void {
+    this.selectedProjectFilter = projectName;
+    this.syncProjectTitle();
   }
 
   openTaskComposer(): void {
@@ -243,7 +268,7 @@ export class TimelineComponent implements OnChanges {
   }
 
   openSubtaskComposer(taskId: string | number): void {
-    this.selectedTaskId = this.selectedTaskId === taskId ? null : taskId;
+    this.selectedTaskId = this.isSelectedTask(taskId) ? null : taskId;
     this.showTaskForm = false;
     this.resetSubtaskForm();
   }
@@ -263,7 +288,7 @@ export class TimelineComponent implements OnChanges {
 
   emitMonthView(): void {
     this.showTodayOnly = false;
-    this.selectedProjectFilter = 'all';
+    this.selectProjectFilter('all');
     this.selectedTypeFilter = 'all';
     this.selectedAllocationFilter = 'all';
     this.selectedAssigneeFilter = 'all';
@@ -288,7 +313,7 @@ export class TimelineComponent implements OnChanges {
   }
 
   clearFilters(): void {
-    this.selectedProjectFilter = 'all';
+    this.selectProjectFilter('all');
     this.selectedTypeFilter = 'all';
     this.selectedAllocationFilter = 'all';
     this.selectedAssigneeFilter = 'all';
@@ -367,6 +392,8 @@ export class TimelineComponent implements OnChanges {
       priority: this.newTask.priority,
       assignee,
       expanded: true,
+      startDate: this.toStorageDate(normalizedRange.startDate),
+      endDate: this.toStorageDate(normalizedRange.endDate),
       subtasks: [
         {
           id: `manual-sub-${Date.now() + 1}`,
@@ -378,7 +405,8 @@ export class TimelineComponent implements OnChanges {
           endDay,
           allocation: 'available',
           startDate: this.toStorageDate(normalizedRange.startDate),
-          endDate: this.toStorageDate(normalizedRange.endDate)
+          endDate: this.toStorageDate(normalizedRange.endDate),
+          isSynthetic: true
         }
       ]
     });
@@ -392,17 +420,19 @@ export class TimelineComponent implements OnChanges {
     const targetTask = this.tasks.find(item => item.id === task.id);
     const title = this.newSubtask.title.trim();
     const assignee = this.newSubtask.assignee.trim();
+    const startDate = this.normalizePickerDate(this.newSubtask.startDate);
+    const endDate = this.normalizePickerDate(this.newSubtask.endDate);
 
-    if (!targetTask || !title || !assignee) {
+    if (!targetTask || !title || !assignee || !startDate || !endDate) {
       return;
     }
 
     this.hasManualEdits = true;
 
-    const startDay = this.clampDay(this.newSubtask.startDay);
-    const duration = Math.max(1, this.newSubtask.duration);
-    const startDate = this.createDateForVisibleMonth(startDay);
-    const endDate = this.addDays(startDate, duration - 1);
+    const normalizedRange = this.normalizeSubtaskDateRange(startDate, endDate, 1);
+    const duration = normalizedRange.duration;
+    const startDay = this.resolveVisibleDay(normalizedRange.startDate, normalizedRange.endDate);
+    const endDay = this.resolveVisibleEndDay(normalizedRange.startDate, normalizedRange.endDate);
 
     const createdSubtask: TimelineSubtask = {
       id: `sub-${Date.now()}`,
@@ -411,10 +441,11 @@ export class TimelineComponent implements OnChanges {
       duration,
       assignee,
       startDay,
-      endDay: this.getEndDay(startDay, duration),
+      endDay,
       allocation: 'available',
-      startDate: this.toStorageDate(startDate),
-      endDate: this.toStorageDate(endDate)
+      startDate: this.toStorageDate(normalizedRange.startDate),
+      endDate: this.toStorageDate(normalizedRange.endDate),
+      isSynthetic: false
     };
 
     targetTask.subtasks.push(createdSubtask);
@@ -473,19 +504,31 @@ export class TimelineComponent implements OnChanges {
   }
 
   getTaskStartDay(task: TimelineTask): number {
+    const startDate = this.getTaskStartDate(task);
+    const endDate = this.getTaskEndDate(task);
+    if (startDate && endDate) {
+      return this.resolveVisibleDay(startDate, endDate, 1);
+    }
+
     if (!task.subtasks.length) {
       return 1;
     }
 
-    return Math.min(...task.subtasks.map(subtask => subtask.startDay));
+    return Math.min(...task.subtasks.map(subtask => this.getSubtaskStartDay(subtask)));
   }
 
   getTaskEndDay(task: TimelineTask): number {
+    const startDate = this.getTaskStartDate(task);
+    const endDate = this.getTaskEndDate(task);
+    if (startDate && endDate) {
+      return this.resolveVisibleEndDay(startDate, endDate);
+    }
+
     if (!task.subtasks.length) {
       return 1;
     }
 
-    return Math.max(...task.subtasks.map(subtask => subtask.endDay));
+    return Math.max(...task.subtasks.map(subtask => this.getSubtaskEndDay(subtask)));
   }
 
   getTaskDuration(task: TimelineTask): number {
@@ -497,19 +540,15 @@ export class TimelineComponent implements OnChanges {
   }
 
   getTaskBarWidth(task: TimelineTask): number {
-    if (task.type === 'MILESTONE') {
-      return 2.2;
-    }
-
     return (this.getTaskDuration(task) / this.totalDays) * 100;
   }
 
   getSubtaskBarLeft(subtask: TimelineSubtask): number {
-    return ((subtask.startDay - 1) / this.totalDays) * 100;
+    return ((this.getSubtaskStartDay(subtask) - 1) / this.totalDays) * 100;
   }
 
   getSubtaskBarWidth(subtask: TimelineSubtask): number {
-    return (Math.max(1, subtask.endDay - subtask.startDay + 1) / this.totalDays) * 100;
+    return (Math.max(1, this.getSubtaskEndDay(subtask) - this.getSubtaskStartDay(subtask) + 1) / this.totalDays) * 100;
   }
 
   getTaskTypeClass(type: TaskType): string {
@@ -526,6 +565,47 @@ export class TimelineComponent implements OnChanges {
 
   getTaskBarClass(task: TimelineTask): string {
     return `task-bar-${task.type.toLowerCase()}`;
+  }
+
+  taskHasConflict(task: TimelineTask): boolean {
+    const assignee = task.assignee.trim().toLowerCase();
+    const startDate = this.getTaskStartDate(task);
+    const endDate = this.getTaskEndDate(task);
+
+    if (!assignee || !startDate || !endDate) {
+      return false;
+    }
+
+    return this.tasks.some(otherTask => {
+      if (otherTask.id === task.id) {
+        return false;
+      }
+
+      const otherAssignee = otherTask.assignee.trim().toLowerCase();
+      const otherStartDate = this.getTaskStartDate(otherTask);
+      const otherEndDate = this.getTaskEndDate(otherTask);
+
+      if (!otherStartDate || !otherEndDate) {
+        return false;
+      }
+
+      const sameAssignee = otherAssignee === assignee;
+      const overlaps = startDate <= otherEndDate && endDate >= otherStartDate;
+      const isLaterTask = this.compareTaskOrder(task, otherTask) > 0;
+      return sameAssignee && overlaps && isLaterTask;
+    });
+  }
+
+  getTaskBarBackground(task: TimelineTask): string {
+    if (this.taskHasConflict(task)) {
+      return 'var(--tm-yellow)';
+    }
+
+    if (task.type === 'BUG') {
+      return 'var(--tm-red)';
+    }
+
+    return '#12906f';
   }
 
   getInitials(name: string): string {
@@ -549,6 +629,10 @@ export class TimelineComponent implements OnChanges {
     return subtask.id;
   }
 
+  isSelectedTask(taskId: string | number): boolean {
+    return this.selectedTaskId !== null && String(this.selectedTaskId) === String(taskId);
+  }
+
   private refreshSchedule(): void {
     for (const task of this.tasks) {
       for (const subtask of task.subtasks) {
@@ -557,8 +641,6 @@ export class TimelineComponent implements OnChanges {
           subtask.startDate = this.toStorageDate(normalizedRange.startDate);
           subtask.endDate = this.toStorageDate(normalizedRange.endDate);
           subtask.duration = normalizedRange.duration;
-          subtask.startDay = this.resolveVisibleDay(normalizedRange.startDate, normalizedRange.endDate);
-          subtask.endDay = this.resolveVisibleEndDay(normalizedRange.startDate, normalizedRange.endDate);
           continue;
         }
 
@@ -570,7 +652,7 @@ export class TimelineComponent implements OnChanges {
 
     for (const task of this.tasks) {
       for (const subtask of task.subtasks) {
-        subtask.allocation = this.hasConflict(task.id, subtask.id, subtask.assignee, subtask.startDay, subtask.endDay)
+        subtask.allocation = this.hasConflict(task.id, subtask.id, subtask.assignee, subtask)
           ? 'busy'
           : 'available';
       }
@@ -593,7 +675,7 @@ export class TimelineComponent implements OnChanges {
     this.refreshSchedule();
   }
 
-  private hasConflict(taskId: string | number, subtaskId: string | number, assignee: string, startDay: number, endDay: number): boolean {
+  private hasConflict(taskId: string | number, subtaskId: string | number, assignee: string, targetSubtask: TimelineSubtask): boolean {
     const normalizedAssignee = assignee.trim().toLowerCase();
 
     if (!normalizedAssignee) {
@@ -607,8 +689,9 @@ export class TimelineComponent implements OnChanges {
         }
 
         const sameAssignee = subtask.assignee.trim().toLowerCase() === normalizedAssignee;
-        const overlaps = startDay <= subtask.endDay && endDay >= subtask.startDay;
-        return sameAssignee && overlaps;
+        const overlaps = this.doSubtasksOverlap(targetSubtask, subtask);
+        const isLaterTask = this.compareSubtaskOrder(targetSubtask, subtask) > 0;
+        return sameAssignee && overlaps && isLaterTask;
       })
     );
   }
@@ -625,11 +708,13 @@ export class TimelineComponent implements OnChanges {
         title: item.title || `Task ${index + 1}`,
         projectName: item.projectName || this.selectedProjectName || this.projectTitle,
         source: 'imported',
-        type: status === 'Completed' ? 'MILESTONE' : 'TASK',
+        type: 'TASK',
         status,
         priority: 'Normal',
         assignee: item.assignee || item.assignedTo || this.currentUsername || 'Unassigned',
         expanded: true,
+        startDate: this.toStorageDate(this.parseDate(item.startDate)),
+        endDate: this.toStorageDate(this.parseDate(item.dueDate)),
         subtasks
       };
     });
@@ -641,8 +726,23 @@ export class TimelineComponent implements OnChanges {
     taskIndex: number,
     subTaskIndex: number
   ): TimelineSubtask {
-    const startDate = this.parseDate(subTask.StartDate || item.startDate || item.createdAt);
-    const endDate = this.parseDate(subTask.EndDate || item.dueDate || subTask.StartDate || item.createdAt);
+    const startDate = this.parseDate(subTask.StartDate || item.startDate);
+    const endDate = this.parseDate(subTask.EndDate || item.dueDate);
+
+    if (!startDate || !endDate) {
+      return {
+        id: `${this.getImportedTaskId(item, taskIndex)}-sub-${subTaskIndex}`,
+        title: subTask.title || `Subtask ${subTaskIndex + 1}`,
+        description: subTask.description || '',
+        duration: 1,
+        assignee: subTask.assignee || subTask.assignedTo || item.assignee || item.assignedTo || this.currentUsername || 'Unassigned',
+        startDay: 1,
+        endDay: 1,
+        allocation: 'available',
+        isSynthetic: false
+      };
+    }
+
     const normalizedRange = this.normalizeSubtaskDateRange(startDate, endDate, 1);
 
     return {
@@ -655,13 +755,29 @@ export class TimelineComponent implements OnChanges {
       endDay: this.resolveVisibleEndDay(normalizedRange.startDate, normalizedRange.endDate),
       allocation: 'available',
       startDate: this.toStorageDate(normalizedRange.startDate),
-      endDate: this.toStorageDate(normalizedRange.endDate)
+      endDate: this.toStorageDate(normalizedRange.endDate),
+      isSynthetic: false
     };
   }
 
   private mapAssignmentFallbackSubTask(item: AssignWork, index: number): TimelineSubtask {
-    const startDate = this.parseDate(item.startDate || item.createdAt);
-    const endDate = this.parseDate(item.dueDate || item.startDate || item.createdAt);
+    const startDate = this.parseDate(item.startDate);
+    const endDate = this.parseDate(item.dueDate);
+
+    if (!startDate || !endDate) {
+      return {
+        id: `${this.getImportedTaskId(item, index)}-sub-0`,
+        title: item.title || `Subtask ${index + 1}`,
+        description: item.description || '',
+        duration: 1,
+        assignee: item.assignee || item.assignedTo || this.currentUsername || 'Unassigned',
+        startDay: 1,
+        endDay: 1,
+        allocation: 'available',
+        isSynthetic: true
+      };
+    }
+
     const normalizedRange = this.normalizeSubtaskDateRange(startDate, endDate, 1);
 
     return {
@@ -674,7 +790,8 @@ export class TimelineComponent implements OnChanges {
       endDay: this.resolveVisibleEndDay(normalizedRange.startDate, normalizedRange.endDate),
       allocation: 'available',
       startDate: this.toStorageDate(normalizedRange.startDate),
-      endDate: this.toStorageDate(normalizedRange.endDate)
+      endDate: this.toStorageDate(normalizedRange.endDate),
+      isSynthetic: true
     };
   }
 
@@ -684,7 +801,11 @@ export class TimelineComponent implements OnChanges {
     }
 
     const parsed = new Date(value);
-    return Number.isNaN(parsed.getTime()) ? null : parsed;
+    if (Number.isNaN(parsed.getTime())) {
+      return null;
+    }
+
+    return new Date(parsed.getFullYear(), parsed.getMonth(), parsed.getDate());
   }
 
   private getDateDifference(startDate: Date | null, endDate: Date | null): number {
@@ -711,6 +832,113 @@ export class TimelineComponent implements OnChanges {
     return Math.min(this.totalDays, Math.max(1, Number(day) || 1));
   }
 
+  private getSubtaskStartDate(subtask: TimelineSubtask): Date | null {
+    return this.parseDate(subtask.startDate);
+  }
+
+  private getSubtaskEndDate(subtask: TimelineSubtask): Date | null {
+    return this.parseDate(subtask.endDate || subtask.startDate);
+  }
+
+  private getTaskStartDate(task: TimelineTask): Date | null {
+    return this.parseDate(task.startDate);
+  }
+
+  private getTaskEndDate(task: TimelineTask): Date | null {
+    return this.parseDate(task.endDate || task.startDate);
+  }
+
+  private getSubtaskStartDay(subtask: TimelineSubtask): number {
+    const startDate = this.getSubtaskStartDate(subtask);
+    const endDate = this.getSubtaskEndDate(subtask);
+    if (startDate && endDate) {
+      return this.resolveVisibleDay(startDate, endDate, subtask.startDay);
+    }
+
+    return this.clampDay(subtask.startDay);
+  }
+
+  private getSubtaskEndDay(subtask: TimelineSubtask): number {
+    const startDate = this.getSubtaskStartDate(subtask);
+    const endDate = this.getSubtaskEndDate(subtask);
+    if (startDate && endDate) {
+      return this.resolveVisibleEndDay(startDate, endDate);
+    }
+
+    return this.getEndDay(this.getSubtaskStartDay(subtask), subtask.duration);
+  }
+
+  private doSubtasksOverlap(left: TimelineSubtask, right: TimelineSubtask): boolean {
+    const leftStartDate = this.getSubtaskStartDate(left);
+    const leftEndDate = this.getSubtaskEndDate(left);
+    const rightStartDate = this.getSubtaskStartDate(right);
+    const rightEndDate = this.getSubtaskEndDate(right);
+
+    if (leftStartDate && leftEndDate && rightStartDate && rightEndDate) {
+      return leftStartDate <= rightEndDate && leftEndDate >= rightStartDate;
+    }
+
+    const leftStartDay = this.getSubtaskStartDay(left);
+    const leftEndDay = this.getSubtaskEndDay(left);
+    const rightStartDay = this.getSubtaskStartDay(right);
+    const rightEndDay = this.getSubtaskEndDay(right);
+    return leftStartDay <= rightEndDay && leftEndDay >= rightStartDay;
+  }
+
+  private compareSubtaskOrder(left: TimelineSubtask, right: TimelineSubtask): number {
+    const leftStartDate = this.getSubtaskStartDate(left);
+    const rightStartDate = this.getSubtaskStartDate(right);
+    if (leftStartDate && rightStartDate) {
+      const startDiff = leftStartDate.getTime() - rightStartDate.getTime();
+      if (startDiff !== 0) {
+        return startDiff;
+      }
+    }
+
+    const leftEndDate = this.getSubtaskEndDate(left);
+    const rightEndDate = this.getSubtaskEndDate(right);
+    if (leftEndDate && rightEndDate) {
+      const endDiff = leftEndDate.getTime() - rightEndDate.getTime();
+      if (endDiff !== 0) {
+        return endDiff;
+      }
+    }
+
+    const startDayDiff = this.getSubtaskStartDay(left) - this.getSubtaskStartDay(right);
+    if (startDayDiff !== 0) {
+      return startDayDiff;
+    }
+
+    const endDayDiff = this.getSubtaskEndDay(left) - this.getSubtaskEndDay(right);
+    if (endDayDiff !== 0) {
+      return endDayDiff;
+    }
+
+    return String(left.id).localeCompare(String(right.id));
+  }
+
+  private compareTaskOrder(left: TimelineTask, right: TimelineTask): number {
+    const leftStartDate = this.getTaskStartDate(left);
+    const rightStartDate = this.getTaskStartDate(right);
+    if (leftStartDate && rightStartDate) {
+      const startDiff = leftStartDate.getTime() - rightStartDate.getTime();
+      if (startDiff !== 0) {
+        return startDiff;
+      }
+    }
+
+    const leftEndDate = this.getTaskEndDate(left);
+    const rightEndDate = this.getTaskEndDate(right);
+    if (leftEndDate && rightEndDate) {
+      const endDiff = leftEndDate.getTime() - rightEndDate.getTime();
+      if (endDiff !== 0) {
+        return endDiff;
+      }
+    }
+
+    return String(left.id).localeCompare(String(right.id));
+  }
+
   private getEndDay(startDay: number, duration: number): number {
     return this.clampDay(startDay + duration - 1);
   }
@@ -732,9 +960,9 @@ export class TimelineComponent implements OnChanges {
     this.newSubtask = {
       title: '',
       description: '',
-      duration: 3,
       assignee: '',
-      startDay: 1
+      startDate: this.getDefaultTaskStartDate() as Date | null,
+      endDate: this.getDefaultTaskEndDate() as Date | null
     };
   }
 
@@ -833,6 +1061,16 @@ export class TimelineComponent implements OnChanges {
 
   private getImportedTaskId(item: AssignWork, index: number): string {
     return String(item._id || item.projectId || item.title || `task-${index}`);
+  }
+
+  private syncProjectTitle(): void {
+    if (this.selectedProjectFilter !== 'all') {
+      this.projectTitle = this.selectedProjectFilter;
+      return;
+    }
+
+    const selectedProjectName = this.selectedProjectName?.trim();
+    this.projectTitle = this.projectOptions.length > 1 ? 'All Projects' : (selectedProjectName || 'Project plan');
   }
 
   private getMonthStart(date: Date): Date {

@@ -26,12 +26,12 @@
         <button class="btn btn-light" type="button" (click)="toggleProjectPanel()">
           Include projects <span>{{ projectCount }}</span>
         </button>
-        <button class="btn btn-light" type="button" (click)="emitFilter()">
+        <!-- <button class="btn btn-light" type="button" (click)="emitFilter()">
           Filter <span>{{ subtaskCount }}</span>
-        </button>
-        <button class="btn btn-light" type="button" (click)="emitToday()">
+        </button> -->
+        <!-- <button class="btn btn-light" type="button" (click)="emitToday()">
           {{ showTodayOnly ? 'Today On' : 'Today' }}
-        </button>
+        </button> -->
         <button class="btn btn-light" type="button" (click)="emitMonthView()">Month View</button>
       </div>
     </div>
@@ -43,7 +43,7 @@
           class="chip-btn"
           type="button"
           [class.active]="selectedProjectFilter === 'all'"
-          (click)="selectedProjectFilter = 'all'"
+          (click)="selectProjectFilter('all')"
         >
           All Projects
         </button>
@@ -52,7 +52,7 @@
           type="button"
           *ngFor="let projectName of projectOptions"
           [class.active]="selectedProjectFilter === projectName"
-          (click)="selectedProjectFilter = projectName"
+          (click)="selectProjectFilter(projectName)"
         >
           {{ projectName }}
         </button>
@@ -73,7 +73,6 @@
             <option value="PHASE">Phase</option>
             <option value="TASK">Task</option>
             <option value="BUG">Bug</option>
-            <option value="MILESTONE">Milestone</option>
           </select>
         </label>
 
@@ -106,7 +105,6 @@
             <option value="PHASE">Phase</option>
             <option value="TASK">Task</option>
             <option value="BUG">Bug</option>
-            <option value="MILESTONE">Milestone</option>
           </select>
 
           <select [(ngModel)]="newTask.status">
@@ -206,19 +204,8 @@
               </div>
             </div>
 
-            <div class="subtask-form-row" *ngIf="selectedTaskId === task.id">
-              <div class="subtask-inline-form">
-                <input [(ngModel)]="newSubtask.title" type="text" placeholder="Subtask title" />
-                <input [(ngModel)]="newSubtask.description" type="text" placeholder="Description" />
-                <input [(ngModel)]="newSubtask.assignee" type="text" placeholder="Assigned person" />
-                <input [(ngModel)]="newSubtask.startDay" type="number" min="1" [max]="totalDays" placeholder="Start day" />
-                <input [(ngModel)]="newSubtask.duration" type="number" min="1" [max]="totalDays" placeholder="Days" />
-                <button class="btn btn-primary small-btn" type="button" (click)="addSubtask(task)">Add</button>
-              </div>
-            </div>
-
-            <ng-container *ngIf="task.expanded">
-              <div class="table-row subtask-row" *ngFor="let subtask of task.subtasks; trackBy: trackBySubtask">
+            <ng-container *ngIf="task.expanded && hasVisibleSubtasks(task)">
+              <div class="table-row subtask-row" *ngFor="let subtask of getVisibleSubtasks(task); trackBy: trackBySubtask">
                 <div class="col subject subject-cell subtask-indent">
                   <span class="subtask-name">{{ subtask.title }}</span>
                 </div>
@@ -246,10 +233,8 @@
               </div>
             </ng-container>
 
-            <div class="task-footer">
-              <button class="link-btn" type="button" (click)="openSubtaskComposer(task.id)">+ Create subtask</button>
-              <button class="link-btn danger" type="button" (click)="deleteTask(task.id)">Delete task</button>
-            </div>
+            <div class="task-footer" aria-hidden="true"></div>
+
           </ng-container>
         </div>
       </div>
@@ -286,6 +271,7 @@
               <div
                 class="task-summary-bar"
                 [ngClass]="getTaskBarClass(task)"
+                [style.background]="getTaskBarBackground(task)"
                 [style.left.%]="getTaskBarLeft(task)"
                 [style.width.%]="getTaskBarWidth(task)"
               >
@@ -293,8 +279,8 @@
               </div>
             </div>
 
-            <ng-container *ngIf="task.expanded">
-              <div class="gantt-row subtask-gantt-row" *ngFor="let subtask of task.subtasks; trackBy: trackBySubtask">
+            <ng-container *ngIf="task.expanded && hasVisibleSubtasks(task)">
+              <div class="gantt-row subtask-gantt-row" *ngFor="let subtask of getVisibleSubtasks(task); trackBy: trackBySubtask">
                 <div class="grid-bg" [style.grid-template-columns]="calendarGridTemplate">
                   <div class="grid-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend"></div>
                 </div>
@@ -321,9 +307,9 @@
     </div>
 
     <div class="bottom-create">
-      <button class="create-work-btn" type="button" (click)="openTaskComposer()">
+      <!-- <button class="create-work-btn" type="button" (click)="openTaskComposer()">
         + Create new work package
-      </button>
+      </button> -->
     </div>
   </div>
 </div>
