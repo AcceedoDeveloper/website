@@ -1,3 +1,4 @@
+
 * {
   box-sizing: border-box;
 }
@@ -451,6 +452,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .expand-btn {
@@ -465,6 +467,8 @@
 
 .task-name,
 .subtask-name {
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -645,6 +649,7 @@
   font-size: 12px;
   font-weight: 700;
   margin-left:300px;
+  margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
@@ -772,14 +777,63 @@
   background: var(--tm-yellow);
 }
 
+.task-summary-bar.bar-status-todo,
+.subtask-bar.bar-status-todo {
+  background: rgba(85, 95, 109, 0.12) !important;
+  border: 1px dashed rgba(85, 95, 109, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+
+.task-summary-bar.bar-status-todo .bar-label.bar-label-inside,
+.subtask-bar.bar-status-todo .bar-label.bar-label-inside {
+  color: #555f6d;
+  text-shadow: none;
+}
+
+.bar-progress-indicator {
+  position: absolute;
+  inset: 0 0 0 auto;
+  background: rgba(255, 255, 255, 0.26);
+  box-shadow: inset 10px 0 16px rgba(255, 255, 255, 0.24);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .bar-label {
   position: absolute;
   top: 50%;
-  left: calc(100% + 10px);
   transform: translateY(-50%);
   color: #555f6d;
   font-size: 12px;
   white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bar-label.bar-label-outside {
+  left: calc(100% + 10px);
+}
+
+.bar-label.bar-label-inside {
+  left: 8px;
+  right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.bar-label.bar-label-inside.bar-label-light {
+  color: rgba(255, 255, 255, 0.96);
+}
+
+.bar-label.bar-label-inside.bar-label-dark {
+  color: #18212f;
+  text-shadow: none;
+}
+
+.bar-label.bar-label-before {
+  left: -10px;
+  transform: translate(-100%, -50%);
 }
 
 .bottom-create {

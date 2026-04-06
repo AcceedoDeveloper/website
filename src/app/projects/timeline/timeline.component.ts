@@ -1,3 +1,4 @@
+
 import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AssignWork, AssignWorkSubTask } from '../../service/assignwork.service';
 
@@ -11,6 +12,7 @@ interface TimelineSubtask {
   title: string;
   description: string;
   duration: number;
+  status: TaskStatus;
   assignee: string;
   startDay: number;
   endDay: number;
@@ -88,6 +90,7 @@ export class TimelineComponent implements OnChanges {
   newSubtask = {
     title: '',
     description: '',
+    status: 'New' as TaskStatus,
     assignee: '',
     startDate: this.getDefaultTaskStartDate() as Date | null,
     endDate: this.getDefaultTaskEndDate() as Date | null
@@ -218,7 +221,7 @@ export class TimelineComponent implements OnChanges {
           return false;
         }
 
-        return task.subtasks.length > 0;
+        return task.subtasks.length > 0 || this.isTaskInVisibleMonth(task);
       });
   }
 
@@ -400,6 +403,7 @@ export class TimelineComponent implements OnChanges {
           title,
           description: '',
           duration,
+          status: this.newTask.status,
           assignee,
           startDay,
           endDay,
@@ -439,6 +443,7 @@ export class TimelineComponent implements OnChanges {
       title,
       description: this.newSubtask.description.trim(),
       duration,
+      status: this.newSubtask.status,
       assignee,
       startDay,
       endDay,
@@ -567,6 +572,41 @@ export class TimelineComponent implements OnChanges {
     return `task-bar-${task.type.toLowerCase()}`;
   }
 
+  getTaskTimelineClass(task: TimelineTask): string {
+    return `bar-status-${this.getTimelineStatusKey(task.status)}`;
+  }
+
+  getSubtaskTimelineClass(subtask: TimelineSubtask): string {
+    return `bar-status-${this.getTimelineStatusKey(subtask.status)}`;
+  }
+
+  getTaskProgressPercent(task: TimelineTask): number {
+    return this.getTimelineProgressPercent(task.status, this.getTaskStartDate(task), this.getTaskEndDate(task));
+  }
+
+  getSubtaskProgressPercent(subtask: TimelineSubtask): number {
+    return this.getTimelineProgressPercent(subtask.status, this.getSubtaskStartDate(subtask), this.getSubtaskEndDate(subtask));
+  }
+
+  getTaskBarLabelClass(task: TimelineTask): string {
+    const placementClass = this.getBarLabelClass(this.getTaskDuration(task), this.totalDays - this.getTaskEndDay(task));
+    if (placementClass !== 'bar-label-inside') {
+      return placementClass;
+    }
+
+    return `${placementClass} ${this.taskHasConflict(task) ? 'bar-label-dark' : 'bar-label-light'}`;
+  }
+
+  getSubtaskBarLabelClass(subtask: TimelineSubtask): string {
+    const duration = Math.max(1, this.getSubtaskEndDay(subtask) - this.getSubtaskStartDay(subtask) + 1);
+    const placementClass = this.getBarLabelClass(duration, this.totalDays - this.getSubtaskEndDay(subtask));
+    if (placementClass !== 'bar-label-inside') {
+      return placementClass;
+    }
+
+    return `${placementClass} ${subtask.allocation === 'busy' ? 'bar-label-dark' : 'bar-label-light'}`;
+  }
+
   taskHasConflict(task: TimelineTask): boolean {
     const assignee = task.assignee.trim().toLowerCase();
     const startDate = this.getTaskStartDate(task);
@@ -597,15 +637,11 @@ export class TimelineComponent implements OnChanges {
   }
 
   getTaskBarBackground(task: TimelineTask): string {
-    if (this.taskHasConflict(task)) {
-      return 'var(--tm-yellow)';
+    if (task.status === 'New') {
+      return 'rgba(85, 95, 109, 0.12)';
     }
 
-    if (task.type === 'BUG') {
-      return 'var(--tm-red)';
-    }
-
-    return '#12906f';
+    return this.taskHasConflict(task) ? 'var(--tm-yellow)' : '#12906f';
   }
 
   getInitials(name: string): string {
@@ -636,6 +672,8 @@ export class TimelineComponent implements OnChanges {
   private refreshSchedule(): void {
     for (const task of this.tasks) {
       for (const subtask of task.subtasks) {
+        subtask.status = subtask.status || task.status;
+
         if (subtask.startDate) {
           const normalizedRange = this.normalizeSubtaskDateRange(subtask.startDate, subtask.endDate, subtask.duration);
           subtask.startDate = this.toStorageDate(normalizedRange.startDate);
@@ -735,6 +773,7 @@ export class TimelineComponent implements OnChanges {
         title: subTask.title || `Subtask ${subTaskIndex + 1}`,
         description: subTask.description || '',
         duration: 1,
+        status: this.normalizeStatus(subTask.Status || item.Status),
         assignee: subTask.assignee || subTask.assignedTo || item.assignee || item.assignedTo || this.currentUsername || 'Unassigned',
         startDay: 1,
         endDay: 1,
@@ -750,6 +789,7 @@ export class TimelineComponent implements OnChanges {
       title: subTask.title || `Subtask ${subTaskIndex + 1}`,
       description: subTask.description || '',
       duration: Math.max(1, this.getDateDifference(normalizedRange.startDate, normalizedRange.endDate)),
+      status: this.normalizeStatus(subTask.Status || item.Status),
       assignee: subTask.assignee || subTask.assignedTo || item.assignee || item.assignedTo || this.currentUsername || 'Unassigned',
       startDay: this.resolveVisibleDay(normalizedRange.startDate, normalizedRange.endDate, subTaskIndex + 1),
       endDay: this.resolveVisibleEndDay(normalizedRange.startDate, normalizedRange.endDate),
@@ -770,6 +810,7 @@ export class TimelineComponent implements OnChanges {
         title: item.title || `Subtask ${index + 1}`,
         description: item.description || '',
         duration: 1,
+        status: this.normalizeStatus(item.Status),
         assignee: item.assignee || item.assignedTo || this.currentUsername || 'Unassigned',
         startDay: 1,
         endDay: 1,
@@ -785,6 +826,7 @@ export class TimelineComponent implements OnChanges {
       title: item.title || `Subtask ${index + 1}`,
       description: item.description || '',
       duration: Math.max(1, this.getDateDifference(normalizedRange.startDate, normalizedRange.endDate)),
+      status: this.normalizeStatus(item.Status),
       assignee: item.assignee || item.assignedTo || this.currentUsername || 'Unassigned',
       startDay: this.resolveVisibleDay(normalizedRange.startDate, normalizedRange.endDate, index + 1),
       endDay: this.resolveVisibleEndDay(normalizedRange.startDate, normalizedRange.endDate),
@@ -943,6 +985,64 @@ export class TimelineComponent implements OnChanges {
     return this.clampDay(startDay + duration - 1);
   }
 
+  private getBarLabelClass(durationDays: number, trailingDays: number): string {
+    if (trailingDays >= 4) {
+      return 'bar-label-outside';
+    }
+
+    if (durationDays >= 4) {
+      return 'bar-label-inside';
+    }
+
+    return 'bar-label-before';
+  }
+
+  private getTimelineStatusKey(status: TaskStatus): 'todo' | 'in-progress' | 'done' {
+    if (status === 'Completed') {
+      return 'done';
+    }
+
+    if (status === 'In progress') {
+      return 'in-progress';
+    }
+
+    return 'todo';
+  }
+
+  private getTimelineProgressPercent(status: TaskStatus, startDate: Date | null, endDate: Date | null): number {
+    if (status === 'Completed') {
+      return 100;
+    }
+
+    if (status !== 'In progress' || !startDate || !endDate) {
+      return 0;
+    }
+
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const visibleStart = this.getMonthStart(this.visibleMonthDate);
+    const visibleEnd = new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0);
+    const segmentStart = startDate > visibleStart ? startDate : visibleStart;
+    const segmentEnd = endDate < visibleEnd ? endDate : visibleEnd;
+
+    if (segmentStart > segmentEnd) {
+      return 0;
+    }
+
+    const progressEnd = today < endDate ? today : endDate;
+    if (progressEnd < segmentStart) {
+      return 0;
+    }
+
+    if (progressEnd >= segmentEnd) {
+      return 100;
+    }
+
+    const visibleDays = Math.max(1, this.getDateDifference(segmentStart, segmentEnd));
+    const completedVisibleDays = Math.max(0, this.getDateDifference(segmentStart, progressEnd));
+    return Math.max(0, Math.min(100, (completedVisibleDays / visibleDays) * 100));
+  }
+
   private resetTaskForm(): void {
     this.newTask = {
       title: '',
@@ -960,6 +1060,7 @@ export class TimelineComponent implements OnChanges {
     this.newSubtask = {
       title: '',
       description: '',
+      status: 'New',
       assignee: '',
       startDate: this.getDefaultTaskStartDate() as Date | null,
       endDate: this.getDefaultTaskEndDate() as Date | null
@@ -1170,6 +1271,18 @@ export class TimelineComponent implements OnChanges {
     return startDate <= visibleEnd && endDate >= visibleStart;
   }
 
+  private isTaskInVisibleMonth(task: TimelineTask): boolean {
+    const startDate = this.getTaskStartDate(task);
+    const endDate = this.getTaskEndDate(task);
+    if (!startDate || !endDate) {
+      return false;
+    }
+
+    const visibleStart = this.getMonthStart(this.visibleMonthDate);
+    const visibleEnd = new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0);
+    return startDate <= visibleEnd && endDate >= visibleStart;
+  }
+
   private resolveVisibleDay(startDate: Date, endDate: Date, fallbackDay = 1): number {
     const visibleStart = this.getMonthStart(this.visibleMonthDate);
     if (startDate > new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0)) {
@@ -1188,3 +1301,5 @@ export class TimelineComponent implements OnChanges {
     return this.clampDay(endDate > visibleEnd ? visibleEnd.getDate() : endDate.getDate());
   }
 }
+
+

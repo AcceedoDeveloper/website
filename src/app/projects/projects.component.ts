@@ -1613,6 +1613,7 @@ this.snackBar.open(
 
     const previousStatus = movedTask.Status;
     movedTask.Status = newStatus;
+    this.updateTimelineItems();
 
     if (movedTask._id) {
       const updatePayload = { Status: newStatus };
@@ -1630,6 +1631,7 @@ this.snackBar.open(
             event.previousIndex
           );
           movedTask.Status = previousStatus;
+          this.updateTimelineItems();
           this.snackBar.open('Failed to update task status', 'Close', { duration: 3000 });
         }
       });
@@ -1642,6 +1644,8 @@ this.snackBar.open(
         event.currentIndex,
         event.previousIndex
       );
+      movedTask.Status = previousStatus;
+      this.updateTimelineItems();
       this.snackBar.open('Cannot change status for unsaved task', 'Close', { duration: 3000 });
     }
   }

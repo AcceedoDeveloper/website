@@ -215,8 +215,8 @@
                 </div>
 
                 <div class="col status">
-                  <span class="dot" [ngClass]="subtask.allocation"></span>
-                  {{ subtask.allocation === 'available' ? 'Available' : 'Busy' }}
+                  <span class="dot" [ngClass]="getStatusClass(subtask.status)"></span>
+                  {{ subtask.status }}
                 </div>
 
                 <div class="col priority">
@@ -270,12 +270,17 @@
 
               <div
                 class="task-summary-bar"
-                [ngClass]="getTaskBarClass(task)"
+                [ngClass]="[getTaskBarClass(task), getTaskTimelineClass(task)]"
                 [style.background]="getTaskBarBackground(task)"
                 [style.left.%]="getTaskBarLeft(task)"
                 [style.width.%]="getTaskBarWidth(task)"
               >
-                <span class="bar-label">{{ task.title }}</span>
+                <span
+                  *ngIf="task.status === 'In progress'"
+                  class="bar-progress-indicator"
+                  [style.width.%]="100 - getTaskProgressPercent(task)"
+                ></span>
+                <span class="bar-label" [ngClass]="getTaskBarLabelClass(task)">{{ task.title }}</span>
               </div>
             </div>
 
@@ -287,11 +292,16 @@
 
                 <div
                   class="subtask-bar"
-                  [ngClass]="subtask.allocation === 'available' ? 'available-bar' : 'busy-bar'"
+                  [ngClass]="[subtask.allocation === 'available' ? 'available-bar' : 'busy-bar', getSubtaskTimelineClass(subtask)]"
                   [style.left.%]="getSubtaskBarLeft(subtask)"
                   [style.width.%]="getSubtaskBarWidth(subtask)"
                 >
-                  <span class="bar-label">{{ subtask.title }}</span>
+                  <span
+                    *ngIf="subtask.status === 'In progress'"
+                    class="bar-progress-indicator"
+                    [style.width.%]="100 - getSubtaskProgressPercent(subtask)"
+                  ></span>
+                  <span class="bar-label" [ngClass]="getSubtaskBarLabelClass(subtask)">{{ subtask.title }}</span>
                 </div>
               </div>
             </ng-container>
