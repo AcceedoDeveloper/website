@@ -779,14 +779,14 @@
 
 .task-summary-bar.bar-status-todo,
 .subtask-bar.bar-status-todo {
-  background: rgba(85, 95, 109, 0.12) !important;
-  border: 1px dashed rgba(85, 95, 109, 0.28);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  background: rgb(255, 128, 0) !important;
+  border: 1px dashed rgba(221, 92, 92, 0.34);
+  box-shadow: inset 0 0 0 1px rgba(255, 234, 234, 0.4);
 }
 
 .task-summary-bar.bar-status-todo .bar-label.bar-label-inside,
 .subtask-bar.bar-status-todo .bar-label.bar-label-inside {
-  color: #555f6d;
+  color: #a34a4a;
   text-shadow: none;
 }
 
