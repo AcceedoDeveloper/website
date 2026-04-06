@@ -1724,7 +1724,7 @@ this.datefiltersection=false;
   this.TimeLine = true;
   this.datefiltersection = false;
 
-  this.updateTimelineItems();
+  this.getAssignments();
 }
   opendocpop(doc?: any) {
     this.editingDocument = doc || null;

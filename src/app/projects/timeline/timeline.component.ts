@@ -556,6 +556,10 @@ export class TimelineComponent implements OnChanges {
     return (Math.max(1, this.getSubtaskEndDay(subtask) - this.getSubtaskStartDay(subtask) + 1) / this.totalDays) * 100;
   }
 
+  getSubtaskColorClass(subtask: TimelineSubtask): string {
+    return subtask.allocation === 'busy' ? 'busy-bar' : 'available-bar';
+  }
+
   getTaskTypeClass(type: TaskType): string {
     return type.toLowerCase();
   }
@@ -714,24 +718,20 @@ export class TimelineComponent implements OnChanges {
   }
 
   private hasConflict(taskId: string | number, subtaskId: string | number, assignee: string, targetSubtask: TimelineSubtask): boolean {
-    const normalizedAssignee = assignee.trim().toLowerCase();
-
-    if (!normalizedAssignee) {
+    const parentTask = this.tasks.find(task => task.id === taskId);
+    if (!parentTask) {
       return false;
     }
 
-    return this.tasks.some(task =>
-      task.subtasks.some(subtask => {
-        if (task.id === taskId && subtask.id === subtaskId) {
-          return false;
-        }
+    return parentTask.subtasks.some(subtask => {
+      if (subtask.id === subtaskId) {
+        return false;
+      }
 
-        const sameAssignee = subtask.assignee.trim().toLowerCase() === normalizedAssignee;
-        const overlaps = this.doSubtasksOverlap(targetSubtask, subtask);
-        const isLaterTask = this.compareSubtaskOrder(targetSubtask, subtask) > 0;
-        return sameAssignee && overlaps && isLaterTask;
-      })
-    );
+      const overlaps = this.doSubtasksOverlap(targetSubtask, subtask);
+      const isLaterSubtask = this.compareSubtaskOrder(targetSubtask, subtask) > 0;
+      return overlaps && isLaterSubtask;
+    });
   }
 
   private mapAssignmentsToTasks(items: AssignWork[]): TimelineTask[] {

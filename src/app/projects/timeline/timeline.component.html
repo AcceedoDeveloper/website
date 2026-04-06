@@ -215,8 +215,8 @@
                 </div>
 
                 <div class="col status">
-                  <span class="dot" [ngClass]="getStatusClass(subtask.status)"></span>
-                  {{ subtask.status }}
+                  <span class="dot" [ngClass]="subtask.allocation"></span>
+                  {{ subtask.allocation === 'available' ? 'Available' : 'Busy' }}
                 </div>
 
                 <div class="col priority">
@@ -292,15 +292,10 @@
 
                 <div
                   class="subtask-bar"
-                  [ngClass]="[subtask.allocation === 'available' ? 'available-bar' : 'busy-bar', getSubtaskTimelineClass(subtask)]"
+                  [ngClass]="getSubtaskColorClass(subtask)"
                   [style.left.%]="getSubtaskBarLeft(subtask)"
                   [style.width.%]="getSubtaskBarWidth(subtask)"
                 >
-                  <span
-                    *ngIf="subtask.status === 'In progress'"
-                    class="bar-progress-indicator"
-                    [style.width.%]="100 - getSubtaskProgressPercent(subtask)"
-                  ></span>
                   <span class="bar-label" [ngClass]="getSubtaskBarLabelClass(subtask)">{{ subtask.title }}</span>
                 </div>
               </div>
