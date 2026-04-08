@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { ConfigService } from '../../service/config.service';
+import { Permission } from '../../permission/permission';
 
 export interface User {
   _id?: string;
@@ -84,4 +85,24 @@ export class UserservicesService {
     return this.http.delete(`${url}/${_id}`);
   }
 
+ //permission 
+ createPermission(permissionData:Permission):Observable<Permission>{
+  const url =this.config.getWebsiteUrl('createPermission');
+  return this.http.post<Permission>(url,permissionData);
+ }
+
+getPermissions(): Observable<Permission[]> {
+  const url = this.config.getWebsiteUrl('getPermissions');
+  return this.http.get<Permission[]>(url);
+}
+
+ updatePermission(_id:string,permissionData:Permission):Observable<Permission>{
+  const url =this.config.getWebsiteUrl('updatePermission');
+  return this.http.put<Permission>(`${url}/${_id}`,permissionData);
+ }
+
+ deletePermission(_id:string):Observable<any>{
+  const url =this.config.getWebsiteUrl('deletePermission');
+  return this.http.delete(`${url}/${_id}`);
+ }
 }

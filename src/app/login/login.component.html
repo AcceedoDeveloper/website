@@ -130,7 +130,13 @@
       <div *ngIf="message" class="error-message">{{ message }}</div>
 
 
-      <button type="submit" class="submit-btn">Login</button>
+      <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+        <span class="btn-content" *ngIf="!isSubmitting">Login</span>
+        <span class="btn-content loading" *ngIf="isSubmitting">
+          <span class="spinner" aria-hidden="true"></span>
+          Logging in...
+        </span>
+      </button>
 
 
     </form>

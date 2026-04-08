@@ -20,7 +20,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Owl Carousel
 import { CarouselModule } from 'ngx-owl-carousel-o';
@@ -105,6 +105,8 @@ import { Product5Component } from './product5/product5.component';
 import { Product6Component } from './product6/product6.component';
 import { Product7Component } from './product7/product7.component';
 import { TimelineComponent } from './projects/timeline/timeline.component';
+import { PermissionComponent } from './permission/permission.component';
+import { AddEditPermissionDialogComponent } from './permission/add-edit-permission-dialog/add-edit-permission-dialog.component';
 
 
 
@@ -181,6 +183,8 @@ export function loadConfigFactory(configService: ConfigService) {
    Product6Component,
    Product7Component,
    UwbComponent,
+   PermissionComponent,
+   AddEditPermissionDialogComponent,
    
   ],
 
@@ -215,6 +219,7 @@ export function loadConfigFactory(configService: ConfigService) {
     MatDatepickerModule,
     MatNativeDateModule,
     PdfViewerModule,
+    MatCheckboxModule
   ],
   providers: [
     provideAnimationsAsync(),

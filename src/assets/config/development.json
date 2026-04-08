@@ -41,6 +41,10 @@
     { "name": "createDocument", "url": "createDocument" },
     { "name": "updateDocument", "url": "updateDocument" },
     { "name": "deleteDocument", "url": "deleteDocument" },
-    { "name": "deleteFile", "url": "deleteFile" }
+    { "name": "deleteFile", "url": "deleteFile" },
+    {"name":"createPermission","url":"createPermission"},
+    {"name":"getPermissions","url":"getPermissions"},
+    {"name":"updatePermission","url":"updatePermission"},
+    {"name":"deletePermission","url":"deletePermission"}
   ]
 }
