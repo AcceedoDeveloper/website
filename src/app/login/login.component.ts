@@ -12,6 +12,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   hidePassword = true;
   message = '';
+  isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
@@ -113,10 +114,17 @@ export class LoginComponent implements OnInit {
 onSubmit(): void {
   if (!this.loginForm.valid) {
     this.message = 'Please fill username and password';
+    this.loginForm.markAllAsTouched();
+    return;
+  }
+
+  if (this.isSubmitting) {
     return;
   }
 
   const { username, password } = this.loginForm.value;
+  this.message = '';
+  this.isSubmitting = true;
 
   this.authService.login(username, password).subscribe({
     next: (res) => {
@@ -168,12 +176,15 @@ onSubmit(): void {
       } else {
         this.router.navigate(['/Projects']);
       }
+
+      this.isSubmitting = false;
       
       
     },
     error: (err) => {
       console.error('❌ Login error:', err);
       this.message = err?.error?.message || 'Invalid username or password';
+      this.isSubmitting = false;
     }
   });
 }

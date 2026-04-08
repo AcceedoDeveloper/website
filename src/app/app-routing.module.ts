@@ -46,7 +46,7 @@ import { Product4Component } from './product4/product4.component';
 import { Product5Component } from './product5/product5.component';
 import { Product6Component } from './product6/product6.component';
 import { TimelineComponent } from './projects/timeline/timeline.component';
-
+import { PermissionComponent } from './permission/permission.component';
 
 
 
@@ -102,22 +102,22 @@ const routes: Routes = [
 {path:'role/edit/:id',component:RoledialogComponent},
  
   // Master (only admin can see + access)
-  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
-  { path: 'department', component: DepartmentComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
-  { path: 'role', component: RoleComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
-  { path: 'create', component: CreateprojectComponent, canActivate: [AuthGuard], data: { roles: ['admin'] } },
-
+  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard] },
+  { path: 'department', component: DepartmentComponent, canActivate: [AuthGuard]},
+  { path: 'role', component: RoleComponent, canActivate: [AuthGuard]},
+  { path: 'create', component: CreateprojectComponent, canActivate: [AuthGuard] },
+ {path:'permission',component:PermissionComponent, canActivate: [AuthGuard] },
   // Projects → all users
-  { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
+  { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard] },
 
   // Frontend → all users
-  { path: 'webdev', component: WebdevComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
-  { path: 'angulardeveloper', component: AngularDeveloperComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
-  { path: 'ngrx', component: NgrxComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
+  { path: 'webdev', component: WebdevComponent, canActivate: [AuthGuard] },
+  { path: 'angulardeveloper', component: AngularDeveloperComponent, canActivate: [AuthGuard]  },
+  { path: 'ngrx', component: NgrxComponent, canActivate: [AuthGuard] },
 
   // Backend → all users
-  { path: 'node', component: NodeComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
-  { path: 'api&database', component: AppComponent, canActivate: [AuthGuard], data: { roles: ['admin','user'] } },
+  { path: 'node', component: NodeComponent, canActivate: [AuthGuard] },
+  { path: 'api&database', component: AppComponent, canActivate: [AuthGuard]},
 
   { path: '', redirectTo: 'projects', pathMatch: 'full' },
   { path: '**', redirectTo: 'projects' }

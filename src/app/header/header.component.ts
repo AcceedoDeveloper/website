@@ -129,7 +129,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private roleService: RoleserviceService,
     private departmentService: DepartmentserviceService,
     private snackBar: MatSnackBar,
-    private meta: Meta, private title: Title
+    private meta: Meta, private title: Title,
+    
   ) {this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -202,6 +203,10 @@ nextPage() {
     }, 1000);
 
     this.startNotificationAutoRefresh();
+
+    // Subscribe to permission refresh events
+   
+
   }
 
   ngOnDestroy(): void {
@@ -260,6 +265,48 @@ nextPage() {
         this.userData.role = this.userData.role.role;
       }
     }
+  }
+
+  /**
+   * Refresh user data from backend and update sessionStorage
+   * This is called when permissions are updated to show the new sidebar menu
+   */
+  refreshUserDataFromBackend(): void {
+    if (!this.userData?._id && !this.userData?.userCode) {
+      console.warn('⚠️ Cannot refresh: current user ID not found');
+      return;
+    }
+
+    this.userService.getuser().subscribe({
+      next: (users: any[]) => {
+        // Find the current user in the list
+        const currentUserId = this.userData?._id;
+        const currentUserCode = this.userData?.userCode;
+        
+        const refreshedUser = users.find(u => 
+          u._id === currentUserId || u.userCode === currentUserCode
+        );
+
+        if (refreshedUser) {
+          // Update userData with fresh backend data
+          this.userData = { ...this.userData, ...refreshedUser };
+          
+          // Update sessionStorage
+          sessionStorage.setItem('user', JSON.stringify(this.userData));
+          
+          console.log('✅ User data refreshed from backend, sidebar will update', this.userData);
+          
+          // Update user service subject
+          this.userService.setUser(this.userData);
+        } else {
+          console.warn('⚠️ Current user not found in users list');
+        }
+      },
+      error: (err) => {
+        console.error('❌ Failed to refresh user data from backend:', err);
+        this.snackBar.open('Failed to refresh permissions', 'Close', { duration: 3000 });
+      }
+    });
   }
 
   loadTodaysTasks() {
@@ -1096,11 +1143,102 @@ saveProfilePicture() {
     return role?.toLowerCase() === 'admin';
   }
 
+  private isAllowed(value: any): boolean {
+    if (typeof value === 'boolean') return value;
+    if (value && typeof value === 'object' && 'visible' in value) {
+      return !!value.visible;
+    }
+    return false;
+  }
+
+  private getScreensPermissions(): any {
+    const screens = this.userData?.permission?.screens || {};
+    return {
+      master: screens?.master  || {},
+      project: screens?.project,
+      frontend: screens?.frontend || {},
+      backend: screens?.backend || {}
+    };
+  }
+
+  canShowMasterSection(): boolean {
+    if (this.isAdmin()) return true;
+    const master = this.getScreensPermissions().master;
+    return !!(master?.visible || master?.user || master?.role || master?.createProject || master?.permission);
+  }
+
+  canShowUserMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().master?.user;
+  }
+
+  canShowDepartmentMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().master?.visible;
+  }
+
+  canShowRoleMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().master?.role;
+  }
+
+  canShowCreateProjectMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().master?.createProject;
+  }
+
+  canShowPermissionMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().master?.permission;
+  }
+
+  canShowProjectsMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return this.isAllowed(this.getScreensPermissions().project);
+  }
+
+  canShowFrontendSection(): boolean {
+    if (this.isAdmin()) return true;
+    const frontend = this.getScreensPermissions().frontend;
+    return !!(frontend?.visible || frontend?.webdev || frontend?.angularDeveloper || frontend?.ngrx);
+  }
+
+  canShowWebdevMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().frontend?.webdev;
+  }
+
+  canShowAngularMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().frontend?.angularDeveloper;
+  }
+
+  canShowNgrxMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().frontend?.ngrx;
+  }
+
+  canShowBackendSection(): boolean {
+    if (this.isAdmin()) return true;
+    const backend = this.getScreensPermissions().backend;
+    return !!(backend?.visible || backend?.node || backend?.apiDatabase);
+  }
+
+  canShowNodeMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().backend?.node;
+  }
+
+  canShowApiDatabaseMenu(): boolean {
+    if (this.isAdmin()) return true;
+    return !!this.getScreensPermissions().backend?.apiDatabase;
+  }
+
 
 
   // Close sidebar on escape key
   @HostListener('document:keydown.escape', ['$event'])
-  onEscapeKey(event: KeyboardEvent): void {
+  onEscapeKey(event: Event): void {
     if (this.sidebarOpen) {
       this.closeSidebar();
     }
