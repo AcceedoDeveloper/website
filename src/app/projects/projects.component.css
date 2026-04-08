@@ -11,6 +11,19 @@ html, body {
   font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
+:host ::ng-deep app-header {
+  display: block;
+  padding-top: 60px;
+}
+
+:host ::ng-deep app-header .top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
 /* =============================================
    APP LAYOUT
    ============================================= */
@@ -126,6 +139,11 @@ html, body {
   width: 100%;
   min-width: max-content;
   margin-top: 30px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: #ffffff;
+  padding-bottom: 12px;
 }
 
 /* =============================================
