@@ -34,7 +34,7 @@
           <td>{{ getRoleDisplay(perm.role) }}</td>
 
           <!-- Initial Screen -->
-          <td>{{ perm.initialScreen || '-' }}</td>
+          <td>{{ getInitialScreenLabel(perm.initialScreen || '') }}</td>
 
           <!-- Enabled Permissions -->
           <td>

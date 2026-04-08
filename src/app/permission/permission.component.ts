@@ -199,4 +199,22 @@ export class PermissionComponent implements OnInit {
     const found = candidates.find((item) => Array.isArray(item));
     return Array.isArray(found) ? found : [];
   }
+
+  private readonly initialScreenMap: Record<string, string> = {
+    'register':       'User Management',
+    'role':           'Role Management',
+    'create':         'Create Project',
+    'permission':     'Permission',
+    'projects':       'Project',
+    'webdev':         'Web Development',
+    'angulardeveloper': 'Angular Developer',
+    'ngrx':           'NgRx / State Management',
+    'node':           'Node.js',
+    'api&database':   'API + Database'
+  };
+
+  getInitialScreenLabel(value: string): string {
+    if (!value) return '-';
+    return this.initialScreenMap[value] || value;
+  }
 }

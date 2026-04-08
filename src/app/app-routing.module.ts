@@ -85,39 +85,29 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   {path:'signin', component:LoginComponent},
   {path:'project', component:ProjectComponent},
-  { path: '', redirectTo: 'projects', pathMatch: 'full' },
   { path: 'timeline', component: TimelineComponent },
+  {path:'loginheader',component:LoginheaderComponent},
+  {path:'roledialog',component:RoledialogComponent},
+  {path:'role/edit/:id',component:RoledialogComponent},
 
+  // Master (requires login + specific permission)
+  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard], data: { permissionKey: 'master.user' } },
+  { path: 'department', component: DepartmentComponent, canActivate: [AuthGuard] },
+  { path: 'role', component: RoleComponent, canActivate: [AuthGuard], data: { permissionKey: 'master.role' } },
+  { path: 'create', component: CreateprojectComponent, canActivate: [AuthGuard], data: { permissionKey: 'master.createProject' } },
+  { path: 'permission', component: PermissionComponent, canActivate: [AuthGuard], data: { permissionKey: 'master.permission' } },
 
- {path:'projects',component:ProjectsComponent},
- {path:'role',component:RoleComponent},
-{path:'ngrx',component:NgrxComponent},
-{path:'webdev',component:WebdevComponent},
-{path:'angulardeveloper',component:AngularDeveloperComponent},
-{path:'node',component:NodeComponent},
-{path:'api&database',component:ApiDatabaseComponent},
-{path:'loginheader',component:LoginheaderComponent},
-{path:'department',component:DepartmentComponent},
-{path:'roledialog',component:RoledialogComponent},
-{path:'role/edit/:id',component:RoledialogComponent},
- 
-  // Master (only admin can see + access)
-  { path: 'register', component: RegisterComponent, canActivate: [AuthGuard] },
-  { path: 'department', component: DepartmentComponent, canActivate: [AuthGuard]},
-  { path: 'role', component: RoleComponent, canActivate: [AuthGuard]},
-  { path: 'create', component: CreateprojectComponent, canActivate: [AuthGuard] },
- {path:'permission',component:PermissionComponent, canActivate: [AuthGuard] },
-  // Projects → all users
-  { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard] },
+  // Projects
+  { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard], data: { permissionKey: 'project' } },
 
-  // Frontend → all users
-  { path: 'webdev', component: WebdevComponent, canActivate: [AuthGuard] },
-  { path: 'angulardeveloper', component: AngularDeveloperComponent, canActivate: [AuthGuard]  },
-  { path: 'ngrx', component: NgrxComponent, canActivate: [AuthGuard] },
+  // Frontend
+  { path: 'webdev', component: WebdevComponent, canActivate: [AuthGuard], data: { permissionKey: 'frontend.webdev' } },
+  { path: 'angulardeveloper', component: AngularDeveloperComponent, canActivate: [AuthGuard], data: { permissionKey: 'frontend.angularDeveloper' } },
+  { path: 'ngrx', component: NgrxComponent, canActivate: [AuthGuard], data: { permissionKey: 'frontend.ngrx' } },
 
-  // Backend → all users
-  { path: 'node', component: NodeComponent, canActivate: [AuthGuard] },
-  { path: 'api&database', component: AppComponent, canActivate: [AuthGuard]},
+  // Backend
+  { path: 'node', component: NodeComponent, canActivate: [AuthGuard], data: { permissionKey: 'backend.node' } },
+  { path: 'api&database', component: ApiDatabaseComponent, canActivate: [AuthGuard], data: { permissionKey: 'backend.apiDatabase' } },
 
   { path: '', redirectTo: 'projects', pathMatch: 'full' },
   { path: '**', redirectTo: 'projects' }

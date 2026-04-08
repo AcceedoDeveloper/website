@@ -1152,7 +1152,46 @@ saveProfilePicture() {
   }
 
   private getScreensPermissions(): any {
-    const screens = this.userData?.permission?.screens || {};
+    const screensFromUser = this.userData?.permission?.screens;
+
+    let screensFromSession: any = null;
+    const permissionStr = sessionStorage.getItem('permission');
+    if (permissionStr) {
+      try {
+        screensFromSession = JSON.parse(permissionStr);
+      } catch {
+        screensFromSession = null;
+      }
+    }
+
+    const screens = screensFromUser || screensFromSession || {};
+    const hasPermissionConfig = Object.keys(screens).length > 0;
+
+    // If user has no permission config, show full sidebar by default.
+    if (!hasPermissionConfig) {
+      return {
+        master: {
+          visible: true,
+          user: true,
+          role: true,
+          createProject: true,
+          permission: true
+        },
+        project: true,
+        frontend: {
+          visible: true,
+          webdev: true,
+          angularDeveloper: true,
+          ngrx: true
+        },
+        backend: {
+          visible: true,
+          node: true,
+          apiDatabase: true
+        }
+      };
+    }
+
     return {
       master: screens?.master  || {},
       project: screens?.project,

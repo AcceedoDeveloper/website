@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../service/auth.service.service';
+import { UserservicesService } from '../register/services/userservices.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +20,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserservicesService
   ) {}
 
   ngOnInit(): void {
@@ -128,8 +132,6 @@ onSubmit(): void {
 
   this.authService.login(username, password).subscribe({
     next: (res) => {
-      console.log('✅ Raw login response from server:', res);
-
       // Store user data
       let userRaw = res?.user ?? res?.data?.user ?? null;
       if (userRaw) {
@@ -141,7 +143,6 @@ onSubmit(): void {
           if (key) {
             const cached = localStorage.getItem(`cachedPhoto_${key}`);
             if (cached) {
-              console.log('🔁 Applying cached photo to login user', key, cached);
               parsed.photoURL = cached;
               userRaw = parsed; // update the reference
             }
@@ -168,16 +169,76 @@ onSubmit(): void {
         sessionStorage.removeItem('role');
       }
 
-      console.log('🔎 extracted role:', role, 'rawRole:', rawRole);
-
-      
-      if (role === 'admin') {
-        this.router.navigate(['/Projects']);
-      } else {
-        this.router.navigate(['/Projects']);
+      // Also extract the raw role ID from the user object (when role is populated as an object)
+      const userForPermission = res?.user ?? res?.data?.user ?? null;
+      let rawRoleId = '';
+      if (userForPermission && typeof userForPermission === 'object') {
+        const ur = userForPermission?.role;
+        if (typeof ur === 'string') {
+          rawRoleId = ur;
+        } else if (ur && typeof ur === 'object') {
+          rawRoleId = ur._id || ur.id || ur.roleId || '';
+        }
+      }
+      if (rawRoleId) {
+        sessionStorage.setItem('roleId', rawRoleId);
       }
 
-      this.isSubmitting = false;
+      // First preference: use permission from login payload directly
+      const loginPermission = res?.user?.permission || res?.data?.user?.permission || null;
+      if (loginPermission) {
+        const screens = loginPermission?.screens || {};
+        sessionStorage.setItem('permission', JSON.stringify(screens));
+
+        const initialScreen = loginPermission?.initialScreen ? String(loginPermission.initialScreen).trim() : '';
+
+        if (initialScreen) {
+          sessionStorage.setItem('initialScreen', initialScreen);
+          this.router.navigateByUrl(initialScreen);
+        } else {
+          sessionStorage.setItem('initialScreen', '/projects');
+          this.router.navigate(['/projects']);
+        }
+
+        this.isSubmitting = false;
+        return;
+      }
+
+      // Fetch permissions and store them for route guard, then navigate
+      this.userService.getPermissions().pipe(
+        catchError((err) => {
+          console.error('getPermissions() failed:', err);
+          return of([]);
+        })
+      ).subscribe((permissions: any[]) => {
+        const matched = this.findPermissionForRole(permissions, rawRole, rawRoleId);
+
+        // Admin bypass: no permission record + admin role → grant full access
+        let screens = matched?.screens || null;
+        if (!screens && role === 'admin') {
+          screens = {
+            master: { user: true, role: true, createProject: true, permission: true },
+            project: true,
+            frontend: { webdev: true, angularDeveloper: true, ngrx: true },
+            backend: { node: true, apiDatabase: true }
+          };
+        }
+        screens = screens || {};
+        sessionStorage.setItem('permission', JSON.stringify(screens));
+
+        // initialScreen is stored in DB as "/register", "/projects", etc.
+        const initialScreen = matched?.initialScreen ? String(matched.initialScreen).trim() : '';
+
+        if (initialScreen) {
+          sessionStorage.setItem('initialScreen', initialScreen);
+          this.router.navigateByUrl(initialScreen);
+        } else {
+          sessionStorage.setItem('initialScreen', '/projects');
+          this.router.navigate(['/projects']);
+        }
+
+        this.isSubmitting = false;
+      });
       
       
     },
@@ -188,4 +249,25 @@ onSubmit(): void {
     }
   });
 }
+
+  private findPermissionForRole(permissions: any[], roleValue: any, roleId?: string): any {
+    const roleStr = String(roleValue || '').trim().toLowerCase();
+    const idStr = String(roleId || '').trim();
+
+    return permissions.find((p: any) => {
+      const pRoleRaw = p?.role;
+      const pRoleId = typeof pRoleRaw === 'object'
+        ? String(pRoleRaw?._id || pRoleRaw?.id || pRoleRaw?.roleId || '').trim()
+        : String(pRoleRaw || '').trim();
+      const pRoleName = typeof pRoleRaw === 'object'
+        ? String(pRoleRaw?.role || pRoleRaw?.name || '').trim().toLowerCase()
+        : String(pRoleRaw || '').trim().toLowerCase();
+
+      const byName = !!roleStr && pRoleName === roleStr;
+      const byId = !!idStr && pRoleId === idStr;
+      return byName || byId;
+    }) || null;
+  }
+
 }
+

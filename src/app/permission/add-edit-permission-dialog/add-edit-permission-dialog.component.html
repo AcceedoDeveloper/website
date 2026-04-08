@@ -25,8 +25,8 @@
         <label>Initial Screen<span class="required">*</span></label>
         <select formControlName="initialScreen" class="form-select">
           <option value="">No Screen</option>
-          <option *ngFor="let screen of initialScreenOptions" [value]="screen">
-            {{ screen }}
+          <option *ngFor="let screen of initialScreenOptions" [value]="screen.route">
+            {{ screen.label }}
           </option>
         </select>
       </div>
