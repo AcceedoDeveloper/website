@@ -18,19 +18,19 @@ export class AddEditPermissionDialogComponent implements OnInit {
   loading = false;
   roles: any[] = [];
 
-  initialScreenOptions: string[] = [];
+  initialScreenOptions: Array<{ route: string; label: string }> = [];
 
-  private readonly screenControlMap: Array<{ path: string; label: string }> = [
-    { path: 'screens.master.user', label: 'User Management' },
-    { path: 'screens.master.role', label: 'Role Management' },
-    { path: 'screens.master.createProject', label: 'Create Project' },
-    { path: 'screens.master.permission', label: 'Permission' },
-    { path: 'screens.project', label: 'Project' },
-    { path: 'screens.frontend.webdev', label: 'Web Development' },
-    { path: 'screens.frontend.angularDeveloper', label: 'Angular Developer' },
-    { path: 'screens.frontend.ngrx', label: 'NgRx / State Management' },
-    { path: 'screens.backend.node', label: 'Node.js' },
-    { path: 'screens.backend.apiDatabase', label: 'API + Database' }
+  private readonly screenControlMap: Array<{ path: string; label: string; route: string }> = [
+    { path: 'screens.master.user',               label: 'User Management',        route: 'register' },
+    { path: 'screens.master.role',               label: 'Role Management',         route: 'role' },
+    { path: 'screens.master.createProject',      label: 'Create Project',          route: 'create' },
+    { path: 'screens.master.permission',         label: 'Permission',              route: 'permission' },
+    { path: 'screens.project',                   label: 'Project',                 route: 'projects' },
+    { path: 'screens.frontend.webdev',           label: 'Web Development',         route: 'webdev' },
+    { path: 'screens.frontend.angularDeveloper', label: 'Angular Developer',       route: 'angulardeveloper' },
+    { path: 'screens.frontend.ngrx',             label: 'NgRx / State Management', route: 'ngrx' },
+    { path: 'screens.backend.node',              label: 'Node.js',                 route: 'node' },
+    { path: 'screens.backend.apiDatabase',       label: 'API + Database',          route: 'api&database' }
   ];
 
   constructor(
@@ -112,10 +112,10 @@ export class AddEditPermissionDialogComponent implements OnInit {
   updateInitialScreenOptions(): void {
     this.initialScreenOptions = this.screenControlMap
       .filter((item) => !!this.permissionForm.get(item.path)?.value)
-      .map((item) => item.label);
+      .map((item) => ({ route: item.route, label: item.label }));
 
     const selectedInitialScreen = this.permissionForm.get('initialScreen')?.value;
-    if (selectedInitialScreen && !this.initialScreenOptions.includes(selectedInitialScreen)) {
+    if (selectedInitialScreen && !this.initialScreenOptions.some((s) => s.route === selectedInitialScreen)) {
       this.permissionForm.get('initialScreen')?.setValue('', { emitEvent: false });
     }
   }
@@ -184,6 +184,7 @@ export class AddEditPermissionDialogComponent implements OnInit {
 
     return {
       ...data,
+      initialScreen: this.normalizeInitialScreenToRoute(data?.initialScreen || ''),
       screens: {
         master: {
           user: !!normalizedMaster?.user,
@@ -203,6 +204,13 @@ export class AddEditPermissionDialogComponent implements OnInit {
         }
       }
     };
+  }
+
+  private normalizeInitialScreenToRoute(stored: string): string {
+    if (!stored) return '';
+    if (this.screenControlMap.some((s) => s.route === stored)) return stored;
+    const byLabel = this.screenControlMap.find((s) => s.label === stored);
+    return byLabel ? byLabel.route : stored;
   }
 
   onSubmit(): void {
