@@ -14,7 +14,7 @@
   --tm-green: #169765;
   --tm-yellow: #e7bc43;
   --tm-red: #ff5a2d;
-  --tm-shadow: 0 34px 90px rgba(0, 0, 0, 0.22);
+  /* --tm-shadow: 0 34px 90px rgba(0, 0, 0, 0.22); */
   display: block;
   width: 100%;
   padding: 28px;
@@ -424,7 +424,7 @@
 }
 
 .table-header {
-  min-height: 75px;
+  min-height: 86px;
   padding: 0 14px;
   border-bottom: 1px solid var(--tm-border);
   background: #fcfcfd;
@@ -611,7 +611,7 @@
 }
 
 .task-footer {
-  min-height: 34px;
+  /* min-height: 34px; */
   display: flex;
   align-items: center;
   gap: 14px;
@@ -701,7 +701,7 @@
 }
 
 .footer-spacer-row {
-  height: 34px;
+  height: 0;
   background: #fff;
 }
 

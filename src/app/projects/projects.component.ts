@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Subscription } from 'rxjs';
+import { catchError, finalize, of, Subscription, timeout } from 'rxjs';
 import { CreatprojectService } from '../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
@@ -1020,9 +1020,21 @@ getTodayDateString(): string {
 
   getAssignments() {
     this.loading = true;
-    const s = this.assignworkService.getAssignments().subscribe({
-      next: (res: any) => {
+    const s = this.assignworkService.getAssignments().pipe(
+      timeout(15000),
+      catchError((err) => {
+        console.error('Assignments request failed or timed out:', err);
+        this.clearAssignments();
+        return of(null);
+      }),
+      finalize(() => {
         this.loading = false;
+      })
+    ).subscribe({
+      next: (res: any) => {
+        if (!res) {
+          return;
+        }
         if (Array.isArray(res)) {
           this.allAssignments = res;
         } else if (res?.data && Array.isArray(res.data)) {
@@ -1037,7 +1049,6 @@ getTodayDateString(): string {
         this.filterAssignmentsByProject();
       },
       error: () => {
-        this.loading = false;
         this.clearAssignments();
       }
     });
