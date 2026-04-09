@@ -123,7 +123,6 @@ getUserview(projectName: string, assignedTo: string): Observable<UserViewRespons
 
 // GetAssignWork
 getAssignments(): Observable<UserViewResponse> {
-  console.log('Fetching assignments from:', this.configService.getWebsiteUrl('GetAssignWork'));
   return this.http.get<UserViewResponse>(this.configService.getWebsiteUrl('GetAssignWork'));
 }
 

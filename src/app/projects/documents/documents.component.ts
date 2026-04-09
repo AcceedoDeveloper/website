@@ -24,6 +24,8 @@ interface Document {
 export class DocumentsComponent {
   isLoading = false;
   isDeleting = false;
+  private fileUrlCache: Record<string, string> = {};
+  private safeFileUrlCache: Record<string, SafeResourceUrl> = {};
   
   showmaindocument = false;
   showdocumentpop = false;
@@ -97,15 +99,24 @@ showMonthView = false;
 
 
   getFileUrl(file: string): string {
+    if (this.fileUrlCache[file]) {
+      return this.fileUrlCache[file];
+    }
+
     const cleanFile = file.replace(/^uploads\//, '');
     const url = file.startsWith('http') ? file : this.configService.getUploadUrl(cleanFile.replace(/\\/g, '/'));
-    console.log(`Generated PDF URL: ${url}`);
+    this.fileUrlCache[file] = url;
     return url;
   }
 
   getSafeFileUrl(file: string): SafeResourceUrl {
-    const url = this.getFileUrl(file);
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    if (this.safeFileUrlCache[file]) {
+      return this.safeFileUrlCache[file];
+    }
+
+    const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.getFileUrl(file));
+    this.safeFileUrlCache[file] = safeUrl;
+    return safeUrl;
   }
 
     opendocpop(doc?: any) {
@@ -227,6 +238,8 @@ showMonthView = false;
     getDocuments() {
       const s = this.assignworkService.getDocument().subscribe({
         next: (res) => {
+          this.fileUrlCache = {};
+          this.safeFileUrlCache = {};
           if (Array.isArray(res)) {
             this.documents = res;
           } else if (res?.data && Array.isArray(res.data)) {
@@ -240,6 +253,8 @@ showMonthView = false;
           this.filteredTitles = [...this.allTitles];
         },
         error: () => {
+          this.fileUrlCache = {};
+          this.safeFileUrlCache = {};
           this.snackBar.open('Failed to load documents', 'Close', { duration: 3000 });
           this.documents = [];
           this.filteredDocuments = [];

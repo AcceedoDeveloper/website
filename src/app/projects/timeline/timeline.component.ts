@@ -1,5 +1,17 @@
 
-import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { AssignWork, AssignWorkSubTask } from '../../service/assignwork.service';
 
 type TaskType = 'PHASE' | 'TASK' | 'BUG';
@@ -47,9 +59,10 @@ interface TimelineDay {
 @Component({
   selector: 'app-timeline',
   templateUrl: './timeline.component.html',
-  styleUrls: ['./timeline.component.css']
+  styleUrls: ['./timeline.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimelineComponent implements OnChanges {
+export class TimelineComponent implements OnChanges, OnDestroy {
   @ViewChild('timelineScroller') timelineScroller?: ElementRef<HTMLDivElement>;
 
   @Input() timelineItems: AssignWork[] = [];
@@ -99,9 +112,28 @@ export class TimelineComponent implements OnChanges {
   tasks: TimelineTask[] = [];
   private deletedImportedTaskIds = new Set<string>();
   private importedSubtaskOverrides: Record<string, TimelineSubtask[]> = {};
+  private persistTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private lastPersistedManualTasks = '';
+  private cachedDisplayTasks: TimelineTask[] = [];
+  private cachedProjectOptions: string[] = [];
+  private cachedAssigneeOptions: string[] = [];
+  private cachedDays: TimelineDay[] = [];
+  private cachedCurrentMonthLabel = '';
+  private cachedTodayLineLeft = -100;
+  private cachedActiveTaskCount = 0;
+  private cachedSubtaskCount = 0;
+  private cachedProjectCount = 0;
+  totalDays = 0;
+  calendarGridTemplate = '';
+  calendarMinWidth = '';
 
-  constructor() {
-    this.refreshSchedule();
+  constructor(private cdr: ChangeDetectorRef) {
+    this.rebuildCalendarState();
+    this.updateComputedState();
+  }
+
+  ngOnDestroy(): void {
+    this.flushPersistTasks();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -116,125 +148,51 @@ export class TimelineComponent implements OnChanges {
     }
 
     this.loadImportedOverrides();
+    this.rebuildTasksFromInputs();
+    this.cachedProjectOptions = Array.from(new Set(this.tasks.map(task => task.projectName).filter(Boolean)));
 
-    const persistedManualTasks = this.loadPersistedTasks();
-    const mappedTimelineTasks = this.mapAssignmentsToTasks(this.timelineItems)
-      .filter(task => !this.deletedImportedTaskIds.has(String(task.id)))
-      .map(task => ({
-        ...task,
-        subtasks: [...task.subtasks, ...(this.importedSubtaskOverrides[String(task.id)] || [])]
-      }));
-
-    this.hasManualEdits = persistedManualTasks.length > 0;
-    this.tasks = [...persistedManualTasks, ...mappedTimelineTasks];
-    if (this.selectedProjectFilter !== 'all' && !this.projectOptions.includes(this.selectedProjectFilter)) {
+    if (this.selectedProjectFilter !== 'all' && !this.cachedProjectOptions.includes(this.selectedProjectFilter)) {
       this.selectedProjectFilter = 'all';
     }
+
     this.syncProjectTitle();
     this.refreshSchedule();
   }
 
   get activeTaskCount(): number {
-    return this.displayTasks.length;
+    return this.cachedActiveTaskCount;
   }
 
   get subtaskCount(): number {
-    return this.displayTasks.reduce((count, task) => count + this.getVisibleSubtasks(task).length, 0);
+    return this.cachedSubtaskCount;
   }
 
   get projectCount(): number {
-    return this.projectOptions.length;
+    return this.cachedProjectCount;
   }
 
   get currentMonthLabel(): string {
-    const monthName =
-      this.months[this.visibleMonthDate.getMonth()] ||
-      this.visibleMonthDate.toLocaleString('default', { month: 'long' });
-    return `${monthName} ${this.visibleMonthDate.getFullYear()}`;
-  }
-
-  get totalDays(): number {
-    return this.getDaysInMonth(this.visibleMonthDate);
+    return this.cachedCurrentMonthLabel;
   }
 
   get days(): TimelineDay[] {
-    return this.buildDays();
-  }
-
-  get calendarGridTemplate(): string {
-    return `repeat(${this.totalDays}, minmax(36px, 1fr))`;
-  }
-
-  get calendarMinWidth(): string {
-    return `${this.totalDays * 36}px`;
+    return this.cachedDays;
   }
 
   get todayLineLeft(): number {
-    if (!this.isViewingCurrentMonth()) {
-      return -100;
-    }
-
-    const todayIndex = this.days.findIndex(day => day.isToday);
-    const safeIndex = todayIndex >= 0 ? todayIndex : 0;
-    return ((safeIndex + 0.5) / this.totalDays) * 100;
+    return this.cachedTodayLineLeft;
   }
 
   get displayTasks(): TimelineTask[] {
-    const todayDay = this.isViewingCurrentMonth() ? this.days.find(day => day.isToday)?.day ?? 1 : null;
-
-    return this.tasks
-      .map(task => {
-        const subtasks = task.subtasks.filter(subtask => {
-          if (!this.isSubtaskInVisibleMonth(subtask)) {
-            return false;
-          }
-
-          const startDay = this.getSubtaskStartDay(subtask);
-          const endDay = this.getSubtaskEndDay(subtask);
-
-          if (this.showTodayOnly && todayDay !== null && (todayDay < startDay || todayDay > endDay)) {
-            return false;
-          }
-
-          if (this.selectedAllocationFilter !== 'all' && subtask.allocation !== this.selectedAllocationFilter) {
-            return false;
-          }
-
-          if (this.selectedAssigneeFilter !== 'all' && subtask.assignee !== this.selectedAssigneeFilter) {
-            return false;
-          }
-
-          return true;
-        });
-
-        return {
-          ...task,
-          subtasks
-        };
-      })
-      .filter(task => {
-        if (this.selectedProjectFilter !== 'all' && task.projectName !== this.selectedProjectFilter) {
-          return false;
-        }
-
-        if (this.selectedTypeFilter !== 'all' && task.type !== this.selectedTypeFilter) {
-          return false;
-        }
-
-        return task.subtasks.length > 0 || this.isTaskInVisibleMonth(task);
-      });
+    return this.cachedDisplayTasks;
   }
 
   get projectOptions(): string[] {
-    return Array.from(new Set(this.tasks.map(task => task.projectName).filter(Boolean)));
+    return this.cachedProjectOptions;
   }
 
   get assigneeOptions(): string[] {
-    return Array.from(
-      new Set(
-        this.tasks.flatMap(task => this.getVisibleSubtasks(task).map(subtask => subtask.assignee)).filter(Boolean)
-      )
-    ).sort((left, right) => left.localeCompare(right));
+    return this.cachedAssigneeOptions;
   }
 
   hasVisibleSubtasks(task: TimelineTask): boolean {
@@ -248,6 +206,7 @@ export class TimelineComponent implements OnChanges {
   selectProjectFilter(projectName: string): void {
     this.selectedProjectFilter = projectName;
     this.syncProjectTitle();
+    this.updateComputedState();
   }
 
   openTaskComposer(): void {
@@ -281,6 +240,8 @@ export class TimelineComponent implements OnChanges {
     if (this.showTodayOnly) {
       this.visibleMonthDate = this.getMonthStart(new Date());
     }
+    this.rebuildCalendarState();
+    this.updateComputedState();
     this.scrollToToday();
     this.todayClick.emit();
   }
@@ -298,6 +259,8 @@ export class TimelineComponent implements OnChanges {
     this.showProjectPanel = false;
     this.showFilterPanel = false;
     this.visibleMonthDate = this.getMonthStart(new Date());
+    this.rebuildCalendarState();
+    this.updateComputedState();
     this.monthViewClick.emit();
   }
 
@@ -305,14 +268,16 @@ export class TimelineComponent implements OnChanges {
     this.visibleMonthDate = this.getMonthStart(
       new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() - 1, 1)
     );
-    this.refreshSchedule();
+    this.rebuildCalendarState();
+    this.updateComputedState();
   }
 
   goToNextMonth(): void {
     this.visibleMonthDate = this.getMonthStart(
       new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 1)
     );
-    this.refreshSchedule();
+    this.rebuildCalendarState();
+    this.updateComputedState();
   }
 
   clearFilters(): void {
@@ -321,6 +286,7 @@ export class TimelineComponent implements OnChanges {
     this.selectedAllocationFilter = 'all';
     this.selectedAssigneeFilter = 'all';
     this.showTodayOnly = false;
+    this.updateComputedState();
   }
 
   onNewTaskStartDateChange(value: Date | null): void {
@@ -506,6 +472,11 @@ export class TimelineComponent implements OnChanges {
     }
 
     targetTask.expanded = !targetTask.expanded;
+    this.updateComputedState();
+  }
+
+  onFiltersChanged(): void {
+    this.updateComputedState();
   }
 
   getTaskStartDay(task: TimelineTask): number {
@@ -590,6 +561,18 @@ export class TimelineComponent implements OnChanges {
 
   getSubtaskProgressPercent(subtask: TimelineSubtask): number {
     return this.getTimelineProgressPercent(subtask.status, this.getSubtaskStartDate(subtask), this.getSubtaskEndDate(subtask));
+  }
+
+  getProgressLabel(progressPercent: number): string {
+    return `${Math.round(progressPercent)}%`;
+  }
+
+  getTaskProgressTextClass(task: TimelineTask): string {
+    return this.taskHasConflict(task) ? 'bar-progress-text-dark' : 'bar-progress-text-light';
+  }
+
+  getSubtaskProgressTextClass(subtask: TimelineSubtask): string {
+    return subtask.allocation === 'busy' ? 'bar-progress-text-dark' : 'bar-progress-text-light';
   }
 
   getTaskBarLabelClass(task: TimelineTask): string {
@@ -700,21 +683,35 @@ export class TimelineComponent implements OnChanges {
       }
     }
 
-    this.persistTasks();
+    this.schedulePersistTasks();
+    this.updateComputedState();
   }
 
   private rebuildTasks(): void {
+    const localManualTasks = this.tasks.filter(task => task.source === 'manual');
     const persistedManualTasks = this.loadPersistedTasks();
-    const mappedTimelineTasks = this.mapAssignmentsToTasks(this.timelineItems)
+    const mappedTimelineTasks = this.buildMappedTimelineTasks();
+    this.tasks = [
+      ...localManualTasks,
+      ...persistedManualTasks.filter(task => !localManualTasks.some(local => local.id === task.id)),
+      ...mappedTimelineTasks
+    ];
+    this.refreshSchedule();
+  }
+
+  private rebuildTasksFromInputs(): void {
+    const persistedManualTasks = this.loadPersistedTasks();
+    this.hasManualEdits = persistedManualTasks.length > 0;
+    this.tasks = [...persistedManualTasks, ...this.buildMappedTimelineTasks()];
+  }
+
+  private buildMappedTimelineTasks(): TimelineTask[] {
+    return this.mapAssignmentsToTasks(this.timelineItems)
       .filter(task => !this.deletedImportedTaskIds.has(String(task.id)))
       .map(task => ({
         ...task,
         subtasks: [...task.subtasks, ...(this.importedSubtaskOverrides[String(task.id)] || [])]
       }));
-
-    const localManualTasks = this.tasks.filter(task => task.source === 'manual');
-    this.tasks = [...localManualTasks, ...persistedManualTasks.filter(task => !localManualTasks.some(local => local.id === task.id)), ...mappedTimelineTasks];
-    this.refreshSchedule();
   }
 
   private hasConflict(taskId: string | number, subtaskId: string | number, assignee: string, targetSubtask: TimelineSubtask): boolean {
@@ -1020,27 +1017,19 @@ export class TimelineComponent implements OnChanges {
 
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const visibleStart = this.getMonthStart(this.visibleMonthDate);
-    const visibleEnd = new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0);
-    const segmentStart = startDate > visibleStart ? startDate : visibleStart;
-    const segmentEnd = endDate < visibleEnd ? endDate : visibleEnd;
-
-    if (segmentStart > segmentEnd) {
-      return 0;
-    }
 
     const progressEnd = today < endDate ? today : endDate;
-    if (progressEnd < segmentStart) {
+    if (progressEnd < startDate) {
       return 0;
     }
 
-    if (progressEnd >= segmentEnd) {
+    if (progressEnd >= endDate) {
       return 100;
     }
 
-    const visibleDays = Math.max(1, this.getDateDifference(segmentStart, segmentEnd));
-    const completedVisibleDays = Math.max(0, this.getDateDifference(segmentStart, progressEnd));
-    return Math.max(0, Math.min(100, (completedVisibleDays / visibleDays) * 100));
+    const totalDays = Math.max(1, this.getDateDifference(startDate, endDate));
+    const completedDays = Math.max(0, this.getDateDifference(startDate, progressEnd));
+    return Math.max(0, Math.min(100, (completedDays / totalDays) * 100));
   }
 
   private resetTaskForm(): void {
@@ -1086,6 +1075,87 @@ export class TimelineComponent implements OnChanges {
     });
   }
 
+  private rebuildCalendarState(): void {
+    this.totalDays = this.getDaysInMonth(this.visibleMonthDate);
+    this.calendarGridTemplate = `repeat(${this.totalDays}, minmax(36px, 1fr))`;
+    this.calendarMinWidth = `${this.totalDays * 36}px`;
+    this.cachedDays = this.buildDays();
+
+    const monthName =
+      this.months[this.visibleMonthDate.getMonth()] ||
+      this.visibleMonthDate.toLocaleString('default', { month: 'long' });
+    this.cachedCurrentMonthLabel = `${monthName} ${this.visibleMonthDate.getFullYear()}`;
+
+    if (!this.isViewingCurrentMonth()) {
+      this.cachedTodayLineLeft = -100;
+      return;
+    }
+
+    const todayIndex = this.cachedDays.findIndex(day => day.isToday);
+    const safeIndex = todayIndex >= 0 ? todayIndex : 0;
+    this.cachedTodayLineLeft = ((safeIndex + 0.5) / this.totalDays) * 100;
+  }
+
+  private updateComputedState(): void {
+    this.rebuildCalendarState();
+
+    const todayDay = this.isViewingCurrentMonth() ? this.cachedDays.find(day => day.isToday)?.day ?? 1 : null;
+    this.cachedProjectOptions = Array.from(new Set(this.tasks.map(task => task.projectName).filter(Boolean)));
+
+    const visibleTasks = this.tasks
+      .map(task => {
+        const subtasks = task.subtasks.filter(subtask => {
+          if (!this.isSubtaskInVisibleMonth(subtask)) {
+            return false;
+          }
+
+          const startDay = this.getSubtaskStartDay(subtask);
+          const endDay = this.getSubtaskEndDay(subtask);
+
+          if (this.showTodayOnly && todayDay !== null && (todayDay < startDay || todayDay > endDay)) {
+            return false;
+          }
+
+          if (this.selectedAllocationFilter !== 'all' && subtask.allocation !== this.selectedAllocationFilter) {
+            return false;
+          }
+
+          if (this.selectedAssigneeFilter !== 'all' && subtask.assignee !== this.selectedAssigneeFilter) {
+            return false;
+          }
+
+          return true;
+        });
+
+        return {
+          ...task,
+          subtasks
+        };
+      })
+      .filter(task => {
+        if (this.selectedProjectFilter !== 'all' && task.projectName !== this.selectedProjectFilter) {
+          return false;
+        }
+
+        if (this.selectedTypeFilter !== 'all' && task.type !== this.selectedTypeFilter) {
+          return false;
+        }
+
+        return task.subtasks.length > 0 || this.isTaskInVisibleMonth(task);
+      });
+
+    this.cachedDisplayTasks = visibleTasks;
+    this.cachedAssigneeOptions = Array.from(
+      new Set(
+        this.tasks.flatMap(task => this.getVisibleSubtasks(task).map(subtask => subtask.assignee)).filter(Boolean)
+      )
+    ).sort((left, right) => left.localeCompare(right));
+    this.cachedActiveTaskCount = visibleTasks.length;
+    this.cachedSubtaskCount = visibleTasks.reduce((count, task) => count + this.getVisibleSubtasks(task).length, 0);
+    this.cachedProjectCount = this.cachedProjectOptions.length;
+    this.cdr.markForCheck();
+  }
+
   private scrollToToday(): void {
     const scroller = this.timelineScroller?.nativeElement;
     if (!scroller) {
@@ -1111,24 +1181,53 @@ export class TimelineComponent implements OnChanges {
 
   private persistTasks(): void {
     const manualTasks = this.tasks.filter(task => task.source === 'manual');
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(manualTasks));
+    const serializedManualTasks = JSON.stringify(manualTasks);
+    if (serializedManualTasks === this.lastPersistedManualTasks) {
+      return;
+    }
+
+    localStorage.setItem(this.getStorageKey(), serializedManualTasks);
+    this.lastPersistedManualTasks = serializedManualTasks;
   }
 
   private loadPersistedTasks(): TimelineTask[] {
     try {
       const raw = localStorage.getItem(this.getStorageKey());
       if (!raw) {
+        this.lastPersistedManualTasks = '[]';
         return [];
       }
 
       const parsed = JSON.parse(raw) as TimelineTask[];
       if (!Array.isArray(parsed)) {
+        this.lastPersistedManualTasks = '[]';
         return [];
       }
 
+      this.lastPersistedManualTasks = raw;
       return parsed.filter(task => task?.source === 'manual');
     } catch {
+      this.lastPersistedManualTasks = '[]';
       return [];
+    }
+  }
+
+  private schedulePersistTasks(): void {
+    if (this.persistTimeoutId) {
+      clearTimeout(this.persistTimeoutId);
+    }
+
+    this.persistTimeoutId = setTimeout(() => {
+      this.persistTimeoutId = null;
+      this.persistTasks();
+    }, 150);
+  }
+
+  private flushPersistTasks(): void {
+    if (this.persistTimeoutId) {
+      clearTimeout(this.persistTimeoutId);
+      this.persistTimeoutId = null;
+      this.persistTasks();
     }
   }
 

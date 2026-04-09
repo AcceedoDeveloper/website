@@ -68,7 +68,7 @@
       <div class="filter-grid">
         <label class="filter-field">
           <span>Type</span>
-          <select [(ngModel)]="selectedTypeFilter">
+          <select [(ngModel)]="selectedTypeFilter" (ngModelChange)="onFiltersChanged()">
             <option value="all">All</option>
             <option value="PHASE">Phase</option>
             <option value="TASK">Task</option>
@@ -78,7 +78,7 @@
 
         <label class="filter-field">
           <span>Resource State</span>
-          <select [(ngModel)]="selectedAllocationFilter">
+          <select [(ngModel)]="selectedAllocationFilter" (ngModelChange)="onFiltersChanged()">
             <option value="all">All</option>
             <option value="available">Available</option>
             <option value="busy">Busy</option>
@@ -87,7 +87,7 @@
 
         <label class="filter-field">
           <span>Assignee</span>
-          <select [(ngModel)]="selectedAssigneeFilter">
+          <select [(ngModel)]="selectedAssigneeFilter" (ngModelChange)="onFiltersChanged()">
             <option value="all">All</option>
             <option *ngFor="let assignee of assigneeOptions" [value]="assignee">{{ assignee }}</option>
           </select>
@@ -281,6 +281,13 @@
                   [style.width.%]="100 - getTaskProgressPercent(task)"
                 ></span>
                 <span class="bar-label" [ngClass]="getTaskBarLabelClass(task)">{{ task.title }}</span>
+                <span
+                  *ngIf="task.status !== 'New'"
+                  class="bar-progress-text"
+                  [ngClass]="getTaskProgressTextClass(task)"
+                >
+                  {{ getProgressLabel(getTaskProgressPercent(task)) }}
+                </span>
               </div>
             </div>
 
@@ -296,7 +303,19 @@
                   [style.left.%]="getSubtaskBarLeft(subtask)"
                   [style.width.%]="getSubtaskBarWidth(subtask)"
                 >
+                  <span
+                    *ngIf="subtask.status === 'In progress'"
+                    class="bar-progress-indicator"
+                    [style.width.%]="100 - getSubtaskProgressPercent(subtask)"
+                  ></span>
                   <span class="bar-label" [ngClass]="getSubtaskBarLabelClass(subtask)">{{ subtask.title }}</span>
+                  <span
+                    *ngIf="subtask.status !== 'New'"
+                    class="bar-progress-text"
+                    [ngClass]="getSubtaskProgressTextClass(subtask)"
+                  >
+                    {{ getProgressLabel(getSubtaskProgressPercent(subtask)) }}
+                  </span>
                 </div>
               </div>
             </ng-container>

@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { catchError, finalize, of, Subscription, timeout } from 'rxjs';
+import { catchError, debounceTime, finalize, of, Subject, Subscription, switchMap, timeout } from 'rxjs';
 import { CreatprojectService } from '../service/creatproject.service';
 import { AssignWorkService, AssignWork } from '../service/assignwork.service';
 import { UserservicesService } from '../register/services/userservices.service';
@@ -136,6 +136,8 @@ selectedProjectTeamLeads: string[] = [];
   days: any[] = [];
   selectedTaskDate: string = '';
   private subs = new Subscription();
+  private assignmentsReload$ = new Subject<boolean>();
+  private assignmentsLoadedOnce = false;
   private dateIntervalId: any = null;
   searchQuery: any;
   isDragActive: any;
@@ -259,6 +261,7 @@ getUserPhoto(name: string): string {
   
 
   ngOnInit(): void {
+    this.setupAssignmentsStream();
     this.loadProjects();
     this.initForm();
     this.initCommentForm();
@@ -1018,61 +1021,16 @@ getTodayDateString(): string {
     window.open(url, '_blank');
   }
 
-  getAssignments() {
-    this.loading = true;
-    const s = this.assignworkService.getAssignments().pipe(
-      timeout(15000),
-      catchError((err) => {
-        console.error('Assignments request failed or timed out:', err);
-        this.clearAssignments();
-        return of(null);
-      }),
-      finalize(() => {
-        this.loading = false;
-      })
-    ).subscribe({
-      next: (res: any) => {
-        if (!res) {
-          return;
-        }
-        if (Array.isArray(res)) {
-          this.allAssignments = res;
-        } else if (res?.data && Array.isArray(res.data)) {
-          this.allAssignments = res.data;
-        } else if (res?.assignments && Array.isArray(res.assignments)) {
-          this.allAssignments = res.assignments;
-        } else if (res?.works && Array.isArray(res.works)) {
-          this.allAssignments = res.works;
-        } else {
-          this.allAssignments = [];
-        }
-        this.filterAssignmentsByProject();
-      },
-      error: () => {
-        this.clearAssignments();
-      }
-    });
-    this.subs.add(s);
+  getAssignments(forceReload = false): void {
+    this.assignmentsReload$.next(forceReload);
   }
 
   private filterAssignmentsByProject() {
-    console.log('=== filterAssignmentsByProject called ===');
-    console.log('selectedProjectId:', this.selectedProjectId);
-    console.log('selectedTaskDate:', this.selectedTaskDate);
-    
-    // Use the same filtering logic as getFilteredTasksByStatus
     this.todoAssignments = this.getFilteredTasksByStatus('ToDo');
     this.inProgressAssignments = this.getFilteredTasksByStatus('InProgress');
     this.doneAssignments = this.getFilteredTasksByStatus('Done');
 
-    // Update timeline view when the source assignments change
     this.updateTimelineItems();
-    
-    console.log('Final filtered assignments:');
-    console.log('- ToDo:', this.todoAssignments.length);
-    console.log('- InProgress:', this.inProgressAssignments.length);
-    console.log('- Done:', this.doneAssignments.length);
-    console.log('- Timeline items:', this.timelineItems.length);
   }
 
   private updateTimelineItems() {
@@ -1094,6 +1052,58 @@ getTodayDateString(): string {
     this.todoAssignments = [];
     this.inProgressAssignments = [];
     this.doneAssignments = [];
+    this.timelineItems = [];
+  }
+
+  private setupAssignmentsStream(): void {
+    const s = this.assignmentsReload$
+      .pipe(
+        debounceTime(50),
+        switchMap((forceReload) => {
+          if (!forceReload && this.assignmentsLoadedOnce) {
+            this.filterAssignmentsByProject();
+            return of(null);
+          }
+
+          this.loading = true;
+          this.error = '';
+
+          return this.assignworkService.getAssignments().pipe(
+            timeout(15000),
+            catchError((err) => {
+              console.error('Assignments request failed or timed out:', err);
+              this.error = 'Unable to load tasks. Please try again.';
+              this.clearAssignments();
+              return of(null);
+            }),
+            finalize(() => {
+              this.loading = false;
+            })
+          );
+        })
+      )
+      .subscribe((res: any) => {
+        if (!res) {
+          return;
+        }
+
+        this.assignmentsLoadedOnce = true;
+        if (Array.isArray(res)) {
+          this.allAssignments = res;
+        } else if (res?.data && Array.isArray(res.data)) {
+          this.allAssignments = res.data;
+        } else if (res?.assignments && Array.isArray(res.assignments)) {
+          this.allAssignments = res.assignments;
+        } else if (res?.works && Array.isArray(res.works)) {
+          this.allAssignments = res.works;
+        } else {
+          this.allAssignments = [];
+        }
+
+        this.filterAssignmentsByProject();
+      });
+
+    this.subs.add(s);
   }
 
 
@@ -1222,7 +1232,7 @@ private resolveDialogProjectId(task?: AssignWork): string {
         next: () => {
           this.snackBar.open('Comment added', 'Close', { duration: 2000 });
           this.commentForm.reset();
-          this.getAssignments();
+          this.getAssignments(true);
         },
         error: () => {
           this.snackBar.open('Failed to add comment', 'Close', { duration: 3000 });
@@ -1477,7 +1487,7 @@ this.editingTask
 );
 
 
-this.getAssignments();
+this.getAssignments(true);
 
 
 this.dialog.closeAll();
@@ -1691,6 +1701,9 @@ this.datefiltersection=false;
 }
 
   opendoc() {
+ if (this.currentPage === 'documents' && this.Documents) {
+   return;
+ }
  this.currentPage = 'documents';    
 this.showmaintask = false;
 this.Documents =true;
@@ -1734,8 +1747,7 @@ this.datefiltersection=false;
   this.compare = false;
   this.TimeLine = true;
   this.datefiltersection = false;
-
-  this.getAssignments();
+  this.filterAssignmentsByProject();
 }
   opendocpop(doc?: any) {
     this.editingDocument = doc || null;
