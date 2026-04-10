@@ -121,102 +121,29 @@
   <h3>To Do <span class="task-count">{{ todoAssignments.length }}</span></h3>
   
   <div *ngFor="let task of todoAssignments"
-       class="kanban-card"
+       class="task-row"
        cdkDrag
        [cdkDragData]="task">
-       
-  <div class="task-header-clean">
-  <div class="task-info-clean">
-    <span class="heading-clean">Task:</span> <span class="point-clean">{{ task.title }}</span>
-  </div>
-
-<div class="task-info-clean assignee-avatar-container">
-  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockDone">
-    <img [src]="photo" alt="User Photo" class="avatar-image" />
-  </ng-container>
-
-  <ng-template #initialsBlockDone>
-    <div class="avatar-circle">
-      {{ getInitials(task.assignee) }}
-    </div>
-  </ng-template>
-
-  <!-- <div class="task-info-clean assignee-avatar-container">
-  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockProgress">
-    <img [src]="photo" alt="User Photo" class="avatar-image" />
-  </ng-container>
-
-  <ng-template #initialsBlockProgress>
-    <div class="avatar-circle">
-      {{ getInitials(task.assignee) }}
-    </div>
-  </ng-template>
-</div> -->
-<!-- <div class="task-info-clean assignee-avatar-container">
-  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockTodo">
-    <img [src]="photo" alt="User Photo" class="avatar-image" />
-  </ng-container>
-
-  <ng-template #initialsBlockTodo>
-    <div class="avatar-circle">
-      {{ getInitials(task.assignee) }}
-    </div>
-  </ng-template>
-</div> -->
-</div>
-
-  </div>
-
-  
-  <div class="task-meta">
-    
-    <span class="start-date">
-  <mat-icon class="start-icon">schedule</mat-icon>
-  {{ task.startDate | date:'dd MMM yyyy' }}
-</span>
-
-  <span class="due-date"
-        [class.overdue]="isOverdue(task)">
-    <mat-icon class="due-icon">schedule</mat-icon>
-    {{ task.dueDate | date:'dd MMM yyyy' }}
-  </span>
-
-    <div class="task-footer">
-        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-          <small><strong>Comments: {{ task.comment.length }}</strong></small>
-        </div>
-
-      
-
-       <div class="actions">
-  
-      <button mat-icon-button color="accent"
-              (click)="openAssignmentDialog(task); $event.stopPropagation()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button color="warn"
-              (click)="deleteAssignment(task._id); $event.stopPropagation()">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
-
-    
+    <div class="task-row-main">
+      <div class="task-line">
+        <span class="task-label">Task:</span>
+        <span class="task-name">{{ task.title }}</span>
       </div>
 
-  <!-- <span *ngIf="isOverdue(task)" class="overdue-label">
-    Overdue
-  </span> -->
-</div>
-
-
-  
-    <div class="task-footer">
-      <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-        <small><strong>Comments: {{ task.comment.length }}</strong></small>
+      <div class="task-row-actions">
+        <button type="button"
+                class="task-inline-btn"
+                (click)="openAssignmentDialog(task); $event.stopPropagation()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="deleteAssignment(task._id); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
     </div>
-    
-    </div>
+  </div>
     
     <div *ngIf="getFilteredTasksByStatus('ToDo').length === 0" class="empty-state">
       No tasks in To Do
@@ -233,61 +160,29 @@
   <h3>In Progress <span class="task-count">{{ getFilteredTasksByStatus('InProgress').length }}</span></h3>
 
   <div *ngFor="let task of getFilteredTasksByStatus('InProgress')"
-       class="kanban-card"
+       class="task-row"
        cdkDrag
        [cdkDragData]="task">
-
-    <div class="task-header-clean">
-      <div class="task-info-clean">
-        <span class="heading-clean">Task:</span>
-        <span class="point-clean">{{ task.title }}</span>
+    <div class="task-row-main">
+      <div class="task-line">
+        <span class="task-label">Task:</span>
+        <span class="task-name">{{ task.title }}</span>
       </div>
 
-      
-  <div class="task-info-clean assignee-avatar-container">
-  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockProgress">
-    <img [src]="photo" alt="User Photo" class="avatar-image" />
-  </ng-container>
-
-  <ng-template #initialsBlockProgress>
-    <div class="avatar-circle">
-      {{ getInitials(task.assignee) }}
-    </div>
-  </ng-template>
-</div>
-    </div>
-
-    <div class="task-meta">
-      <span class="due-date"
-            [class.overdue]="isOverdue(task)">
-        <!-- <mat-icon class="due-icon">schedule</mat-icon>
-        {{ task.dueDate | date:'dd MMM yyyy' }} -->
-        <!-- If you want to keep getDueLabel: -->
-        {{ getDueLabel(task) }}
-      </span>
-
-      <div class="task-footer">
-        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-          <small><strong>Comments: {{ task.comment.length }}</strong></small>
-        </div>
-
-        <div class="actions">
-          <button mat-icon-button color="accent"
-                  (click)="openAssignmentDialog(task); $event.stopPropagation()">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn"
-                  (click)="deleteAssignment(task._id); $event.stopPropagation()">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
+      <div class="task-row-actions">
+        <span class="task-days-chip">{{ getTaskDurationLabel(task) }}</span>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="openAssignmentDialog(task); $event.stopPropagation()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="deleteAssignment(task._id); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
-
-      <!-- <span *ngIf="isOverdue(task)" class="overdue-label">
-        Overdue
-      </span> -->
     </div>
-
   </div>
 
   <div *ngIf="getFilteredTasksByStatus('InProgress').length === 0" class="empty-state">
@@ -307,66 +202,31 @@
   <h3>Done <span class="task-count">{{ getFilteredTasksByStatus('Done').length }}</span></h3>
 
   <div *ngFor="let task of getFilteredTasksByStatus('Done')"
-       class="kanban-card"
+       class="task-row"
        cdkDrag
        [cdkDragData]="task">
-
-    <div class="task-header-clean">
-      <div class="task-info-clean">
-        <span class="heading-clean">Task:</span>
-        <span class="point-clean">{{ task.title }}</span>
+    <div class="task-row-main">
+      <div class="task-line">
+        <span class="task-label">Task:</span>
+        <span class="task-name">{{ task.title }}</span>
       </div>
 
-     <div class="task-info-clean assignee-avatar-container">
-  <ng-container *ngIf="getUserPhoto(task.assignee) as photo; else initialsBlockTodo">
-    <img [src]="photo" alt="User Photo" class="avatar-image" />
-  </ng-container>
-
-  <ng-template #initialsBlockTodo>
-    <div class="avatar-circle">
-      {{ getInitials(task.assignee) }}
-    </div>
-  </ng-template>
-</div>
-    </div>
-
-    <div class="task-meta">
-     <div class="task-status-badge" [ngClass]="getStatusClass(task.Status)">
-{{ 
-  task.Status.toLowerCase() === 'done' ? 'Completed' :
-
-  task.Status || 'To Do'
-}}
-
-</div>
-      <!-- <span class="due-date"
-            [class.overdue]="isOverdue(task)">
-        <mat-icon class="due-icon">schedule</mat-icon>
-        {{ task.dueDate | date:'dd MMM yyyy' }}
-      </span> -->
-
-      <div class="task-footer">
-        <div *ngIf="task.comment && task.comment.length > 0" class="comments-preview">
-          <small><strong>Comments: {{ task.comment.length }}</strong></small>
-        </div>
-
-        <div class="actions">
-          <button mat-icon-button color="accent"
-                  (click)="openAssignmentDialog(task); $event.stopPropagation()">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn"
-                  (click)="deleteAssignment(task._id); $event.stopPropagation()">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
+      <div class="task-row-actions">
+        <button type="button"
+                class="task-inline-btn"
+                (click)="openAssignmentDialog(task); $event.stopPropagation()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="deleteAssignment(task._id); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <span class="task-done-tick" aria-label="Completed">
+          <mat-icon>check_circle</mat-icon>
+        </span>
       </div>
-
-      <!-- <span *ngIf="isOverdue(task)" class="overdue-label">
-        Overdue
-      </span> -->
     </div>
-
   </div>
 
   <div *ngIf="getFilteredTasksByStatus('Done').length === 0" class="empty-state">

@@ -457,6 +457,48 @@ getDueLabel(task: AssignWork): string {
   return `Due in ${diffDays} days`;
 }
 
+private getTaskDateOnly(value: string | Date | undefined | null): Date | null {
+  if (!value) {
+    return null;
+  }
+
+  const parsedDate = new Date(value);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return null;
+  }
+
+  parsedDate.setHours(0, 0, 0, 0);
+  return parsedDate;
+}
+
+getTaskDurationLabel(task: AssignWork): string {
+  const startDate = this.getTaskDateOnly(task?.startDate);
+  const endDate = this.getTaskDateOnly(task?.dueDate);
+
+  if (startDate && endDate) {
+    const diffInDays = Math.max(
+      1,
+      Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+    );
+
+    return `${diffInDays} Day${diffInDays > 1 ? 's' : ''}`;
+  }
+
+  if (startDate) {
+    const today = this.getTaskDateOnly(new Date());
+    const elapsedDays = today
+      ? Math.max(
+          1,
+          Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1
+        )
+      : 1;
+
+    return `${elapsedDays} Day${elapsedDays > 1 ? 's' : ''}`;
+  }
+
+  return 'Days';
+}
+
 loadProjects(): void {
   this.projectService.getProjects().subscribe({
     next: (res: any[]) => {

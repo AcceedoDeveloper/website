@@ -2182,6 +2182,145 @@ img, table, input, button, select { max-width: 100%; }
   text-transform: uppercase;
 }
 
+.task-row {
+  display: block;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+  box-shadow: none;
+  border-left: 0;
+  border-radius: 10px;
+  min-height: 56px;
+  cursor: move;
+}
+
+.task-row:hover {
+  transform: none;
+  box-shadow: none;
+  background: #f8fafc;
+}
+
+.task-row-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.task-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.task-label {
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.task-name {
+  font-size: 14px;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+}
+
+.task-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.task-inline-btn {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: #eef2ff;
+  color: #4f46e5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.task-inline-btn:hover {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.task-inline-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.task-date-chip,
+.task-days-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.task-date-chip {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.task-date-chip.overdue {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.task-days-chip {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.task-done-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #16a34a;
+}
+
+.task-done-tick mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+#todo-list .task-label {
+  color: #dc2626;
+}
+
+#progress-list .task-label {
+  color: #eab308;
+}
+
+#done-list .task-label {
+  color: #16a34a;
+}
+
 
 
 
