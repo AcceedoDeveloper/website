@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -54,6 +53,12 @@ interface TimelineDay {
   label: string;
   isWeekend: boolean;
   isToday: boolean;
+}
+
+interface TimelineMonthSegment {
+  label: string;
+  left: number;
+  width: number;
 }
 
 @Component({
@@ -118,6 +123,7 @@ export class TimelineComponent implements OnChanges, OnDestroy {
   private cachedProjectOptions: string[] = [];
   private cachedAssigneeOptions: string[] = [];
   private cachedDays: TimelineDay[] = [];
+  private cachedMonthSegments: TimelineMonthSegment[] = [];
   private cachedCurrentMonthLabel = '';
   private cachedTodayLineLeft = -100;
   private cachedActiveTaskCount = 0;
@@ -177,6 +183,10 @@ export class TimelineComponent implements OnChanges, OnDestroy {
 
   get days(): TimelineDay[] {
     return this.cachedDays;
+  }
+
+  get monthSegments(): TimelineMonthSegment[] {
+    return this.cachedMonthSegments;
   }
 
   get todayLineLeft(): number {
@@ -279,20 +289,17 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     }, 0);
   }
 
-  goToPreviousMonth(): void {
-    this.visibleMonthDate = this.getMonthStart(
-      new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() - 1, 1)
-    );
-    this.rebuildCalendarState();
-    this.updateComputedState();
-  }
+  onTimelineScroll(): void {
+    const scroller = this.timelineScroller?.nativeElement;
+    if (!scroller) {
+      return;
+    }
 
-  goToNextMonth(): void {
-    this.visibleMonthDate = this.getMonthStart(
-      new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 1)
-    );
-    this.rebuildCalendarState();
-    this.updateComputedState();
+    if (!this.totalDays) {
+      return;
+    }
+
+    this.syncMonthLabelFromScroll(scroller);
   }
 
   clearFilters(): void {
@@ -1073,40 +1080,58 @@ export class TimelineComponent implements OnChanges, OnDestroy {
 
   private buildDays(): TimelineDay[] {
     const today = new Date();
-    const year = this.visibleMonthDate.getFullYear();
-    const month = this.visibleMonthDate.getMonth();
+    const yearStart = this.getVisibleYearStart();
 
     return Array.from({ length: this.totalDays }, (_, index) => {
-      const date = new Date(year, month, index + 1);
+      const date = this.addDays(yearStart, index);
       return {
-        day: index + 1,
+        day: date.getDate(),
         label: date.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2),
         isWeekend: date.getDay() === 0 || date.getDay() === 6,
-        isToday:
-          index + 1 === today.getDate() &&
-          month === today.getMonth() &&
-          year === today.getFullYear()
+        isToday: date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear()
+      };
+    });
+  }
+
+  private buildMonthSegments(): TimelineMonthSegment[] {
+    const yearStart = this.getVisibleYearStart();
+    const totalDays = Math.max(1, this.totalDays);
+
+    return Array.from({ length: 12 }, (_, monthIndex) => {
+      const monthStart = new Date(yearStart.getFullYear(), monthIndex, 1);
+      const nextMonthStart = new Date(yearStart.getFullYear(), monthIndex + 1, 1);
+      const leftDays = this.getDateDifference(yearStart, monthStart) - 1;
+      const widthDays = this.getDateDifference(monthStart, nextMonthStart);
+      const monthName = this.months[monthIndex] || monthStart.toLocaleString('default', { month: 'long' });
+
+      return {
+        label: `${monthName} ${yearStart.getFullYear()}`,
+        left: (leftDays / totalDays) * 100,
+        width: (widthDays / totalDays) * 100
       };
     });
   }
 
   private rebuildCalendarState(): void {
-    this.totalDays = this.getDaysInMonth(this.visibleMonthDate);
+    const yearStart = this.getVisibleYearStart();
+    const yearEnd = this.getVisibleYearEnd();
+    this.totalDays = this.getDateDifference(yearStart, yearEnd);
     this.calendarGridTemplate = `repeat(${this.totalDays}, minmax(36px, 1fr))`;
     this.calendarMinWidth = `${this.totalDays * 36}px`;
     this.cachedDays = this.buildDays();
+    this.cachedMonthSegments = this.buildMonthSegments();
 
     const monthName =
       this.months[this.visibleMonthDate.getMonth()] ||
       this.visibleMonthDate.toLocaleString('default', { month: 'long' });
     this.cachedCurrentMonthLabel = `${monthName} ${this.visibleMonthDate.getFullYear()}`;
 
-    if (!this.isViewingCurrentMonth()) {
+    if (!this.isViewingVisibleYear()) {
       this.cachedTodayLineLeft = -100;
       return;
     }
 
-    const todayIndex = this.cachedDays.findIndex(day => day.isToday);
+    const todayIndex = this.getDayOfYear(new Date()) - 1;
     const safeIndex = todayIndex >= 0 ? todayIndex : 0;
     this.cachedTodayLineLeft = ((safeIndex + 0.5) / this.totalDays) * 100;
   }
@@ -1114,7 +1139,7 @@ export class TimelineComponent implements OnChanges, OnDestroy {
   private updateComputedState(): void {
     this.rebuildCalendarState();
 
-    const todayDay = this.isViewingCurrentMonth() ? this.cachedDays.find(day => day.isToday)?.day ?? 1 : null;
+    const todayDay = this.isViewingVisibleYear() ? this.getDayOfYear(new Date()) : null;
     this.cachedProjectOptions = Array.from(new Set(this.tasks.map(task => task.projectName).filter(Boolean)));
 
     const visibleTasks = this.tasks
@@ -1171,6 +1196,24 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  private syncMonthLabelFromScroll(scroller: HTMLDivElement): void {
+    const yearStart = this.getVisibleYearStart();
+    const centerLeft = scroller.scrollLeft + scroller.clientWidth / 2;
+    const dayIndex = Math.max(0, Math.min(this.totalDays - 1, Math.round((centerLeft / scroller.scrollWidth) * (this.totalDays - 1))));
+    const centeredDate = this.addDays(yearStart, dayIndex);
+    const nextMonthDate = this.getMonthStart(centeredDate);
+
+    if (
+      nextMonthDate.getFullYear() === this.visibleMonthDate.getFullYear() &&
+      nextMonthDate.getMonth() === this.visibleMonthDate.getMonth()
+    ) {
+      return;
+    }
+
+    this.visibleMonthDate = nextMonthDate;
+    this.rebuildCalendarState();
+  }
+
   private scrollToToday(): void {
     const scroller = this.timelineScroller?.nativeElement;
     if (!scroller) {
@@ -1190,7 +1233,10 @@ export class TimelineComponent implements OnChanges, OnDestroy {
       return;
     }
 
-    const dayIndex = Math.min(this.totalDays - 1, Math.max(0, date.getDate() - 1));
+    const dayIndex = Math.min(
+      this.totalDays - 1,
+      Math.max(0, this.getDateDifference(this.getVisibleYearStart(), date) - 1)
+    );
     const targetLeft = ((dayIndex + 0.5) / this.totalDays) * scroller.scrollWidth - scroller.clientWidth / 2;
     scroller.scrollTo({
       left: Math.max(0, targetLeft),
@@ -1327,16 +1373,26 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     return new Date(date.getFullYear(), date.getMonth(), 1);
   }
 
+  private getVisibleYearStart(): Date {
+    return new Date(this.visibleMonthDate.getFullYear(), 0, 1);
+  }
+
+  private getVisibleYearEnd(): Date {
+    return new Date(this.visibleMonthDate.getFullYear(), 11, 31);
+  }
+
+  private getDayOfYear(date: Date): number {
+    const yearStart = new Date(date.getFullYear(), 0, 1);
+    return this.getDateDifference(yearStart, date);
+  }
+
   private getDaysInMonth(date: Date): number {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   }
 
-  private isViewingCurrentMonth(): boolean {
+  private isViewingVisibleYear(): boolean {
     const today = new Date();
-    return (
-      this.visibleMonthDate.getFullYear() === today.getFullYear() &&
-      this.visibleMonthDate.getMonth() === today.getMonth()
-    );
+    return this.visibleMonthDate.getFullYear() === today.getFullYear();
   }
 
   private createDateForVisibleMonth(day: number): Date {
@@ -1415,8 +1471,8 @@ export class TimelineComponent implements OnChanges, OnDestroy {
       return false;
     }
 
-    const visibleStart = this.getMonthStart(this.visibleMonthDate);
-    const visibleEnd = new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0);
+    const visibleStart = this.getVisibleYearStart();
+    const visibleEnd = this.getVisibleYearEnd();
     return startDate <= visibleEnd && endDate >= visibleStart;
   }
 
@@ -1427,28 +1483,36 @@ export class TimelineComponent implements OnChanges, OnDestroy {
       return false;
     }
 
-    const visibleStart = this.getMonthStart(this.visibleMonthDate);
-    const visibleEnd = new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0);
+    const visibleStart = this.getVisibleYearStart();
+    const visibleEnd = this.getVisibleYearEnd();
     return startDate <= visibleEnd && endDate >= visibleStart;
   }
 
   private resolveVisibleDay(startDate: Date, endDate: Date, fallbackDay = 1): number {
-    const visibleStart = this.getMonthStart(this.visibleMonthDate);
-    if (startDate > new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0)) {
+    const visibleStart = this.getVisibleYearStart();
+    const visibleEnd = this.getVisibleYearEnd();
+    if (startDate > visibleEnd) {
       return this.clampDay(fallbackDay);
     }
 
-    return this.clampDay(startDate < visibleStart ? 1 : startDate.getDate());
-  }
-
-  private resolveVisibleEndDay(startDate: Date, endDate: Date): number {
-    const visibleEnd = new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() + 1, 0);
-    if (endDate < this.getMonthStart(this.visibleMonthDate)) {
+    if (startDate < visibleStart) {
       return 1;
     }
 
-    return this.clampDay(endDate > visibleEnd ? visibleEnd.getDate() : endDate.getDate());
+    return this.clampDay(this.getDateDifference(visibleStart, startDate));
+  }
+
+  private resolveVisibleEndDay(startDate: Date, endDate: Date): number {
+    const visibleStart = this.getVisibleYearStart();
+    const visibleEnd = this.getVisibleYearEnd();
+    if (endDate < visibleStart) {
+      return 1;
+    }
+
+    if (endDate > visibleEnd) {
+      return this.totalDays;
+    }
+
+    return this.clampDay(this.getDateDifference(visibleStart, endDate));
   }
 }
-
-

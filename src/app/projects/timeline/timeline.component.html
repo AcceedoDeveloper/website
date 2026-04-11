@@ -8,15 +8,6 @@
           [(ngModel)]="projectTitle"
           placeholder="Project plan"
         />
-        <!-- <div class="month-label month-nav">
-          <button class="month-nav-btn" type="button" (click)="goToPreviousMonth()" aria-label="Previous month">
-            &#8249;
-          </button>
-          <span>{{ currentMonthLabel }}</span>
-          <button class="month-nav-btn" type="button" (click)="goToNextMonth()" aria-label="Next month">
-            &#8250;
-          </button>
-        </div> -->
       </div>
 
       <div class="tm-actions">
@@ -242,16 +233,16 @@
         </div>
       </div>
 
-      <div class="right-panel" #timelineScroller>
+      <div class="right-panel" #timelineScroller (scroll)="onTimelineScroll()">
         <div class="gantt-header">
-          <div class="month-title month-nav">
-            <button class="month-nav-btn" type="button" (click)="goToPreviousMonth()" aria-label="Previous month">
-              &#8249;
-            </button>
+          <!-- <div class="month-title">
             <span>{{ currentMonthLabel }}</span>
-            <button class="month-nav-btn" type="button" (click)="goToNextMonth()" aria-label="Next month">
-              &#8250;
-            </button>
+          </div> -->
+
+          <div class="months-header" [style.min-width]="calendarMinWidth">
+            <div class="month-segment" *ngFor="let month of monthSegments" [style.left.%]="month.left" [style.width.%]="month.width">
+              {{ month.label }}
+            </div>
           </div>
 
           <div class="days-header" [style.grid-template-columns]="calendarGridTemplate" [style.min-width]="calendarMinWidth">
