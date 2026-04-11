@@ -17,7 +17,8 @@
   /* --tm-shadow: 0 34px 90px rgba(0, 0, 0, 0.22); */
   display: block;
   width: 100%;
-  /* padding: 28px; */
+  max-width: 3300px;
+    padding: 10px; 
   /* background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 24%),
     radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.05), transparent 26%),
@@ -34,7 +35,7 @@
 .tm-card {
   width: 100%;
   max-width: 1500px;
-  padding: 34px 34px 28px;
+ /* padding: 34px 34px 28px; */
   border-radius: 34px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.96)),
@@ -147,6 +148,18 @@
 .btn-projects:hover {
   border-color: #a9c6ea;
   box-shadow: 0 12px 22px rgba(49, 98, 168, 0.14);
+}
+
+.btn-project-start {
+  border-color: #d7e7d9;
+  background: linear-gradient(180deg, #f4fff6 0%, #e4f7e8 100%);
+  color: #1e6a44;
+  box-shadow: 0 8px 18px rgba(30, 106, 68, 0.08);
+}
+
+.btn-project-start:hover {
+  border-color: #a9d3b6;
+  box-shadow: 0 12px 22px rgba(30, 106, 68, 0.14);
 }
 
 .btn-projects span {

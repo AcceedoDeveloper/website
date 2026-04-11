@@ -264,6 +264,21 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     this.monthViewClick.emit();
   }
 
+  jumpToProjectStart(): void {
+    const projectStart = this.getProjectStartDate();
+    if (!projectStart) {
+      return;
+    }
+
+    this.visibleMonthDate = this.getMonthStart(projectStart);
+    this.rebuildCalendarState();
+    this.updateComputedState();
+
+    setTimeout(() => {
+      this.scrollToDate(projectStart);
+    }, 0);
+  }
+
   goToPreviousMonth(): void {
     this.visibleMonthDate = this.getMonthStart(
       new Date(this.visibleMonthDate.getFullYear(), this.visibleMonthDate.getMonth() - 1, 1)
@@ -1169,6 +1184,20 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     });
   }
 
+  private scrollToDate(date: Date): void {
+    const scroller = this.timelineScroller?.nativeElement;
+    if (!scroller || !this.totalDays) {
+      return;
+    }
+
+    const dayIndex = Math.min(this.totalDays - 1, Math.max(0, date.getDate() - 1));
+    const targetLeft = ((dayIndex + 0.5) / this.totalDays) * scroller.scrollWidth - scroller.clientWidth / 2;
+    scroller.scrollTo({
+      left: Math.max(0, targetLeft),
+      behavior: 'smooth'
+    });
+  }
+
   private getStorageKey(): string {
     const key = this.selectedProjectId || this.selectedProjectName || 'default';
     return `timeline.tasks.${key}`;
@@ -1271,6 +1300,27 @@ export class TimelineComponent implements OnChanges, OnDestroy {
 
     const selectedProjectName = this.selectedProjectName?.trim();
     this.projectTitle = this.projectOptions.length > 1 ? 'All Projects' : (selectedProjectName || 'Project plan');
+  }
+
+  private getProjectStartDate(): Date | null {
+    const selectedProject = this.selectedProjectFilter !== 'all'
+      ? this.selectedProjectFilter
+      : this.selectedProjectName?.trim();
+
+    const relevantTasks = selectedProject
+      ? this.tasks.filter(task => task.projectName === selectedProject)
+      : this.tasks;
+
+    const taskDates = relevantTasks.flatMap(task => {
+      const dates = [this.getTaskStartDate(task), ...task.subtasks.map(subtask => this.getSubtaskStartDate(subtask))];
+      return dates.filter((date): date is Date => !!date);
+    });
+
+    if (!taskDates.length) {
+      return null;
+    }
+
+    return taskDates.reduce((earliest, current) => (current < earliest ? current : earliest));
   }
 
   private getMonthStart(date: Date): Date {
