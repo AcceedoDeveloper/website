@@ -302,6 +302,38 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     this.syncMonthLabelFromScroll(scroller);
   }
 
+  onTimelineWheel(event: WheelEvent): void {
+    const scroller = this.timelineScroller?.nativeElement;
+    if (!scroller || !this.totalDays) {
+      return;
+    }
+
+    const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+    if (!delta) {
+      return;
+    }
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    if (maxScrollLeft <= 0) {
+      return;
+    }
+
+    const nextScrollLeft = scroller.scrollLeft + delta;
+    const atStart = scroller.scrollLeft <= 0.5;
+    const atEnd = scroller.scrollLeft >= maxScrollLeft - 0.5;
+
+    if (nextScrollLeft < 0 && atStart) {
+      event.preventDefault();
+      this.rollTimelineYear(-1, Math.abs(nextScrollLeft));
+      return;
+    }
+
+    if (nextScrollLeft > maxScrollLeft && atEnd) {
+      event.preventDefault();
+      this.rollTimelineYear(1, nextScrollLeft - maxScrollLeft);
+    }
+  }
+
   clearFilters(): void {
     this.selectProjectFilter('all');
     this.selectedTypeFilter = 'all';
@@ -1212,6 +1244,27 @@ export class TimelineComponent implements OnChanges, OnDestroy {
 
     this.visibleMonthDate = nextMonthDate;
     this.rebuildCalendarState();
+  }
+
+  private rollTimelineYear(direction: 1 | -1, overflowPx: number): void {
+    const currentYear = this.visibleMonthDate.getFullYear();
+    const nextYear = currentYear + direction;
+
+    this.visibleMonthDate = new Date(nextYear, direction > 0 ? 0 : 11, 1);
+    this.rebuildCalendarState();
+    this.updateComputedState();
+
+    requestAnimationFrame(() => {
+      const scroller = this.timelineScroller?.nativeElement;
+      if (scroller) {
+        const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+        const nextScrollLeft = direction > 0
+          ? Math.min(overflowPx, maxScrollLeft)
+          : Math.max(0, maxScrollLeft - overflowPx);
+
+        scroller.scrollLeft = nextScrollLeft;
+      }
+    });
   }
 
   private scrollToToday(): void {

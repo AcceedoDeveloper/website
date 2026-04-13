@@ -233,7 +233,7 @@
         </div>
       </div>
 
-      <div class="right-panel" #timelineScroller (scroll)="onTimelineScroll()">
+      <div class="right-panel" #timelineScroller (scroll)="onTimelineScroll()" (wheel)="onTimelineWheel($event)">
         <div class="gantt-header">
           <!-- <div class="month-title">
             <span>{{ currentMonthLabel }}</span>
