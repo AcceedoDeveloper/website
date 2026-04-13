@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -67,7 +68,7 @@ interface TimelineMonthSegment {
   styleUrls: ['./timeline.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimelineComponent implements OnChanges, OnDestroy {
+export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
   @ViewChild('timelineScroller') timelineScroller?: ElementRef<HTMLDivElement>;
 
   @Input() timelineItems: AssignWork[] = [];
@@ -93,6 +94,8 @@ export class TimelineComponent implements OnChanges, OnDestroy {
   selectedAllocationFilter: 'all' | AllocationState = 'all';
   selectedAssigneeFilter = 'all';
   visibleMonthDate = this.getMonthStart(new Date());
+  private viewInitialized = false;
+  private initialProjectViewApplied = false;
 
   newTask = {
     title: '',
@@ -118,6 +121,7 @@ export class TimelineComponent implements OnChanges, OnDestroy {
   private deletedImportedTaskIds = new Set<string>();
   private importedSubtaskOverrides: Record<string, TimelineSubtask[]> = {};
   private persistTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  private yearRollCooldownId: ReturnType<typeof setTimeout> | null = null;
   private lastPersistedManualTasks = '';
   private cachedDisplayTasks: TimelineTask[] = [];
   private cachedProjectOptions: string[] = [];
@@ -140,6 +144,15 @@ export class TimelineComponent implements OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.flushPersistTasks();
+    if (this.yearRollCooldownId) {
+      clearTimeout(this.yearRollCooldownId);
+      this.yearRollCooldownId = null;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
+    this.applyInitialProjectView();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -163,6 +176,7 @@ export class TimelineComponent implements OnChanges, OnDestroy {
 
     this.syncProjectTitle();
     this.refreshSchedule();
+    this.applyInitialProjectView();
   }
 
   get activeTaskCount(): number {
@@ -266,11 +280,15 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     this.selectedTypeFilter = 'all';
     this.selectedAllocationFilter = 'all';
     this.selectedAssigneeFilter = 'all';
+    this.initialProjectViewApplied = true;
     this.showProjectPanel = false;
     this.showFilterPanel = false;
     this.visibleMonthDate = this.getMonthStart(new Date());
     this.rebuildCalendarState();
     this.updateComputedState();
+    setTimeout(() => {
+      this.scrollToDate(new Date(), 'auto');
+    }, 0);
     this.monthViewClick.emit();
   }
 
@@ -287,6 +305,15 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     setTimeout(() => {
       this.scrollToDate(projectStart);
     }, 0);
+  }
+
+  private applyInitialProjectView(): void {
+    if (this.initialProjectViewApplied || !this.viewInitialized || !this.tasks.length) {
+      return;
+    }
+
+    this.initialProjectViewApplied = true;
+    this.jumpToProjectStart();
   }
 
   onTimelineScroll(): void {
@@ -315,6 +342,10 @@ export class TimelineComponent implements OnChanges, OnDestroy {
 
     const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
     if (maxScrollLeft <= 0) {
+      return;
+    }
+
+    if (this.yearRollCooldownId) {
       return;
     }
 
@@ -1247,6 +1278,14 @@ export class TimelineComponent implements OnChanges, OnDestroy {
   }
 
   private rollTimelineYear(direction: 1 | -1, overflowPx: number): void {
+    if (this.yearRollCooldownId) {
+      return;
+    }
+
+    this.yearRollCooldownId = setTimeout(() => {
+      this.yearRollCooldownId = null;
+    }, 120);
+
     const currentYear = this.visibleMonthDate.getFullYear();
     const nextYear = currentYear + direction;
 
@@ -1280,7 +1319,7 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     });
   }
 
-  private scrollToDate(date: Date): void {
+  private scrollToDate(date: Date, behavior: ScrollBehavior = 'smooth'): void {
     const scroller = this.timelineScroller?.nativeElement;
     if (!scroller || !this.totalDays) {
       return;
@@ -1293,7 +1332,7 @@ export class TimelineComponent implements OnChanges, OnDestroy {
     const targetLeft = ((dayIndex + 0.5) / this.totalDays) * scroller.scrollWidth - scroller.clientWidth / 2;
     scroller.scrollTo({
       left: Math.max(0, targetLeft),
-      behavior: 'smooth'
+      behavior
     });
   }
 

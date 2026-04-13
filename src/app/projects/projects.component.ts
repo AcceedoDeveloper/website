@@ -2078,7 +2078,16 @@ handleTimelineFilterClick(): void {
 }
 
 handleTimelineMonthViewClick(): void {
-  this.openMonthView();
+  this.currentPage = 'TimeLine';
+  this.showmaintask = false;
+  this.Documents = false;
+  this.Calendar = false;
+  this.Summary = false;
+  this.compare = false;
+  this.TimeLine = true;
+  this.showtask = false;
+  this.datefiltersection = false;
+  this.filterAssignmentsByProject();
 }
 
 handleTimelineNewTaskClick(): void {
