@@ -1607,4 +1607,33 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
 
     return this.clampDay(this.getDateDifference(visibleStart, endDate));
   }
+
+  goToPreviousMonth(event?: Event): void {
+    event?.stopPropagation();
+    this.shiftTimelineByDays(-47, 'previous');
+  }
+
+  goToNextMonth(event?: Event): void {
+    event?.stopPropagation();
+    this.shiftTimelineByDays(47, 'next');
+  }
+
+  private shiftTimelineByDays(dayDelta: number, directionLabel: 'previous' | 'next'): void {
+    const targetDate = this.addDays(this.visibleMonthDate, dayDelta);
+
+    console.log(`[Timeline] goTo${directionLabel === 'previous' ? 'Previous' : 'Next'}Month clicked`, {
+      from: this.visibleMonthDate.toISOString(),
+      to: targetDate.toISOString(),
+      dayDelta
+    });
+
+    this.visibleMonthDate = targetDate;
+    this.rebuildCalendarState();
+    this.updateComputedState();
+
+    setTimeout(() => {
+      console.log(`[Timeline] scrolling to ${directionLabel} date`, targetDate.toISOString());
+      this.scrollToDate(targetDate, 'smooth');
+    }, 100);
+  }
 }

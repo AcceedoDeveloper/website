@@ -235,15 +235,29 @@
 
       <div class="right-panel" #timelineScroller (scroll)="onTimelineScroll()" (wheel)="onTimelineWheel($event)">
         <div class="gantt-header">
-          <!-- <div class="month-title">
-            <span>{{ currentMonthLabel }}</span>
-          </div> -->
+      
 
-          <div class="months-header" [style.min-width]="calendarMinWidth">
-            <div class="month-segment" *ngFor="let month of monthSegments" [style.left.%]="month.left" [style.width.%]="month.width">
-              {{ month.label }}
-            </div>
-          </div>
+          <div class="timeline-header-nav">
+  
+
+</div>
+
+<!-- KEEP THIS AS IT IS -->
+
+<div class="months-header" [style.min-width]="calendarMinWidth">
+ 
+<div
+    class="month-segment"
+    *ngFor="let month of monthSegments"
+    [style.left.%]="month.left"
+    [style.width.%]="month.width"
+  >
+   <button class="nav-btn" type="button" (click)="goToPreviousMonth($event)">&#8249;</button>
+    {{ month.label }}
+     <button class="nav-btn" type="button" (click)="goToNextMonth($event)">&#8250;</button>
+  </div>
+ 
+</div>
 
           <div class="days-header" [style.grid-template-columns]="calendarGridTemplate" [style.min-width]="calendarMinWidth">
             <div class="day-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend">
