@@ -243,7 +243,7 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
     if (this.showProjectPanel) {
       this.showFilterPanel = false;
     }
-  }
+}
 
   toggleFilterPanel(): void {
     this.showFilterPanel = !this.showFilterPanel;
@@ -602,7 +602,7 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   getTaskBarWidth(task: TimelineTask): number {
     return (this.getTaskDuration(task) / this.totalDays) * 100;
-  }
+}
 
   getSubtaskBarLeft(subtask: TimelineSubtask): number {
     return ((this.getSubtaskStartDay(subtask) - 1) / this.totalDays) * 100;
@@ -1336,6 +1336,51 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
     });
   }
 
+onTaskClick(task: TimelineTask): void {
+    this.scrollToTask(task);
+  const startDate = this.getTaskStartDate(task);
+  if (!startDate) return;
+
+  const middleDate = this.getMiddleOfMonth(startDate);
+
+  // scroll first
+  setTimeout(() => {
+    this.scrollToDate(middleDate, 'smooth');
+
+    // then highlight that bar
+    setTimeout(() => {
+      this.highlightTaskBar(task.id);
+    }, 300); // wait for scroll
+  }, 0);
+}
+
+highlightTaskBar(taskId: string | number): void {
+  // remove old highlight
+  document.querySelectorAll('.task-bar').forEach(el => {
+    el.classList.remove('active-task');
+  });
+
+  // add highlight to clicked one
+  const el = document.getElementById('task-bar-' + taskId);
+
+  if (el) {
+    el.classList.add('active-task');
+
+    // auto remove after animation
+    setTimeout(() => {
+      el.classList.remove('active-task');
+    }, 1500);
+  }
+}
+focusTaskId: string | number | null = null;
+
+triggerFocusAnimation(taskId: string | number): void {
+  this.focusTaskId = taskId;
+
+  setTimeout(() => {
+    this.focusTaskId = null; // remove animation after effect
+  }, 600);
+}
   private getStorageKey(): string {
     const key = this.selectedProjectId || this.selectedProjectName || 'default';
     return `timeline.tasks.${key}`;
@@ -1608,32 +1653,82 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
     return this.clampDay(this.getDateDifference(visibleStart, endDate));
   }
 
-  goToPreviousMonth(event?: Event): void {
-    event?.stopPropagation();
-    this.shiftTimelineByDays(-47, 'previous');
-  }
+goToPreviousMonth(event?: Event): void {
+  event?.stopPropagation();
 
-  goToNextMonth(event?: Event): void {
-    event?.stopPropagation();
-    this.shiftTimelineByDays(47, 'next');
-  }
+  const prevMonth = new Date(
+    this.visibleMonthDate.getFullYear(),
+    this.visibleMonthDate.getMonth() - 1,
+    1
+  );
 
-  private shiftTimelineByDays(dayDelta: number, directionLabel: 'previous' | 'next'): void {
-    const targetDate = this.addDays(this.visibleMonthDate, dayDelta);
+  this.visibleMonthDate = prevMonth;
+  this.rebuildCalendarState();
+  this.updateComputedState();
 
-    console.log(`[Timeline] goTo${directionLabel === 'previous' ? 'Previous' : 'Next'}Month clicked`, {
-      from: this.visibleMonthDate.toISOString(),
-      to: targetDate.toISOString(),
-      dayDelta
-    });
+  const middleDate = this.getMiddleOfMonth(prevMonth);
 
-    this.visibleMonthDate = targetDate;
-    this.rebuildCalendarState();
-    this.updateComputedState();
+  setTimeout(() => {
+    this.scrollToDate(middleDate, 'smooth');
+  }, 100);
+}
 
-    setTimeout(() => {
-      console.log(`[Timeline] scrolling to ${directionLabel} date`, targetDate.toISOString());
-      this.scrollToDate(targetDate, 'smooth');
-    }, 100);
-  }
+goToNextMonth(event?: Event): void {
+  event?.stopPropagation();
+
+  const nextMonth = new Date(
+    this.visibleMonthDate.getFullYear(),
+    this.visibleMonthDate.getMonth() + 1,
+    1
+  );
+
+  this.visibleMonthDate = nextMonth;
+  this.rebuildCalendarState();
+  this.updateComputedState();
+
+  const middleDate = this.getMiddleOfMonth(nextMonth);
+
+  setTimeout(() => {
+    this.scrollToDate(middleDate, 'smooth');
+  }, 100);
+}
+
+private shiftTimelineByDays(dayDelta: number, directionLabel: 'previous' | 'next'): void {
+  const movedDate = this.addDays(this.visibleMonthDate, dayDelta);
+
+  // ✅ Convert to middle of that month
+  const targetDate = this.getMiddleOfMonth(movedDate);
+
+  this.visibleMonthDate = targetDate;
+  this.rebuildCalendarState();
+  this.updateComputedState();
+
+  setTimeout(() => {
+    this.scrollToDate(targetDate, 'smooth');
+  }, 100);
+}
+getMiddleOfMonth(date: Date): Date {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const middleDay = Math.floor(daysInMonth / 2);
+
+  return new Date(year, month, middleDay);
+}
+
+scrollToTask(task: TimelineTask): void {
+  this.selectedTaskId = task.id;
+
+  const startDate = this.getTaskStartDate(task);
+  if (!startDate) return;
+
+  const middleDate = this.getMiddleOfMonth(startDate);
+
+  setTimeout(() => {
+    this.scrollToDate(middleDate, 'smooth');
+  }, 0);
+}
+
+
 }

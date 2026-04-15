@@ -130,6 +130,11 @@
   color: #1e6a44;
   box-shadow: 0 8px 18px rgba(30, 106, 68, 0.08);
 }
+.btn-project-start:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 .btn-project-start:hover {
   border-color: #a9d3b6;
@@ -1029,4 +1034,27 @@
   border-color: #89a8ff;
   box-shadow: 0 0 0 3px rgba(137, 168, 255, 0.18);
 }
+
+.task-bar {
+  transition: transform 0.3s ease;
+}
+
+.active-task {
+  animation: boomEffect 0.4s ease;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.7);
+  z-index: 5;
+}
+
+@keyframes boomEffect {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 

@@ -14,9 +14,14 @@
         <!-- <button class="btn btn-primary" type="button" (click)="openTaskComposer()">
           + Create
         </button> -->
-        <button class="btn btn-project-start" type="button" (click)="jumpToProjectStart()">
-          Project view
-        </button>
+       <button 
+  class="btn btn-project-start" 
+  type="button" 
+  (click)="jumpToProjectStart()"
+  [disabled]="!selectedProjectFilter || selectedProjectFilter === 'null'"
+>
+  Project view
+</button>
         <!-- <button class="btn btn-projects" type="button" (click)="toggleProjectPanel()">
           Include projects <span>{{ projectCount }}</span>
         </button> -->
@@ -170,11 +175,15 @@
 
         <div class="table-body">
           <ng-container *ngFor="let task of displayTasks; trackBy: trackByTask">
-            <div class="table-row task-row">
-              <div class="col subject subject-cell">
+            <div class="table-row task-row" >
+              <div class="col subject subject-cell" (click)="onTaskClick(task)">
                 <button class="expand-btn" type="button" (click)="toggleTask(task)">
                   {{ task.expanded ? '▾' : '▸' }}
                 </button>
+                <div 
+  class="task-bar"
+  [id]="'task-bar-' + task.id">
+</div>
                 <span class="task-name">{{ task.title }}</span>
               </div>
 
@@ -263,7 +272,7 @@
             <div class="day-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend">
               <span class="day-number">{{ day.day }}</span>
               <span class="day-name">{{ day.label }}</span>
-            </div>
+</div>
           </div>
         </div>
 
@@ -276,13 +285,17 @@
                 <div class="grid-cell" *ngFor="let day of days" [class.weekend]="day.isWeekend"></div>
               </div>
 
-              <div
-                class="task-summary-bar"
-                [ngClass]="[getTaskBarClass(task), getTaskTimelineClass(task)]"
-                [style.background]="getTaskBarBackground(task)"
-                [style.left.%]="getTaskBarLeft(task)"
-                [style.width.%]="getTaskBarWidth(task)"
-              >
+            <div
+  class="task-summary-bar"
+  [ngClass]="[
+    getTaskBarClass(task),
+    getTaskTimelineClass(task),
+    isSelectedTask(task.id) ? 'active-task' : ''
+  ]"
+  [style.background]="getTaskBarBackground(task)"
+  [style.left.%]="getTaskBarLeft(task)"
+  [style.width.%]="getTaskBarWidth(task)"
+>
                 <span
                   *ngIf="task.status === 'In progress'"
                   class="bar-progress-indicator"
