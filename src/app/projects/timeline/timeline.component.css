@@ -17,6 +17,7 @@
   display: block;
   width: 100%;
   max-width: 3300px;
+  min-height: 600px;
     padding: 10px; 
   /* background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 24%),

@@ -359,9 +359,21 @@ activeView: 'month' | 'project' = 'month';
     const atStart = scroller.scrollLeft <= 0.5;
     const atEnd = scroller.scrollLeft >= maxScrollLeft - 0.5;
 
+    if (this.activeView === 'project' && atStart && nextScrollLeft < 0) {
+      event.preventDefault();
+      scroller.scrollLeft = 0;
+      return;
+    }
+
     if (nextScrollLeft < 0 && atStart) {
       event.preventDefault();
       this.rollTimelineYear(-1, Math.abs(nextScrollLeft));
+      return;
+    }
+
+    if (this.activeView === 'project' && atEnd && nextScrollLeft > maxScrollLeft) {
+      event.preventDefault();
+      scroller.scrollLeft = maxScrollLeft;
       return;
     }
 
@@ -1153,10 +1165,10 @@ get isProjectSelected(): boolean {
 
   private buildDays(): TimelineDay[] {
     const today = new Date();
-    const yearStart = this.getVisibleYearStart();
+    const visibleStart = this.getVisibleRangeStart();
 
     return Array.from({ length: this.totalDays }, (_, index) => {
-      const date = this.addDays(yearStart, index);
+      const date = this.addDays(visibleStart, index);
       return {
         day: date.getDate(),
         label: date.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2),
@@ -1167,28 +1179,38 @@ get isProjectSelected(): boolean {
   }
 
   private buildMonthSegments(): TimelineMonthSegment[] {
-    const yearStart = this.getVisibleYearStart();
+    const visibleStart = this.getVisibleRangeStart();
+    const visibleEnd = this.getVisibleRangeEnd();
     const totalDays = Math.max(1, this.totalDays);
 
-    return Array.from({ length: 12 }, (_, monthIndex) => {
-      const monthStart = new Date(yearStart.getFullYear(), monthIndex, 1);
-      const nextMonthStart = new Date(yearStart.getFullYear(), monthIndex + 1, 1);
-      const leftDays = this.getDateDifference(yearStart, monthStart) - 1;
-      const widthDays = this.getDateDifference(monthStart, nextMonthStart);
-      const monthName = this.months[monthIndex] || monthStart.toLocaleString('default', { month: 'long' });
+    const segments: TimelineMonthSegment[] = [];
+    let current = new Date(visibleStart.getFullYear(), visibleStart.getMonth(), 1);
 
-      return {
-        label: `${monthName} ${yearStart.getFullYear()}`,
+    while (current <= visibleEnd) {
+      const monthStart = new Date(current.getFullYear(), current.getMonth(), 1);
+      const nextMonthStart = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+      const segmentStart = monthStart < visibleStart ? visibleStart : monthStart;
+      const segmentEnd = nextMonthStart <= visibleEnd ? this.addDays(nextMonthStart, -1) : visibleEnd;
+      const leftDays = this.getDateDifference(visibleStart, segmentStart) - 1;
+      const widthDays = this.getDateDifference(segmentStart, segmentEnd);
+      const monthName = this.months[current.getMonth()] || monthStart.toLocaleString('default', { month: 'long' });
+
+      segments.push({
+        label: `${monthName} ${current.getFullYear()}`,
         left: (leftDays / totalDays) * 100,
         width: (widthDays / totalDays) * 100
-      };
-    });
+      });
+
+      current = nextMonthStart;
+    }
+
+    return segments;
   }
 
   private rebuildCalendarState(): void {
-    const yearStart = this.getVisibleYearStart();
-    const yearEnd = this.getVisibleYearEnd();
-    this.totalDays = this.getDateDifference(yearStart, yearEnd);
+    const visibleStart = this.getVisibleRangeStart();
+    const visibleEnd = this.getVisibleRangeEnd();
+    this.totalDays = this.getDateDifference(visibleStart, visibleEnd);
     this.calendarGridTemplate = `repeat(${this.totalDays}, minmax(36px, 1fr))`;
     this.calendarMinWidth = `${this.totalDays * 36}px`;
     this.cachedDays = this.buildDays();
@@ -1270,10 +1292,10 @@ get isProjectSelected(): boolean {
   }
 
   private syncMonthLabelFromScroll(scroller: HTMLDivElement): void {
-    const yearStart = this.getVisibleYearStart();
+    const visibleStart = this.getVisibleRangeStart();
     const centerLeft = scroller.scrollLeft + scroller.clientWidth / 2;
     const dayIndex = Math.max(0, Math.min(this.totalDays - 1, Math.round((centerLeft / scroller.scrollWidth) * (this.totalDays - 1))));
-    const centeredDate = this.addDays(yearStart, dayIndex);
+    const centeredDate = this.addDays(visibleStart, dayIndex);
     const nextMonthDate = this.getMonthStart(centeredDate);
 
     if (
@@ -1337,7 +1359,7 @@ get isProjectSelected(): boolean {
 
     const dayIndex = Math.min(
       this.totalDays - 1,
-      Math.max(0, this.getDateDifference(this.getVisibleYearStart(), date) - 1)
+      Math.max(0, this.getDateDifference(this.getVisibleRangeStart(), date) - 1)
     );
     const targetLeft = ((dayIndex + 0.5) / this.totalDays) * scroller.scrollWidth - scroller.clientWidth / 2;
     scroller.scrollTo({
@@ -1516,15 +1538,50 @@ triggerFocusAnimation(taskId: string | number): void {
     return taskDates.reduce((earliest, current) => (current < earliest ? current : earliest));
   }
 
+  private getProjectEndDate(): Date | null {
+    const selectedProject = this.selectedProjectFilter !== 'all'
+      ? this.selectedProjectFilter
+      : this.selectedProjectName?.trim();
+
+    const relevantTasks = selectedProject
+      ? this.tasks.filter(task => task.projectName === selectedProject)
+      : this.tasks;
+
+    const taskDates = relevantTasks.flatMap(task => {
+      const dates = [this.getTaskEndDate(task), ...task.subtasks.map(subtask => this.getSubtaskEndDate(subtask))];
+      return dates.filter((date): date is Date => !!date);
+    });
+
+    if (!taskDates.length) {
+      return null;
+    }
+
+    return taskDates.reduce((latest, current) => (current > latest ? current : latest));
+  }
+
   private getMonthStart(date: Date): Date {
     return new Date(date.getFullYear(), date.getMonth(), 1);
   }
 
-  private getVisibleYearStart(): Date {
+  private getVisibleRangeStart(): Date {
+    if (this.activeView === 'project') {
+      const projectStart = this.getProjectStartDate();
+      if (projectStart) {
+        return projectStart;
+      }
+    }
+
     return new Date(this.visibleMonthDate.getFullYear(), 0, 1);
   }
 
-  private getVisibleYearEnd(): Date {
+  private getVisibleRangeEnd(): Date {
+    if (this.activeView === 'project') {
+      const projectEnd = this.getProjectEndDate();
+      if (projectEnd) {
+        return new Date(projectEnd.getFullYear(), projectEnd.getMonth(), projectEnd.getDate());
+      }
+    }
+
     return new Date(this.visibleMonthDate.getFullYear(), 11, 31);
   }
 
@@ -1618,8 +1675,8 @@ triggerFocusAnimation(taskId: string | number): void {
       return false;
     }
 
-    const visibleStart = this.getVisibleYearStart();
-    const visibleEnd = this.getVisibleYearEnd();
+    const visibleStart = this.getVisibleRangeStart();
+    const visibleEnd = this.getVisibleRangeEnd();
     return startDate <= visibleEnd && endDate >= visibleStart;
   }
 
@@ -1630,14 +1687,14 @@ triggerFocusAnimation(taskId: string | number): void {
       return false;
     }
 
-    const visibleStart = this.getVisibleYearStart();
-    const visibleEnd = this.getVisibleYearEnd();
+    const visibleStart = this.getVisibleRangeStart();
+    const visibleEnd = this.getVisibleRangeEnd();
     return startDate <= visibleEnd && endDate >= visibleStart;
   }
 
   private resolveVisibleDay(startDate: Date, endDate: Date, fallbackDay = 1): number {
-    const visibleStart = this.getVisibleYearStart();
-    const visibleEnd = this.getVisibleYearEnd();
+    const visibleStart = this.getVisibleRangeStart();
+    const visibleEnd = this.getVisibleRangeEnd();
     if (startDate > visibleEnd) {
       return this.clampDay(fallbackDay);
     }
@@ -1650,8 +1707,8 @@ triggerFocusAnimation(taskId: string | number): void {
   }
 
   private resolveVisibleEndDay(startDate: Date, endDate: Date): number {
-    const visibleStart = this.getVisibleYearStart();
-    const visibleEnd = this.getVisibleYearEnd();
+    const visibleStart = this.getVisibleRangeStart();
+    const visibleEnd = this.getVisibleRangeEnd();
     if (endDate < visibleStart) {
       return 1;
     }
@@ -1671,6 +1728,16 @@ goToPreviousMonth(event?: Event): void {
     this.visibleMonthDate.getMonth() - 1,
     1
   );
+
+  if (this.activeView === 'project') {
+    const projectStart = this.getProjectStartDate();
+    if (projectStart) {
+      const earliestMonth = this.getMonthStart(projectStart);
+      if (prevMonth < earliestMonth) {
+        return;
+      }
+    }
+  }
 
   this.visibleMonthDate = prevMonth;
   this.rebuildCalendarState();
