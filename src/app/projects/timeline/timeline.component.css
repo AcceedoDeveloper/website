@@ -56,6 +56,8 @@
   min-width: 260px;
 }
 
+
+
 .project-title-input {
   width: 100%;
   max-width: 360px;
@@ -1057,4 +1059,39 @@
   }
 }
 
+.project-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
+/* Common button style */
+.view-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+/* Active button (highlight) */
+.active-btn {
+  background-color: #1976d2;
+  color: #fff;
+  opacity: 1;
+}
+
+/* Inactive button (dull) */
+.inactive-btn {
+  background-color: #e0e0e0;
+  color: black;
+  opacity: 0.6;
+}
+
+/* Disabled state */
+.view-btn:disabled {
+  background-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.5;
+}

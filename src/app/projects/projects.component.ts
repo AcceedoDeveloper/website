@@ -13,6 +13,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Chart, DoughnutController, ArcElement, Tooltip, Legend } from 'chart.js';
 import { DateUtilsService } from '../service/date-utils.service';
 import { AssignmentDeleteConfirmationDialogComponent } from './assignment-delete-confirmation-dialog.component';
+import { TimelineComponent } from './timeline/timeline.component';
 Chart.register(DoughnutController, ArcElement, Tooltip, Legend);
 interface Document {
   _id: string;
@@ -120,6 +121,7 @@ selectedProjectTeamLeads: string[] = [];
   editingTask: AssignWork | null = null;
   selectedTask: AssignWork | null = null;
   @ViewChild('assignmentDialog') assignmentDialog!: TemplateRef<any>;
+  @ViewChild(TimelineComponent) timelineComponent?: TimelineComponent;
 
 
   employees: any[] = [];
@@ -1780,6 +1782,10 @@ this.TimeLine = false;
 this.datefiltersection=false;
 }
  openTL() {
+  if (!this.assignmentsLoadedOnce) {
+    this.getAssignments();
+  }
+
   this.currentPage = 'TimeLine';
   this.showmaintask = false;
   this.showtask = false;
@@ -1790,6 +1796,10 @@ this.datefiltersection=false;
   this.TimeLine = true;
   this.datefiltersection = false;
   this.filterAssignmentsByProject();
+
+  setTimeout(() => {
+    this.timelineComponent?.emitMonthView();
+  }, 0);
 }
   opendocpop(doc?: any) {
     this.editingDocument = doc || null;

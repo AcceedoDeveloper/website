@@ -96,7 +96,7 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
   visibleMonthDate = this.getMonthStart(new Date());
   private viewInitialized = false;
   private initialProjectViewApplied = false;
-
+activeView: 'month' | 'project' = 'month';
   newTask = {
     title: '',
     type: 'TASK' as TaskType,
@@ -274,23 +274,29 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
     this.toggleFilterPanel();
   }
 
-  emitMonthView(): void {
-    this.showTodayOnly = false;
-    this.selectProjectFilter('all');
-    this.selectedTypeFilter = 'all';
-    this.selectedAllocationFilter = 'all';
-    this.selectedAssigneeFilter = 'all';
-    this.initialProjectViewApplied = true;
-    this.showProjectPanel = false;
-    this.showFilterPanel = false;
-    this.visibleMonthDate = this.getMonthStart(new Date());
-    this.rebuildCalendarState();
-    this.updateComputedState();
-    setTimeout(() => {
-      this.scrollToDate(new Date(), 'auto');
-    }, 0);
-    this.monthViewClick.emit();
-  }
+ emitMonthView(): void {
+  this.showTodayOnly = false;
+  this.selectProjectFilter('all');
+  this.selectedTypeFilter = 'all';
+  this.selectedAllocationFilter = 'all';
+  this.selectedAssigneeFilter = 'all';
+
+  this.initialProjectViewApplied = true;
+  this.showProjectPanel = false;
+  this.showFilterPanel = false;
+
+  this.activeView = 'month'; // ✅ THIS IS IMPORTANT
+
+  this.visibleMonthDate = this.getMonthStart(new Date());
+  this.rebuildCalendarState();
+  this.updateComputedState();
+
+  setTimeout(() => {
+    this.scrollToDate(new Date(), 'auto');
+  }, 0);
+
+  this.monthViewClick.emit();
+}
 
   jumpToProjectStart(): void {
     const projectStart = this.getProjectStartDate();
@@ -659,6 +665,10 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
   getSubtaskProgressTextClass(subtask: TimelineSubtask): string {
     return subtask.allocation === 'busy' ? 'bar-progress-text-dark' : 'bar-progress-text-light';
   }
+
+get isProjectSelected(): boolean {
+  return !!(this.selectedProjectId || this.selectedProjectName);
+}
 
   getTaskBarLabelClass(task: TimelineTask): string {
     const placementClass = this.getBarLabelClass(this.getTaskDuration(task), this.totalDays - this.getTaskEndDay(task));
@@ -1728,6 +1738,30 @@ scrollToTask(task: TimelineTask): void {
   setTimeout(() => {
     this.scrollToDate(middleDate, 'smooth');
   }, 0);
+}
+emitProjectView(): void {
+  if (!this.isProjectSelected) {
+    return;
+  }
+
+  this.showTodayOnly = false;
+  this.showProjectPanel = false;
+  this.showFilterPanel = false;
+  this.activeView = 'project';
+
+  const selectedProjectName = this.selectedProjectName?.trim();
+  if (selectedProjectName) {
+    this.selectProjectFilter(selectedProjectName);
+  }
+
+  this.jumpToProjectStart();
+}
+
+onProjectSelect(project: any) {
+  this.selectedProjectId = project.id;
+  this.selectedProjectName = project.name;
+
+  this.cdr.detectChanges(); // OnPush fix 🔥
 }
 
 

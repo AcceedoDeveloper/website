@@ -14,13 +14,12 @@
         <!-- <button class="btn btn-primary" type="button" (click)="openTaskComposer()">
           + Create
         </button> -->
-       <button 
-  class="btn btn-project-start" 
-  type="button" 
-  (click)="jumpToProjectStart()"
-  [disabled]="!selectedProjectFilter || selectedProjectFilter === 'null'"
->
-  Project view
+<button 
+  class="view-btn"
+  (click)="emitProjectView()"
+  [disabled]="!isProjectSelected"
+  [ngClass]="activeView === 'project' ? 'active-btn' : 'inactive-btn'">
+  Project View
 </button>
         <!-- <button class="btn btn-projects" type="button" (click)="toggleProjectPanel()">
           Include projects <span>{{ projectCount }}</span>
@@ -31,7 +30,13 @@
         <!-- <button class="btn btn-light" type="button" (click)="emitToday()">
           {{ showTodayOnly ? 'Today On' : 'Today' }}
         </button> -->
-        <button class="btn btn-month-view" type="button" (click)="emitMonthView()">Month View</button>
+      
+<button 
+  class="view-btn"
+  (click)="emitMonthView()"
+  [ngClass]="activeView === 'month' ? 'active-btn' : 'inactive-btn'">
+  Month View
+</button>
       </div>
     </div>
 
