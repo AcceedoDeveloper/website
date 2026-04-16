@@ -432,7 +432,7 @@
 
 .timeline-layout {
   display: grid;
-  grid-template-columns: minmax(520px, 42%) minmax(640px, 58%);
+    grid-template-columns: minmax(440px, 32%) minmax(740px, 68%);
   border: 1px solid var(--tm-border);
   background: #fff;
   overflow: hidden;
@@ -452,7 +452,7 @@
 .table-header,
 .table-row {
   display: grid;
-  grid-template-columns: 2.55fr 1.05fr 1.25fr 1.15fr 1.65fr;
+grid-template-columns: 150px 100px 100px 100px;
   align-items: center;
 }
 
@@ -509,6 +509,7 @@
 .task-name {
   font-weight: 500;
   color: #394455;
+  cursor:pointer;
 }
 
 .subtask-indent {
@@ -596,6 +597,7 @@
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
+  cursor:pointer;
   justify-content: center;
   background: linear-gradient(180deg, #4ec54f 0%, #33af35 100%);
   color: #fff;

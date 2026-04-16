@@ -270,18 +270,7 @@
   [projects]="projects"
   (back)="closeCompare()">
 </app-compare>
-<app-timeline
- *ngIf="TimeLine"
-  [timelineItems]="timelineItems"
-  [selectedProjectId]="selectedProjectId"
-  [selectedProjectName]="selectedProjectName"
-  [months]="months"
-  [currentUsername]="username"
-  (todayClick)="handleTimelineTodayClick()"
-  (filterClick)="handleTimelineFilterClick()"
-  (monthViewClick)="handleTimelineMonthViewClick()"
-  (newTaskClick)="handleTimelineNewTaskClick()">
-</app-timeline>
+
 
   <app-documents *ngIf="Documents"></app-documents>
 <app-summary *ngIf="Summary" [selectedProjectId]="selectedProjectId" [projects]="projects"></app-summary> 
@@ -651,6 +640,20 @@
 
 
   
+</div>
+<div class="main">
+<app-timeline
+ *ngIf="TimeLine"
+  [timelineItems]="timelineItems"
+  [selectedProjectId]="selectedProjectId"
+  [selectedProjectName]="selectedProjectName"
+  [months]="months"
+  [currentUsername]="username"
+  (todayClick)="handleTimelineTodayClick()"
+  (filterClick)="handleTimelineFilterClick()"
+  (monthViewClick)="handleTimelineMonthViewClick()"
+  (newTaskClick)="handleTimelineNewTaskClick()">
+</app-timeline>
 </div>
 
 <app-footer></app-footer>

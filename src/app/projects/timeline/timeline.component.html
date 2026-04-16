@@ -172,7 +172,7 @@
       <div class="left-panel">
         <div class="table-header">
           <div class="col subject">SUBJECT</div>
-          <div class="col type">TYPE</div>
+          <!-- <div class="col type">TYPE</div> -->
           <div class="col status">STATUS</div>
           <div class="col priority">PRIORITY</div>
           <div class="col assignee">ASSIGNEE</div>
@@ -191,10 +191,10 @@
 </div>
                 <span class="task-name">{{ task.title }}</span>
               </div>
-
+<!-- 
               <div class="col type">
                 <span class="type-badge" [ngClass]="getTaskTypeClass(task.type)">{{ task.type }}</span>
-              </div>
+              </div> -->
 
               <div class="col status">
                 <span class="dot" [ngClass]="getStatusClass(task.status)"></span>
@@ -207,8 +207,8 @@
               </div>
 
               <div class="col assignee assignee-cell">
-                <span class="avatar">{{ getInitials(task.assignee) }}</span>
-                <span>{{ task.assignee }}</span>
+                <span class="avatar" title="{{ task.assignee }}">{{ getInitials(task.assignee) }}</span>
+                <!-- <span>{{ task.assignee }}</span> -->
               </div>
             </div>
 
@@ -217,10 +217,10 @@
                 <div class="col subject subject-cell subtask-indent">
                   <span class="subtask-name">{{ subtask.title }}</span>
                 </div>
-
+<!-- 
                 <div class="col type">
                   <span class="type-badge task">{{ task.type === 'BUG' ? 'BUG' : 'TASK' }}</span>
-                </div>
+                </div> -->
 
                 <div class="col status">
                   <span class="dot" [ngClass]="subtask.allocation"></span>
@@ -232,8 +232,8 @@
                 </div>
 
                 <div class="col assignee assignee-cell">
-                  <span class="avatar muted">{{ getInitials(subtask.assignee) }}</span>
-                  <span>{{ subtask.assignee }}</span>
+                  <span class="avatar muted" title="{{ subtask.assignee }}">{{ getInitials(subtask.assignee) }}</span>
+                  <!-- <span>{{ subtask.assignee }}</span> -->
                   <!-- <button class="subtask-delete-btn" type="button" (click)="deleteSubtask(task, subtask.id)">
                     Delete
                   </button> -->
