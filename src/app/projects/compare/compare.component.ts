@@ -591,6 +591,37 @@ export class CompareComponent implements OnInit, OnChanges, AfterViewChecked {
     setTimeout(() => myChart.resize(), 3000);
   }
 
+  private shortenChartLabel(name: string): string {
+    if (!name) {
+      return '';
+    }
+
+    const raw = name.trim();
+    if (raw.length <= 8) {
+      return raw;
+    }
+
+    const vowels = raw.match(/[aeiouAEIOU]/g) || [];
+    let syllableCount = 0;
+    let result = '';
+
+    for (let i = 0; i < raw.length; i++) {
+      result += raw[i];
+      if (/[aeiouAEIOU]/.test(raw[i])) {
+        syllableCount++;
+      }
+      if (syllableCount >= 2) {
+        break;
+      }
+    }
+
+    if (result.length >= 4 && result.length <= 6) {
+      return result;
+    }
+
+    return raw.slice(0, 6);
+  }
+
   private getCustomChartOption(labels: string[], data: number[]) {
     const option = {
       backgroundColor: '#ffffff',
@@ -839,7 +870,8 @@ animationEasing: 'cubicInOut'
         axisLine: { show: false },
         axisLabel: {
           fontSize: 12,
-          color: '#2c3e50'
+          color: '#2c3e50',
+          formatter: (value: string) => this.shortenChartLabel(value)
         }
       },
       yAxis: {
@@ -899,7 +931,8 @@ animationEasing: 'cubicInOut'
         axisLine: { show: false },
         axisLabel: {
           fontSize: 12,
-          color: '#2c3e50'
+          color: '#2c3e50',
+          formatter: (value: string) => this.shortenChartLabel(value)
         }
       },
       yAxis: {

@@ -263,13 +263,7 @@
 
 
 
-<app-compare 
-  *ngIf="compare"
-  [selectedProjectId]="selectedProjectId"
-  [selectedProjectName]="selectedProjectName"
-  [projects]="projects"
-  (back)="closeCompare()">
-</app-compare>
+
 
 
   <app-documents *ngIf="Documents"></app-documents>
@@ -654,6 +648,13 @@
   (monthViewClick)="handleTimelineMonthViewClick()"
   (newTaskClick)="handleTimelineNewTaskClick()">
 </app-timeline>
+<app-compare 
+  *ngIf="compare"
+  [selectedProjectId]="selectedProjectId"
+  [selectedProjectName]="selectedProjectName"
+  [projects]="projects"
+  (back)="closeCompare()">
+</app-compare>
 </div>
 
 <app-footer></app-footer>

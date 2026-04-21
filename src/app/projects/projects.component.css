@@ -460,8 +460,8 @@ html, body {
    WELCOME
    ============================================= */
 .wecomemaincontent {
-  width: 80%;
-  margin-left: 18%;
+  width: 83%;
+  margin-left: 15%;
 }
 
 .welcome-header {
@@ -2327,7 +2327,7 @@ img, table, input, button, select { max-width: 100%; }
   margin-left: 220px;
   width: calc(100% - 240px);
   max-width: calc(100% - 240px);
-  min-height: 100vh;
+  /* min-height: 100vh; */
   padding: 0;
   overflow-x: hidden;
   overflow-y: auto;
