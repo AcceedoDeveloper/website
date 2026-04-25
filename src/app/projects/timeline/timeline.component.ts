@@ -150,6 +150,10 @@ activeView: 'month' | 'project' = 'month';
     }
   }
 
+  ngOnInit(): void {
+    this.emitProjectView();
+  }
+
   ngAfterViewInit(): void {
     this.viewInitialized = true;
     this.applyInitialProjectView();
@@ -300,6 +304,7 @@ activeView: 'month' | 'project' = 'month';
 
   jumpToProjectStart(): void {
     const projectStart = this.getProjectStartDate();
+    console.log('Project start date:', projectStart);
     if (!projectStart) {
       return;
     }
