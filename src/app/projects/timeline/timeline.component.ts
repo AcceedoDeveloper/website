@@ -285,7 +285,7 @@ activeView: 'month' | 'project' = 'month';
   this.showProjectPanel = false;
   this.showFilterPanel = false;
 
-  this.activeView = 'month'; // ✅ THIS IS IMPORTANT
+  this.activeView = 'project'; // ✅ THIS IS IMPORTANT
 
   this.visibleMonthDate = this.getMonthStart(new Date());
   this.rebuildCalendarState();

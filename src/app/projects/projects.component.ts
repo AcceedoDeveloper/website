@@ -523,6 +523,15 @@ loadProjects(): void {
 
       console.log('Filtered Projects:', this.projects);
 
+      if (this.projects.length > 0) {
+  this.selectedProjectId = this.projects[0]._id; // first project
+} else {
+  this.selectedProjectId = ''; // fallback to "All Projects"
+}
+
+
+
+
       this.onProjectSelect();
       this.cd.detectChanges();
     },
