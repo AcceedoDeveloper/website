@@ -502,17 +502,29 @@ getTaskDurationLabel(task: AssignWork): string {
 }
 
 loadProjects(): void {
+  const userStr = sessionStorage.getItem('user');
+
+  if (!userStr) {
+    console.error('No user found in sessionStorage');
+    return;
+  }
+
+  const user = JSON.parse(userStr);
+  const userName = user.UserName;
+
   this.projectService.getProjects().subscribe({
     next: (res: any[]) => {
-      console.log("Projects:", res);
-      this.projects = res;
-      console.log('this.projects', this.projects);
+      console.log("All Projects:", res);
 
-      // re-evaluate the selection in case the list changed
+      // 🔥 Filter projects where user is in employees
+      this.projects = res.filter(project =>
+        project.employees?.includes(userName)
+      );
+
+      console.log('Filtered Projects:', this.projects);
+
       this.onProjectSelect();
-      
-      // ──────────────── Add this ────────────────
-      this.cd.detectChanges();           // ← important
+      this.cd.detectChanges();
     },
     error: (err) => {
       console.error("Error loading projects:", err);
