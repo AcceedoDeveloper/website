@@ -2270,7 +2270,8 @@ img, table, input, button, select { max-width: 100%; }
 }
 
 .task-date-chip,
-.task-days-chip {
+.task-days-chip,
+.task-creator-chip {
   display: inline-flex;
   align-items: center;
   min-height: 28px;
@@ -2294,6 +2295,16 @@ img, table, input, button, select { max-width: 100%; }
 .task-days-chip {
   background: #fff7ed;
   color: #c2410c;
+}
+
+.task-creator-chip {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.task-creator-chip.created-by-me {
+  background: #ecfdf5;
+  color: #047857;
 }
 
 .task-done-tick {

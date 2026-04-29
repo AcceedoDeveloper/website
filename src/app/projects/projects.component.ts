@@ -374,13 +374,14 @@ getUserPhoto(name: string): string {
       String(this.selectedProjectName || '').toLowerCase()
     );
 
+    if (!this.isAdmin()) {
+      tasks = tasks.filter(task => this.isTaskAssignedToCurrentUser(task));
+    }
+
   }
   else {
 
-    tasks = tasks.filter(a =>
-      String(a.assignedTo) === String(this.username) ||
-      String(a.assignee) === String(this.username)
-    );
+    tasks = tasks.filter(task => this.isTaskAssignedToCurrentUser(task));
 
   }
 
@@ -510,16 +511,19 @@ loadProjects(): void {
   }
 
   const user = JSON.parse(userStr);
-  const userName = user.UserName;
+  const userName = user.UserName || user.username || user.name || '';
 
   this.projectService.getProjects().subscribe({
     next: (res: any[]) => {
       console.log("All Projects:", res);
 
       // 🔥 Filter projects where user is in employees
-      this.projects = res.filter(project =>
-        project.employees?.includes(userName)
-      );
+      this.projects = this.isAdmin()
+        ? res
+        : res.filter(project =>
+            this.isUserInProjectList(project?.employees, userName) ||
+            this.isUserInProjectList(project?.teamLeads, userName)
+          );
 
       console.log('Filtered Projects:', this.projects);
 
@@ -540,6 +544,76 @@ loadProjects(): void {
     }
   });
 }
+
+private getPersonName(person: any): string {
+  return String(
+    person?.username ||
+    person?.UserName ||
+    person?.name ||
+    person?.displayName ||
+    person ||
+    ''
+  ).toLowerCase().trim();
+}
+
+private isUserInProjectList(list: any, userName: string): boolean {
+  if (!list) {
+    return false;
+  }
+
+  const currentUser = this.getPersonName(userName);
+  const members = Array.isArray(list) ? list : [list];
+
+  return members.some(member => this.getPersonName(member) === currentUser);
+}
+
+private isTaskAssignedToCurrentUser(task: AssignWork): boolean {
+  const currentUser = this.getPersonName(
+    this.username ||
+    this.userData?.UserName ||
+    this.userData?.username ||
+    ''
+  );
+
+  return (
+    this.getPersonName(task?.assignedTo) === currentUser ||
+    this.getPersonName(task?.assignee) === currentUser
+  );
+}
+
+isTaskCreatedByCurrentUser(task: AssignWork): boolean {
+  const currentUser = this.getPersonName(
+    this.username ||
+    this.userData?.UserName ||
+    this.userData?.username ||
+    ''
+  );
+
+  return this.getPersonName(task?.assignedTo) === currentUser;
+}
+
+getTaskCreatorLabel(task: AssignWork): string {
+  if (this.isTaskCreatedByCurrentUser(task)) {
+    return this.isCurrentUserTeamLead() ? 'TL' : 'Admin';
+  }
+ return this.isTaskCreatedByTeamLead(task) ? 'TL' : 'Admin';
+}
+
+isTaskCreatedByTeamLead(task: AssignWork): boolean {
+  const creator = String(task?.assignedTo || '').toLowerCase().trim();
+
+  return this.selectedProjectTeamLeads.some((lead: any) => {
+    const leadName = String(
+      lead?.username ||
+      lead?.UserName ||
+      lead?.name ||
+      lead
+    ).toLowerCase().trim();
+
+    return leadName === creator;
+  });
+}
+
 trackById(index: number, project: any): string {
   return project._id || project.id || index;
 }
@@ -1050,13 +1124,19 @@ getTodayDateString(): string {
   }
 
   isCurrentUserTeamLead(): boolean {
-    if (!this.selectedProjectTeamLeads.length) return false;
-    return this.selectedProjectTeamLeads.some(lead =>
-      lead === this.username ||
-      lead === this.userData?.UserName ||
-      lead === this.userData?.username
-    );
+
+  if (!this.selectedProjectTeamLeads || this.selectedProjectTeamLeads.length === 0) {
+    return false;
   }
+
+  const currentUser =
+    this.username ||
+    this.userData?.UserName ||
+    this.userData?.username ||
+    '';
+
+  return this.isUserInProjectList(this.selectedProjectTeamLeads, currentUser);
+}
 
   onPictureSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -1194,23 +1274,35 @@ getTodayDateString(): string {
     return this.projects;
   }
 
+isAdminOrTeamLead(): boolean {
+  return this.isAdmin() || this.isCurrentUserTeamLead();
+}
 
 openAssignmentDialog(task?: AssignWork) {
+
+  // 🚨 ROLE CHECK
+  if (!this.isAdminOrTeamLead() && !task) {
+    this.snackBar.open(
+      'Only Admin or Team Lead can create tasks',
+      'Close',
+      { duration: 3000 }
+    );
+    return;
+  }
+
   this.editingTask = task || null;
 
   let startDateStr = '';
   let dueDateStr = '';
 
-  // Normalize dates to yyyy-mm-dd
+  // Normalize dates
   if (task?.startDate) {
     try {
       const d = new Date(task.startDate);
       if (!isNaN(d.getTime())) {
         startDateStr = d.toISOString().split('T')[0];
       }
-    } catch (e) {
-      console.warn("Invalid startDate format:", task.startDate);
-    }
+    } catch {}
   }
 
   if (task?.dueDate) {
@@ -1219,26 +1311,25 @@ openAssignmentDialog(task?: AssignWork) {
       if (!isNaN(d.getTime())) {
         dueDateStr = d.toISOString().split('T')[0];
       }
-    } catch (e) {
-      console.warn("Invalid dueDate format:", task.dueDate);
-    }
+    } catch {}
   }
 
   const resolvedProjectId = this.resolveDialogProjectId(task);
 
   this.assignmentForm.patchValue({
-    title:       task?.title       || '',
+    title: task?.title || '',
     description: task?.description || '',
-    assignedTo:  this.username,
-    assignee:    task?.assignee    || '',
-    startDate:   startDateStr,
-    dueDate:     dueDateStr,
-    Status:      task?.Status      || 'ToDo',
-    projectId:   resolvedProjectId,
+    assignedTo: this.username,
+    assignee: task?.assignee || '',
+    startDate: startDateStr,
+    dueDate: dueDateStr,
+    Status: task?.Status || 'ToDo',
+    projectId: resolvedProjectId,
     projectName: task?.projectName || this.selectedProjectName || ''
   });
 
   const taskSubTasks = task?.subTask?.length ? task.subTask : [null];
+
   this.assignmentForm.setControl(
     'subTask',
     this.fb.array(taskSubTasks.map(subTask => this.createSubTaskGroup(subTask)))

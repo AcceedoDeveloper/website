@@ -131,6 +131,9 @@
       </div>
 
       <div class="task-row-actions">
+        <span class="task-creator-chip" [class.created-by-me]="isTaskCreatedByCurrentUser(task)">
+          {{ getTaskCreatorLabel(task) }}
+        </span>
         <button type="button"
                 class="task-inline-btn"
                 (click)="openAssignmentDialog(task); $event.stopPropagation()">
@@ -170,6 +173,9 @@
       </div>
 
       <div class="task-row-actions">
+        <span class="task-creator-chip" [class.created-by-me]="isTaskCreatedByCurrentUser(task)">
+          {{ getTaskCreatorLabel(task) }}
+        </span>
         <span class="task-days-chip">{{ getTaskDurationLabel(task) }}</span>
         <button type="button"
                 class="task-inline-btn"
@@ -212,6 +218,9 @@
       </div>
 
       <div class="task-row-actions">
+        <span class="task-creator-chip" [class.created-by-me]="isTaskCreatedByCurrentUser(task)">
+          {{ getTaskCreatorLabel(task) }}
+        </span>
         <!-- <button type="button"
                 class="task-inline-btn"
                 (click)="openAssignmentDialog(task); $event.stopPropagation()">
