@@ -375,13 +375,13 @@ getUserPhoto(name: string): string {
     );
 
     if (!this.isAdmin()) {
-      tasks = tasks.filter(task => this.isTaskAssignedToCurrentUser(task));
+      tasks = tasks.filter(task => this.isTaskVisibleToCurrentUser(task));
     }
 
   }
   else {
 
-    tasks = tasks.filter(task => this.isTaskAssignedToCurrentUser(task));
+    tasks = tasks.filter(task => this.isTaskVisibleToCurrentUser(task));
 
   }
 
@@ -579,6 +579,51 @@ private isTaskAssignedToCurrentUser(task: AssignWork): boolean {
     this.getPersonName(task?.assignedTo) === currentUser ||
     this.getPersonName(task?.assignee) === currentUser
   );
+}
+
+private isTaskVisibleToCurrentUser(task: AssignWork): boolean {
+  return (
+    this.isTaskAssignedToCurrentUser(task) ||
+    this.isCurrentUserTeamLeadForTask(task)
+  );
+}
+
+private isCurrentUserTeamLeadForTask(task: AssignWork): boolean {
+  const currentUser =
+    this.username ||
+    this.userData?.UserName ||
+    this.userData?.username ||
+    '';
+
+  if (!currentUser) {
+    return false;
+  }
+
+  const taskProjectId = String(task?.projectId || '').trim();
+  const taskProjectName = String(task?.projectName || '').trim().toLowerCase();
+
+  const taskBelongsToSelectedProject =
+    !!this.selectedProjectId &&
+    (
+      String(this.selectedProjectId) === taskProjectId ||
+      String(this.selectedProjectName || '').trim().toLowerCase() === taskProjectName
+    );
+
+  if (taskBelongsToSelectedProject && this.isUserInProjectList(this.selectedProjectTeamLeads, currentUser)) {
+    return true;
+  }
+
+  const taskProject = this.projects.find(project => {
+    const projectId = String(project?._id || project?.id || '').trim();
+    const projectName = String(project?.projectName || project?.name || '').trim().toLowerCase();
+
+    return (
+      (!!taskProjectId && projectId === taskProjectId) ||
+      (!!taskProjectName && projectName === taskProjectName)
+    );
+  });
+
+  return this.isUserInProjectList(taskProject?.teamLeads, currentUser);
 }
 
 isTaskCreatedByCurrentUser(task: AssignWork): boolean {
