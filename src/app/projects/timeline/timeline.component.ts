@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -68,7 +67,7 @@ interface TimelineMonthSegment {
   styleUrls: ['./timeline.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
+export class TimelineComponent implements OnChanges, OnDestroy {
   @ViewChild('timelineScroller') timelineScroller?: ElementRef<HTMLDivElement>;
 
   @Input() timelineItems: AssignWork[] = [];
@@ -94,9 +93,7 @@ export class TimelineComponent implements OnChanges, OnDestroy, AfterViewInit {
   selectedAllocationFilter: 'all' | AllocationState = 'all';
   selectedAssigneeFilter = 'all';
   visibleMonthDate = this.getMonthStart(new Date());
-  private viewInitialized = false;
-  private initialProjectViewApplied = false;
-activeView: 'month' | 'project' = 'month';
+  activeView = 'month';
   newTask = {
     title: '',
     type: 'TASK' as TaskType,
@@ -150,15 +147,6 @@ activeView: 'month' | 'project' = 'month';
     }
   }
 
-  ngOnInit(): void {
-    this.emitProjectView();
-  }
-
-  ngAfterViewInit(): void {
-    this.viewInitialized = true;
-    this.applyInitialProjectView();
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedProjectName']) {
       this.syncProjectTitle();
@@ -180,7 +168,6 @@ activeView: 'month' | 'project' = 'month';
 
     this.syncProjectTitle();
     this.refreshSchedule();
-    this.applyInitialProjectView();
   }
 
   get activeTaskCount(): number {
@@ -285,11 +272,10 @@ activeView: 'month' | 'project' = 'month';
   this.selectedAllocationFilter = 'all';
   this.selectedAssigneeFilter = 'all';
 
-  this.initialProjectViewApplied = true;
   this.showProjectPanel = false;
   this.showFilterPanel = false;
 
-  this.activeView = 'project'; // ✅ THIS IS IMPORTANT
+  this.activeView = 'month';
 
   this.visibleMonthDate = this.getMonthStart(new Date());
   this.rebuildCalendarState();
@@ -301,6 +287,34 @@ activeView: 'month' | 'project' = 'month';
 
   this.monthViewClick.emit();
 }
+
+  emitProjectView(): void {
+    if (!this.isProjectSelected) {
+      return;
+    }
+
+    this.showTodayOnly = false;
+    this.selectProjectFilter(this.selectedProjectName?.trim() || 'all');
+    this.selectedTypeFilter = 'all';
+    this.selectedAllocationFilter = 'all';
+    this.selectedAssigneeFilter = 'all';
+
+    this.showProjectPanel = false;
+    this.showFilterPanel = false;
+
+    this.activeView = 'project';
+
+    const projectStart = this.getProjectStartDate();
+    this.visibleMonthDate = projectStart ? this.getMonthStart(projectStart) : this.getMonthStart(new Date());
+    this.rebuildCalendarState();
+    this.updateComputedState();
+
+    if (projectStart) {
+      setTimeout(() => {
+        this.scrollToDate(projectStart, 'auto');
+      }, 0);
+    }
+  }
 
   jumpToProjectStart(): void {
     const projectStart = this.getProjectStartDate();
@@ -316,15 +330,6 @@ activeView: 'month' | 'project' = 'month';
     setTimeout(() => {
       this.scrollToDate(projectStart);
     }, 0);
-  }
-
-  private applyInitialProjectView(): void {
-    if (this.initialProjectViewApplied || !this.viewInitialized || !this.tasks.length) {
-      return;
-    }
-
-    this.initialProjectViewApplied = true;
-    this.jumpToProjectStart();
   }
 
   onTimelineScroll(): void {
@@ -364,21 +369,9 @@ activeView: 'month' | 'project' = 'month';
     const atStart = scroller.scrollLeft <= 0.5;
     const atEnd = scroller.scrollLeft >= maxScrollLeft - 0.5;
 
-    if (this.activeView === 'project' && atStart && nextScrollLeft < 0) {
-      event.preventDefault();
-      scroller.scrollLeft = 0;
-      return;
-    }
-
     if (nextScrollLeft < 0 && atStart) {
       event.preventDefault();
       this.rollTimelineYear(-1, Math.abs(nextScrollLeft));
-      return;
-    }
-
-    if (this.activeView === 'project' && atEnd && nextScrollLeft > maxScrollLeft) {
-      event.preventDefault();
-      scroller.scrollLeft = maxScrollLeft;
       return;
     }
 
@@ -1226,12 +1219,13 @@ get isProjectSelected(): boolean {
       this.visibleMonthDate.toLocaleString('default', { month: 'long' });
     this.cachedCurrentMonthLabel = `${monthName} ${this.visibleMonthDate.getFullYear()}`;
 
-    if (!this.isViewingVisibleYear()) {
+    const today = new Date();
+    if (today < visibleStart || today > visibleEnd) {
       this.cachedTodayLineLeft = -100;
       return;
     }
 
-    const todayIndex = this.getDayOfYear(new Date()) - 1;
+    const todayIndex = this.getDateDifference(visibleStart, today) - 1;
     const safeIndex = todayIndex >= 0 ? todayIndex : 0;
     this.cachedTodayLineLeft = ((safeIndex + 0.5) / this.totalDays) * 100;
   }
@@ -1239,7 +1233,10 @@ get isProjectSelected(): boolean {
   private updateComputedState(): void {
     this.rebuildCalendarState();
 
-    const todayDay = this.isViewingVisibleYear() ? this.getDayOfYear(new Date()) : null;
+    const visibleStart = this.getVisibleRangeStart();
+    const visibleEnd = this.getVisibleRangeEnd();
+    const today = new Date();
+    const todayDay = today >= visibleStart && today <= visibleEnd ? this.getDateDifference(visibleStart, today) : null;
     this.cachedProjectOptions = Array.from(new Set(this.tasks.map(task => task.projectName).filter(Boolean)));
 
     const visibleTasks = this.tasks
@@ -1583,7 +1580,7 @@ triggerFocusAnimation(taskId: string | number): void {
     if (this.activeView === 'project') {
       const projectEnd = this.getProjectEndDate();
       if (projectEnd) {
-        return new Date(projectEnd.getFullYear(), projectEnd.getMonth(), projectEnd.getDate());
+        return projectEnd;
       }
     }
 
@@ -1810,23 +1807,6 @@ scrollToTask(task: TimelineTask): void {
   setTimeout(() => {
     this.scrollToDate(middleDate, 'smooth');
   }, 0);
-}
-emitProjectView(): void {
-  if (!this.isProjectSelected) {
-    return;
-  }
-
-  this.showTodayOnly = false;
-  this.showProjectPanel = false;
-  this.showFilterPanel = false;
-  this.activeView = 'project';
-
-  const selectedProjectName = this.selectedProjectName?.trim();
-  if (selectedProjectName) {
-    this.selectProjectFilter(selectedProjectName);
-  }
-
-  this.jumpToProjectStart();
 }
 
 onProjectSelect(project: any) {
