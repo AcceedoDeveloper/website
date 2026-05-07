@@ -24,12 +24,12 @@ import { AdobeComponent } from './adobe/adobe.component';
 import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
 import { CardsComponent } from './cards/cards.component.spec';
 import { Product3Component } from './product3/product3.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent } from '../../projects/task/src/app/components/projects/register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ProjectComponent } from './project/project.component';
-import {CreateprojectComponent} from "./createproject/createproject.component";
-import { ProjectsComponent } from './projects/projects.component';
-import { RoleComponent } from './role/role.component';
+import {CreateprojectComponent} from "../../projects/task/src/app/components/createproject/createproject.component";
+import { ProjectsComponent } from '../../projects/task/src/app/components/projects/projects.component';
+import { RoleComponent } from '../../projects/task/src/app/components/role/role.component';
 import { NgrxComponent } from './ngrx/ngrx.component';
 import { WebdevComponent } from './webdev/webdev.component';
 import { UwbComponent } from './uwb/uwb.component';
@@ -37,16 +37,16 @@ import { UwbComponent } from './uwb/uwb.component';
 import { NodeComponent } from './node/node.component';
 import { ApiDatabaseComponent } from './api-database/api-database.component';
 import { AngularDeveloperComponent } from './angular-developer/angular-developer.component';
-import { LoginheaderComponent } from './loginheader/loginheader.component';
-import { DepartmentComponent } from './department/department.component';
-import { RoledialogComponent } from './role/roledialog/roledialog.component';
+import { LoginheaderComponent } from '../../projects/task/src/app/components/loginheader/loginheader.component';
+import { DepartmentComponent } from '../../projects/task/src/app/components/department/department.component';
+import { RoledialogComponent } from '../../projects/task/src/app/components/role/roledialog/roledialog.component';
 import { AuthGuard }from '../../src/app/guard/guards/auth.guard';
 import { Product7Component } from './product7/product7.component';
 import { Product4Component } from './product4/product4.component';
 import { Product5Component } from './product5/product5.component';
 import { Product6Component } from './product6/product6.component';
-import { TimelineComponent } from './projects/timeline/timeline.component';
-import { PermissionComponent } from './permission/permission.component';
+import { TimelineComponent } from '../../projects/task/src/app/components/projects/timeline/timeline.component';
+import { PermissionComponent } from '../../projects/task/src/app/components/permission/permission.component';
 
 
 

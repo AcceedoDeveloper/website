@@ -1,0 +1,668 @@
+<app-header></app-header>
+
+
+
+
+ 
+  <div class="wecomemaincontent">
+
+      <div class="task-controls">
+    <!-- Add Task Button 1 -->
+    <button class="pill-btn" (click)="openAssignmentDialog()" *ngIf="showtask">
+      + Add Task
+    </button>
+
+
+    <!-- project 2 -->
+    <div class="header">
+     
+                   <!-- Project Dropdown -->
+       <div class="pill-dropdown">
+
+<!-- project selector; calls onProjectSelect when changed -->
+<select
+  [(ngModel)]="selectedProjectId"
+  (ngModelChange)="onProjectSelect($event)"
+  class="form-select"
+  name="selectedProjectId"
+>
+
+  <option [ngValue]="''">All Projects</option>
+
+  <option
+    *ngFor="let project of projects; trackBy: trackById"
+    [ngValue]="project._id"
+  >
+
+    {{ project?.projectName || project?.name }}
+
+  </option>
+
+</select>
+
+</div>
+
+       
+       <div class="pill-dropdown-containermv1">
+         <div class="pill-dropdown">
+           <button [class.active]="currentPage === 'task'" (click)="opentask()">Task</button>
+         </div>
+         
+         <div class="pill-dropdown">     
+           <button [class.active]="currentPage === 'calendar'" (click)="openMonthView()">Calendar</button>
+         </div>
+         
+
+       </div>
+
+       <div class="pill-dropdown-containermv1">
+         <div class="pill-dropdown">
+           <button [class.active]="currentPage === 'summary'" (click)="openuv()">Summary</button>
+         </div>
+         
+         <div class="pill-dropdown">
+           <button [class.active]="currentPage === 'documents'" (click)="opendoc()">Documents</button>
+         </div>
+
+         <div class="pill-dropdown">
+           <button [class.active]="currentPage === 'compare'" (click)="opencom()">Compare</button>
+         </div>
+         <div class="pill-dropdown">
+           <button [class.active]="currentPage === 'TimeLine'" (click)="openTL()">Time Line</button>
+         </div>
+
+       </div>
+     </div>
+
+
+  <!-- filter 3 -->
+    <div class="date-filter-section" *ngIf="datefiltersection">
+  
+  
+  <div class="date-picker-wrapper">
+    <button type="button" class="nav-btn" (click)="prevDay()">&lt;</button>
+    
+    <input type="date" 
+           class="form-control" 
+           [(ngModel)]="selectedTaskDate" 
+           (change)="onDateChange()">
+           
+    <button type="button" class="nav-btn" (click)="nextDay()">&gt;</button>
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  
+ 
+
+  <div class="content-wrapper">
+  
+
+
+
+
+  <!-- <app-task *ngIf="mainTask"></app-task> -->
+   <div class="maintask" *ngIf="showmaintask">
+
+   
+<div class="task-controls-container">
+  <div class="kanban-board" *ngIf="!loading && !error" cdkDropListGroup>
+    
+  <div class="kanban-column"
+     cdkDropList
+     [cdkDropListData]="todoAssignments"
+     (cdkDropListDropped)="drop($event, 'ToDo')"
+     id="todo-list">
+  <h3>To Do <span class="task-count">{{ todoAssignments.length }}</span></h3>
+  
+  <div *ngFor="let task of todoAssignments"
+       class="task-row"
+       cdkDrag
+       [cdkDragData]="task">
+    <div class="task-row-main">
+      <div class="task-line">
+        <span class="task-label">Task:</span>
+        <span class="task-name">{{ task.title }}</span>
+      </div>
+
+      <div class="task-row-actions">
+        <span class="task-creator-chip" [class.created-by-me]="isTaskCreatedByCurrentUser(task)">
+          {{ getTaskCreatorLabel(task) }}
+        </span>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="openAssignmentDialog(task); $event.stopPropagation()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="deleteAssignment(task._id); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+    
+    <div *ngIf="getFilteredTasksByStatus('ToDo').length === 0" class="empty-state">
+      No tasks in To Do
+    </div>
+    </div>
+    
+<!-- In Progress Column -->
+<div class="kanban-column"
+     cdkDropList
+     [cdkDropListData]="getFilteredTasksByStatus('InProgress')"
+     (cdkDropListDropped)="drop($event, 'InProgress')"
+     id="progress-list">
+
+  <h3>In Progress <span class="task-count">{{ getFilteredTasksByStatus('InProgress').length }}</span></h3>
+
+  <div *ngFor="let task of getFilteredTasksByStatus('InProgress')"
+       class="task-row"
+       cdkDrag
+       [cdkDragData]="task">
+    <div class="task-row-main">
+      <div class="task-line">
+        <span class="task-label">Task:</span>
+        <span class="task-name">{{ task.title }}</span>
+      </div>
+
+      <div class="task-row-actions">
+        <span class="task-creator-chip" [class.created-by-me]="isTaskCreatedByCurrentUser(task)">
+          {{ getTaskCreatorLabel(task) }}
+        </span>
+        <span class="task-days-chip">{{ getTaskDurationLabel(task) }}</span>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="openAssignmentDialog(task); $event.stopPropagation()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button type="button"
+                class="task-inline-btn"
+                (click)="deleteAssignment(task._id); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="getFilteredTasksByStatus('InProgress').length === 0" class="empty-state">
+    No tasks In Progress
+  </div>
+
+</div>
+    
+    <!-- Done Column -->
+<!-- Done Column -->
+<div class="kanban-column"
+     cdkDropList
+     [cdkDropListData]="getFilteredTasksByStatus('Done')"
+     (cdkDropListDropped)="drop($event, 'Done')"
+     id="done-list">
+
+  <h3>Done <span class="task-count">{{ getFilteredTasksByStatus('Done').length }}</span></h3>
+
+  <div *ngFor="let task of getFilteredTasksByStatus('Done')"
+       class="task-row"
+       cdkDrag
+       [cdkDragData]="task">
+    <div class="task-row-main">
+      <div class="task-line">
+        <span class="task-label">Task:</span>
+        <span class="task-name">{{ task.title }}</span>
+      </div>
+
+      <div class="task-row-actions">
+        <span class="task-creator-chip" [class.created-by-me]="isTaskCreatedByCurrentUser(task)">
+          {{ getTaskCreatorLabel(task) }}
+        </span>
+        <!-- <button type="button"
+                class="task-inline-btn"
+                (click)="openAssignmentDialog(task); $event.stopPropagation()">
+          <mat-icon>edit</mat-icon>
+        </button> -->
+        <button type="button"
+                class="task-inline-btn"
+                (click)="deleteAssignment(task._id); $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+        <span class="task-done-tick" aria-label="Completed">
+          <mat-icon>check_circle</mat-icon>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="getFilteredTasksByStatus('Done').length === 0" class="empty-state">
+    No tasks completed
+  </div>
+
+</div>
+  
+  </div>
+</div>
+
+
+  <div *ngIf="error" class="error-state">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+
+  <div *ngIf="successMessage" class="success-message">
+    <mat-icon>check_circle</mat-icon>
+    <span>{{ successMessage }}</span>
+  </div>
+
+ 
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Loading tasks...</span>
+  </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+  <app-documents *ngIf="Documents"></app-documents>
+<app-summary *ngIf="Summary" [selectedProjectId]="selectedProjectId" [projects]="projects"></app-summary> 
+
+         <div *ngIf="Calendar" class="calendar-section">
+  <app-calendar
+    [selectedProjectId]="selectedProjectId"
+    [selectedProjectName]="selectedProjectName"
+    [username]="username"
+    [projects]="projects">
+  </app-calendar>
+  
+</div>
+
+</div>
+
+
+
+
+<ng-template #assignmentDialog>
+  <div class="dialog-container" [class.loading]="isLoading">
+    <div class="dialog-header">
+      
+      <h2 class="dialog-title">
+  {{ editingTask ? 'Edit Task' : 'Add Task' }}
+</h2>
+ <button type="button" class="dialog-close-btn" (click)="close()">X</button>
+    </div>
+
+    <div class="dialog-content">
+      <form [formGroup]="assignmentForm" class="dialog-form" [class.loading]="isLoading">
+        <div class="form-columns">
+          
+          
+          <div class="left-column scrollable-section">
+            
+        
+            <div class="section-block">
+              
+              <h3 class="section-title">• Task Title</h3>
+              <div class="form-group">
+                <input 
+                  type="text"
+                  formControlName="title" 
+                  required
+                  placeholder="Enter task title..."
+                  class="form-input">
+                <div class="error-message" *ngIf="assignmentForm.get('title')?.hasError('required')">
+                  Title is required
+                </div>
+              </div>
+            </div>
+
+
+            <div class="section-block">
+              <h3 class="section-title">• Task Description</h3>
+              <div class="form-group">
+                <textarea 
+                  formControlName="description" 
+                  rows="4"
+                  placeholder="Enter detailed task description..."
+                  class="form-textarea">
+                </textarea>
+              </div>
+            </div>
+
+         
+          <div class="section-block" *ngIf="editingTask">
+  <h3 class="section-title">• Comments</h3>
+  
+
+<div *ngIf="(selectedTask?.comment?.length || 0) > 0" class="comments-section">
+  <div *ngFor="let comment of selectedTask?.comment || []; let i = index" class="comment-item" [style.animation-delay]="(i * 0.1) + 's'">
+    <strong>{{ comment.user }}:</strong> {{ comment.message }}
+    <br>
+  </div>
+</div>
+  
+
+  <div class="add-comment-section">
+    <h4 class="comment-section-title">Add Comment:</h4>
+    <form [formGroup]="commentForm" class="comment-form">
+      <div class="form-group">
+        <textarea 
+          formControlName="message" 
+          rows="3"
+          placeholder="Add your comment..."
+          class="form-textarea">
+        </textarea>
+        <div class="error-message" *ngIf="commentForm.get('message')?.hasError('required')">
+          Comment is required
+        </div>
+      </div>
+      <button type="button"
+              (click)="addComment()"
+              [disabled]="commentForm.invalid || isLoading"
+              class="add-comment-btn">
+        <span *ngIf="!isLoading">Add Comment</span>
+        <span *ngIf="isLoading">Adding...</span>
+      </button>
+    </form>
+  </div>
+</div>
+<div class="section-block">
+  <h3 class="section-title">• Pictures</h3>
+
+  <div class="file-upload-section">
+    <input type="file" (change)="onPictureSelected($event)" accept="image/*" multiple [disabled]="isLoading">
+    <div class="upload-hint" *ngIf="!isLoading">Click to select images or drag and drop</div>
+    <div class="upload-hint loading" *ngIf="isLoading">Uploading images...</div>
+  </div>
+  
+  <div class="uploaded-images">
+    <div *ngFor="let img of uploadedPictures; let i = index" class="image-preview" [style.animation-delay]="(i * 0.1) + 's'">
+      <img [src]="getImageUrl(img)" (click)="viewImage(img)" alt="Task Picture" class="thumb">
+      <button class="remove-image-btn" (click)="removeImage(i)" [disabled]="isLoading" *ngIf="!isLoading">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+          </div>
+
+      
+          <div class="right-column">
+            
+  
+<div class="form-group">
+
+<label class="form-label">Projects</label>
+
+<select formControlName="projectId" class="form-select">
+
+<option value="">Select Project</option>
+
+<option
+  *ngFor="let project of projects; trackBy: trackById"
+  [value]="project._id">
+
+{{ project?.projectName || project?.name }}
+
+</option>
+
+</select>
+
+</div>
+            
+     
+            <div class="form-group">
+              <label class="form-label">Assigner (work giver)</label>
+              <input type="text" [value]="username" readonly class="form-input readonly">
+              <input type="hidden" formControlName="assignedTo">
+            </div>
+
+      
+            <div class="form-group">
+              <label class="form-label">Assignee (work receiver)</label>
+              <select formControlName="assignee" [disabled]="!!editingTask" class="form-select">
+                <option value="">Select Assignee</option>
+                <option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+                  {{ getEmployeeDisplay(emp) }}
+                </option>
+              </select>
+              <div class="error-message" *ngIf="assignmentForm.get('assignee')?.hasError('required')">
+                Assignee is required
+              </div>
+            </div>
+
+         
+      <div class="form-group">
+  <label class="form-label">Start Date</label>
+  <input type="date"
+         formControlName="startDate"
+         #startDateInput
+         (change)="onStartDateChange($event)"
+         class="form-input">
+</div>
+
+        
+            <div class="form-group">
+              <label class="form-label">Due Date</label>
+              <input type="date" 
+                     formControlName="dueDate"
+                     class="form-input"
+                     [value]="assignmentForm.get('dueDate')?.value">
+              <div class="error-message" *ngIf="assignmentForm.get('dueDate')?.hasError('required')">
+                Due date is required
+              </div>
+            </div>
+
+      
+              <div class="subtask-header">
+                <h3 class="section-title">Sub Task</h3>
+                <button type="button" class="subtask-add-btn" (click)="addSubTaskRow()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+
+              <div class="subtask-grid" formArrayName="subTask">
+                <div class="subtask-card" *ngFor="let subTaskGroup of subTaskArray.controls; let i = index" [formGroupName]="i">
+                  <div class="subtask-card-head">
+                    <span class="subtask-index">Subtask {{ i + 1 }}</span>
+                    <button type="button" class="subtask-remove-btn" (click)="removeSubTaskRow(i)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Title</label>
+                    <input type="text" formControlName="title" class="form-input" placeholder="Enter subtask title">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Description</label>
+                    <textarea formControlName="description" rows="3" class="form-textarea" placeholder="Enter subtask description"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Start Date</label>
+                    <input
+                      type="date"
+                      formControlName="StartDate"
+                      (change)="onSubTaskStartDateChange(i)"
+                      class="form-input">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask End Date</label>
+                    <input
+                      type="date"
+                      formControlName="EndDate"
+                      (change)="onSubTaskEndDateChange(i)"
+                      class="form-input">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Assigner (work giver)</label>
+                    <input type="text" formControlName="assignedTo" readonly class="form-input readonly">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Assignee (work receiver)</label>
+                    <select formControlName="assignee" class="form-select">
+                      <option value="">Select Assignee</option>
+                      <option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+                        {{ getEmployeeDisplay(emp) }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Subtask Status</label>
+                    <select formControlName="Status" class="form-select">
+                      <option value="ToDo">To Do</option>
+                      <option value="InProgress">In Progress</option>
+                      <option value="Done">Done</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Duration (No of Days)</label>
+                    <input type="text" formControlName="NoOfDays" readonly class="form-input readonly">
+                  </div>
+                </div>
+              </div>
+         
+
+      
+            <div class="form-group" *ngIf="editingTask">
+              <label class="form-label">Status</label>
+              <input type="text" [value]="assignmentForm.get('Status')?.value" readonly class="form-input readonly">
+            </div>
+          </div>
+        </div>
+
+        <div class="subtask-section">
+          <div class="subtask-header">
+            <h3 class="section-title">Sub Task</h3>
+            <button type="button" class="subtask-add-btn" (click)="addSubTaskRow()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div class="subtask-grid" formArrayName="subTask">
+            <div class="subtask-card" *ngFor="let subTaskGroup of subTaskArray.controls; let i = index" [formGroupName]="i">
+              <div class="subtask-card-head">
+                <span class="subtask-index">Subtask {{ i + 1 }}</span>
+                <button type="button" class="subtask-remove-btn" (click)="removeSubTaskRow(i)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Subtask Title</label>
+                <input type="text" formControlName="title" class="form-input" placeholder="Enter subtask title">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Subtask Description</label>
+                <textarea formControlName="description" rows="3" class="form-textarea" placeholder="Enter subtask description"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Subtask Start Date</label>
+                <input
+                  type="date"
+                  formControlName="StartDate"
+                  (change)="onSubTaskStartDateChange(i)"
+                  class="form-input">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Subtask End Date</label>
+                <input
+                  type="date"
+                  formControlName="EndDate"
+                  (change)="onSubTaskEndDateChange(i)"
+                  class="form-input">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Assigner (work giver)</label>
+                <input type="text" formControlName="assignedTo" readonly class="form-input readonly">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Assignee (work receiver)</label>
+                <select formControlName="assignee" class="form-select">
+                  <option value="">Select Assignee</option>
+                  <option *ngFor="let emp of employees" [value]="getEmployeeValue(emp)">
+                    {{ getEmployeeDisplay(emp) }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Subtask Status</label>
+                <select formControlName="Status" class="form-select">
+                  <option value="ToDo">To Do</option>
+                  <option value="InProgress">In Progress</option>
+                  <option value="Done">Done</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Duration (No of Days)</label>
+                <input type="text" formControlName="NoOfDays" readonly class="form-input readonly">
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-cancel" [disabled]="isLoading" (click)="closeDialog()">Cancel</button>
+      <button type="button" class="btn btn-primary"
+              (click)="saveAssignment()"
+              [disabled]="assignmentForm.invalid || isLoading">
+        <span *ngIf="!isLoading">{{ editingTask ? 'Update Task' : 'Create Task' }}</span>
+        <span *ngIf="isLoading">Saving...</span>
+      </button>
+    </div>
+  </div>
+  </ng-template>
+
+
+  
+</div>
+<div class="main">
+<app-timeline
+ *ngIf="TimeLine"
+  [timelineItems]="timelineItems"
+  [selectedProjectId]="selectedProjectId"
+  [selectedProjectName]="selectedProjectName"
+  [months]="months"
+  [currentUsername]="username"
+  (todayClick)="handleTimelineTodayClick()"
+  (filterClick)="handleTimelineFilterClick()"
+  (monthViewClick)="handleTimelineMonthViewClick()"
+  (newTaskClick)="handleTimelineNewTaskClick()">
+</app-timeline>
+<app-compare 
+  *ngIf="compare"
+  [selectedProjectId]="selectedProjectId"
+  [selectedProjectName]="selectedProjectName"
+  [projects]="projects"
+  (back)="closeCompare()">
+</app-compare>
+</div>
+

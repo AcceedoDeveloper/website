@@ -1,0 +1,57 @@
+<app-header></app-header>
+
+  <div class="maincontent">
+    
+    
+<div class="department-container">
+  <div class="department-header">
+    <button class="add-department-btn"  (click)="showshowdepartment()">+ Add Department</button>
+  </div>
+
+  <div class="department-table-wrapper">
+    <table class="department-table">
+      <thead>
+        <tr>
+          <th>Department</th>
+          <th>Subdepartments</th>
+          <th class="action-col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of showdm">
+          <td>{{ item.departmentName }}</td>
+          <td>
+            <ul class="sub-list">
+              <li *ngFor="let sub of item.subDepartments">{{ sub.name }}</li>
+            </ul>
+          </td>
+      <td>
+  <!-- Edit Department -->
+  <button mat-icon-button class="black-btn" (click)="editdepartment(item)">
+    <mat-icon>edit</mat-icon>
+  </button>
+
+  <!-- Delete Department -->
+  <button mat-icon-button class="black-btn" (click)="deletedm(item._id)">
+    <mat-icon>delete</mat-icon>
+  </button>
+</td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="showdm.length === 0" class="empty-state">
+      No departments found. Start by adding one.
+    </div>
+  </div>
+</div>
+
+      
+       <!-- Hidden Checkbox to Control Modal -->
+       <input type="checkbox" id="modal-toggle" hidden />
+   
+
+</div>
+
+

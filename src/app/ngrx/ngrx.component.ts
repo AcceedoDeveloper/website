@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { UserservicesService } from '../register/services/userservices.service';
-import { ConfigService } from '../service/config.service';
+import { UserservicesService } from '../../../projects/task/src/app/components/projects/register/services/userservices.service';
+import { ConfigService } from '../../../projects/task/src/app/services/service/config.service';
 
 
 @Pipe({

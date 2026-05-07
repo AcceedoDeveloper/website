@@ -26,7 +26,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 
 
-import {ConfigService} from './service/config.service';
+import {ConfigService} from '../../projects/task/src/app/services/service/config.service';
 
 // Components
 import { AppComponent } from './app.component';
@@ -49,7 +49,7 @@ import { Product2Component } from './product2/product2.component';
 import { Product3Component } from './product3/product3.component';
 import { ProductionMonitorComponent } from './production-monitor/production-monitor.component';
 import { BlogComponent } from './blog/blog.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent } from '../../projects/task/src/app/components/projects/register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ProjectComponent } from './project/project.component';
 import { UwbComponent } from './uwb/uwb.component';
@@ -64,9 +64,9 @@ import { Dwincontant7Component } from './dwincontant7/dwincontant7.component';
 import { Dwincontant8Component } from './dwincontant8/dwincontant8.component';
 import { HttpservicesComponent } from './httpservices/httpservices.component';
 import { FilterPipe } from './filter.pipe';
-import { CreateprojectComponent } from './createproject/createproject.component';
-import { ProjectsComponent } from './projects/projects.component';
-import { RoleComponent } from './role/role.component';
+import { CreateprojectComponent } from '../../projects/task/src/app/components/createproject/createproject.component';
+import { ProjectsComponent } from '../../projects/task/src/app/components/projects/projects.component';
+import { RoleComponent } from '../../projects/task/src/app/components/role/role.component';
 import { NgrxComponent } from './ngrx/ngrx.component';
 import { WebdevComponent } from './webdev/webdev.component';
 import { MatDialogModule } from '@angular/material/dialog'; // ✅ Added for mat-dialog-content
@@ -74,16 +74,16 @@ import { MatInputModule } from '@angular/material/input';
 import { NodeComponent } from './node/node.component';
 import { ApiDatabaseComponent } from './api-database/api-database.component';
 import { AngularDeveloperComponent } from './angular-developer/angular-developer.component';
-import { LoginheaderComponent } from './loginheader/loginheader.component';
-import { DepartmentComponent } from './department/department.component';
-import { DepartmentDialogComponent } from './department/department-dialog/department-dialog.component';
-import { RoledialogComponent } from './role/roledialog/roledialog.component';
+import { LoginheaderComponent } from '../../projects/task/src/app/components/loginheader/loginheader.component';
+import { DepartmentComponent } from '../../projects/task/src/app/components/department/department.component';
+import { DepartmentDialogComponent } from '../../projects/task/src/app/components/department/department-dialog/department-dialog.component';
+import { RoledialogComponent } from '../../projects/task/src/app/components/role/roledialog/roledialog.component';
 import { HttpClientModule } from '@angular/common/http';
-import { RegistermatComponent } from './register/registermat/registermat.component';
-import { ProjectDeleteConfirmationDialogComponent } from './createproject/project-delete-confirmation-dialog.component';
-import { AssignmentDeleteConfirmationDialogComponent } from './projects/assignment-delete-confirmation-dialog.component';
-import { FileDeleteConfirmationDialogComponent } from './projects/file-delete-confirmation-dialog.component';
-import { HeaderComponent } from './header/header.component';
+import { RegistermatComponent } from '../../projects/task/src/app/components/projects/register/registermat/registermat.component';
+import { ProjectDeleteConfirmationDialogComponent } from '../../projects/task/src/app/components/createproject/project-delete-confirmation-dialog.component';
+import { AssignmentDeleteConfirmationDialogComponent } from '../../projects/task/src/app/components/projects/assignment-delete-confirmation-dialog.component';
+import { FileDeleteConfirmationDialogComponent } from '../../projects/task/src/app/components/projects/file-delete-confirmation-dialog.component';
+import { HeaderComponent } from '../../projects/task/src/app/components/header/header.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -94,19 +94,19 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { TaskComponent } from './projects/task/task.component';
-import { CalendarComponent } from './projects/calendar/calendar.component';
-import { SummaryComponent } from './projects/summary/summary.component';
-import { CompareComponent } from './projects/compare/compare.component';
-import { DocumentsComponent } from './projects/documents/documents.component';
+import { TaskComponent } from '../../projects/task/src/app/components/projects/task/task.component';
+import { CalendarComponent } from '../../projects/task/src/app/components/projects/calendar/calendar.component';
+import { SummaryComponent } from '../../projects/task/src/app/components/projects/summary/summary.component';
+import { CompareComponent } from '../../projects/task/src/app/components/projects/compare/compare.component';
+import { DocumentsComponent } from '../../projects/task/src/app/components/projects/documents/documents.component';
 import { SharedComponent } from './shared/shared.component';
 import { Product4Component } from './product4/product4.component';
 import { Product5Component } from './product5/product5.component';
 import { Product6Component } from './product6/product6.component';
 import { Product7Component } from './product7/product7.component';
-import { TimelineComponent } from './projects/timeline/timeline.component';
-import { PermissionComponent } from './permission/permission.component';
-import { AddEditPermissionDialogComponent } from './permission/add-edit-permission-dialog/add-edit-permission-dialog.component';
+import { TimelineComponent } from '../../projects/task/src/app/components/projects/timeline/timeline.component';
+import { PermissionComponent } from '../../projects/task/src/app/components/permission/permission.component';
+import { AddEditPermissionDialogComponent } from '../../projects/task/src/app/components/permission/add-edit-permission-dialog/add-edit-permission-dialog.component';
 
 
 

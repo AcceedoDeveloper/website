@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../service/auth.service.service';
-import { UserservicesService } from '../register/services/userservices.service';
+import { AuthService } from '../../../projects/task/src/app/services/service/auth.service.service';
+import { UserservicesService } from '../../../projects/task/src/app/components/projects/register/services/userservices.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 

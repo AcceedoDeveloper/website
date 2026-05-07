@@ -1,0 +1,63 @@
+<app-header></app-header>
+
+<div class="maincontent">
+
+  <div class="permission-page">
+
+    <!-- Header -->
+    <div class="page-header">
+      <h2>Permission</h2>
+    <button mat-raised-button color="primary" (click)="openAddDialog()"> <mat-icon>add</mat-icon> Add New Permission </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading" *ngIf="loading">
+      <p>Loading...</p>
+    </div>
+
+    <!-- Table -->
+    <table class="permission-table" *ngIf="!loading">
+
+      <thead>
+        <tr>
+          <th>Role Name</th>
+          <th>Initial Screen</th>
+          <th>Enabled Permissions</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let perm of permissions">
+
+          <!-- Role -->
+          <td>{{ getRoleDisplay(perm.role) }}</td>
+
+          <!-- Initial Screen -->
+          <td>{{ getInitialScreenLabel(perm.initialScreen || '') }}</td>
+
+          <!-- Enabled Permissions -->
+          <td>
+  <span class="chip" *ngFor="let p of getEnabledPermissions(perm).split(', ')">
+    {{ p }}
+  </span>
+</td>
+
+          <!-- Actions -->
+          <td>
+          <button mat-icon-button color="accent" (click)="openEditDialog(perm)" title="Edit"> <mat-icon>edit</mat-icon> </button> <button mat-icon-button color="warn" (click)="deletePermission(perm._id)" title="Delete"> <mat-icon>delete</mat-icon> </button>
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+    <!-- No Data -->
+    <p *ngIf="!loading && permissions.length === 0" class="no-data">
+      No permissions found. Click "Add New Permission" to create one.
+    </p>
+
+  </div>
+
+</div>

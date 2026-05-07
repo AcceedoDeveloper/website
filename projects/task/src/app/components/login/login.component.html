@@ -1,0 +1,50 @@
+<div class="login-page">
+  <nav class="login-nav">
+    <div class="brand" routerLink="/login">
+      Acceedo
+      <span>IIoT Solutions</span>
+    </div>
+    <div class="login-icon">
+      <i class="fas fa-user"></i>
+    </div>
+  </nav>
+
+  <main class="login-container">
+    <section class="login-box">
+      <div class="login-visual"></div>
+
+      <div class="login-panel">
+        <h1>Login</h1>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <label>
+            Username
+            <input type="text" formControlName="username" placeholder="Enter username" autocomplete="username" />
+          </label>
+          <div *ngIf="loginForm.get('username')?.touched && loginForm.get('username')?.hasError('required')" class="error">
+            Username is required
+          </div>
+
+          <label>
+            Password
+            <span class="password-wrapper">
+              <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Enter password" autocomplete="current-password" />
+              <button type="button" (click)="togglePasswordVisibility()">
+                {{ hidePassword ? 'Show' : 'Hide' }}
+              </button>
+            </span>
+          </label>
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')" class="error">
+            Password is required
+          </div>
+
+          <p *ngIf="message" class="error-message">{{ message }}</p>
+
+          <button type="submit" class="submit-btn" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Logging in...' : 'Login' }}
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>

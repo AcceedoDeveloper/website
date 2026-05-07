@@ -1,0 +1,300 @@
+<header class="top-bar">
+  <div class="left-section">
+    <span class="brand-title">ACCEEDO</span>
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" (click)="toggleSidebar()">
+      <i class="fa fa-bars"></i>
+    </button>
+  </div>
+    
+
+  <!-- Search Bar 
+ <div class="search-bar">
+  <input type="text" placeholder="Search here..." />
+  <i class="fas fa-search search-icon"></i>
+</div>-->
+
+  <div class="right-icons">
+    <!-- Notification -->
+    <div class="notification-icon" 
+         (click)="onNotificationClick()">
+      <img
+        [src]="hasNotification
+          ? 'https://cdn-icons-png.flaticon.com/128/594/594838.png'
+          : 'https://cdn-icons-png.flaticon.com/128/17383/17383017.png'"
+        alt="Notification"
+        class="notification-bell"
+      />
+      <span class="notification-count" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+      
+      <!-- Notification Popup -->
+      <div class="notification-popup" [class.show]="showNotificationPopup">
+        <div class="notification-header">
+          <h4>Today's Tasks ({{ notificationCount }})</h4>
+        </div>
+        <div class="notification-content">
+          <div *ngIf="todaysTasks.length === 0" class="no-tasks">
+            <div class="no-tasks-icon">📋</div>
+            <div class="no-tasks-text">No tasks assigned for today</div>
+          </div>
+          <div *ngFor="let task of todaysTasks; let i = index" class="task-item">
+            <div class="task-header">
+              <div class="task-title">{{ task.title || 'Untitled Task' }}</div>
+              <div class="task-priority" *ngIf="getTaskPriority(task)" [class]="'priority-' + (getTaskPriority(task) || '').toLowerCase()">
+                {{ getTaskPriority(task) }}
+              </div>
+            </div>
+            
+            <div class="task-details">
+              <div class="task-project" *ngIf="task.projectName">
+                <span class="label">Project:</span> {{ task.projectName }}
+              </div>
+              <!-- <div class="task-assignee" *ngIf="task.assignedTo || task.assignee">
+                <span class="label">Assigned to:</span> {{ task.assignedTo || task.assignee }}
+              </div> -->
+              <!-- <div class="task-due-date" *ngIf="task.dueDate">
+                <span class="label">Due:</span> {{ formatDate(task.dueDate) }}
+              </div> -->
+            </div>
+            
+             <div class="task-footer">
+              <div class="task-status" [class]="'status-' + (task.Status || 'pending').toLowerCase()">
+                {{ task.Status || 'Pending' }}
+              </div>
+              <div class="task-time" *ngIf="task.createdAt">
+                Created: {{ formatDate(task.createdAt) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <!-- Profile Dropdown -->
+    <div class="login-dropdown" #loginDropdown>
+      <label class="user-icon" (click)="toggleDropdown()">
+  <ng-container *ngIf="userData?.photoURL; else initialAvatar">
+    <img
+      [src]="userData.photoURL"
+      class="header-avatar"
+      alt="profile"
+      (error)="onAvatarError()"
+    />
+  </ng-container>
+
+  <ng-template #initialAvatar>
+    <div class="avatar-initial">{{ getUserInitial() }}</div>
+  </ng-template>
+</label>
+      <div  class="login-menu" [class.show]="showDropdown" (click)="onOverlayClick($event)">
+        <button class="mobile-close-btn" (click)="toggleDropdown()"></button>
+        <div class="mobile-content" (click)="$event.stopPropagation()">
+          <p><strong>{{ userData?.userName ||  'Username' }}</strong></p>
+          <p>{{ getRoleLabel(userData?.role) || 'Role' }}</p>
+          <button class="edit-btn" (click)="openEditProfile()">Edit Profile</button>
+          <a href="#" (click)="signOut()">Sign Out</a>
+        </div>
+      </div>
+
+    </div>
+    
+  </div>
+
+  
+</header>
+
+<!-- Profile Edit Modal  -->
+<div class="overlay" *ngIf="showEditModal">
+  <div class="popup-card">
+    <!-- Header -->
+    <div class="popup-header">
+      <h2>Edit Profile</h2>
+      <button class="close-btn" (click)="closeEditModal()">&times;</button>
+    </div>
+
+    <!-- Body -->
+    <div class="popup-body">
+      <!-- LEFT: Profile Image -->
+      <div class="profile-section">
+  <label>Profile Image</label>
+<div class="profile-img-wrapper">
+
+  <!-- IMAGE -->
+    <ng-container *ngIf="previewImage; else placeholder">
+    <img [src]="previewImage" class="profile-img" (error)="onProfileImageError()">
+    <button class="delete-img-btn" (click)="removeProfilePicture()">✕</button>
+  </ng-container>
+
+  <ng-template #placeholder>
+    <div class="profile-initials">{{ getUserInitial() }}</div>
+  </ng-template>
+
+
+  <!-- INITIAL AVATAR -->
+
+</div>
+
+  <!-- FILE UPLOAD -->
+  <div class="file-upload-wrapper">
+    <input
+      type="file"
+      id="profileUpload"
+      accept="image/*"
+      (change)="onPhotoSelected($event)" />
+
+    <label for="profileUpload" class="file-upload-label">
+      {{  'Choose File' }}
+    </label>
+  </div>
+</div>
+      <!-- RIGHT: Basic Info  -->
+      <div class="info-section">
+        <div class="top-row">
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" [(ngModel)]="editUserData.name" placeholder="Full name" />
+          </div>
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" [(ngModel)]="editUserData.userName" placeholder="Username" />
+          </div>
+        </div>
+
+        <div class="middle-row">
+          <div class="form-group">
+            <label>User Code</label>
+            <input type="text" [(ngModel)]="editUserData.userCode" placeholder="User Code" />
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select [(ngModel)]="editUserData.role">
+              <option value="">-- Select Role --</option>
+              <option *ngFor="let r of roles" [value]="getRoleValue(r)">{{ getRoleLabel(r) }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" [(ngModel)]="editUserData.emailId" placeholder="Email address" />
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" [(ngModel)]="editUserData.phoneNumber" placeholder="Phone number" />
+          </div>
+        </div>
+
+        <div class="bottom-row">
+          <div class="form-group">
+            <label>Department <span *ngIf="editUserData.role?.toLowerCase() === 'admin'" class="optional-text">(Optional)</span></label>
+            <select [(ngModel)]="editUserData.departmentName" (change)="onDepartmentChange($event)">
+              <option value="">-- Select Department --</option>
+              <option *ngFor="let d of departments" [value]="d.departmentName">{{ d.departmentName }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>SubDepartment <span *ngIf="editUserData.role?.toLowerCase() === 'admin'" class="optional-text">(Optional)</span></label>
+            <select [(ngModel)]="editUserData.subDepartmentName">
+              <option value="">-- Select SubDepartment --</option>
+              <option *ngFor="let sd of subDepartmentsData" [value]="sd.name">{{ sd.name }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" [(ngModel)]="editUserData.password" placeholder="Password" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="popup-actions">
+      <button type="button" class="btn cancel" (click)="closeEditModal()" [disabled]="isLoading">Cancel</button>
+      <button type="button" class="btn save" (click)="saveProfilePicture()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Save</span>
+        <span *ngIf="isLoading">Saving...</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="submain">
+
+  <div class="sidebarothercontent">
+
+  
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" [class.active]="sidebarOpen" (click)="closeSidebar()"></div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" [class.open]="sidebarOpen">
+       <!-- Close Button for Mobile -->
+       <button class="sidebar-close" (click)="closeSidebar()">
+         <i class="fa fa-times"></i>
+       </button>
+       
+       <h3 class="menu-title">Menu</h3>
+       <ul class="menu-list">
+         <li *ngIf="canShowMasterSection()">
+           <div class="menu-section">
+             <input type="checkbox" id="master-toggle" class="section-toggle" hidden>
+             <label for="master-toggle" class="section-title">
+               Master <i class="fa fa-chevron-down"></i>
+             </label>
+             <div class="submenu">
+               <a routerLink="/register" *ngIf="canShowUserMenu()">User</a>
+               <a routerLink="/department" *ngIf="canShowDepartmentMenu()">Department</a>
+               <a routerLink="/role" *ngIf="canShowRoleMenu()">Role</a>
+               <a routerLink="/create" *ngIf="canShowCreateProjectMenu()">Create Project</a>
+               <a routerLink="/permission" *ngIf="canShowPermissionMenu()">Permission</a>
+             </div>
+           </div>
+         </li>
+         <li *ngIf="canShowProjectsMenu()">
+           <a routerLink="/projects">Projects</a>
+         </li>
+       
+        
+       </ul>
+      </div>
+    
+    <!-- another content in right side here  -->
+     </div>
+  
+
+ <div class="wecomemaincontent" *ngIf="!isProjectsRoute()">
+
+  
+
+  <!-- because it is header so we can use all the components  -->
+ </div>
+
+ 
+<div class="page-nav-header" *ngIf="currentLabel">
+
+  <!-- Previous -->
+  <button
+    class="nav-arrow"
+    [disabled]="isFirstPage"
+    (click)="previousPage()">
+     &#10094;
+  </button>
+
+  <h4 class="page-title">{{ currentLabel }}</h4>
+
+  <!-- Next -->
+  <button
+    class="nav-arrow"
+    [disabled]="isLastPage"
+    (click)="nextPage()">
+     &#10095;
+  </button>
+
+</div>
+
+
+
+
+
+
+</div>            
