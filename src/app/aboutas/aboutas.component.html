@@ -1,103 +1,320 @@
 <app-footr></app-footr>
-    <header>
-        <div class="header-container"> 
-            <div class="container">
-                <div class="header-content">
-                    <div class="logo gradient-text">ACCEE<span style="color: var(--accent);">DO</span></div>
-                    <h1>Building the Future of IoT in India</h1>
-                    <p>We are a passionate team creating innovative IoT solutions to transform industries through automation, analytics, and connectivity.</p>
-                </div>
+<!-- <header class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="subtitle">Acceedo</span>
+                <h1>Building the Future of <br>
+                    <span class="gradient-text">IoT in India</span>
+                </h1>
+                <div class="divider"></div>
+                <p>We are a passionate team creating innovative IoT solutions to transform industries through
+                    automation, analytics, and connectivity.</p>
             </div>
         </div>
-        
-    </header>
-   
-    <main class="main-content">
-        <div class="container">
-            <!-- Our Story Section -->
-            <section class="section" id="story">
-                <div class="section-title">
-                    <h2 class = "gradient-text">Our Story</h2>
+    </div>
+</header> -->
+
+<main class="main-content">
+    <canvas id="particle-canvas"></canvas>
+    <div class="container">
+        <!-- Our Story Section -->
+        <div class="section-title">
+            <div class="section-title lined-title-container">
+                <h2 class="gradient-text">Our Story</h2>
+            </div>
+            <div class="divider" style="margin: 5px auto;"></div>
+        </div>
+
+        <section class="slideshow-hero">
+            <div class="slide-bg" *ngFor="let img of images; let i = index" [style.backgroundImage]="'url(' + img + ')'"
+                [class.active]="i === currentIndex">
+            </div>
+
+            <div class="slide-overlay"></div>
+
+            <div class="slide-content">
+
+                <div class="hero-text">
+                    <span class="subtitle">Acceedo</span>
+                    <h1>Building the Future of <br>
+                        <span class="gradient-text">IoT in India</span>
+                    </h1>
+                    <div class="divider"></div>
+                    <p>We are a passionate team creating innovative IoT solutions to transform industries through
+                        automation, analytics, and connectivity.</p>
                 </div>
-                <div class="story-grid">
-                    <div class="story-image">
-                        <img src="assets/about.jpg" alt="Acceedo Office">
+
+                <div class="story-text-overlay">
+                    <h2>
+                        <span style="color:#FF5FA2;">From</span>
+                        Coimbatore
+                        <br>
+                        <span class="gradient-text">to the World</span>
+                    </h2>
+                    <p>Acceedo, headquartered in Coimbatore, is a dynamic software company offering cutting-edge web
+                        design, development, and IoT solutions. We deploy connected devices and smart machinery that
+                        transform industrial operations through real-time analytics and machine learning.</p>
+
+                    <div class="slide-dots">
+                        <span class="dot" *ngFor="let img of images; let i = index" [class.active]="i === currentIndex"
+                            (click)="currentIndex = i">
+                        </span>
                     </div>
-                    <div class="story-text">
-                        <h3>From Coimbatore to the World</h3>
-                        <p>Acceedo, headquartered in Coimbatore, is a dynamic software company offering cutting-edge web design, development, and application services. We specialize in Multilevel Marketing (MLM) software solutions and provide customized web services to both corporate and small business enterprises.</p>
-                        <p>At the forefront of Industrial IoT innovation, Acceedo deploys connected devices and smart machinery that transform industrial operations. Our solutions enable real-time data collection, machine health monitoring, performance analytics, and deliver actionable insights to enhance management efficiency.</p>
-                        <p>By leveraging machine learning and predictive analytics, our systems can detect potential equipment failures before they occur, helping companies save millions in operational costs and minimize downtime.</p>
-                    </div>
                 </div>
-            </section>
-           
-            <!-- Why Choose Us Section -->
-            <section class="section" id="why-us">
-                <div class="section-title">
-                    <h2 class = "gradient-text">Why Choose Acceedo</h2>
-                </div>
-                <div class="features">
-                    <div class="feature-card">
+
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section class="section" id="why-us">
+            <div class="curved-title-wrapper">
+                <h2 style="color: #1a0b3c;">Why Choose <span class="gradient-text">Acceedo</span></h2>
+                <div class="wide-curve"></div>
+            </div>
+            <div class="features">
+
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <div class="feature-icon">
-                            <i class="bi bi-gear-fill"></i>
+                            <svg width="48" height="48" viewBox="0 0 64 64" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Central chip body -->
+                                <rect x="18" y="18" width="28" height="28" rx="3" fill="#7B5FFF" opacity="0.15"
+                                    stroke="#7B5FFF" stroke-width="1.5" />
+                                <rect x="22" y="22" width="20" height="20" rx="2" fill="#7B5FFF" opacity="0.25" />
+
+                                <!-- Inner grid lines -->
+                                <line x1="22" y1="29" x2="42" y2="29" stroke="#7B5FFF" stroke-width="0.8"
+                                    opacity="0.6" />
+                                <line x1="22" y1="35" x2="42" y2="35" stroke="#7B5FFF" stroke-width="0.8"
+                                    opacity="0.6" />
+                                <line x1="29" y1="22" x2="29" y2="42" stroke="#7B5FFF" stroke-width="0.8"
+                                    opacity="0.6" />
+                                <line x1="35" y1="22" x2="35" y2="42" stroke="#7B5FFF" stroke-width="0.8"
+                                    opacity="0.6" />
+
+                                <!-- Center dot -->
+                                <circle cx="32" cy="32" r="3" fill="#FF5FA2" />
+                                <circle cx="32" cy="32" r="1.5" fill="white" />
+
+                                <!-- Left pins -->
+                                <line x1="18" y1="24" x2="12" y2="24" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="18" y1="30" x2="12" y2="30" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="18" y1="36" x2="12" y2="36" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="18" y1="42" x2="12" y2="42" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+
+                                <!-- Right pins -->
+                                <line x1="46" y1="24" x2="52" y2="24" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="46" y1="30" x2="52" y2="30" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="46" y1="36" x2="52" y2="36" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="46" y1="42" x2="52" y2="42" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+
+                                <!-- Top pins -->
+                                <line x1="24" y1="18" x2="24" y2="12" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="30" y1="18" x2="30" y2="12" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="36" y1="18" x2="36" y2="12" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="42" y1="18" x2="42" y2="12" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+
+                                <!-- Bottom pins -->
+                                <line x1="24" y1="46" x2="24" y2="52" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="30" y1="46" x2="30" y2="52" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="36" y1="46" x2="36" y2="52" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <line x1="42" y1="46" x2="42" y2="52" stroke="#7B5FFF" stroke-width="2"
+                                    stroke-linecap="round" />
+
+                                <!-- Corner accent dots -->
+                                <circle cx="12" cy="24" r="1.5" fill="#FF5FA2" />
+                                <circle cx="12" cy="42" r="1.5" fill="#FF5FA2" />
+                                <circle cx="52" cy="24" r="1.5" fill="#FF5FA2" />
+                                <circle cx="52" cy="42" r="1.5" fill="#FF5FA2" />
+                            </svg>
                         </div>
+                    </div>
+                    <div class="feature-text">
                         <h3>IoT Specialization</h3>
-                        <p>We provide IoT solutions tailored for the manufacturing industry, integrating smart machinery with automation and advanced analytics.</p>
+                        <p>We provide IoT solutions tailored for the manufacturing industry, integrating smart machinery
+                            with automation and advanced analytics.</p>
                     </div>
-                    <div class="feature-card">
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
                         <div class="feature-icon">
-                            <i class="bi bi-graph-up"></i>
+                            <svg width="48" height="48" viewBox="0 0 64 64" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <!-- Outer gear teeth -->
+                                <circle cx="32" cy="32" r="16" fill="none" stroke="#7B5FFF" stroke-width="1.5"
+                                    opacity="0.3" />
+
+                                <!-- Gear teeth - 8 teeth using rectangles rotated around center -->
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(0 32 32)" />
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(45 32 32)" />
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(90 32 32)" />
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(135 32 32)" />
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(180 32 32)" />
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(225 32 32)" />
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(270 32 32)" />
+                                <rect x="30" y="12" width="4" height="6" rx="1" fill="#7B5FFF" opacity="0.7"
+                                    transform="rotate(315 32 32)" />
+
+                                <!-- Gear body circle -->
+                                <circle cx="32" cy="32" r="14" fill="#7B5FFF" opacity="0.12" />
+                                <circle cx="32" cy="32" r="14" fill="none" stroke="#7B5FFF" stroke-width="1.5" />
+
+                                <!-- Inner hole -->
+                                <circle cx="32" cy="32" r="6" fill="#7B5FFF" opacity="0.2" stroke="#7B5FFF"
+                                    stroke-width="1.5" />
+
+                                <!-- Cycle arrow top-right -->
+                                <path d="M 38 20 A 10 10 0 0 1 48 30" fill="none" stroke="#FF5FA2" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <polygon points="48,26 48,32 44,29" fill="#FF5FA2" />
+
+                                <!-- Cycle arrow bottom-left -->
+                                <path d="M 26 44 A 10 10 0 0 1 16 34" fill="none" stroke="#FF5FA2" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <polygon points="16,38 16,32 20,35" fill="#FF5FA2" />
+
+                                <!-- Center dot -->
+                                <circle cx="32" cy="32" r="3" fill="#FF5FA2" />
+                                <circle cx="32" cy="32" r="1.5" fill="white" />
+                            </svg>
                         </div>
+                    </div>
+                    <div class="feature-text">
                         <h3>Operational Efficiency</h3>
-                        <p>Our solutions make every worker and every factory more efficient through data-driven insights and process optimization.</p>
+                        <p>Our solutions make every worker and every factory more efficient through data-driven insights
+                            and process optimization.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="bi bi-cpu"></i>
-                        </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="54" width="20" height="4" rx="2" fill="#7B5FFF" opacity="0.3" />
+                            <rect x="14" y="50" width="8" height="5" rx="1" fill="#7B5FFF" opacity="0.5" />
+                            <rect x="17" y="34" width="6" height="17" rx="3" fill="#7B5FFF" />
+                            <circle cx="20" cy="34" r="4" fill="#FF5FA2" />
+                            <circle cx="20" cy="34" r="2" fill="white" />
+                            <rect x="19" y="18" width="6" height="18" rx="3" transform="rotate(20 22 34)"
+                                fill="#7B5FFF" />
+                            <circle cx="27" cy="20" r="4" fill="#FF5FA2" />
+                            <circle cx="27" cy="20" r="2" fill="white" />
+                            <rect x="27" y="17" width="14" height="5" rx="2.5" fill="#7B5FFF" opacity="0.8" />
+                            <rect x="39" y="13" width="3" height="7" rx="1.5" fill="#FF5FA2" />
+                            <rect x="39" y="21" width="3" height="7" rx="1.5" fill="#FF5FA2" />
+                            <circle cx="44" cy="50" r="6" fill="none" stroke="#7B5FFF" stroke-width="1.5"
+                                opacity="0.5" />
+                            <circle cx="44" cy="50" r="3" fill="#7B5FFF" opacity="0.3" />
+                            <line x1="44" y1="43" x2="44" y2="41" stroke="#7B5FFF" stroke-width="1.5" opacity="0.5" />
+                            <line x1="44" y1="57" x2="44" y2="59" stroke="#7B5FFF" stroke-width="1.5" opacity="0.5" />
+                            <line x1="37" y1="50" x2="35" y2="50" stroke="#7B5FFF" stroke-width="1.5" opacity="0.5" />
+                            <line x1="51" y1="50" x2="53" y2="50" stroke="#7B5FFF" stroke-width="1.5" opacity="0.5" />
+                        </svg>
+                    </div>
+                    <div class="feature-text">
                         <h3>Smart Manufacturing</h3>
-                        <p>We enable autonomous facility operations through seamless communication between various industrial technologies.</p>
+                        <p>We enable autonomous facility operations through seamless communication between various
+                            industrial technologies.</p>
                     </div>
                 </div>
-            </section>
-           
-            <!-- Vision Section -->
-            <section class="section" id="vision">
-                <div class="vision-section">
-                    <div class="vision-content">
-                        <h2 class = "gradient-text">Our Vision</h2>
-                        <div class="quote">
-                            To be a leading software developing company and improve our existing position in the market and enhance the business growth of our clients through creative design, development and deliver high-quality solutions.
-                        </div>
+
+            </div>
+        </section>
+
+
+        <!-- Vision Section -->
+        <section class="section" id="vision">
+            <div class="vision-section">
+                <div class="vision-content">
+                    <h2 class="gradient-text">Our Vision</h2>
+                    <div class="quote">
+                        To be a leading software developing company and improve our existing position in the market and
+                        enhance the business growth of our clients through creative design, development and deliver
+                        high-quality solutions.
                     </div>
-                </div>
-            </section>
-           
-          
-           
-            <!-- Stats Section -->
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number" class = "gradient-text">25+</div>
-                    <div class="stat-label">Clients Served</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" class = "gradient-text">50+</div>
-                    <div class="stat-label">Projects Completed</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" class = "gradient-text">10+</div>
-                    <div class="stat-label">Years Experience</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number " class = "gradient-text">24/7</div>
-                    <div class="stat-label">Support</div>
                 </div>
             </div>
+        </section>
+
+
+
+        <!-- Stats Section -->
+        <div class="stats">
+            <div class="stat-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none"
+                    stroke="#1a0b3c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    style="opacity: 0.8;">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <div class="stat-number gradient-text">55+</div>
+                <div class="stat-label">Clients Served</div>
+            </div>
+
+            <div class="stat-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none"
+                    stroke="#1a0b3c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    style="opacity: 0.8;">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+                <div class="stat-number gradient-text">150+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+
+            <div class="stat-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none"
+                    stroke="#1a0b3c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    style="opacity: 0.8;">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+                <div class="stat-number gradient-text">10+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+
+            <div class="stat-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none"
+                    stroke="#1a0b3c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    style="opacity: 0.8;">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                    <path
+                        d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
+                    </path>
+                </svg>
+                <div class="stat-number gradient-text">24/7</div>
+                <div class="stat-label">Support</div>
+            </div>
         </div>
-    </main>
-   
-    <app-footer></app-footer>
-   
-   
+    </div>
+</main>
+
+<app-footer></app-footer>
