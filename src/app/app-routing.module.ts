@@ -47,12 +47,13 @@ import { Product5Component } from './product5/product5.component';
 import { Product6Component } from './product6/product6.component';
 import { TimelineComponent } from './projects/timeline/timeline.component';
 import { PermissionComponent } from './permission/permission.component';
-
+import { ResistorComponent } from './resistor/resistor.component';
 
 
 const routes: Routes = [
   { path: '', redirectTo: 'acceedo', pathMatch: 'full' },
   { path: 'uwb', component: UwbComponent },
+  { path: 'resistor', component: ResistorComponent },
   { path: 'acceedo', component: HomeComponent },
   { path: 'power-metrics', component: PowerMetricsComponent },
   { path: 'heat-treatment', component: HeatTreatmentComponent },

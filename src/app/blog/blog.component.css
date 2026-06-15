@@ -51,7 +51,7 @@
 
 .categories {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 boxes one line */
+  grid-template-columns: repeat(4, 1fr); /* 4 boxes per line */
   gap: 30px;
   max-width: 1300px;
   margin: 0 auto;

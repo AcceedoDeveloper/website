@@ -107,6 +107,7 @@ import { Product7Component } from './product7/product7.component';
 import { TimelineComponent } from './projects/timeline/timeline.component';
 import { PermissionComponent } from './permission/permission.component';
 import { AddEditPermissionDialogComponent } from './permission/add-edit-permission-dialog/add-edit-permission-dialog.component';
+import { ResistorComponent } from './resistor/resistor.component';
 
 
 
@@ -185,6 +186,7 @@ export function loadConfigFactory(configService: ConfigService) {
    UwbComponent,
    PermissionComponent,
    AddEditPermissionDialogComponent,
+   ResistorComponent,
    
   ],
 
