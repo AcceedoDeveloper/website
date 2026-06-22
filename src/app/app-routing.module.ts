@@ -48,6 +48,7 @@ import { Product6Component } from './product6/product6.component';
 import { TimelineComponent } from './projects/timeline/timeline.component';
 import { PermissionComponent } from './permission/permission.component';
 import { ResistorComponent } from './resistor/resistor.component';
+import { CareersComponent } from './careers/careers.component';
 
 
 const routes: Routes = [
@@ -81,6 +82,7 @@ const routes: Routes = [
   { path: 'product5', component: Product5Component },
   { path: 'product6', component: Product6Component },
   { path: 'product7', component: Product7Component },
+  { path: 'careers', component: CareersComponent },
 
 
   { path: 'login', component: LoginComponent},

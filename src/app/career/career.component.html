@@ -12,25 +12,18 @@
 
   <section class="job-listings" id="jobs">
     <h2>Current Openings</h2>
-    <div class="job-cards">
-      <div class="job-card">
-        <h3>Marketing</h3>
-        <p><strong>Location:</strong>Coimbatore</p>
-        <p>SEO, SEM, Data Analysis, Social Media Campaigns.</p>
-        <a  class="apply-btn" (click)="openWhatsApp()">Apply Now</a>
-      </div>
-      <div class="job-card">
-        <h3> Field Service Engineer</h3>
-        <p><strong>Location:</strong>Coimbatore</p>
-        <p>Experience with Diploma in Electronics / ECE / Electrical
-           OR ITI (Electronics / Electrical)</p>
-        <a  class="apply-btn" (click)="openWhatsApp()">Apply Now</a>
-      </div>
-      <div class="job-card">
-        <h3>Frontend Developer</h3>
-        <p><strong>Location:</strong> Coimbatore </p>
-        <p>Proficient in Angular, HTML, CSS, and JavaScript.</p>
-        <a  class="apply-btn" (click)="openWhatsApp()">Apply Now</a>
+    <div class="job-cards" >
+      <div class="job-card" *ngFor="let job of roles">
+        <h3>{{ job.role }}</h3>
+            <p><strong>Location:</strong> {{ job.location }}</p>
+            <p><strong>Experience:</strong> {{ job.experience }}</p>
+            <p><strong>Education:</strong> {{ job.education }}</p>
+            <p><strong>Requirements:</strong> {{job.requirement}}</p>
+              <p><strong>Job Type:</strong> {{job.jobtype}}</p>
+              <p><strong>Responsibilities:</strong> {{job.jobresponsibility}}</p>
+
+            <p><strong>Description:</strong> {{job.jobdescription}}</p>
+            <a href="#" class="apply-btn" (click)="openWhatsApp()">Apply Now</a>
       </div>
     </div>
   </section>

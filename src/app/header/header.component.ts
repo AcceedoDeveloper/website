@@ -174,7 +174,8 @@ nextPage() {
     { path: '/register', label: 'User' },
     { path: '/department', label: 'Department' },
     { path: '/role', label: 'Role' },
-    { path: '/create', label: 'Create Project' }
+    { path: '/create', label: 'Create Project' },
+    { path: '/careers', label: 'Careers' }
   ];
 
   frontendPages = [

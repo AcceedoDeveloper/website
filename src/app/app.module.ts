@@ -108,6 +108,8 @@ import { TimelineComponent } from './projects/timeline/timeline.component';
 import { PermissionComponent } from './permission/permission.component';
 import { AddEditPermissionDialogComponent } from './permission/add-edit-permission-dialog/add-edit-permission-dialog.component';
 import { ResistorComponent } from './resistor/resistor.component';
+import { CareersComponent } from './careers/careers.component';
+import { CareersmatComponent } from './careers/careersmat/careersmat.component';
 
 
 
@@ -187,6 +189,8 @@ export function loadConfigFactory(configService: ConfigService) {
    PermissionComponent,
    AddEditPermissionDialogComponent,
    ResistorComponent,
+   CareersComponent,
+   CareersmatComponent,
    
   ],
 

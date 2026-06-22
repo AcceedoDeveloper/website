@@ -1,0 +1,96 @@
+<!-- Delete Confirmation Dialog -->
+<div class="popup-card delete-confirmation" *ngIf="isDeleteMode">
+  <div class="popup-header">
+    <h2>{{ data.title || 'Confirm Deletion' }}</h2>
+    <button class="close-btn" (click)="cancelDelete()">&times;</button>
+  </div>
+
+  <div class="delete-message">
+    <p>{{ data.message || 'Are you sure you want to delete this career?' }}</p>
+  </div>
+
+  <div class="popup-actions">
+    <button type="button" class="btn cancel" (click)="cancelDelete()">Cancel</button>
+    <button type="button" class="btn danger" (click)="confirmDelete()">Delete</button>
+  </div>
+</div>
+
+<!-- Create / Edit Career Dialog -->
+<div class="popup-card" [class.loading]="isLoading" *ngIf="!isDeleteMode">
+
+  <div class="popup-header">
+    <h2>{{ isEdit ? 'Edit Career' : 'Add Career' }}</h2>
+    <button class="close-btn" (click)="cancel()" [disabled]="isLoading">&times;</button>
+  </div>
+
+  <form [formGroup]="careerForm" (ngSubmit)="onSubmit()" class="popup-form" autocomplete="off" [class.loading]="isLoading">
+
+    <div class="popup-body">
+
+      <!-- ROW 1: Role · Location · Job Type -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Role</label>
+          <input type="text" formControlName="role" placeholder="e.g. Frontend Developer" />
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" formControlName="location" placeholder="e.g. Remote / Chennai" />
+        </div>
+        <div class="form-group">
+          <label>Job Type</label>
+          <select formControlName="jobtype">
+            <option value="">-- Select Job Type --</option>
+            <option value="Full-Time">Full-Time</option>
+            <option value="Part-Time">Part-Time</option>
+            <option value="Contract">Contract</option>
+            <option value="Internship">Internship</option>
+            <option value="Freelance">Freelance</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ROW 2: Experience · Education · Requirement -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Experience</label>
+          <input type="text" formControlName="experience" placeholder="e.g. 2+ years" />
+        </div>
+        <div class="form-group">
+          <label>Education</label>
+          <input type="text" formControlName="education" placeholder="e.g. B.E / B.Tech" />
+        </div>
+        <div class="form-group">
+          <label>Requirement</label>
+          <input type="text" formControlName="requirement" placeholder="e.g. Angular, Node.js" />
+        </div>
+      </div>
+
+      <!-- ROW 3: Job Description (full width) -->
+      <div class="form-row single">
+        <div class="form-group">
+          <label>Job Description</label>
+          <textarea formControlName="jobdescription" placeholder="Describe the role and responsibilities in detail..." rows="4"></textarea>
+        </div>
+      </div>
+
+      <!-- ROW 4: Job Responsibility (full width) -->
+      <div class="form-row single">
+        <div class="form-group">
+          <label>Job Responsibility</label>
+          <textarea formControlName="jobresponsibility" placeholder="List the key responsibilities..." rows="4"></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="popup-actions">
+      <button type="button" class="btn cancel" (click)="cancel()" [disabled]="isLoading">Cancel</button>
+      <button type="submit" class="btn save" [disabled]="careerForm.invalid || isLoading">
+        <span *ngIf="!isLoading">{{ isEdit ? 'Update' : 'Save' }}</span>
+        <span *ngIf="isLoading">Saving...</span>
+      </button>
+    </div>
+
+  </form>
+</div>

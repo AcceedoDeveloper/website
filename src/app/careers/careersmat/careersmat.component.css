@@ -1,0 +1,261 @@
+/* ── Popup Card ── */
+.popup-card {
+  background: #ffffff;
+  border-radius: 14px;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  position: relative;
+  transition: opacity 0.3s ease;
+  box-sizing: border-box;
+}
+
+.popup-card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ── Header ── */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #1f3c88 0%, #2e52b8 100%);
+  padding: 16px 22px;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-header h2 {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.close-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Form ── */
+.popup-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-body {
+  padding: 22px 24px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Form rows ── */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-row.single {
+  grid-template-columns: 1fr;
+}
+
+/* ── Form group ── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0; /* prevent grid blowout */
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 9px 12px;
+  border: 1.5px solid #d1d9e0;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1a1a2e;
+  background: #f9fafb;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-group textarea {
+  resize: vertical;
+  line-height: 1.55;
+  min-height: 90px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #1f3c88;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(31, 60, 136, 0.1);
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: #b0bac5;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+/* ── Actions ── */
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 14px 24px 20px;
+  border-top: 1px solid #edf2f7;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+.btn {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.25s ease;
+  letter-spacing: 0.02em;
+}
+
+.btn.cancel {
+  background: #f1f3f5;
+  color: #495057;
+  border: 1.5px solid #dee2e6;
+}
+
+.btn.cancel:hover {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+.btn.save {
+  background: linear-gradient(135deg, #1f3c88 0%, #2e52b8 100%);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(31, 60, 136, 0.25);
+}
+
+.btn.save:hover:not(:disabled) {
+  background: linear-gradient(135deg, #174a6b 0%, #1f3c88 100%);
+  box-shadow: 0 5px 16px rgba(31, 60, 136, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn.save:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(31, 60, 136, 0.2);
+}
+
+.btn.save:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn.danger {
+  background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(229, 62, 62, 0.3);
+}
+
+.btn.danger:hover {
+  background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(229, 62, 62, 0.4);
+}
+
+/* ── Delete dialog ── */
+.popup-card.delete-confirmation {
+  overflow: hidden;
+}
+
+.delete-message {
+  padding: 24px 24px 8px;
+}
+
+.delete-message p {
+  color: #4a5568;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .popup-body { padding: 16px 16px 8px; }
+  .popup-actions { padding: 12px 16px 16px; }
+  .popup-header { padding: 14px 16px; }
+
+  .btn { padding: 8px 16px; font-size: 13px; }
+}
