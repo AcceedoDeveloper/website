@@ -9,7 +9,7 @@ import { ConfigService } from '../service/config.service';
 })
 export class CareersService {
   constructor(private http: HttpClient,private config: ConfigService) { }
- // private baseUrl = 'http://localhost:3008/api';
+  //private baseUrl = 'http://localhost:3008/api';
   getAllCareers() {
     const url = this.config.getWebsiteUrl('getJobs');
     return this.http.get<CareerData[]>(url);
