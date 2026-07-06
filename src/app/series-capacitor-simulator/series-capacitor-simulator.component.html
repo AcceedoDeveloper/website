@@ -1,0 +1,230 @@
+<div class="simulator-card">
+
+  <h2 class="simulator-title">Series Capacitors in a DC Circuit</h2>
+
+  <!-- ============================================================ -->
+  <!-- CIRCUIT PANEL                                                  -->
+  <!-- ============================================================ -->
+  <section class="circuit-panel" [class.is-on]="powerOn()">
+
+    <!-- Battery / source voltage readout -->
+    <div class="source-badge">
+      <span class="source-value">{{ formatNumber(sourceVoltage(), 1) }}V</span>
+      <span class="source-caption">DC SOURCE</span>
+    </div>
+
+    <!-- Wire loop + components, drawn with simple absolutely positioned
+         divs / SVG so no canvas is required. -->
+    <div class="circuit-stage">
+
+      <!-- Wire path (top, right, bottom, left segments) -->
+      <svg class="wire-svg" viewBox="0 0 600 320" preserveAspectRatio="none" aria-hidden="true">
+        <path class="wire-path wire-base"
+              d="M 60 60 H 540 V 230 H 60 Z" />
+        <path class="wire-path wire-glow"
+              [class.flowing]="isFlowing()"
+              d="M 60 60 H 540 V 230 H 60 Z" />
+
+        <!-- Charge particles travelling the loop -->
+        <circle *ngFor="let p of particles()"
+                class="charge-particle"
+                [class.discharging]="chargeState() === 'discharging'"
+                [style.opacity]="isFlowing() ? 1 : 0"
+                [attr.cx]="particleX(p.position)"
+                [attr.cy]="particleY(p.position)"
+                r="5"></circle>
+      </svg>
+
+      <!-- Power switch -->
+      <button type="button"
+              class="power-switch"
+              [class.on]="powerOn()"
+              (click)="togglePower()"
+              [attr.aria-pressed]="powerOn()"
+              aria-label="Toggle circuit power">
+        <span class="switch-track">
+          <span class="switch-thumb"></span>
+        </span>
+        <span class="switch-label">{{ powerOn() ? 'ON' : 'OFF' }}</span>
+      </button>
+
+      <!-- Bulb indicator -->
+      <div class="bulb-wrap">
+        <div class="bulb"
+             [class.glowing]="bulbBrightness() > 0.05"
+             [class.full]="isFullyCharged()"
+             [style.--bulb-brightness]="bulbBrightness()">
+          <svg viewBox="0 0 64 64" class="bulb-svg" aria-hidden="true">
+            <circle cx="32" cy="26" r="18" class="bulb-bulb"></circle>
+            <rect x="26" y="44" width="12" height="6" rx="1.5" class="bulb-base"></rect>
+            <rect x="27" y="51" width="10" height="5" rx="1.5" class="bulb-base"></rect>
+            <path d="M24 26 L29 20 L24 32 L29 26" class="bulb-filament"></path>
+            <g class="bulb-rays">
+              <line x1="32" y1="2" x2="32" y2="8"></line>
+              <line x1="10" y1="26" x2="4" y2="26"></line>
+              <line x1="60" y1="26" x2="54" y2="26"></line>
+              <line x1="14.5" y1="8.5" x2="10.5" y2="4.5"></line>
+              <line x1="49.5" y1="8.5" x2="53.5" y2="4.5"></line>
+            </g>
+          </svg>
+        </div>
+        <span class="bulb-caption">INDICATOR LAMP</span>
+      </div>
+
+      <!-- Series capacitors -->
+      <div class="capacitor-row">
+        <div class="capacitor-box" [style.--glow]="plateGlow1()">
+          <div class="cap-plates">
+            <span class="plate plate-pos">+</span>
+            <span class="plate plate-neg">&minus;</span>
+          </div>
+          <span class="cap-name">C1</span>
+          <span class="cap-value">{{ formatNumber(capacitance1(), 1) }} &micro;F</span>
+        </div>
+
+        <div class="capacitor-box" [style.--glow]="plateGlow2()">
+          <div class="cap-plates">
+            <span class="plate plate-pos">+</span>
+            <span class="plate plate-neg">&minus;</span>
+          </div>
+          <span class="cap-name">C2</span>
+          <span class="cap-value">{{ formatNumber(capacitance2(), 1) }} &micro;F</span>
+        </div>
+
+        <div class="capacitor-box" [style.--glow]="plateGlow3()">
+          <div class="cap-plates">
+            <span class="plate plate-pos">+</span>
+            <span class="plate plate-neg">&minus;</span>
+          </div>
+          <span class="cap-name">C3</span>
+          <span class="cap-value">{{ formatNumber(capacitance3(), 1) }} &micro;F</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- STATUS STRIP                                                   -->
+  <!-- ============================================================ -->
+  <section class="status-strip">
+    <div class="status-text">
+      <strong>Series capacitor bank</strong>
+      <span *ngIf="chargeState() === 'idle'">Switch the power on to begin charging the capacitor bank.</span>
+      <span *ngIf="chargeState() === 'charging'">Charge is flowing onto the plates through the series path.</span>
+      <span *ngIf="chargeState() === 'charged'">Capacitors are fully charged. Current flow has stopped.</span>
+      <span *ngIf="chargeState() === 'discharging'">Power is off &mdash; the bank discharges back through the bulb.</span>
+      <span *ngIf="chargeState() === 'discharged'">Capacitors are fully discharged.</span>
+    </div>
+    <span class="status-pill" [attr.data-state]="chargeState()">{{ statusLabel() }}</span>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- CONTROL PANEL                                                  -->
+  <!-- ============================================================ -->
+  <section class="control-panel">
+
+    <div class="control-row">
+      <label class="control-label" for="voltageSlider">
+        <span>Source Voltage</span>
+        <span class="control-value">{{ formatNumber(sourceVoltage(), 1) }} V</span>
+      </label>
+      <input id="voltageSlider"
+             type="range"
+             class="slider slider-voltage"
+             [min]="VOLTAGE_MIN"
+             [max]="VOLTAGE_MAX"
+             step="0.5"
+             [ngModel]="sourceVoltage()"
+             (ngModelChange)="onVoltageChange($event)" />
+    </div>
+
+    <div class="control-row">
+      <label class="control-label" for="cap1Slider">
+        <span>Capacitor C1</span>
+        <span class="control-value">{{ formatNumber(capacitance1(), 1) }} &micro;F</span>
+      </label>
+      <input id="cap1Slider"
+             type="range"
+             class="slider slider-cap"
+             [min]="CAP_MIN"
+             [max]="CAP_MAX"
+             step="1"
+             [ngModel]="capacitance1()"
+             (ngModelChange)="onCapacitance1Change($event)" />
+    </div>
+
+    <div class="control-row">
+      <label class="control-label" for="cap2Slider">
+        <span>Capacitor C2</span>
+        <span class="control-value">{{ formatNumber(capacitance2(), 1) }} &micro;F</span>
+      </label>
+      <input id="cap2Slider"
+             type="range"
+             class="slider slider-cap"
+             [min]="CAP_MIN"
+             [max]="CAP_MAX"
+             step="1"
+             [ngModel]="capacitance2()"
+             (ngModelChange)="onCapacitance2Change($event)" />
+    </div>
+
+    <div class="control-row">
+      <label class="control-label" for="cap3Slider">
+        <span>Capacitor C3</span>
+        <span class="control-value">{{ formatNumber(capacitance3(), 1) }} &micro;F</span>
+      </label>
+      <input id="cap3Slider"
+             type="range"
+             class="slider slider-cap"
+             [min]="CAP_MIN"
+             [max]="CAP_MAX"
+             step="1"
+             [ngModel]="capacitance3()"
+             (ngModelChange)="onCapacitance3Change($event)" />
+    </div>
+
+    <button type="button"
+            class="discharge-btn"
+            [disabled]="!canDischarge()"
+            (click)="discharge()">
+      <svg viewBox="0 0 20 20" class="discharge-icon" aria-hidden="true">
+        <path d="M10 2 L10 12 M5 8 L10 13 L15 8 M4 17 H16" />
+      </svg>
+      Discharge
+    </button>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- CHARGE / DISCHARGE PROGRESS                                    -->
+  <!-- ============================================================ -->
+  <section class="progress-panel">
+    <div class="progress-header">
+      <strong>Charge state</strong>
+      <span class="status-pill" [attr.data-state]="chargeState()">{{ statusLabel() }}</span>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill"
+           [class.discharging]="chargeState() === 'discharging'"
+           [style.width.%]="chargePercent()"></div>
+    </div>
+
+    <div class="progress-footer">
+      <span>{{ chargeState() === 'discharging' ? 'Discharging' : 'Charging' }}: {{ formatNumber(chargePercent(), 0) }}%</span>
+      <span class="progress-hint" *ngIf="isFullyCharged()">Fully Charged</span>
+      <span class="progress-hint" *ngIf="isFullyDischarged() && chargeState() !== 'idle'">Fully Discharged</span>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- INFORMATION PANEL                                              -->
+  <!-- ============================================================ -->
+  <section class="info-panel">
+    <div class="info-row" *ngFor="let row of infoRows()">
+      <span class="info-label">{{ row.label }}</span>
+      <span class="info-formula">{{ row.formula }}</span>
+      <span class="info-value" [attr.data-accent]="row.accent">{{ row.value }}</span>
+    </div>
+  </section>
+
+</div>

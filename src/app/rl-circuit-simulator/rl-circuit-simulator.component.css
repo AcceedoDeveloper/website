@@ -1,0 +1,589 @@
+/* ==================================================================
+   Series Inductors in an RL Circuit — Simulator styles
+   Dark navy circuit board, orange/yellow glow, blue sliders, white text.
+   ================================================================== */
+
+:host {
+  --navy-bg: #0e1a2b;
+  --navy-bg-2: #101f33;
+  --panel-bg: #ffffff;
+  --panel-border: #e7e9ee;
+  --text-dark: #1c2230;
+  --text-muted: #6b7480;
+  --orange: #f5a623;
+  --orange-bright: #ffb938;
+  --orange-glow: rgba(245, 166, 35, 0.55);
+  --wire-color: #aab4c2;
+  --green: #1fae6e;
+  --green-bright: #27c47e;
+  --red: #d6455a;
+  --blue: #2e6fe0;
+  --teal: #0fb39a;
+
+  display: block;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-dark);
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.simulator-root {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 14px;
+}
+
+/* ------------------------------------------------------------ */
+/* Title */
+/* ------------------------------------------------------------ */
+.sim-title {
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 4px 0 0 0;
+}
+
+/* ------------------------------------------------------------ */
+/* Circuit board */
+/* ------------------------------------------------------------ */
+.circuit-board {
+  position: relative;
+  background: radial-gradient(120% 140% at 50% 0%, var(--navy-bg-2) 0%, var(--navy-bg) 65%);
+  border-radius: 14px;
+  padding: 14px;
+  height: 280px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.circuit-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.grid-dot {
+  fill: rgba(255, 255, 255, 0.05);
+}
+
+.wire-path {
+  stroke: var(--wire-color);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: url(#wireGlow);
+  opacity: 0.9;
+}
+
+.junction-dot {
+  fill: var(--orange-bright);
+  r: 3;
+  filter: drop-shadow(0 0 3px var(--orange-glow));
+}
+
+.current-particle {
+  fill: #ffd766;
+  filter: drop-shadow(0 0 4px #ffcf4d) drop-shadow(0 0 8px rgba(255, 200, 60, 0.6));
+  transition: opacity 0.4s ease;
+  offset-rotate: 0deg;
+}
+
+.current-particle.particle-dim {
+  opacity: 0.08;
+}
+
+/* ------------------------------------------------------------ */
+/* DC Source */
+/* ------------------------------------------------------------ */
+.dc-source {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #142539;
+  border: 1.5px solid var(--orange);
+  border-radius: 10px;
+  padding: 8px 22px;
+  text-align: center;
+  box-shadow: 0 0 16px rgba(245, 166, 35, 0.25);
+  min-width: 130px;
+}
+
+.dc-source-value {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--orange-bright);
+  letter-spacing: 0.5px;
+}
+
+.dc-source-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #c9cfd9;
+  margin-top: 1px;
+}
+
+/* ------------------------------------------------------------ */
+/* Power switch (in-circuit toggle) */
+/* ------------------------------------------------------------ */
+.power-switch {
+  position: absolute;
+  top: 26%;
+  left: 6%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #142539;
+  border: 1.5px solid #2a3d54;
+  border-radius: 10px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.power-switch.switch-on {
+  border-color: var(--green-bright);
+  box-shadow: 0 0 14px rgba(39, 196, 126, 0.35);
+}
+
+.switch-track {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border-radius: 10px;
+  background: #3a4658;
+  transition: background 0.25s ease;
+  display: inline-block;
+}
+
+.power-switch.switch-on .switch-track {
+  background: var(--green-bright);
+}
+
+.switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.25s ease;
+}
+
+.power-switch.switch-on .switch-knob {
+  left: 18px;
+}
+
+.switch-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #cfd5de;
+}
+
+.power-switch.switch-on .switch-text {
+  color: #fff;
+}
+
+/* ------------------------------------------------------------ */
+/* Bulb */
+/* ------------------------------------------------------------ */
+.bulb-wrap {
+  position: absolute;
+  top: 14%;
+  right: 7%;
+  width: 76px;
+  text-align: center;
+}
+
+.bulb-glow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffe08a 0%, rgba(255, 215, 102, 0.4) 40%, rgba(255, 215, 102, 0) 72%);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.bulb-svg {
+  width: 70px;
+  height: 90px;
+  position: relative;
+  z-index: 1;
+}
+
+.bulb-wire {
+  stroke: #8a93a3;
+  stroke-width: 2;
+}
+
+.bulb-glass {
+  fill: #6b6440;
+  transition: fill 0.4s ease;
+}
+
+.bulb-outline {
+  stroke: #d9dde3;
+  stroke-width: 1.6;
+}
+
+.bulb-base {
+  fill: #aeb6c2;
+}
+
+.bulb-base-line {
+  stroke: #aeb6c2;
+  stroke-width: 1.4;
+}
+
+.shared-load-label {
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+  white-space: nowrap;
+  margin-top: -4px;
+}
+
+/* ------------------------------------------------------------ */
+/* Inductor boxes */
+/* ------------------------------------------------------------ */
+.inductor-box {
+  position: absolute;
+  bottom: 6%;
+  width: 27%;
+  background: #142539;
+  border: 1.5px solid var(--orange);
+  border-radius: 10px;
+  padding: 8px 6px 7px;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.inductor-l1 { left: 4%; }
+.inductor-l2 { left: 36.5%; }
+.inductor-l3 { left: 69%; }
+
+.inductor-box.coil-active {
+  box-shadow: 0 0 0 5px rgba(31, 174, 110, 0.12), 0 0 14px rgba(31, 174, 110, 0.25);
+}
+
+.inductor-box.coil-active::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(39, 196, 126, 0.55);
+  pointer-events: none;
+}
+
+.coil-svg {
+  width: 100%;
+  height: 22px;
+}
+
+.coil-path {
+  stroke: var(--orange-bright);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.inductor-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--orange-bright);
+  margin-top: 2px;
+}
+
+.inductor-value {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------ */
+/* Info card + power button */
+/* ------------------------------------------------------------ */
+.info-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #eef3fb;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.info-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.info-subtitle {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.power-button {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 22px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.1s ease;
+}
+
+.power-button:active {
+  transform: scale(0.97);
+}
+
+.power-button-on {
+  background: linear-gradient(180deg, #2bd17e, #1fae6e);
+  box-shadow: 0 4px 14px rgba(31, 174, 110, 0.45);
+}
+
+.power-button-off {
+  background: linear-gradient(180deg, #e2536a, #d6455a);
+  box-shadow: 0 4px 14px rgba(214, 69, 90, 0.45);
+}
+
+/* ------------------------------------------------------------ */
+/* Sliders */
+/* ------------------------------------------------------------ */
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 18px;
+}
+
+.control-item.full-width {
+  grid-column: 1 / -1;
+  max-width: calc(50% - 9px);
+}
+
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.control-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.control-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: #d7deea;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 1px 4px rgba(46, 111, 224, 0.5);
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 1px 4px rgba(46, 111, 224, 0.5);
+  border: none;
+}
+
+.slider::-moz-range-track {
+  height: 4px;
+  border-radius: 4px;
+  background: #d7deea;
+}
+
+/* ------------------------------------------------------------ */
+/* Energy progress card */
+/* ------------------------------------------------------------ */
+.energy-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.05);
+}
+
+.energy-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.energy-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.energy-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 14px;
+  background: #e4e8f0;
+  color: #4c5667;
+  white-space: nowrap;
+}
+
+.energy-badge.badge-charging {
+  background: #fff1d6;
+  color: #b9740f;
+}
+
+.energy-badge.badge-steady {
+  background: #e4e8f0;
+  color: #4c5667;
+}
+
+.energy-badge.badge-discharging {
+  background: #fde7ea;
+  color: #c43a52;
+}
+
+.energy-track {
+  position: relative;
+  height: 7px;
+  border-radius: 6px;
+  background: #e7eaf0;
+  margin: 10px 0 8px;
+  overflow: hidden;
+}
+
+.energy-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--green-bright) 0%, #ffd54a 55%, var(--orange) 100%);
+  transition: width 0.2s linear;
+}
+
+.energy-footer {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.energy-footer span:not(.energy-note) {
+  margin-right: 14px;
+}
+
+.energy-note {
+  flex-basis: 100%;
+}
+
+/* ------------------------------------------------------------ */
+/* Results panel */
+/* ------------------------------------------------------------ */
+.results-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 92px 1fr auto;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+.result-label {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.result-formula {
+  color: #8a93a3;
+  font-size: 11.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-value {
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.result-blue { color: var(--blue); }
+.result-teal { color: var(--teal); }
+.result-green { color: var(--green); }
+.result-red { color: var(--red); }
+
+.result-divider {
+  height: 1px;
+  background: var(--panel-border);
+  margin: 4px 0;
+}
+
+/* ------------------------------------------------------------ */
+/* Responsive */
+/* ------------------------------------------------------------ */
+@media (max-width: 420px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-item.full-width {
+    max-width: 100%;
+  }
+
+  .result-row {
+    grid-template-columns: 80px 1fr auto;
+    font-size: 11px;
+  }
+}

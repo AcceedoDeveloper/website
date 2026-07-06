@@ -1,0 +1,141 @@
+.simulator-container{
+  padding:20px;
+}
+
+.equation-box{
+  text-align:center;
+  font-size:28px;
+  font-weight:700;
+  margin-bottom:20px;
+  color:#2563eb;
+}
+
+.slider-group{
+  margin-bottom:20px;
+}
+
+.slider-label{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+  font-weight:600;
+}
+
+input[type="range"]{
+  width:100%;
+}
+
+svg{
+  background:#fafafa;
+  border:1px solid #eee;
+  border-radius:12px;
+}
+
+.wire{
+  fill:none;
+  stroke:#7f8c8d;
+  stroke-width:6;
+}
+
+.battery{
+  fill:#2c3e50;
+}
+
+.battery-text{
+  fill:white;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.resistor-back{
+  fill:#f39c12;
+  stroke:#d35400;
+  stroke-width:2;
+}
+
+.resistor-band{
+  fill:#333;
+}
+/* Moving Electrons */
+
+.electron {
+  fill: #3498db;
+  stroke: #2980b9;
+  stroke-width: 1;
+}
+
+/* Smooth SVG */
+
+svg {
+  overflow: visible;
+}
+
+/* Resistor Animation */
+
+.resistor-back {
+  fill: #f39c12;
+  stroke: #d35400;
+  stroke-width: 2;
+}
+
+/* Formula */
+
+.equation-box {
+  background: #eff6ff;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 20px;
+}
+
+/* Sliders */
+
+input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* SVG Circuit */
+
+svg {
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.wire {
+  fill: none;
+  stroke: #7f8c8d;
+  stroke-width: 6;
+}
+
+.battery {
+  fill: #2c3e50;
+}
+
+.battery-text {
+  fill: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.resistor-band {
+  fill: #333;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+  .equation-box {
+    font-size: 20px;
+  }
+
+  svg {
+    height: 220px;
+  }
+
+}

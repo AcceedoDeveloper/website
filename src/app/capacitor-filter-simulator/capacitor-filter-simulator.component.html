@@ -1,0 +1,218 @@
+<!--
+  Interactive Capacitor Filter Circuit Simulator
+  Structure mirrors the reference recording exactly:
+    1. Title card
+    2. Circuit diagram (battery - wires - capacitor - bulb load)
+    3. DC Power Switch control
+    4. Capacitor Charge (Q) progress readout
+    5. Monospace circuit-state / calculation info panel
+-->
+<div class="simulator-card">
+
+  <!-- ============== HEADER ============== -->
+  <header class="simulator-header">
+    <h1 class="simulator-title">Interactive Capacitor Filter Circuit</h1>
+  </header>
+
+  <!-- ============== CIRCUIT DIAGRAM ============== -->
+  <section class="circuit-stage" aria-label="Capacitor filter circuit diagram">
+
+    <svg
+      class="circuit-svg"
+      viewBox="0 0 640 270"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Battery connected through wires to a capacitor and bulb load"
+    >
+      <!-- ===== Wire loop (rectangle) ===== -->
+      <!-- Top wire -->
+      <line x1="95" y1="40" x2="545" y2="40" class="wire-line" />
+      <!-- Bottom wire -->
+      <line x1="95" y1="230" x2="545" y2="230" class="wire-line" />
+      <!-- Left wire (battery to top/bottom rail) -->
+      <line x1="95" y1="40" x2="95" y2="230" class="wire-line" />
+      <!-- Right wire (bulb to top/bottom rail) -->
+      <line x1="545" y1="40" x2="545" y2="230" class="wire-line" />
+      <!-- Capacitor branch stubs (rail down to the plates) -->
+      <line x1="300" y1="40" x2="300" y2="95" class="wire-line" />
+      <line x1="300" y1="175" x2="300" y2="230" class="wire-line" />
+      <line x1="340" y1="40" x2="340" y2="95" class="wire-line" />
+      <line x1="340" y1="175" x2="340" y2="230" class="wire-line" />
+
+      <!-- ===== Battery-side current indicator dots (yellow) ===== -->
+      <circle
+        class="flow-dot flow-dot--battery"
+        r="6"
+        [class.flow-dot--active]="isBatterySideFlowing"
+        [attr.cx]="batteryDotTop.x" [attr.cy]="batteryDotTop.y"
+      ></circle>
+      <circle
+        class="flow-dot flow-dot--battery"
+        r="6"
+        [class.flow-dot--active]="isBatterySideFlowing"
+        [attr.cx]="batteryDotBottom.x" [attr.cy]="batteryDotBottom.y"
+      ></circle>
+
+      <!-- ===== Load-side current indicator dots (blue) ===== -->
+      <circle
+        class="flow-dot flow-dot--load"
+        r="6"
+        [class.flow-dot--active]="isLoadSideFlowing"
+        [attr.cx]="loadDotTop.x" [attr.cy]="loadDotTop.y"
+      ></circle>
+      <circle
+        class="flow-dot flow-dot--load"
+        r="6"
+        [class.flow-dot--active]="isLoadSideFlowing"
+        [attr.cx]="loadDotBottom.x" [attr.cy]="loadDotBottom.y"
+      ></circle>
+
+      <!-- ===== Capacitor plates ===== -->
+      <g class="capacitor-group">
+        <rect
+          class="capacitor-plate capacitor-plate--positive"
+          x="292" y="95" width="10" height="80" rx="3"
+          [style.filter]="'drop-shadow(0 0 ' + (4 + capacitorGlow * 14) + 'px rgba(56, 222, 255,' + (0.4 + capacitorGlow * 0.6) + '))'"
+        ></rect>
+        <rect
+          class="capacitor-plate capacitor-plate--negative"
+          x="338" y="95" width="10" height="80" rx="3"
+          [style.filter]="'drop-shadow(0 0 ' + (4 + capacitorGlow * 14) + 'px rgba(255, 32, 110,' + (0.4 + capacitorGlow * 0.6) + '))'"
+        ></rect>
+
+        <!-- polarity marks -->
+        <text x="297" y="90" class="plate-symbol">+</text>
+        <text x="343" y="90" class="plate-symbol">&minus;</text>
+      </g>
+
+      <text x="320" y="252" text-anchor="middle" class="component-caption">CAPACITOR</text>
+
+      <!-- ===== Battery component ===== -->
+      <g class="component-group">
+        <rect
+          class="component-box"
+          [class.component-box--off]="!isPowerOn"
+          x="20" y="95" width="135" height="80" rx="10"
+        ></rect>
+        <text x="87" y="132" text-anchor="middle" class="component-value" [class.component-value--off]="!isPowerOn">
+          {{ isPowerOn ? (readings.sourceVoltage | number:'1.1-1') + 'V' : '' }}
+        </text>
+        <text x="87" y="155" text-anchor="middle" class="component-label" [class.component-label--off]="!isPowerOn">
+          {{ isPowerOn ? 'BATTERY' : 'OPEN WIRE' }}
+        </text>
+      </g>
+
+      <!-- ===== Bulb / load component ===== -->
+      <g class="component-group">
+        <rect class="component-box" x="485" y="95" width="135" height="80" rx="10"></rect>
+
+        <!-- bulb glyph -->
+        <g [style.filter]="'drop-shadow(0 0 ' + (2 + bulbBrightness * 10) + 'px rgba(255, 214, 64,' + (0.3 + bulbBrightness * 0.7) + '))'">
+          <circle cx="552" cy="122" r="9" class="bulb-glyph" [class.bulb-glyph--lit]="bulbBrightness > 0.05"
+            [style.opacity]="0.35 + bulbBrightness * 0.65"></circle>
+          <line x1="552" y1="131" x2="552" y2="136" class="bulb-filament" />
+        </g>
+
+        <text x="552" y="155" text-anchor="middle" class="component-label">BULB LOAD</text>
+      </g>
+    </svg>
+  </section>
+
+  <!-- ============== CONTROLS: POWER SWITCH ============== -->
+  <section class="control-row">
+    <span class="control-label">DC Power Switch:</span>
+
+    <div class="power-control">
+      <span
+        class="power-status"
+        [class.power-status--on]="isPowerOn"
+        [class.power-status--off]="!isPowerOn"
+      >
+        {{ isPowerOn ? 'Battery Connected (ON)' : 'Battery Disconnected (OFF)' }}
+      </span>
+
+      <button
+        type="button"
+        class="power-toggle"
+        [class.power-toggle--on]="isPowerOn"
+        [attr.aria-pressed]="isPowerOn"
+        aria-label="Toggle DC power switch"
+        (click)="togglePower()"
+      >
+        <span class="power-toggle__knob"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============== CONTROLS: CHARGE PROGRESS ============== -->
+  <section class="control-row control-row--stacked">
+    <span class="control-label">Capacitor Charge (Q)</span>
+
+    <div class="progress-row">
+      <div
+        class="progress-track"
+        role="progressbar"
+        [attr.aria-valuenow]="chargePercentRounded"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      >
+        <div class="progress-fill" [style.width.%]="readings.chargePercent"></div>
+      </div>
+      <span class="progress-value">{{ chargePercentRounded }}%</span>
+    </div>
+  </section>
+
+  <!-- ============== ACTIONS: RESET ============== -->
+  <section class="control-row control-row--actions">
+    <button type="button" class="reset-button" (click)="reset()">
+      &#8634; Reset Simulation
+    </button>
+  </section>
+
+  <!-- ============== INFO / CALCULATION PANEL ============== -->
+  <section class="info-panel">
+    <div class="info-row">
+      <span class="info-key">Circuit Operating State</span>
+      <span class="info-detail">{{ circuitStateDescription }}</span>
+      <span
+        class="info-value info-value--state"
+        [class.info-value--charging]="circuitState === 'CHARGING'"
+        [class.info-value--discharging]="circuitState === 'DISCHARGING'"
+        [class.info-value--steady]="circuitState === 'STEADY'"
+      >{{ circuitState }}</span>
+    </div>
+
+    <div class="info-row">
+      <span class="info-key">Stored Charge Quantity (Q)</span>
+      <span class="info-detail">Q = C * Vc</span>
+      <span class="info-value info-value--cyan">{{ readings.chargeMicroCoulombs | number:'1.2-2' }} &micro;C</span>
+    </div>
+
+    <hr class="info-divider" />
+
+    <div class="info-row">
+      <span class="info-key">Total Bulb Load Current (I)</span>
+      <span class="info-detail">Current delivered from battery source</span>
+      <span class="info-value info-value--green">{{ readings.loadCurrent | number:'1.2-2' }} A</span>
+    </div>
+
+    <div class="info-row">
+      <span class="info-key">Capacitor Voltage (Vc)</span>
+      <span class="info-detail">Voltage across the plates</span>
+      <span class="info-value info-value--cyan">{{ readings.capacitorVoltage | number:'1.2-2' }} V</span>
+    </div>
+
+    <div class="info-row">
+      <span class="info-key">Load Resistance (R)</span>
+      <span class="info-detail">I = V / R (Ohm's Law)</span>
+      <span class="info-value">{{ readings.resistance | number:'1.0-0' }} &#8486;</span>
+    </div>
+
+    <div class="info-row">
+      <span class="info-key">Load Power (P)</span>
+      <span class="info-detail">P = V * I</span>
+      <span class="info-value info-value--green">{{ readings.power | number:'1.2-2' }} W</span>
+    </div>
+  </section>
+
+</div>

@@ -1,0 +1,292 @@
+/* ===========================================================
+   Interactive Series Circuit Simulator
+   =========================================================== */
+
+:host {
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+}
+
+.sim-card * {
+  font-family: inherit;
+}
+
+.sim-card {
+  max-width: 560px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(20, 30, 50, 0.08);
+  padding: 28px 32px 32px;
+  box-sizing: border-box;
+}
+
+.sim-title {
+  margin: 0 0 18px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1f2d3d;
+  letter-spacing: 0.2px;
+}
+
+.sim-title-divider {
+  height: 1px;
+  background: #e7eaf0;
+  margin: 0 0 22px;
+}
+
+/* ============== CIRCUIT DIAGRAM ============== */
+
+.circuit-box {
+  background: #182230;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 28px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.circuit-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.wire {
+  fill: none;
+  stroke: #5b6b7d;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.node-dot {
+  fill: #f0b429;
+}
+
+.flow-dot {
+  fill: #f3c742;
+  filter: drop-shadow(0 0 3px rgba(243, 199, 66, 0.85));
+}
+
+.source-box {
+  fill: #233244;
+  stroke: #f0c419;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 6px rgba(240, 196, 25, 0.45));
+}
+
+.source-voltage {
+  fill: #f7d046;
+  font-size: 22px;
+  font-weight: 800;
+  font-family: inherit;
+}
+
+.source-label {
+  fill: #8fa1b3;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
+.resistor-box {
+  fill: #233244;
+  stroke: #e0703a;
+  stroke-width: 2;
+}
+
+.resistor-name {
+  fill: #e98a52;
+  font-size: 17px;
+  font-weight: 800;
+  font-family: inherit;
+}
+
+.resistor-value {
+  fill: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+/* ============== SLIDER CONTROLS ============== */
+
+.control-group {
+  margin-bottom: 22px;
+}
+
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+  font-size: 0.92rem;
+}
+
+.control-label {
+  color: #2d4a63;
+  font-weight: 500;
+}
+
+.control-var {
+  color: #4a90d9;
+  font-family: 'Courier New', monospace;
+  font-weight: 500;
+}
+
+.control-value {
+  font-family: 'Courier New', monospace;
+  color: #1f2d3d;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.value-blue {
+  color: #2f80d6;
+}
+
+.value-green {
+  color: #2fa84f;
+}
+
+.value-red {
+  color: #d6494f;
+}
+
+/* Range slider look & feel, matched across browsers */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: #e3e7ed;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4a9ce0;
+  box-shadow: 0 2px 5px rgba(40, 100, 160, 0.35);
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.08);
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4a9ce0;
+  box-shadow: 0 2px 5px rgba(40, 100, 160, 0.35);
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.08);
+}
+
+.slider::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: #e3e7ed;
+}
+
+/* ============== RESULTS PANEL ============== */
+
+.results-panel {
+  background: #f4f6fa;
+  border: 1px solid #e7eaf0;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-top: 8px;
+}
+
+.result-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  padding: 5px 0;
+  color: #38506b;
+}
+
+.result-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: #38506b;
+}
+
+.result-formula {
+  flex: 1;
+  text-align: left;
+  padding-left: 16px;
+  color: #5b7088;
+}
+
+.result-value {
+  flex: 0 0 auto;
+  font-weight: 700;
+  min-width: 60px;
+  text-align: right;
+}
+
+.results-divider {
+  height: 1px;
+  background: #dfe3ea;
+  margin: 10px 0;
+}
+
+/* ============== RESPONSIVE ============== */
+
+@media (max-width: 480px) {
+  .sim-card {
+    padding: 20px 18px 26px;
+    border-radius: 14px;
+  }
+
+  .result-row {
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+  }
+
+  .result-formula {
+    padding-left: 0;
+    flex-basis: 100%;
+    order: 3;
+  }
+}
+
+/* ============== ACCESSIBILITY ============== */
+
+.slider:focus-visible {
+  box-shadow: 0 0 0 3px rgba(74, 156, 224, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-dot {
+    display: none;
+  }
+}

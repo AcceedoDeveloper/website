@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-resistor',
@@ -6,6 +6,28 @@ import { Component } from '@angular/core';
   styleUrl: './resistor.component.css'
 })
 export class ResistorComponent {
+
+  selectedTopic: string = 'resistor';
+
+  @ViewChild('animationCard') animationCard!: ElementRef<HTMLElement>;
+  @ViewChild('contentArea') contentArea!: ElementRef<HTMLElement>;
+
+  changeTopic(topic: string): void {
+    this.selectedTopic = topic;
+
+    // Wait for *ngIf to render the new content, then scroll both
+    // panels back to their own top (not the whole window).
+    setTimeout(() => {
+      this.animationCard?.nativeElement.scrollIntoView({
+        behavior: 'auto',
+        block: 'start'
+      });
+      this.contentArea?.nativeElement.scrollIntoView({
+        behavior: 'auto',
+        block: 'start'
+      });
+    });
+  }
 
   todayDate: string = '';
 

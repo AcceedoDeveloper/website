@@ -1,0 +1,185 @@
+<div class="sim-card">
+
+  <h1 class="sim-title">Parallel Branch Connection</h1>
+  <div class="sim-title-divider"></div>
+
+  <!-- ============== CIRCUIT DIAGRAM ============== -->
+  <div class="circuit-box">
+    <svg class="circuit-svg" viewBox="0 0 520 220" preserveAspectRatio="xMidYMid meet">
+
+      <!-- Left bus (vertical): bottom rail up to top rail -->
+      <polyline class="wire" points="140,190 140,30" />
+      <!-- Source stub connecting source box to left bus -->
+      <polyline class="wire" points="120,110 140,110" />
+      <!-- Top rail: left bus across to R1 -->
+      <polyline class="wire" points="140,30 320,30" />
+      <!-- Mid bus (vertical): drops from top rail, feeds R2 and R3 -->
+      <polyline class="wire" points="270,30 270,190" />
+      <!-- Branch stub into R2 -->
+      <polyline class="wire" points="270,90 320,90" />
+      <!-- Branch stub into R3 -->
+      <polyline class="wire" points="270,150 320,150" />
+      <!-- Right bus (vertical): collects R1/R2/R3 outputs -->
+      <polyline class="wire" points="460,30 460,190" />
+      <!-- Output stubs from each resistor into the right bus -->
+      <polyline class="wire" points="420,30 460,30" />
+      <polyline class="wire" points="420,90 460,90" />
+      <polyline class="wire" points="420,150 460,150" />
+      <!-- Bottom rail: right bus back to left bus -->
+      <polyline class="wire" points="460,190 140,190" />
+
+      <!-- Junction dots along the bottom rail -->
+      <circle class="node-dot" cx="140" cy="190" r="4"></circle>
+      <circle class="node-dot" cx="270" cy="190" r="4"></circle>
+      <circle class="node-dot" cx="320" cy="190" r="4"></circle>
+
+      <!-- Animated current-flow dots, one independent set per branch -->
+      <circle
+        *ngFor="let d of dotsTop"
+        class="flow-dot"
+        [attr.cx]="getTopDotPoint(d).x"
+        [attr.cy]="getTopDotPoint(d).y"
+        r="5"
+      ></circle>
+      <circle
+        *ngFor="let d of dotsMid"
+        class="flow-dot"
+        [attr.cx]="getMidDotPoint(d).x"
+        [attr.cy]="getMidDotPoint(d).y"
+        r="5"
+      ></circle>
+      <circle
+        *ngFor="let d of dotsBot"
+        class="flow-dot"
+        [attr.cx]="getBotDotPoint(d).x"
+        [attr.cy]="getBotDotPoint(d).y"
+        r="5"
+      ></circle>
+
+      <!-- Source box -->
+      <g>
+        <rect class="source-box" x="10" y="80" width="110" height="60" rx="8"></rect>
+        <text class="source-voltage" x="65" y="108" text-anchor="middle">{{ fmt1(vSource) }}V</text>
+        <text class="source-label" x="65" y="124" text-anchor="middle">PARALLEL DC</text>
+        <text class="source-label" x="65" y="134" text-anchor="middle">SOURCE</text>
+      </g>
+
+      <!-- Resistor boxes -->
+      <g>
+        <rect class="resistor-box" x="320" y="5" width="100" height="50" rx="8"></rect>
+        <text class="resistor-name" x="370" y="26" text-anchor="middle">R<tspan baseline-shift="sub" font-size="9">1</tspan> (Top)</text>
+        <text class="resistor-value" x="370" y="42" text-anchor="middle">{{ fmt1(r1) }}Ω</text>
+      </g>
+
+      <g>
+        <rect class="resistor-box" x="320" y="65" width="100" height="50" rx="8"></rect>
+        <text class="resistor-name" x="370" y="86" text-anchor="middle">R<tspan baseline-shift="sub" font-size="9">2</tspan> (Mid)</text>
+        <text class="resistor-value" x="370" y="102" text-anchor="middle">{{ fmt1(r2) }}Ω</text>
+      </g>
+
+      <g>
+        <rect class="resistor-box" x="320" y="125" width="100" height="50" rx="8"></rect>
+        <text class="resistor-name" x="370" y="146" text-anchor="middle">R<tspan baseline-shift="sub" font-size="9">3</tspan> (Bot)</text>
+        <text class="resistor-value" x="370" y="162" text-anchor="middle">{{ fmt1(r3) }}Ω</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ============== SLIDERS ============== -->
+  <div class="control-group">
+    <div class="control-row">
+      <label for="vSourceRange" class="control-label">Source Voltage (V)</label>
+      <span class="control-value value-blue">{{ fmt1(vSource) }} V</span>
+    </div>
+    <input
+      id="vSourceRange"
+      type="range"
+      class="slider"
+      [min]="vMin"
+      [max]="vMax"
+      [step]="vStep"
+      [(ngModel)]="vSource"
+    />
+  </div>
+
+  <div class="control-group">
+    <div class="control-row">
+      <label for="r1Range" class="control-label">Resistor 1 (R<sub>1</sub>)</label>
+      <span class="control-value">{{ fmt1(r1) }} Ω</span>
+    </div>
+    <input
+      id="r1Range"
+      type="range"
+      class="slider"
+      [min]="rMin"
+      [max]="rMax"
+      [step]="rStep"
+      [(ngModel)]="r1"
+    />
+  </div>
+
+  <div class="control-group">
+    <div class="control-row">
+      <label for="r2Range" class="control-label">Resistor 2 (R<sub>2</sub>)</label>
+      <span class="control-value">{{ fmt1(r2) }} Ω</span>
+    </div>
+    <input
+      id="r2Range"
+      type="range"
+      class="slider"
+      [min]="rMin"
+      [max]="rMax"
+      [step]="rStep"
+      [(ngModel)]="r2"
+    />
+  </div>
+
+  <div class="control-group">
+    <div class="control-row">
+      <label for="r3Range" class="control-label">Resistor 3 (R<sub>3</sub>)</label>
+      <span class="control-value">{{ fmt1(r3) }} Ω</span>
+    </div>
+    <input
+      id="r3Range"
+      type="range"
+      class="slider"
+      [min]="rMin"
+      [max]="rMax"
+      [step]="rStep"
+      [(ngModel)]="r3"
+    />
+  </div>
+
+  <!-- ============== RESULTS TABLE ============== -->
+  <div class="results-panel">
+    <div class="result-row">
+      <span class="result-label">Total R_tot Recip.</span>
+      <span class="result-formula">1/{{ fmt1(r1) }} + 1/{{ fmt1(r2) }} + 1/{{ fmt1(r3) }}</span>
+      <span class="result-value value-blue">{{ fmt2(totalResistance) }} Ω</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Total Current (I_tot)</span>
+      <span class="result-formula">{{ fmt1(vSource) }}V / {{ fmt2(totalResistance) }}Ω</span>
+      <span class="result-value value-green">{{ fmt2(totalCurrent) }} A</span>
+    </div>
+
+    <div class="results-divider"></div>
+
+    <div class="result-row">
+      <span class="result-label">Branch Current I<sub>1</sub></span>
+      <span class="result-formula">{{ fmt1(vSource) }}V / {{ fmt1(r1) }}Ω</span>
+      <span class="result-value value-red">{{ fmt2(branchCurrent1) }} A</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Branch Current I<sub>2</sub></span>
+      <span class="result-formula">{{ fmt1(vSource) }}V / {{ fmt1(r2) }}Ω</span>
+      <span class="result-value value-red">{{ fmt2(branchCurrent2) }} A</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Branch Current I<sub>3</sub></span>
+      <span class="result-formula">{{ fmt1(vSource) }}V / {{ fmt1(r3) }}Ω</span>
+      <span class="result-value value-red">{{ fmt2(branchCurrent3) }} A</span>
+    </div>
+  </div>
+
+</div>

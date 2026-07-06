@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OhmsLawSimulatorComponent } from './ohms-law-simulator/ohms-law-simulator.component';
 
 // Angular Material Modules
 import { MatIconModule } from '@angular/material/icon';
@@ -108,6 +109,16 @@ import { TimelineComponent } from './projects/timeline/timeline.component';
 import { PermissionComponent } from './permission/permission.component';
 import { AddEditPermissionDialogComponent } from './permission/add-edit-permission-dialog/add-edit-permission-dialog.component';
 import { ResistorComponent } from './resistor/resistor.component';
+import { ResistanceSimulatorComponent } from './resistance-simulator/resistance-simulator.component';
+import { SeriesLoopSimulatorComponent } from './series-loop-simulator/series-loop-simulator.component';
+import { ParallelBranchSimulatorComponent } from './parallel-branch-simulator/parallel-branch-simulator.component';
+import { DiodeBiasSimulatorComponent } from './diode-bias-simulator/diode-bias-simulator.component';
+import { CapacitorFilterSimulatorComponent } from './capacitor-filter-simulator/capacitor-filter-simulator.component';
+import { SeriesCapacitorSimulatorComponent } from './series-capacitor-simulator/series-capacitor-simulator.component';
+import { ParallelCapacitorRcSimulatorComponent } from './parallel-capacitor-rc-simulator/parallel-capacitor-rc-simulator.component';
+import { RlCircuitSimulatorComponent } from './rl-circuit-simulator/rl-circuit-simulator.component';
+import { ParallelInductorComponent } from './parallel-inductor/parallel-inductor.component';
+
 
 
 
@@ -187,6 +198,17 @@ export function loadConfigFactory(configService: ConfigService) {
    PermissionComponent,
    AddEditPermissionDialogComponent,
    ResistorComponent,
+   OhmsLawSimulatorComponent,
+   RlCircuitSimulatorComponent,
+   ParallelInductorComponent,
+   DiodeBiasSimulatorComponent,
+   
+   
+   
+   
+   
+   
+   
    
   ],
 
@@ -221,7 +243,13 @@ export function loadConfigFactory(configService: ConfigService) {
     MatDatepickerModule,
     MatNativeDateModule,
     PdfViewerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ResistanceSimulatorComponent,
+    SeriesLoopSimulatorComponent,
+    ParallelBranchSimulatorComponent,
+    CapacitorFilterSimulatorComponent,
+    SeriesCapacitorSimulatorComponent,
+    ParallelCapacitorRcSimulatorComponent,
   ],
   providers: [
     provideAnimationsAsync(),

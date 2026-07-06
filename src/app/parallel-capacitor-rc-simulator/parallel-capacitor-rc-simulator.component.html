@@ -1,0 +1,310 @@
+<div class="sim-root">
+
+  <h1 class="sim-title">Parallel Capacitors on a Shared RC Path</h1>
+
+  <!-- ===================== CIRCUIT BOARD PANEL ===================== -->
+  <section class="circuit-panel">
+    <svg
+      class="circuit-svg"
+      viewBox="0 0 400 300"
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true">
+
+      <defs>
+        <pattern id="pcbGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle cx="1" cy="1" r="1" class="grid-dot" />
+        </pattern>
+      </defs>
+
+      <rect x="0" y="0" width="400" height="300" fill="url(#pcbGrid)" />
+
+      <!-- ===== Wires (trunk + 3 parallel branches + 3 load legs) ===== -->
+      <g class="wire-layer" [class.wire-energized]="powerOn">
+        <!-- main vertical trunk, rising from the DC source's right edge -->
+        <path id="wire-main" d="M 70 90 L 70 210" class="wire-trace" />
+        <!-- horizontal feed to the branch column -->
+        <path d="M 70 90 L 150 90" class="wire-trace" />
+        <path d="M 70 150 L 150 150" class="wire-trace" />
+        <path d="M 70 210 L 150 210" class="wire-trace" />
+
+        <!-- capacitor branch stubs (source side, used only as particle travel paths) -->
+        <path id="wire-branch-1" d="M 70 90 L 150 90" class="wire-path-invisible" />
+        <path id="wire-branch-2" d="M 70 150 L 150 150" class="wire-path-invisible" />
+        <path id="wire-branch-3" d="M 70 210 L 150 210" class="wire-path-invisible" />
+
+        <!-- load legs from each capacitor to its bulb -->
+        <path id="wire-load-1" d="M 250 90 L 320 90" class="wire-trace" />
+        <path id="wire-load-2" d="M 250 150 L 320 150" class="wire-trace" />
+        <path id="wire-load-3" d="M 250 210 L 320 210" class="wire-trace" />
+
+        <!-- junction dots -->
+        <circle cx="70" cy="90" r="3" class="wire-junction" />
+        <circle cx="70" cy="150" r="3" class="wire-junction" />
+        <circle cx="70" cy="210" r="3" class="wire-junction" />
+      </g>
+    </svg>
+
+    <!-- Particle dots are positioned with JS-free CSS offset-path via inline style bound from TS -->
+    <svg class="circuit-svg circuit-svg-particles" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <circle
+        *ngFor="let p of particles; trackBy: trackParticle"
+        r="3"
+        class="charge-particle"
+        [class.particle-charge]="p.direction === 'charge'"
+        [class.particle-discharge]="p.direction === 'discharge'"
+        [attr.cx]="particleX(p)"
+        [attr.cy]="particleY(p)" />
+    </svg>
+
+    <!-- ===== Overlay HTML controls/readouts placed on top of the SVG board ===== -->
+    <div class="board-overlay">
+
+      <!-- Power toggle floats independently in the top-left corner (no wire connects to it) -->
+      <button
+        type="button"
+        class="power-toggle"
+        [class.toggle-on]="powerOn"
+        (click)="togglePower()"
+        [attr.aria-pressed]="powerOn">
+        <span class="toggle-track">
+          <span class="toggle-thumb"></span>
+        </span>
+        <span class="toggle-label">{{ powerOn ? 'ON' : 'OFF' }}</span>
+      </button>
+
+      <!-- LEFT: DC source, vertically centered on the branch column -->
+      <div class="left-col">
+        <div class="dc-source-box">
+          <div class="dc-voltage">{{ dcSourceLabel }}</div>
+          <div class="dc-label">DC SOURCE</div>
+        </div>
+      </div>
+
+      <!-- MIDDLE: three capacitor branches -->
+      <div class="mid-col">
+        <div class="cap-box">
+          <div class="cap-icon" aria-hidden="true">
+            <span class="plate plate-pos"></span><span class="plate plate-neg"></span>
+          </div>
+          <div class="cap-name">C1 top</div>
+          <div class="cap-value">{{ capacitanceC1 | number:'1.1-1' }} uF</div>
+        </div>
+
+        <div class="cap-box">
+          <div class="cap-icon" aria-hidden="true">
+            <span class="plate plate-pos"></span><span class="plate plate-neg"></span>
+          </div>
+          <div class="cap-name">C2 mid</div>
+          <div class="cap-value">{{ capacitanceC2 | number:'1.1-1' }} uF</div>
+        </div>
+
+        <div class="cap-box">
+          <div class="cap-icon" aria-hidden="true">
+            <span class="plate plate-pos"></span><span class="plate plate-neg"></span>
+          </div>
+          <div class="cap-name">C3 bot</div>
+          <div class="cap-value">{{ capacitanceC3 | number:'1.1-1' }} uF</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: three bulbs — plain outline bulb with zigzag filament, no glow badge -->
+      <div class="right-col">
+        <div class="bulb-cell">
+          <svg viewBox="0 0 40 56" class="bulb-svg">
+            <circle cx="20" cy="18" r="13" class="bulb-bulb"
+              [style.opacity]="0.45 + branches[0].brightness * 0.55"
+              [style.stroke]="branches[0].brightness > 0.05 ? 'var(--bulb-on)' : 'var(--bulb-off)'"></circle>
+            <path d="M14 18 L18 12 L20 18 L22 12 L26 18" class="bulb-filament"
+              [style.opacity]="0.35 + branches[0].brightness * 0.65"
+              [style.stroke]="branches[0].brightness > 0.05 ? 'var(--bulb-on)' : 'var(--bulb-off)'"></path>
+            <line x1="20" y1="31" x2="20" y2="36" class="bulb-neck-line" />
+            <rect x="15" y="36" width="10" height="7" rx="1.5" class="bulb-base" />
+            <line x1="15" y1="40" x2="25" y2="40" class="bulb-base-line" />
+          </svg>
+          <span class="branch-tag">BRANCH 1</span>
+        </div>
+
+        <div class="bulb-cell">
+          <svg viewBox="0 0 40 56" class="bulb-svg">
+            <circle cx="20" cy="18" r="13" class="bulb-bulb"
+              [style.opacity]="0.45 + branches[1].brightness * 0.55"
+              [style.stroke]="branches[1].brightness > 0.05 ? 'var(--bulb-on)' : 'var(--bulb-off)'"></circle>
+            <path d="M14 18 L18 12 L20 18 L22 12 L26 18" class="bulb-filament"
+              [style.opacity]="0.35 + branches[1].brightness * 0.65"
+              [style.stroke]="branches[1].brightness > 0.05 ? 'var(--bulb-on)' : 'var(--bulb-off)'"></path>
+            <line x1="20" y1="31" x2="20" y2="36" class="bulb-neck-line" />
+            <rect x="15" y="36" width="10" height="7" rx="1.5" class="bulb-base" />
+            <line x1="15" y1="40" x2="25" y2="40" class="bulb-base-line" />
+          </svg>
+          <span class="branch-tag">BRANCH 2</span>
+        </div>
+
+        <div class="bulb-cell">
+          <svg viewBox="0 0 40 56" class="bulb-svg">
+            <circle cx="20" cy="18" r="13" class="bulb-bulb"
+              [style.opacity]="0.45 + branches[2].brightness * 0.55"
+              [style.stroke]="branches[2].brightness > 0.05 ? 'var(--bulb-on)' : 'var(--bulb-off)'"></circle>
+            <path d="M14 18 L18 12 L20 18 L22 12 L26 18" class="bulb-filament"
+              [style.opacity]="0.35 + branches[2].brightness * 0.65"
+              [style.stroke]="branches[2].brightness > 0.05 ? 'var(--bulb-on)' : 'var(--bulb-off)'"></path>
+            <line x1="20" y1="31" x2="20" y2="36" class="bulb-neck-line" />
+            <rect x="15" y="36" width="10" height="7" rx="1.5" class="bulb-base" />
+            <line x1="15" y1="40" x2="25" y2="40" class="bulb-base-line" />
+          </svg>
+          <span class="branch-tag">BRANCH 3</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== INFO STRIP + POWER BUTTON ===================== -->
+  <section class="info-strip">
+    <div class="info-text">
+      <strong>Parallel switch and branch bulbs</strong>
+      <p *ngIf="powerOn">All capacitors share the same voltage, so bigger capacitance stores more charge.</p>
+      <p *ngIf="!powerOn">With power off the bank discharges through the branch loads, then current and glow fade away.</p>
+    </div>
+    <button
+      type="button"
+      class="power-button"
+      [class.power-button-on]="powerOn"
+      (click)="togglePower()">
+      <span>Power</span>
+      <span>{{ powerOn ? 'ON' : 'OFF' }}</span>
+    </button>
+  </section>
+
+  <!-- ===================== SLIDER CONTROLS ===================== -->
+  <section class="controls-grid">
+    <div class="control">
+      <div class="control-label-row">
+        <span>Source Voltage</span>
+        <span class="control-value">{{ sourceVoltage | number:'1.1-1' }} V</span>
+      </div>
+      <input
+        type="range"
+        [min]="sourceVoltageMin"
+        [max]="sourceVoltageMax"
+        step="0.5"
+        [(ngModel)]="sourceVoltage"
+        (input)="onSliderChange()"
+        class="slider" />
+    </div>
+
+    <div class="control">
+      <div class="control-label-row">
+        <span>Load Resistance</span>
+        <span class="control-value">{{ loadResistance | number:'1.1-1' }} ohm</span>
+      </div>
+      <input
+        type="range"
+        [min]="loadResistanceMin"
+        [max]="loadResistanceMax"
+        step="0.5"
+        [(ngModel)]="loadResistance"
+        (input)="onSliderChange()"
+        class="slider" />
+    </div>
+
+    <div class="control">
+      <div class="control-label-row">
+        <span>Capacitor C1</span>
+        <span class="control-value">{{ capacitanceC1 | number:'1.1-1' }} uF</span>
+      </div>
+      <input
+        type="range"
+        [min]="capMin"
+        [max]="capMax"
+        step="1"
+        [(ngModel)]="capacitanceC1"
+        (input)="onSliderChange()"
+        class="slider" />
+    </div>
+
+    <div class="control">
+      <div class="control-label-row">
+        <span>Capacitor C2</span>
+        <span class="control-value">{{ capacitanceC2 | number:'1.1-1' }} uF</span>
+      </div>
+      <input
+        type="range"
+        [min]="capMin"
+        [max]="capMax"
+        step="1"
+        [(ngModel)]="capacitanceC2"
+        (input)="onSliderChange()"
+        class="slider" />
+    </div>
+
+    <div class="control control-full">
+      <div class="control-label-row">
+        <span>Capacitor C3</span>
+        <span class="control-value">{{ capacitanceC3 | number:'1.1-1' }} uF</span>
+      </div>
+      <input
+        type="range"
+        [min]="capMin"
+        [max]="capMax"
+        step="1"
+        [(ngModel)]="capacitanceC3"
+        (input)="onSliderChange()"
+        class="slider" />
+    </div>
+  </section>
+
+  <!-- ===================== CHARGE STATE / PROGRESS ===================== -->
+  <section class="status-card">
+    <div class="status-header">
+      <strong>Charge state and discharge</strong>
+      <span
+        class="status-pill"
+        [class.pill-charging]="status === 'Charging'"
+        [class.pill-discharging]="status === 'Discharging'"
+        [class.pill-steady]="status === 'Steady'">
+        {{ status }}
+      </span>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="chargePercent"></div>
+      <div class="progress-knob" [style.left.%]="chargePercent"></div>
+    </div>
+
+    <div class="status-metrics">
+      <span>Stored charge {{ storedChargeUC | number:'1.1-1' }} uC</span>
+      <span>Phase time {{ phaseTimeDisplay }}</span>
+      <span class="metric-note">Transient view is time-magnified for visibility.</span>
+    </div>
+  </section>
+
+  <!-- ===================== CALCULATION TABLE ===================== -->
+  <section class="data-table">
+    <div class="data-row">
+      <span class="data-key">C_eq</span>
+      <span class="data-eq">{{ ceqEquationText }}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-key">Time Constant</span>
+      <span class="data-eq">{{ tauEquationText }} = {{ tauDisplay }}</span>
+    </div>
+    <div class="data-row">
+      <span class="data-key">Total Current</span>
+      <span class="data-eq" [class.value-negative]="totalCurrentA < 0" [class.value-positive]="totalCurrentA >= 0">
+        {{ currentEquationText }} = {{ totalCurrentA | number:'1.2-2' }} A
+      </span>
+    </div>
+
+    <div class="data-divider"></div>
+
+    <div class="data-row" *ngFor="let b of branches; let i = index">
+      <span class="data-key">Branch Q{{ i + 1 }}</span>
+      <span class="data-eq value-charge">{{ branchEquation(b) }} = {{ b.chargeUC | number:'1.1-1' }} uC</span>
+    </div>
+
+    <div class="data-row">
+      <span class="data-key">Stored Energy</span>
+      <span class="data-eq value-energy">{{ energyEquationText }} = {{ totalEnergyUJ | number:'1.1-1' }} uJ</span>
+    </div>
+  </section>
+
+</div>

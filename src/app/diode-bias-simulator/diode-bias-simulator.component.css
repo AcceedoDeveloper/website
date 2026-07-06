@@ -1,0 +1,192 @@
+:host {
+  --primary: #3498db;
+  --success: #2ecc71;
+  --danger: #e74c3c;
+  --dark-bg: #1a252f;
+  --card-bg: #ffffff;
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f1f2f6;
+}
+
+.widget-container {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  padding: 30px;
+  width: 100%;
+  max-width: 650px;
+  margin: 40px auto;
+}
+
+h2 {
+  margin-top: 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: 2px solid #f1f2f6;
+  padding-bottom: 15px;
+  text-align: center;
+}
+
+.circuit-canvas {
+  background: var(--dark-bg);
+  border-radius: 12px;
+  height: 260px;
+  margin-bottom: 25px;
+  position: relative;
+  box-shadow: inset 0 2px 15px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+.circuit-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* Electron Animation Path (Matches the wires drawn in HTML) */
+.electron-particle {
+  animation: flowLinear infinite linear;
+  offset-path: path('M 120,105 L 120,60 L 400,60 L 480,60 L 480,105 M 480,155 L 480,200 L 120,200 L 120,155');
+  motion-path: path('M 120,105 L 120,60 L 400,60 L 480,60 L 480,105 M 480,155 L 480,200 L 120,200 L 120,155');
+}
+
+@keyframes flowLinear {
+  from { offset-distance: 0%; motion-offset: 0%; }
+  to { offset-distance: 100%; motion-offset: 100%; }
+}
+
+/* Controls */
+.control-group {
+  margin-bottom: 18px;
+}
+
+.control-group label {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.label-val {
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 18px;
+}
+
+.toggle-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--danger);
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--success);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(30px);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 5px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  transition: transform 0.1s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.math-panel {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  margin-top: 25px;
+}
+
+.formula-row {
+  font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.formula-row:last-child { margin-bottom: 0; }
+
+.sym { font-weight: 600; color: #64748b; }
+.calc { color: #334155; }
+.res { font-weight: 700; }
+
+.c-blue { color: var(--primary); }
+.c-green { color: var(--success); }
+.c-red { color: var(--danger); }
+
+hr {
+  border: 0;
+  border-top: 1px solid #e2e8f0;
+  margin: 15px 0;
+}

@@ -1,0 +1,154 @@
+<div class="widget-container">
+  <h1>Parallel Inductors in an RL Circuit</h1>
+
+  <div class="circuit-canvas" #canvasContainer>
+    <div class="circuit-stage">
+      <svg class="circuit-svg" viewBox="0 0 520 300" aria-hidden="true">
+        <!-- Wires -->
+        <path class="wire" d="M 68,120 L 68,60 L 260,60 M 260,234 L 68,234 L 68,178"></path>
+        <path class="wire" d="M 260,60 L 480,60 L 480,234 L 260,234 Z"></path>
+        <path class="wire" d="M 260,147 L 480,147"></path>
+
+        <!-- Flux Rings -->
+        <ellipse class="flux-ring" cx="388" cy="60" rx="54" ry="29"
+                 [style.opacity]="currentRatios[0] <= 0.004 ? 0 : (0.04 + currentRatios[0] * 0.26)"
+                 [style.--flux-opacity]="0.04 + currentRatios[0] * 0.54"></ellipse>
+        <ellipse class="flux-ring" cx="388" cy="147" rx="54" ry="29" style="animation-delay: -0.45s;"
+                 [style.opacity]="currentRatios[1] <= 0.004 ? 0 : (0.04 + currentRatios[1] * 0.26)"
+                 [style.--flux-opacity]="0.04 + currentRatios[1] * 0.54"></ellipse>
+        <ellipse class="flux-ring" cx="388" cy="234" rx="54" ry="29" style="animation-delay: -0.9s;"
+                 [style.opacity]="currentRatios[2] <= 0.004 ? 0 : (0.04 + currentRatios[2] * 0.26)"
+                 [style.--flux-opacity]="0.04 + currentRatios[2] * 0.54"></ellipse>
+
+        <!-- Electrons (Animated) -->
+        <circle class="electron" r="5" fill="#f3c14b"
+                style="offset-path: path('M 68,147 L 68,60 L 480,60 L 480,234 L 68,234 Z'); animation-delay: 0s;"
+                [style.animation-duration]="(currentRatios[0] <= 0.004 ? '0s' : (0.34 + (1 - currentRatios[0]) * 1.3) + 's')"
+                [style.opacity]="currentRatios[0] <= 0.004 ? 0 : (0.16 + currentRatios[0] * 0.84)"
+                [style.animation-play-state]="isOn ? 'running' : 'running'">
+        </circle>
+        <circle class="electron" r="5" fill="#f3c14b"
+                style="offset-path: path('M 68,147 L 68,60 L 260,60 L 260,147 L 480,147 L 480,234 L 68,234 Z'); animation-delay: -0.7s;"
+                [style.animation-duration]="(currentRatios[1] <= 0.004 ? '0s' : (0.34 + (1 - currentRatios[1]) * 1.3) + 's')"
+                [style.opacity]="currentRatios[1] <= 0.004 ? 0 : (0.16 + currentRatios[1] * 0.84)"
+                [style.animation-play-state]="isOn ? 'running' : 'running'">
+        </circle>
+        <circle class="electron" r="5" fill="#f3c14b"
+                style="offset-path: path('M 68,147 L 68,60 L 260,60 L 260,234 L 480,234 L 68,234 Z'); animation-delay: -1.4s;"
+                [style.animation-duration]="(currentRatios[2] <= 0.004 ? '0s' : (0.34 + (1 - currentRatios[2]) * 1.3) + 's')"
+                [style.opacity]="currentRatios[2] <= 0.004 ? 0 : (0.16 + currentRatios[2] * 0.84)"
+                [style.animation-play-state]="isOn ? 'running' : 'running'">
+        </circle>
+      </svg>
+
+      <!-- Components -->
+      <div class="comp source">
+        <div class="val">{{ isOn ? sourceVoltage + '.0V' : '0.0V' }}</div>
+        <div class="lbl">DC STEP SOURCE</div>
+      </div>
+
+      <div class="comp switch" [class.state-on]="isOn">
+        <div class="switch-track"></div>
+        <div class="switch-copy">{{ isOn ? 'ON' : 'OFF' }}</div>
+      </div>
+
+      <div class="comp inductor" id="p-l-node-1">
+        <svg class="coil-mark" viewBox="0 0 88 18"><path d="M2 9 C8 -1 16 -1 22 9 S36 19 42 9 S56 -1 62 9 S76 19 86 9"></path></svg>
+        <div class="name">L1 top</div>
+        <div class="value">{{ inductorL1 }} mH</div>
+      </div>
+      <div class="comp inductor" id="p-l-node-2">
+        <svg class="coil-mark" viewBox="0 0 88 18"><path d="M2 9 C8 -1 16 -1 22 9 S36 19 42 9 S56 -1 62 9 S76 19 86 9"></path></svg>
+        <div class="name">L2 mid</div>
+        <div class="value">{{ inductorL2 }} mH</div>
+      </div>
+      <div class="comp inductor" id="p-l-node-3">
+        <svg class="coil-mark" viewBox="0 0 88 18"><path d="M2 9 C8 -1 16 -1 22 9 S36 19 42 9 S56 -1 62 9 S76 19 86 9"></path></svg>
+        <div class="name">L3 bot</div>
+        <div class="value">{{ inductorL3 }} mH</div>
+      </div>
+
+      <!-- Bulbs -->
+      <div class="comp bulb" id="p-bulb-1" *ngFor="let ratio of currentRatios; let i = index; let isFirst = first">
+        <svg class="bulb-svg" viewBox="0 0 60 78" aria-hidden="true">
+          <g class="bulb-rays">
+            <line x1="30" y1="4" x2="30" y2="0"></line><line x1="13" y1="10" x2="9" y2="6"></line>
+            <line x1="47" y1="10" x2="51" y2="6"></line><line x1="7" y1="28" x2="2" y2="28"></line>
+            <line x1="53" y1="28" x2="58" y2="28"></line>
+          </g>
+          <ellipse class="bulb-core" cx="30" cy="28" rx="18" ry="20"
+                   [style.opacity]="ratio <= 0.004 ? 0 : (0.1 + ratio * 0.9)"
+                   [style.filter]="'drop-shadow(0 0 ' + (4 + ratio * 16) + 'px rgba(255, 215, 107, ' + (0.15 + ratio * 0.55) + '))'">
+          </ellipse>
+          <path class="bulb-glass" d="M30 8 C18 8 10 17 10 29 C10 39 15 45 20 49 C22 50 23 52 23 55 L37 55 C37 52 38 50 40 49 C45 45 50 39 50 29 C50 17 42 8 30 8 Z"></path>
+          <path class="bulb-filament" d="M23 34 L27 30 L30 34 L33 30 L37 34"></path>
+          <rect class="bulb-base" x="22" y="55" width="16" height="14" rx="3"></rect>
+          <rect class="bulb-base" x="24" y="68" width="12" height="5" rx="2"></rect>
+        </svg>
+        <div class="bulb-label" [style.top]="i === 0 ? '10px' : i === 1 ? '97px' : '184px'">BRANCH {{ i + 1 }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="control-grid">
+    <div class="toggle-row">
+      <div class="toggle-copy">
+        <div class="toggle-title">Parallel switch and one bulb per branch</div>
+        <div class="toggle-note">{{ isOn ? 'Current splits across branches, so each bulb can glow differently.' : 'After switch-off each branch discharges its own stored energy, then electron flow fades out branch by branch.' }}</div>
+      </div>
+      <button type="button" class="toggle-button" [class.is-on]="isOn" (click)="onTogglePower()">
+        {{ isOn ? 'Power ON' : 'Power OFF' }}
+      </button>
+    </div>
+
+    <div class="control-group">
+      <label>Source Voltage <span class="label-val">{{ sourceVoltage }} V</span></label>
+      <input type="range" min="2" max="30" step="1" [(ngModel)]="sourceVoltage" (ngModelChange)="onSliderChange()">
+    </div>
+    <div class="control-group">
+      <label>Branch Load Resistance <span class="label-val">{{ loadResistance }} ohm</span></label>
+      <input type="range" min="2" max="60" step="1" [(ngModel)]="loadResistance" (ngModelChange)="onSliderChange()">
+    </div>
+    <div class="control-group">
+      <label>Inductor L1 <span class="label-val">{{ inductorL1 }} mH</span></label>
+      <input type="range" min="1" max="100" step="1" [(ngModel)]="inductorL1" (ngModelChange)="onSliderChange()">
+    </div>
+    <div class="control-group">
+      <label>Inductor L2 <span class="label-val">{{ inductorL2 }} mH</span></label>
+      <input type="range" min="1" max="100" step="1" [(ngModel)]="inductorL2" (ngModelChange)="onSliderChange()">
+    </div>
+    <div class="control-group">
+      <label>Inductor L3 <span class="label-val">{{ inductorL3 }} mH</span></label>
+      <input type="range" min="1" max="100" step="1" [(ngModel)]="inductorL3" (ngModelChange)="onSliderChange()">
+    </div>
+
+    <!-- Status Card -->
+    <div class="status-card">
+      <div class="status-head">
+        <div class="status-title">Stored magnetic energy and branch discharge</div>
+        <div class="status-pill">{{ phaseLabel }}</div>
+      </div>
+      <div class="meter">
+        <div class="meter-fill" [style.width.%]="maxEnergyMj > 0 ? (energyMj / maxEnergyMj * 100) : 0"></div>
+      </div>
+      <div class="status-meta">
+        <span>Remaining energy {{ energyMj | number:'1.1-1' }} mJ</span>
+        <span>Phase time {{ phaseTimeMs | number:'1.2-2' }} ms</span>
+        <span>Transient view is time-magnified for visibility.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Math Panel -->
+  <div class="math-panel">
+    <div class="formula-row"><span class="sym">1 / L_eq</span><span class="calc">1/{{ inductorL1 }} + 1/{{ inductorL2 }} + 1/{{ inductorL3 }}</span><span class="res c-blue">{{ leqMh | number:'1.2-2' }} mH</span></div>
+    <div class="formula-row"><span class="sym">Time Constant</span><span class="calc">{{ leqMh | number:'1.2-2' }}mH / {{ loadResistance }}ohm</span><span class="res c-blue">{{ tauMs | number:'1.2-2' }} ms</span></div>
+    <div class="formula-row"><span class="sym">Total Current</span><span class="calc">I1 + I2 + I3 through the three branches</span><span class="res c-green">{{ totalCurrent | number:'1.2-2' }} A</span></div>
+    <hr>
+    <div class="formula-row"><span class="sym">Branch I1</span><span class="calc">{{ (isOn ? (sourceVoltage/loadResistance) : 0) | number:'1.2-2' }}A + ({{ branchCurrents[0] | number:'1.2-2' }}A - {{ (isOn ? (sourceVoltage/loadResistance) : 0) | number:'1.2-2' }}A)e^-t/tau1</span><span class="res c-red">{{ branchCurrents[0] | number:'1.2-2' }} A</span></div>
+    <div class="formula-row"><span class="sym">Branch I2</span><span class="calc">{{ (isOn ? (sourceVoltage/loadResistance) : 0) | number:'1.2-2' }}A + ({{ branchCurrents[1] | number:'1.2-2' }}A - {{ (isOn ? (sourceVoltage/loadResistance) : 0) | number:'1.2-2' }}A)e^-t/tau2</span><span class="res c-red">{{ branchCurrents[1] | number:'1.2-2' }} A</span></div>
+    <div class="formula-row"><span class="sym">Branch I3</span><span class="calc">{{ (isOn ? (sourceVoltage/loadResistance) : 0) | number:'1.2-2' }}A + ({{ branchCurrents[2] | number:'1.2-2' }}A - {{ (isOn ? (sourceVoltage/loadResistance) : 0) | number:'1.2-2' }}A)e^-t/tau3</span><span class="res c-red">{{ branchCurrents[2] | number:'1.2-2' }} A</span></div>
+    <div class="formula-row"><span class="sym">Stored Energy</span><span class="calc">sum 0.5 x L x i^2</span><span class="res c-green">{{ energyMj | number:'1.1-1' }} mJ</span></div>
+  </div>
+</div>

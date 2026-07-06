@@ -133,3 +133,576 @@ body {
 .header-section:hover .title-subtext {
   color: #7fffd4;
 }
+
+body{
+  background:#f8fafc;
+}
+
+/* SIDEBAR */
+
+.sidebar-card{
+  background:#ffffff;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  position:sticky;
+  top:90px;
+}
+
+.sidebar-header{
+  margin-bottom:25px;
+}
+
+.sidebar-label{
+  display:inline-block;
+  background:#e0edff;
+  color:#2563eb;
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  text-transform:uppercase;
+}
+
+.sidebar-title{
+  margin-top:12px;
+  font-weight:700;
+}
+
+.component-item{
+  width:100%;
+  border:none;
+  background:#f8fafc;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+
+  display:flex;
+  align-items:center;
+  gap:15px;
+
+  text-align:left;
+  transition:.3s;
+}
+
+.component-item:hover{
+  background:#eff6ff;
+}
+
+.component-item.active{
+  background:#2563eb;
+  color:#fff;
+}
+
+.component-item.active h6,
+.component-item.active small{
+  color:#fff;
+}
+
+.component-number{
+  width:42px;
+  height:42px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border-radius:12px;
+  font-weight:700;
+
+  background:rgba(255,255,255,.2);
+}
+
+.component-item h6{
+  margin:0;
+  font-size:18px;
+  font-weight:600;
+}
+
+.component-item small{
+  color:#64748b;
+}
+
+/* CONTENT */
+
+.content-card{
+  background:#fff;
+  border-radius:20px;
+  padding:30px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  height:100%;
+}
+
+.animation-card{
+  min-height:700px;
+}
+
+.card-header-custom{
+  margin-bottom:20px;
+}
+
+.card-header-custom h4{
+  font-weight:700;
+}
+
+.animation-placeholder{
+  min-height:550px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  color:#94a3b8;
+  text-align:center;
+}
+
+.animation-placeholder i{
+  font-size:70px;
+}
+
+.content-tag{
+  background:#e0edff;
+  color:#2563eb;
+  padding:8px 16px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.content-title{
+  margin-top:20px;
+  font-size:42px;
+  font-weight:700;
+}
+
+.content-description{
+  color:#64748b;
+  font-size:18px;
+  margin-top:10px;
+}
+
+/* MOBILE */
+
+@media(max-width:991px){
+
+  .sidebar-card{
+    position:relative;
+    top:0;
+  }
+
+  .animation-card{
+    min-height:auto;
+  }
+
+}
+
+.content-section{
+  margin-top: 40px;
+}
+
+.section-title{
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.section-text{
+  color: #64748b;
+}
+
+.ohm-formula-card{
+  background: linear-gradient(135deg,#2563eb,#1d4ed8);
+  color: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.formula-main{
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.formula-subtitle{
+  margin: 0;
+}
+
+.animation-note{
+  background: #eff6ff;
+  color: #2563eb;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 20px;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.law-card{
+  background:#f8fafc;
+  border-radius:16px;
+  padding:25px;
+  text-align:center;
+  height:100%;
+}
+
+.law-card h4{
+  font-size:2rem;
+  font-weight:700;
+  color:#2563eb;
+}
+
+.content-card-custom{
+  background:white;
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 10px 20px rgba(0,0,0,.05);
+}
+
+.content-heading{
+  font-size:1.8rem;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+.formula-box{
+  background:#eff6ff;
+  border-left:4px solid #2563eb;
+  padding:15px 20px;
+  margin-top:20px;
+  border-radius:10px;
+  font-size:1.2rem;
+  font-weight:600;
+}
+
+.info-box{
+  background:#f8fafc;
+  padding:20px;
+  border-radius:15px;
+  height:100%;
+}
+
+.example-card{
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:white;
+  padding:30px;
+  border-radius:20px;
+}
+
+.example-formula{
+  font-size:2rem;
+  font-weight:700;
+  margin-top:15px;
+}
+.content-section{
+  margin-bottom:40px;
+}
+
+.content-heading{
+  font-size:30px;
+  font-weight:700;
+  margin-bottom:20px;
+  color:#0f172a;
+}
+
+.content-text{
+  line-height:1.9;
+  color:#475569;
+}
+
+.symbol-card,
+.principle-card{
+  background:#fff;
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 8px 20px rgba(0,0,0,.06);
+}
+
+.symbol-preview{
+  font-size:40px;
+  font-weight:700;
+  color:#2563eb;
+}
+
+.unit-card{
+  background:#eff6ff;
+  border-radius:16px;
+  text-align:center;
+  padding:20px;
+}
+
+.unit-card h4{
+  color:#2563eb;
+  font-size:30px;
+  font-weight:700;
+}
+
+.function-card{
+  background:#f8fafc;
+  padding:20px;
+  border-radius:16px;
+  font-weight:600;
+  text-align:center;
+  border-left:4px solid #2563eb;
+}
+
+.analogy-table th{
+  background:#2563eb;
+  color:white;
+}
+.content-section {
+  margin-top: 40px;
+}
+
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-tag {
+  display: inline-block;
+  background: #2563eb;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.section-header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 10px;
+}
+
+.content-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  margin-bottom: 25px;
+}
+
+.content-card p {
+  line-height: 1.8;
+  color: #475569;
+  font-size: 16px;
+}
+
+.content-card h4 {
+  margin-top: 25px;
+  margin-bottom: 20px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.feature-list {
+  padding-left: 20px;
+}
+
+.feature-list li {
+  margin-bottom: 20px;
+  color: #334155;
+}
+
+.formula-box {
+  margin-top: 10px;
+  background: #eff6ff;
+  border-left: 4px solid #2563eb;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.analogy-card {
+  background: #fff7ed;
+  border-left: 5px solid #f97316;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+}
+
+.analogy-card h4 {
+  color: #ea580c;
+  margin-bottom: 12px;
+}
+
+.analogy-card p {
+  margin: 0;
+  line-height: 1.8;
+}
+
+.result-card {
+  background: #ecfdf5;
+  border-left: 5px solid #10b981;
+  padding: 25px;
+  border-radius: 15px;
+}
+
+.result-card h4 {
+  color: #059669;
+  margin-bottom: 12px;
+}
+
+.result-card p {
+  margin: 0;
+  line-height: 1.8;
+  font-weight: 500;
+}
+
+/* ==========================
+   COMMON CONTENT DESIGN
+========================== */
+
+.topic-content{
+  padding:20px;
+}
+
+.section-tag{
+  display:inline-block;
+  padding:8px 16px;
+  background:#dbeafe;
+  color:#2563eb;
+  border-radius:25px;
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+.topic-title{
+  font-size:52px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:30px;
+}
+
+.content-card{
+  background:#ffffff;
+  border-radius:20px;
+  padding:30px;
+  margin-bottom:7px;
+  box-shadow:0 4px 15px rgba(0,0,0,0.06);
+}
+
+.content-card h2{
+  font-size:32px;
+  font-weight:700;
+  color:#0f172a;
+  margin-bottom:20px;
+}
+
+.content-card p{
+  font-size:18px;
+  line-height:1.8;
+  color:#475569;
+}
+
+.content-card ul{
+  margin-top:15px;
+  padding-left:25px;
+}
+
+.content-card li{
+  font-size:17px;
+  line-height:1.8;
+  margin-bottom:10px;
+  color:#475569;
+}
+
+.topic-image{
+  max-width:300px;
+  width:100%;
+  display:block;
+  margin:auto;
+}
+
+.highlight-box{
+  background:#eff6ff;
+  border-left:5px solid #2563eb;
+  padding:20px;
+  border-radius:12px;
+  margin-top:15px;
+}
+
+.analogy-box{
+  background:#f8fafc;
+  border-radius:12px;
+  padding:20px;
+  margin-top:15px;
+}
+.symbol-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:30px 0;
+}
+
+.capacitor-symbol{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.wire-left,
+.wire-right{
+  width:90px;
+  height:4px;
+  background:#111827;
+}
+
+.plate{
+  width:4px;
+  height:90px;
+  background:#111827;
+}
+
+.symbol-caption{
+  text-align:center;
+  margin-top:15px;
+  color:#475569;
+  font-size:16px;
+}
+.comparison-table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:Arial, sans-serif;
+    margin:20px 0;
+}
+
+.comparison-table th{
+    background:#1565c0;
+    color:#fff;
+    padding:12px;
+    border:1px solid #0d47a1;
+    text-align:left;
+}
+
+.comparison-table td{
+    padding:12px;
+    border:1px solid #b3d4fc;
+    vertical-align:top;
+    line-height:1.6;
+}
+
+.comparison-table tbody tr:nth-child(even){
+    background:#f4f9ff;
+}
+
+.comparison-table strong{
+    color:#1565c0;
+}
+
+@media (max-width:768px){
+    .comparison-table th,
+    .comparison-table td{
+        padding:10px;
+        font-size:14px;
+    }
+}

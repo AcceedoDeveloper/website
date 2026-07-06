@@ -1,0 +1,160 @@
+<div class="sim-card">
+
+  <h1 class="sim-title">Series Loop Connection</h1>
+  <div class="sim-title-divider"></div>
+
+  <!-- ============== CIRCUIT DIAGRAM ============== -->
+  <div class="circuit-box">
+    <svg class="circuit-svg" viewBox="0 0 500 190" preserveAspectRatio="xMidYMid meet">
+
+      <!-- Wire loop: top -> right -> bottom -> left -->
+      <polyline
+        class="wire"
+        points="195,18 20,18 20,150 480,150 480,18 305,18"
+      />
+
+      <!-- Connector dots between resistors (static) -->
+      <circle class="node-dot" cx="20" cy="150" r="4"></circle>
+      <circle class="node-dot" cx="480" cy="150" r="4"></circle>
+
+      <!-- Animated current-flow dots -->
+      <circle
+        *ngFor="let d of dots"
+        class="flow-dot"
+        [attr.cx]="getDotPoint(d).x"
+        [attr.cy]="getDotPoint(d).y"
+        r="5"
+      ></circle>
+
+      <!-- Source box -->
+      <g>
+        <rect class="source-box" x="195" y="2" width="110" height="58" rx="8"></rect>
+        <text class="source-voltage" x="250" y="30" text-anchor="middle">{{ fmt1(vSource) }}V</text>
+        <text class="source-label" x="250" y="48" text-anchor="middle">SERIES DC SOURCE</text>
+      </g>
+
+      <!-- Resistor boxes -->
+      <g>
+        <rect class="resistor-box" x="48" y="123" width="84" height="54" rx="8"></rect>
+        <text class="resistor-name" x="90" y="146" text-anchor="middle">R<tspan baseline-shift="sub" font-size="10">1</tspan></text>
+        <text class="resistor-value" x="90" y="164" text-anchor="middle">{{ fmt1(r1) }}Ω</text>
+      </g>
+
+      <g>
+        <rect class="resistor-box" x="208" y="123" width="84" height="54" rx="8"></rect>
+        <text class="resistor-name" x="250" y="146" text-anchor="middle">R<tspan baseline-shift="sub" font-size="10">2</tspan></text>
+        <text class="resistor-value" x="250" y="164" text-anchor="middle">{{ fmt1(r2) }}Ω</text>
+      </g>
+
+      <g>
+        <rect class="resistor-box" x="368" y="123" width="84" height="54" rx="8"></rect>
+        <text class="resistor-name" x="410" y="146" text-anchor="middle">R<tspan baseline-shift="sub" font-size="10">3</tspan></text>
+        <text class="resistor-value" x="410" y="164" text-anchor="middle">{{ fmt1(r3) }}Ω</text>
+      </g>
+
+      <!-- Connector dots between resistors -->
+      <circle class="node-dot" cx="132" cy="150" r="4"></circle>
+      <circle class="node-dot" cx="208" cy="150" r="4"></circle>
+      <circle class="node-dot" cx="292" cy="150" r="4"></circle>
+      <circle class="node-dot" cx="368" cy="150" r="4"></circle>
+    </svg>
+  </div>
+
+  <!-- ============== SLIDERS ============== -->
+  <div class="control-group">
+    <div class="control-row">
+      <label for="vSourceRange" class="control-label">Source Voltage (V)</label>
+      <span class="control-value value-blue">{{ fmt1(vSource) }} V</span>
+    </div>
+    <input
+      id="vSourceRange"
+      type="range"
+      class="slider"
+      [min]="vMin"
+      [max]="vMax"
+      [step]="vStep"
+      [(ngModel)]="vSource"
+    />
+  </div>
+
+  <div class="control-group">
+    <div class="control-row">
+      <label for="r1Range" class="control-label">Resistor 1 (R<sub>1</sub>)</label>
+      <span class="control-value">{{ fmt1(r1) }} Ω</span>
+    </div>
+    <input
+      id="r1Range"
+      type="range"
+      class="slider"
+      [min]="rMin"
+      [max]="rMax"
+      [step]="rStep"
+      [(ngModel)]="r1"
+    />
+  </div>
+
+  <div class="control-group">
+    <div class="control-row">
+      <label for="r2Range" class="control-label">Resistor 2 (R<sub>2</sub>)</label>
+      <span class="control-value">{{ fmt1(r2) }} Ω</span>
+    </div>
+    <input
+      id="r2Range"
+      type="range"
+      class="slider"
+      [min]="rMin"
+      [max]="rMax"
+      [step]="rStep"
+      [(ngModel)]="r2"
+    />
+  </div>
+
+  <div class="control-group">
+    <div class="control-row">
+      <label for="r3Range" class="control-label">Resistor 3 (R<sub>3</sub>)</label>
+      <span class="control-value">{{ fmt1(r3) }} Ω</span>
+    </div>
+    <input
+      id="r3Range"
+      type="range"
+      class="slider"
+      [min]="rMin"
+      [max]="rMax"
+      [step]="rStep"
+      [(ngModel)]="r3"
+    />
+  </div>
+
+  <!-- ============== RESULTS TABLE ============== -->
+  <div class="results-panel">
+    <div class="result-row">
+      <span class="result-label">Total R_tot</span>
+      <span class="result-formula">{{ fmt1(r1) }} + {{ fmt1(r2) }} + {{ fmt1(r3) }}</span>
+      <span class="result-value value-blue">{{ fmt1(totalResistance) }} Ω</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">Circuit Current (I)</span>
+      <span class="result-formula">{{ fmt1(vSource) }}V / {{ fmt1(totalResistance) }}Ω</span>
+      <span class="result-value value-green">{{ fmt2(current) }} A</span>
+    </div>
+
+    <div class="results-divider"></div>
+
+    <div class="result-row">
+      <span class="result-label">R<sub>1</sub> Voltage Drop</span>
+      <span class="result-formula">{{ fmt2(current) }}A &times; {{ fmt1(r1) }}Ω</span>
+      <span class="result-value value-red">{{ fmt1(vDrop1) }} V</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">R<sub>2</sub> Voltage Drop</span>
+      <span class="result-formula">{{ fmt2(current) }}A &times; {{ fmt1(r2) }}Ω</span>
+      <span class="result-value value-red">{{ fmt1(vDrop2) }} V</span>
+    </div>
+    <div class="result-row">
+      <span class="result-label">R<sub>3</sub> Voltage Drop</span>
+      <span class="result-formula">{{ fmt2(current) }}A &times; {{ fmt1(r3) }}Ω</span>
+      <span class="result-value value-red">{{ fmt1(vDrop3) }} V</span>
+    </div>
+  </div>
+
+</div>

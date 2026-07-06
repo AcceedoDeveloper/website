@@ -1,32 +1,1501 @@
 <app-footr></app-footr>
-
-<div class="header-section">
-  <img src="assets/motherboard-background (2).jpg" alt="Header Background" class="header-bg" />
-
-  <div class="header-overlay">
-    <h1 class="title">
-      <span class="title-text">Resistor</span>
-      <span class="title-subtext">A resistor is a passive electrical component that restricts or limits the flow of electrical current in a circuit.</span>
-    </h1>
-
-    <div class="date-display">
-      <img
-        src="https://cdn-icons-png.flaticon.com/128/10692/10692035.png"
-        alt="Calendar Icon"
-        class="calendar-icon"
-      />
-      <span>{{ todayDate }}</span>
+<br>
+<br>
+<div class="container-fluid py-4">
+  <div class="row g-4">
+    <!-- SIDEBAR -->
+    <div class="col-lg-2 col-md-3">
+      <div class="sidebar-card">
+        <div class="sidebar-header">
+          <span class="sidebar-label"> Electronics </span>
+          <h3 class="sidebar-title"> Components </h3>
+        </div>
+        <button class="component-item" [class.active]="selectedTopic === 'resistor'" (click)="changeTopic('resistor')">
+          <span class="component-number">01</span>
+          <div>
+            <h6>Resistor</h6>
+            <small>Current Control</small>
+          </div>
+        </button>
+        <button class="component-item" [class.active]="selectedTopic === 'diode'" (click)="changeTopic('diode')">
+          <span class="component-number">02</span>
+          <div>
+            <h6>Diode</h6>
+            <small>One-way Current</small>
+          </div>
+        </button>
+        <button class="component-item" [class.active]="selectedTopic === 'capacitor'" (click)="changeTopic('capacitor')">
+          <span class="component-number">03</span>
+          <div>
+            <h6>Capacitor</h6>
+            <small>Energy Storage</small>
+          </div>
+        </button>
+        <button class="component-item" [class.active]="selectedTopic === 'inductor'" (click)="changeTopic('inductor')">
+          <span class="component-number">04</span>
+          <div>
+            <h6>Inductor</h6>
+            <small>Magnetic Field</small>
+          </div>
+        </button>
+      </div>
     </div>
-
-    <h6 class="title-special-link" >
-    Resistance is measured in ohms (Ω), and the behavior of a resistor is defined by Ohm's Law:
-    </h6>
-    <h6 class="title-special-link" >
-    V = I × R
-    </h6>
+    <!-- ANIMATION AREA -->
+    <div class="col-lg-4 col-md-9" #animationCard>
+      <div class="content-card animation-card" >
+        <div class="card-header-custom">
+          <h4>Interactive Simulator</h4>
+        </div>
+        <div class="animation-placeholder">
+          <div *ngIf="selectedTopic === 'resistor'">
+            <app-ohms-law-simulator></app-ohms-law-simulator>
+            <br>
+            <br>
+            <app-resistance-simulator></app-resistance-simulator>
+            <br>
+            <section class="content-section">
+              <h2 class="content-heading"> Unit </h2>
+              <p class="content-text"> Resistance is measured in <strong>Ohms (Ω)</strong>. </p>
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <div class="unit-card">
+                    <h4>Ω</h4>
+                    <p>Ohm</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="unit-card">
+                    <h4>kΩ</h4>
+                    <p>1000 Ω</p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="unit-card">
+                    <h4>MΩ</h4>
+                    <p>1,000,000 Ω</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="content-section">
+              <h2 class="content-heading"> Functions </h2>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="function-card"> Limits Current Flow </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="function-card"> Protects Components </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="function-card"> Divides Voltage </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="function-card"> Controls Signal Levels </div>
+                </div>
+              </div>
+            </section>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <app-series-loop-simulator></app-series-loop-simulator>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <app-parallel-branch-simulator></app-parallel-branch-simulator>
+            <br>
+            <br>
+            <div class="content-card">
+              <h2>Types of Resistors</h2>
+              <p> Resistors are generally classified into two main categories: <strong>Fixed Resistors</strong> and <strong>Variable Resistors</strong>. </p>
+            </div>
+            <div class="content-card">
+              <h2>1. Fixed Resistors</h2>
+              <p> A fixed resistor has a resistance value that remains constant and cannot be changed after manufacturing. </p>
+              <div class="highlight-box">
+                <strong>Characteristics:</strong>
+                <ul>
+                  <li>Provides a fixed resistance value.</li>
+                  <li>Widely used in electronic circuits.</li>
+                  <li>Available in different resistance ratings and power ratings.</li>
+                </ul>
+              </div>
+              <br>
+              <h5>Examples of Fixed Resistors</h5>
+              <ul>
+                <li>
+                  <strong>Carbon Film Resistor</strong>
+                </li>
+                <li>
+                  <strong>Metal Film Resistor</strong>
+                </li>
+                <li>
+                  <strong>Wire Wound Resistor</strong>
+                </li>
+              </ul>
+            </div>
+            <div class="content-card">
+              <h2>2. Variable Resistors</h2>
+              <p> A variable resistor allows its resistance value to be adjusted according to circuit requirements. </p>
+              <div class="highlight-box">
+                <strong>Characteristics:</strong>
+                <ul>
+                  <li>Resistance can be increased or decreased manually.</li>
+                  <li>Used for controlling voltage and current.</li>
+                  <li>Commonly found in adjustment and tuning circuits.</li>
+                </ul>
+              </div>
+              <br>
+              <h5>Examples of Variable Resistors</h5>
+              <ul>
+                <li>
+                  <strong>Potentiometer</strong>
+                </li>
+                <li>
+                  <strong>Rheostat</strong>
+                </li>
+                <li>
+                  <strong>Trimmer Potentiometer</strong>
+                </li>
+              </ul>
+            </div>
+            <br>
+            <br>
+            <br>
+            <div class="content-card">
+              <h2>Comparison Table</h2>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Feature</th>
+                    <th>Fixed Resistor</th>
+                    <th>Variable Resistor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Resistance Value</td>
+                    <td>Constant</td>
+                    <td>Adjustable</td>
+                  </tr>
+                  <tr>
+                    <td>User Control</td>
+                    <td>Not Adjustable</td>
+                    <td>Can Be Adjusted</td>
+                  </tr>
+                  <tr>
+                    <td>Applications</td>
+                    <td>General Electronic Circuits</td>
+                    <td>Volume Controls, Brightness Controls, Calibration</td>
+                  </tr>
+                  <tr>
+                    <td>Examples</td>
+                    <td>Carbon Film, Metal Film, Wire Wound</td>
+                    <td>Potentiometer, Rheostat, Trimmer</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div *ngIf="selectedTopic === 'diode'">
+            <app-diode-bias-simulator></app-diode-bias-simulator>
+            <div class="content-card">
+              <h2>Real-Life Example</h2>
+              <p> Suppose a battery is connected incorrectly to an electronic circuit. </p>
+              <h3>Without a Diode</h3>
+              <ul>
+                <li>Current may flow in the wrong direction.</li>
+                <li>Sensitive components can become damaged.</li>
+                <li>The circuit may stop working properly.</li>
+              </ul>
+              <h3>With a Diode</h3>
+              <ul>
+                <li>Wrong-direction current is blocked.</li>
+                <li>The circuit is protected from damage.</li>
+                <li>Electronic devices become safer and more reliable.</li>
+              </ul>
+            </div>
+            <div class="content-card">
+              <h2>Working Principle</h2>
+              <p> When the positive terminal of a battery is connected to the anode and the negative terminal to the cathode:</p>
+              <h3>Forward Bias</h3>
+              <div class="highlight-box">
+                <strong>+ ────|>|──── -</strong>
+              </div>
+              <ul>
+                <li>Current flows </li>
+                <li>The diode acts like an open gate.</li>
+              </ul>
+              <h3>Reverse Bias</h3>
+              <div class="highlight-box">
+                <strong>- ────|>|──── +</strong>
+              </div>
+              <ul>
+                <li>Current is blocked.</li>
+                <li>The diode acts like a closed gate.</li>
+              </ul>
+            </div>
+          </div>
+          <div *ngIf="selectedTopic === 'capacitor'">
+            <div class="content-card">
+              <app-series-capacitor-simulator></app-series-capacitor-simulator>
+            </div>
+            <br>
+            <div class="content-card">
+              <h2>How a Capacitor Works</h2>
+              <p> A capacitor stores electric charge between two conductive plates separated by an insulating material called a dielectric. </p>
+              <ul>
+                <li>During charging, electric charge accumulates on the plates.</li>
+                <li>The stored energy creates an electric field.</li>
+                <li>When power is removed, the capacitor releases the stored energy.</li>
+                <li>This charging and discharging process happens very quickly.</li>
+              </ul>
+              <br>
+              <div class="content-card">
+                <h2>Comparison with Water System</h2>
+                <div class="table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Water System</th>
+                        <th>Electrical System</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Water</td>
+                        <td>Electric Charge</td>
+                      </tr>
+                      <tr>
+                        <td>Tank</td>
+                        <td>Capacitor</td>
+                      </tr>
+                      <tr>
+                        <td>Pipe</td>
+                        <td>Wire</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="highlight-box">
+                <strong> A capacitor stores electrical energy in the form of an electric field. </strong>
+              </div>
+            </div>
+            <br>
+            <div class="content-card">
+              <app-capacitor-filter-simulator></app-capacitor-filter-simulator>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="content-card">
+              <app-parallel-capacitor-rc-simulator></app-parallel-capacitor-rc-simulator>
+            </div>
+            <br>
+            <br>
+            <div class="content-card">
+              <h2>Does a Capacitor Control Voltage or Current?</h2>
+              <p> Unlike a resistor, a capacitor does not directly control voltage or current. Its primary function is to store electrical charge and release it when needed. </p>
+              <div class="highlight-box">
+                <strong>Main Functions of a Capacitor</strong>
+                <ul>
+                  <li>✅ Stores electrical charge</li>
+                  <li>✅ Opposes sudden changes in voltage</li>
+                </ul>
+              </div>
+              <h3>Current–Voltage Relationship</h3>
+              <p> The behavior of a capacitor is described by the following relationship: </p>
+              <div class="formula-box text-center">
+                <h4>I = C × (dV / dt)</h4>
+              </div>
+              <p> Where: </p>
+              <ul>
+                <li>
+                  <strong>I</strong> = Current through the capacitor
+                </li>
+                <li>
+                  <strong>C</strong> = Capacitance
+                </li>
+                <li>
+                  <strong>dV/dt</strong> = Rate of change of voltage
+                </li>
+              </ul>
+              <div class="content-card-inner">
+                <h3>What Does This Mean?</h3>
+                <ul>
+                  <li>When voltage changes rapidly, current becomes large.</li>
+                  <li>When voltage remains constant, current becomes zero.</li>
+                  <li>A capacitor only allows current to flow while it is charging or discharging.</li>
+                </ul>
+              </div>
+              <div class="highlight-box">
+                <h3>Capacitor Behavior</h3>
+                <p>
+                  <strong>✔ Capacitor Likes:</strong> Constant Voltage
+                </p>
+                <p>
+                  <strong>❌ Capacitor Dislikes:</strong> Sudden Voltage Changes
+                </p>
+              </div>
+              <div class="analogy-box">
+                <h3>Simple Analogy</h3>
+                <p> Think of a capacitor like a water tank connected to a pipe. The tank can store water and release it when needed, but it resists sudden changes in water pressure. </p>
+                <p> Similarly, a capacitor stores electrical energy and resists sudden changes in voltage. </p>
+              </div>
+            </div>
+            <div class="content-card">
+              <h2>Example: Charging a Capacitor</h2>
+              <p> Suppose a capacitor is initially uncharged (empty). When a battery is suddenly connected, the capacitor begins to charge. </p>
+              <div class="highlight-box">
+                <strong> Battery ─── Capacitor </strong>
+              </div>
+              <br>
+              <h3>At the Moment of Connection</h3>
+              <p> The capacitor behaves almost like a normal wire for a very brief moment. </p>
+              <ul>
+                <li>Large current flows through the circuit.</li>
+                <li>The capacitor starts storing charge.</li>
+                <li>The voltage across the capacitor is initially zero.</li>
+              </ul>
+              <h3>During Charging</h3>
+              <p> As charge accumulates on the capacitor plates: </p>
+              <ul>
+                <li>Voltage across the capacitor increases.</li>
+                <li>Current gradually decreases.</li>
+                <li>The charging process slows down over time.</li>
+              </ul>
+              <h3>Fully Charged Condition</h3>
+              <p> Eventually, the capacitor becomes fully charged. </p>
+              <div class="formula-box text-center">
+                <p>
+                  <strong>Capacitor Voltage = Battery Voltage</strong>
+                </p>
+                <p>
+                  <strong>Current = 0 A</strong>
+                </p>
+              </div>
+              <p> At this point, no more current flows through the circuit. </p>
+              <div class="highlight-box">
+                <strong> A fully charged capacitor behaves like an open switch in a DC circuit. </strong>
+              </div>
+            </div>
+            <div class="content-card">
+              <h2>Why Capacitors are Used</h2>
+              <p> Capacitors are widely used in electronic circuits because they can store electrical energy, smooth voltage fluctuations, create timing delays, and provide temporary backup power. </p>
+            </div>
+            <div class="content-card">
+              <h2>1. Energy Storage</h2>
+              <p> A capacitor can store electrical energy and release it when needed. </p>
+              <div class="highlight-box">
+                <strong>Example:</strong> Camera Flash
+              </div>
+              <p> The capacitor slowly stores energy from the battery and then releases it instantly to produce a bright flash of light. </p>
+            </div>
+            <div class="content-card">
+              <h2>2. Filtering</h2>
+              <p> Capacitors help remove unwanted voltage fluctuations and electrical noise from power supplies. </p>
+              <div class="highlight-box">
+                <strong>Examples:</strong>
+                <ul>
+                  <li>Phone Chargers</li>
+                  <li>Power Supplies</li>
+                </ul>
+              </div>
+              <p> They smooth the output voltage and provide a more stable power source. </p>
+            </div>
+            <div class="content-card">
+              <h2>Summary Table</h2>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Application</th>
+                    <th>Purpose</th>
+                    <th>Example</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Energy Storage</td>
+                    <td>Stores electrical energy</td>
+                    <td>Camera Flash</td>
+                  </tr>
+                  <tr>
+                    <td>Filtering</td>
+                    <td>Removes voltage fluctuations</td>
+                    <td>Phone Chargers</td>
+                  </tr>
+                  <tr>
+                    <td>Timing Circuits</td>
+                    <td>Creates delays</td>
+                    <td>LED Blinkers</td>
+                  </tr>
+                  <tr>
+                    <td>Backup Power</td>
+                    <td>Provides temporary power</td>
+                    <td>Computers, Memory Circuits</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div *ngIf="selectedTopic === 'inductor'">
+    
+              <div class="content-card">
+              <app-rl-circuit-simulator></app-rl-circuit-simulator>
+              </div>
+              
+              <div class="content-card">
+                <h2>Key Point</h2>
+                <div class="formula-box text-center">
+                  <h4> An Inductor Likes Constant Current </h4>
+                  <p> It resists sudden increases or decreases in current. </p>
+                </div>
+              </div>
+              <div class="content-card">
+                <h2>Symbol of an Inductor</h2>
+                <div class="formula-box text-center">
+                  <h1>──∿∿∿──</h1>
+                  <p>Standard Inductor Symbol</p>
+                </div>
+                <p> The inductor symbol consists of several curved loops that represent a coil of wire. The coil stores energy in the form of a magnetic field whenever current flows through it. </p>
+              </div>
+              <div class="content-card">
+                <h2>Inductors: Series vs Parallel</h2>
+                <p> Inductors behave opposite to capacitors when connected together. The way inductance changes depends on whether the inductors are connected in series or in parallel. </p>
+                <div class="highlight-box">
+                  <strong> Inductors in Series → Larger Equivalent Inductance </strong>
+                </div>
+              </div>
+              <div class="content-card">
+                <h2>Inductors in Series</h2>
+                <p> When inductors are connected end-to-end in a single current path, they are said to be connected in series. </p>
+                <p> The magnetic effects of each coil add together, increasing the total inductance of the circuit. </p>
+                <h3>The Formula</h3>
+                <div class="formula-box text-center">
+                  <h4> L <sub>eq</sub> = L₁ + L₂ + L₃ + ... + Lₙ </h4>
+                </div>
+                <p>For two inductors:</p>
+                <div class="formula-box text-center">
+                  <h4> L <sub>eq</sub> = L₁ + L₂ </h4>
+                </div>
+              </div>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+             
+              
+              <app-parallel-inductor></app-parallel-inductor>
+              <br>
+              <div class="content-card">
+                <h2>Important Result</h2>
+                <ul>
+                  <li>L <sub>eq</sub> &lt; L₁ </li>
+                  <li>L <sub>eq</sub> &lt; L₂ </li>
+                  <li>The equivalent inductance is always less than the smallest individual inductor.</li>
+                </ul>
+                <div class="highlight-box">
+                  <strong> Series Connection → Inductance Increases <br>
+                    <br> Parallel Connection → Inductance Decreases </strong>
+                </div>
+              </div>
+              <div class="content-card">
+                <h2>Example</h2>
+                <p> Two inductors are connected in parallel: </p>
+                <ul>
+                  <li>L₁ = 6 H</li>
+                  <li>L₂ = 3 H</li>
+                </ul>
+                <div class="formula-box text-center">
+                  <h4> L <sub>eq</sub> = (6 × 3) / (6 + 3) </h4>
+                  <h4> L <sub>eq</sub> = 18 / 9 = 2 H </h4>
+                </div>
+                <p> The equivalent inductance is <strong>2 H</strong>, which is smaller than both individual inductors. </p>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CONTENT AREA -->
+    <div class="col-lg-6" #contentArea>
+      <div *ngIf="selectedTopic === 'resistor'">
+        <div class="content-card">
+          <span class="content-tag"> FUNDAMENTAL LAW </span>
+          <!-- OHM'S LAW SECTION -->
+          <section class="content-section">
+            <div class="section-header">
+              <h2 class="section-title"> Ohm's Law </h2>
+              <p class="section-text"> The relationship between voltage, current, and resistance is described by Ohm's Law. </p>
+            </div>
+            <!-- Formula Card -->
+            <div class="ohm-formula-card">
+              <h3 class="formula-main"> V = I × R </h3>
+              <p class="formula-subtitle"> Voltage = Current × Resistance </p>
+            </div>
+            <!-- Animation Note -->
+            <div class="animation-note">
+              <i class="bi bi-play-circle-fill"></i>
+              <span> Interactive Animation Available in Simulator Panel </span>
+            </div>
+            <!-- Variables -->
+            <div class="row g-3 mt-3">
+              <div class="col-md-4">
+                <div class="law-card">
+                  <h4>V</h4>
+                  <p>Voltage</p>
+                  <small>Measured in Volts (V)</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="law-card">
+                  <h4>I</h4>
+                  <p>Current</p>
+                  <small>Measured in Amperes (A)</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="law-card">
+                  <h4>R</h4>
+                  <p>Resistance</p>
+                  <small>Measured in Ohms (Ω)</small>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="content-section">
+            <h2 class="section-title"> Resister</h2>
+            <h2 class="content-heading"> Definition </h2>
+            <p class="content-text"> A resistor is a passive electronic component that opposes the flow of electric current in a circuit. It is used to control current, divide voltage, and protect electronic components from excessive current. </p>
+          </section>
+          <section class="content-section">
+            <h2 class="content-heading"> Symbol </h2>
+            <div class="symbol-card">
+              <div class="row align-items-center">
+                <div class="col-md-5 text-center">
+                  <img src="../../assets/resister.png" class="img-fluid" alt="Resistor">
+                </div>
+                <div class="col-md-7 text-center">
+                  <div class="symbol-preview"> ─/\/\/\/─ </div>
+                  <br>
+                  <small> Standard Resistor Symbol </small>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="content-section">
+            <h2 class="content-heading"> Working Principle </h2>
+            <div class="principle-card">
+              <p> Imagine water flowing through a pipe. When the pipe is wide, water flows freely. If a narrow section is introduced, water flow decreases because it faces more resistance. </p>
+              <p> Similarly, in an electrical circuit, wires act like pipes and electrons act like flowing water. A resistor behaves like a narrow pipe section, restricting the flow of electrons. </p>
+            </div>
+          </section>
+          <section class="content-section">
+            <div class="content-card-custom">
+              <h3 class="content-heading"> When Does a Resistor Reduce Voltage? </h3>
+              <p> A resistor always creates a <strong>voltage drop</strong> across its terminals whenever current flows through it. </p>
+              <div class="formula-box"> Vdrop = I × R </div>
+              <div class="row g-3 mt-4">
+                <div class="col-md-4">
+                  <div class="info-box">
+                    <h5>Heat Loss</h5>
+                    <p> Electrons collide with atoms in the resistor material, causing energy loss as heat. </p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="info-box">
+                    <h5>Lower Voltage</h5>
+                    <p> The output voltage becomes lower than the input voltage. </p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="info-box">
+                    <h5>Current Flow</h5>
+                    <p> Current remains the same throughout a series resistor. </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="content-section">
+            <h2 class="content-heading"> Water Flow Analogy </h2>
+            <div class="table-responsive">
+              <table class="table table-bordered analogy-table">
+                <thead>
+                  <tr>
+                    <th>Water System</th>
+                    <th>Electrical System</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Water</td>
+                    <td>Electrons</td>
+                  </tr>
+                  <tr>
+                    <td>Pipe</td>
+                    <td>Wire</td>
+                  </tr>
+                  <tr>
+                    <td>Water Flow</td>
+                    <td>Electric Current</td>
+                  </tr>
+                  <tr>
+                    <td>Narrow Pipe</td>
+                    <td>Resistor</td>
+                  </tr>
+                  <tr>
+                    <td>Pipe Pressure</td>
+                    <td>Voltage</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="content-section">
+            <div class="section-header">
+              <span class="section-tag">CIRCUIT CONNECTION</span>
+              <h2>1. Series Connection (One Single Path)</h2>
+            </div>
+            <div class="content-card">
+              <p> In a series circuit, components are connected end-to-end, forming a single continuous loop. There is only one path for electric current to travel from the positive terminal of the power source to the negative terminal. </p>
+              <h4>How the Physics Works</h4>
+              <ul class="feature-list">
+                <li>
+                  <strong>Current stays the same through every component:</strong>
+                  <div class="formula-box"> I <sub>total</sub> = I <sub>1</sub> = I <sub>2</sub> = I <sub>3</sub>
+                  </div>
+                </li>
+                <li>
+                  <strong>Voltage is shared among the components:</strong>
+                  <div class="formula-box"> V <sub>total</sub> = V <sub>1</sub> + V <sub>2</sub> + V <sub>3</sub>
+                  </div>
+                </li>
+                <li>
+                  <strong>Total resistance increases as resistances add together:</strong>
+                  <div class="formula-box"> R <sub>total</sub> = R <sub>1</sub> + R <sub>2</sub> + R <sub>3</sub>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <!-- Analogy Card -->
+            <div class="analogy-card">
+              <h4>🚗 Simple Analogy</h4>
+              <p> Imagine a single road with several speed bumps placed one after another. Every car must pass through all of them, slowing the overall flow. Similarly, each component adds resistance to the circuit and affects the flow of current. </p>
+            </div>
+            <!-- Result Card -->
+            <div class="result-card">
+              <h4>Key Result</h4>
+              <p> Current remains the same throughout the entire circuit, voltage is divided among the connected components, and the total resistance increases as more resistors are added in series. </p>
+            </div>
+          </section>
+          <div class="content-card">
+            <span class="section-tag">CIRCUIT CONNECTION</span>
+            <h2>2.Parallel Connection (Multiple Split Paths)</h2>
+            <p> In a parallel circuit, components are connected side-by-side across the same two nodes of the circuit. This arrangement creates multiple independent paths for electric current to travel. </p>
+            <p> Since there are several paths available, current can flow through different branches at the same time. </p>
+          </div>
+          <div class="content-card">
+            <h2>How the Physics Works</h2>
+            <h4>1. Voltage Remains the Same</h4>
+            <p> Every branch is connected directly across the power supply, so each branch receives the same voltage. </p>
+            <div class="formula-box text-center">
+              <h4> V <sub>total</sub> = V₁ = V₂ = V₃ </h4>
+            </div>
+            <h4>2. Current Splits Between Branches</h4>
+            <p> The total current from the source divides among the available branches and combines again when returning to the source. </p>
+            <div class="formula-box text-center">
+              <h4> I <sub>total</sub> = I₁ + I₂ + I₃ </h4>
+            </div>
+            <h4>3. Total Resistance Decreases</h4>
+            <p> Adding more parallel branches provides additional paths for current flow, reducing the overall resistance of the circuit. </p>
+            <div class="highlight-box">
+              <strong> More Paths → Easier Current Flow → Lower Equivalent Resistance </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Simple Analogy</h2>
+            <p> Imagine a road that splits into several lanes. </p>
+            <ul>
+              <li>More lanes allow more cars to travel at the same time.</li>
+              <li>Traffic becomes less congested.</li>
+              <li>Vehicles can reach their destination more easily.</li>
+            </ul>
+            <p> In the same way, a parallel circuit provides multiple paths for current, allowing more current to flow through the circuit. </p>
+            <div class="analogy-box">
+              <strong> Parallel Circuit = Multi-Lane Highway </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Result of a Parallel Connection</h2>
+            <ul>
+              <li>All components receive the same voltage.</li>
+              <li>Current is divided among the branches.</li>
+              <li>Total current is the sum of branch currents.</li>
+              <li>Equivalent resistance becomes lower.</li>
+              <li>The circuit can carry more current overall.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> Same Voltage • Split Current • Lower Resistance </strong>
+            </div>
+          </div>
+          <br>
+          <br>
+          <div class="content-card">
+            <h2>Summary Table</h2>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Parallel Circuit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Current Path</td>
+                  <td>Multiple Paths</td>
+                </tr>
+                <tr>
+                  <td>Voltage</td>
+                  <td>Same Across All Branches</td>
+                </tr>
+                <tr>
+                  <td>Current</td>
+                  <td>Splits Between Branches</td>
+                </tr>
+                <tr>
+                  <td>Total Current</td>
+                  <td>I <sub>total</sub> = I₁ + I₂ + I₃ </td>
+                </tr>
+                <tr>
+                  <td>Equivalent Resistance</td>
+                  <td>Decreases</td>
+                </tr>
+                <tr>
+                  <td>Real-Life Analogy</td>
+                  <td>Multi-Lane Road</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+          <br>
+          <div class="content-card">
+            <h2>Series vs Parallel Circuit Comparison</h2>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Electrical Property</th>
+                    <th>Series Connection</th>
+                    <th>Parallel Connection</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>Current (I)</strong>
+                    </td>
+                    <td>Same through all components.</td>
+                    <td>Splits into individual branches.</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Voltage (V)</strong>
+                    </td>
+                    <td>Divides across components.</td>
+                    <td>Same across all branches.</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Equivalent Resistance (R)</strong>
+                    </td>
+                    <td> Increases <br> (R₁ + R₂ + R₃ ...) </td>
+                    <td> Decreases <br> (Additional current paths) </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Component Independence</strong>
+                    </td>
+                    <td> If one component breaks, the entire circuit opens and stops working. </td>
+                    <td> If one branch breaks, the other branches continue to operate independently. </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <br>
+          <br>
+          <div class="highlight-box">
+            <strong>Quick Note:</strong>
+            <p> Fixed resistors provide a constant resistance value, while variable resistors allow the resistance to be adjusted to control current or voltage in a circuit. </p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedTopic === 'diode'">
+        <div class="content-card">
+          <div class="section-tag"> SEMICONDUCTOR DEVICE </div>
+          <h1 class="topic-title">Diode</h1>
+          <div class="content-card">
+            <h2>What is a Diode?</h2>
+            <p> A diode is an electronic component that allows electric current to flow in <strong>only one direction</strong> and blocks it in the opposite direction. </p>
+          </div>
+          <div class="content-card">
+            <h2>Water Pipe Analogy</h2>
+            <p> Imagine a water pipe with a <strong>one-way valve</strong>. </p>
+            <ul>
+              <li> If water flows in the correct direction, the valve opens and water passes through. </li>
+              <li> If water tries to flow backward, the valve closes and blocks the flow. </li>
+            </ul>
+            <p> A diode behaves exactly like this one-way valve for electricity. </p>
+          </div>
+          <div class="content-card">
+            <h2>Symbol of a Diode</h2>
+            <div class="text-center">
+              <img src="../../assets/diodeimage.jpg" alt="Diode Symbol" class="topic-image">
+            </div>
+          </div>
+          <br>
+          <div class="content-card">
+            <h2>Current Flow Direction</h2>
+            <ul>
+              <li> Current flows from <strong>Anode to Cathode</strong>
+              </li>
+              <li> Reverse current is blocked </li>
+            </ul>
+          </div>
+          <br>
+          <div class="content-card">
+            <h2>Easy Way to Remember</h2>
+            <p> The diode is like a gatekeeper that says: </p>
+            <div class="highlight-box">
+              <strong> "You can enter from this side only!" </strong>
+            </div>
+          </div>
+          <br>
+          <br>
+          <div class="content-card">
+            <h2>Applications of Diodes</h2>
+            <div class="application-item">
+              <h5>
+                <strong>1. Reverse Polarity Protection</strong>
+              </h5>
+              <p> Diodes protect electronic circuits when batteries or power supplies are connected incorrectly. They block reverse current and prevent damage to sensitive components. </p>
+            </div>
+            <div class="application-item">
+              <h5>
+                <strong>2. AC to DC Conversion</strong>
+              </h5>
+              <p> Diodes are widely used in <strong>rectifier circuits</strong> to convert Alternating Current (AC) into Direct Current (DC), which is required by most electronic devices. </p>
+            </div>
+            <div class="application-item">
+              <h5>
+                <strong>3. Light Emitting Diodes (LEDs)</strong>
+              </h5>
+              <p> An LED is a special type of diode that emits light when electric current flows through it. LEDs are used in displays, indicators, lighting systems, and electronic devices. </p>
+            </div>
+            <div class="application-item">
+              <h5>
+                <strong>4. Solar Panels</strong>
+              </h5>
+              <p> Solar cells operate using semiconductor junctions that work on diode principles. They convert sunlight into electrical energy and are used in renewable energy systems.</p>
+            </div>
+            <div class="highlight-box">
+              <strong> Diodes are essential components used for protection, power conversion, lighting, and energy generation UK. </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedTopic === 'capacitor'">
+        <div class="content-card">
+          <div class="section-tag"> ENERGY STORAGE DEVICE </div>
+          <h1 class="topic-title">Capacitor</h1>
+          <div class="content-card">
+            <h2>What is a Capacitor?</h2>
+            <p> A capacitor is an electronic component that stores <strong>electrical energy temporarily</strong> and releases it when needed. </p>
+            <p> Think of it as a small rechargeable battery that charges and discharges very quickly. </p>
+          </div>
+          <div class="content-card">
+            <h2>Water Tank Analogy</h2>
+            <p> Imagine a water pipe carrying water. Now place a small tank connected to the pipe. </p>
+            <ul>
+              <li> When water starts flowing, some water enters the tank and gets stored. </li>
+              <li> Once the tank is full, water continues flowing normally. </li>
+              <li> If the water supply stops, the tank can still release stored water for a short time. </li>
+            </ul>
+            <p> A capacitor behaves in a similar way inside an electrical circuit. </p>
+          </div>
+          <div class="content-card">
+            <h2>Symbol of a Capacitor</h2>
+            <div class="symbol-container">
+              <div class="capacitor-symbol">
+                <div class="wire-left"></div>
+                <div class="plate"></div>
+                <div class="plate"></div>
+                <div class="wire-right"></div>
+              </div>
+            </div>
+            <p class="symbol-caption"> Standard symbol of a capacitor used in electrical and electronic circuit diagrams. </p>
+          </div>
+          <div class="content-card">
+            <h2>Working Principle</h2>
+            <p> A capacitor stores electrical energy by creating an electric field between two conductive plates separated by an insulating material. </p>
+            <h3>Structure of a Capacitor</h3>
+            <ul>
+              <li>Two metal plates</li>
+              <li>An insulating material (dielectric) between them</li>
+            </ul>
+            <h3>What Happens When Voltage is Applied?</h3>
+            <ol>
+              <li> Electrons accumulate on one plate of the capacitor. </li>
+              <li> Electrons leave the opposite plate. </li>
+              <li> An electric field forms between the two plates. </li>
+              <li> Electrical energy is stored in this electric field. </li>
+            </ol>
+            <div class="highlight-box">
+              <strong> Energy Storage Process: </strong>
+              <p class="mb-0 mt-2"> Voltage Applied → Charge Separation → Electric Field Formation → Energy Stored </p>
+            </div>
+            <h3 class="mt-4">When the Power Source is Removed</h3>
+            <p> The capacitor does not lose its stored energy immediately. Instead, the stored charge can flow back into the circuit, supplying electrical energy for a short period of time. </p>
+            <div class="highlight-box">
+              <strong> A capacitor stores energy in an electric field and releases it when required. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Capacitors in Series</h2>
+            <div class="text-center">
+              <img src="../../assets/seriescapacitor.png" alt="Capacitors in Series" class="topic-image">
+            </div>
+            <h3>What Happens?</h3>
+            <ul>
+              <li>All capacitors carry the same charge.</li>
+              <li>Voltage gets divided across the capacitors.</li>
+              <li>The total capacitance becomes smaller than any individual capacitor.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong>Key Point:</strong>
+              <p class="mb-0 mt-2"> In a series connection, the same charge flows through every capacitor, but the applied voltage is shared between them. </p>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Example</h2>
+            <div class="analogy-box">
+              <p>
+                <strong>Battery Voltage:</strong> 9V
+              </p>
+              <p>
+                <strong>C₁ = C₂ = C₃</strong>
+              </p>
+              <p> Since the capacitors are identical and connected in series, the voltage is divided equally. </p>
+              <p>
+                <strong>Voltage across each capacitor = 3V</strong>
+              </p>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Equivalent Capacitance</h2>
+            <p> Capacitors connected in series produce a smaller equivalent capacitance. </p>
+            <div class="highlight-box">
+              <h3 style="margin-bottom:15px;"> Formula </h3>
+              <p style="font-size:22px; text-align:center; margin:0;"> 1 / C <sub>eq</sub> = 1 / C <sub>1</sub> + 1 / C <sub>2</sub> + 1 / C <sub>3</sub>
+              </p>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Why Does Capacitance Decrease?</h2>
+            <p> When capacitors are connected in series, charge must pass through multiple storage stages before it can be stored. </p>
+            <ul>
+              <li>The same charge appears on every capacitor.</li>
+              <li>The effective distance between storage plates increases.</li>
+              <li>The ability to store charge becomes smaller.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> Result: Capacitors in series always have a smaller equivalent capacitance. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Capacitors in Parallel</h2>
+            <div class="text-center">
+              <img src="../../assets/parallelcapacitor.png" alt="Capacitors in Parallel" class="topic-image">
+            </div>
+            <p> In a parallel connection, all capacitors are connected across the same voltage source. </p>
+            <div class="highlight-box">
+              <strong> Both capacitors experience the same voltage. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>What Happens?</h2>
+            <ul>
+              <li> Each capacitor stores charge independently. </li>
+              <li> Both capacitors receive the same applied voltage. </li>
+              <li> The total stored charge increases. </li>
+              <li> The circuit can store more electrical energy. </li>
+            </ul>
+          </div>
+          <div class="content-card">
+            <h2>Equivalent Capacitance</h2>
+            <p> In a parallel connection, capacitances add directly. </p>
+            <div class="highlight-box">
+              <h3 class="text-center"> C <sub>eq</sub> = C <sub>1</sub> + C <sub>2</sub>
+              </h3>
+            </div>
+            <p> The equivalent capacitance is always larger than any individual capacitor in the circuit. </p>
+          </div>
+          <div class="content-card">
+            <h2>Why Does Capacitance Increase?</h2>
+            <p> Connecting capacitors in parallel effectively increases the total plate area available for storing charge. </p>
+            <ul>
+              <li> Larger effective plate area. </li>
+              <li> More charge can be stored. </li>
+              <li> Energy storage capacity increases. </li>
+            </ul>
+            <div class="highlight-box">
+              <strong> Result: Capacitors in parallel always have a larger equivalent capacitance. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Parallel Capacitor Summary</h2>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Parallel Connection</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Voltage</td>
+                  <td>Same across all capacitors</td>
+                </tr>
+                <tr>
+                  <td>Charge</td>
+                  <td>Adds together</td>
+                </tr>
+                <tr>
+                  <td>Capacitance</td>
+                  <td>Increases</td>
+                </tr>
+                <tr>
+                  <td>Formula</td>
+                  <td>Ceq = C1 + C2</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="content-card">
+            <h2>Capacitor in Series with a Bulb</h2>
+            <h3>When Power is Switched ON</h3>
+            <ul>
+              <li>The capacitor starts charging.</li>
+              <li>Current flows through the circuit.</li>
+              <li>The bulb glows briefly.</li>
+            </ul>
+            <h3>After Charging</h3>
+            <ul>
+              <li>The capacitor becomes fully charged.</li>
+              <li>Current becomes zero.</li>
+              <li>The bulb turns OFF.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> A capacitor in series allows current only during charging and discharging. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Capacitor in Parallel with a Bulb</h2>
+            <h3>When Power is ON</h3>
+            <ul>
+              <li>The bulb glows normally.</li>
+              <li>The capacitor charges simultaneously.</li>
+            </ul>
+            <h3>When Power is OFF</h3>
+            <ul>
+              <li>The capacitor begins to discharge.</li>
+              <li>The stored energy flows through the bulb.</li>
+              <li>The bulb remains ON briefly.</li>
+              <li>The brightness gradually fades away.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> The capacitor acts as a temporary energy source after power is removed. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Real-Life Applications</h2>
+            <ul>
+              <li> Emergency backup LED lights </li>
+              <li> Camera flash circuits </li>
+              <li> Power supply smoothing circuits </li>
+              <li> Short-term energy storage systems </li>
+            </ul>
+            <div class="highlight-box">
+              <strong> This is exactly how emergency backup LEDs and smoothing circuits work. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>What is a Dielectric?</h2>
+            <p> A <strong>dielectric</strong> is the insulating material placed between the two plates of a capacitor. </p>
+            <p> It prevents direct electrical contact between the plates while allowing the capacitor to store electrical energy. </p>
+          </div>
+          <div class="content-card">
+            <h2>Common Dielectric Materials</h2>
+            <ul>
+              <li>Air</li>
+              <li>Paper</li>
+              <li>Ceramic</li>
+              <li>Plastic</li>
+              <li>Mica</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> Different dielectric materials provide different capacitance values, voltage ratings, and performance characteristics. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Why is a Dielectric Needed?</h2>
+            <p> Without a dielectric, the capacitor plates could touch each other and create a short circuit. </p>
+            <div class="analogy-box text-center">
+              <p>
+                <strong>Plate +++++</strong>
+              </p>
+              <p>
+                <strong>Plate -----</strong>
+              </p>
+            </div>
+            <p> The dielectric acts as a barrier between the plates and makes energy storage possible. </p>
+          </div>
+          <div class="content-card">
+            <h2>Functions of a Dielectric</h2>
+            <ul>
+              <li> Separates the capacitor plates. </li>
+              <li> Prevents current from flowing directly between the plates. </li>
+              <li> Increases the capacitor's charge storage capability. </li>
+              <li> Helps store more electrical energy in the electric field. </li>
+            </ul>
+            <div class="highlight-box">
+              <strong> Dielectric = Insulator + Energy Storage Enhancer </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Summary</h2>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Dielectric</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Purpose</td>
+                  <td>Separates capacitor plates</td>
+                </tr>
+                <tr>
+                  <td>Material Types</td>
+                  <td>Air, Paper, Ceramic, Plastic, Mica</td>
+                </tr>
+                <tr>
+                  <td>Main Benefit</td>
+                  <td>Increases charge storage capacity</td>
+                </tr>
+                <tr>
+                  <td>Additional Benefit</td>
+                  <td>Prevents short circuits</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="content-card">
+            <h2>3. Timing Circuits</h2>
+            <p> Capacitors can control the charging and discharging time in electronic circuits, creating predictable delays. </p>
+            <div class="highlight-box">
+              <strong>Example:</strong> LED Blinkers
+            </div>
+            <p> The charging and discharging process determines how quickly the LED turns ON and OFF. </p>
+          </div>
+          <div class="content-card">
+            <h2>4. Backup Power</h2>
+            <p> Capacitors can provide power for a short period when the main power source drops or is interrupted. </p>
+            <div class="highlight-box">
+              <strong>Examples:</strong>
+              <ul>
+                <li>Computers</li>
+                <li>Memory Circuits</li>
+              </ul>
+            </div>
+            <p> This helps prevent data loss and allows circuits to continue operating briefly during power interruptions. </p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedTopic === 'inductor'">
+        <div class="content-card">
+          <div class="content-card">
+            <div class="section-tag"> MAGNETIC FIELD</div>
+            <h1 class="topic-title">Inductor </h1>
+            <p>
+              <strong>What is an inductor?(The Electron Flywheel)</strong>
+            </p>
+            <p> An <strong>inductor</strong> is a passive electrical component that stores energy in a <strong>magnetic field</strong> when electric current flows through it. </p>
+            <p> It is typically made by winding a wire into a coil around an air core, iron core, or ferrite core. </p>
+            <p> The main property of an inductor is that it resists sudden changes in current flowing through it. </p>
+          </div>
+          <div class="content-card">
+            <h2>Real-Life Analogy: Bicycle Wheel</h2>
+            <p> Imagine a bicycle wheel spinning. </p>
+            <ul>
+              <li>If the wheel is stopped, it is difficult to start spinning instantly.</li>
+              <li>If the wheel is already spinning, it is difficult to stop instantly.</li>
+            </ul>
+            <p> The wheel naturally resists changes in its motion. </p>
+            <div class="analogy-box">
+              <strong>Bicycle Wheel = Inductor</strong>
+              <p> Just as a wheel resists sudden changes in motion, an inductor resists sudden changes in current. </p>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>How an Inductor Behaves</h2>
+            <p> An inductor does not oppose current itself. Instead, it opposes changes in current. </p>
+            <div class="highlight-box">
+              <ul>
+                <li>
+                  <strong>Resistor</strong> → Opposes Current
+                </li>
+                <li>
+                  <strong>Capacitor</strong> → Opposes Voltage Changes
+                </li>
+                <li>
+                  <strong>Inductor</strong> → Opposes Current Changes
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Why Does Inductance Increase?</h2>
+            <p> Each inductor creates its own magnetic field when current flows through it. </p>
+            <ul>
+              <li>The magnetic fields add together.</li>
+              <li>More magnetic field means more stored energy.</li>
+              <li>Greater stored energy means higher inductance.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> The total inductance is always greater than any individual inductor. </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Important Result</h2>
+            <ul>
+              <li>L <sub>eq</sub> > L₁ </li>
+              <li>L <sub>eq</sub> > L₂ </li>
+              <li>L <sub>eq</sub> > Any individual inductor in the series circuit </li>
+            </ul>
+          </div>
+          <div class="content-card">
+            <h2>Example</h2>
+            <p> Suppose two inductors are connected in series: </p>
+            <ul>
+              <li>L₁ = 5 H</li>
+              <li>L₂ = 3 H</li>
+            </ul>
+            <div class="formula-box text-center">
+              <h4> L <sub>eq</sub> = 5 + 3 = 8 H </h4>
+            </div>
+            <p> Therefore, the equivalent inductance of the circuit is <strong>8 H</strong>. </p>
+          </div>
+          <div class="content-card">
+            <h2>Summary</h2>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Connection Type</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Inductors in Series</td>
+                  <td>Inductance Increases</td>
+                </tr>
+                <tr>
+                  <td>Equivalent Formula</td>
+                  <td>L <sub>eq</sub> = L₁ + L₂ + L₃ + ... </td>
+                </tr>
+                <tr>
+                  <td>Main Effect</td>
+                  <td>Magnetic fields add together</td>
+                </tr>
+                <tr>
+                  <td>Final Value</td>
+                  <td>L <sub>eq</sub> is greater than each individual inductor </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="content-card">
+            <h2>Why Does Inductance Increase in Series?</h2>
+            <p> When inductors are connected in series, their coil turns effectively add together, creating a longer magnetic path. </p>
+            <ul>
+              <li>The number of coil turns increases.</li>
+              <li>More turns produce a stronger magnetic field.</li>
+              <li>A stronger magnetic field stores more energy.</li>
+              <li>More stored magnetic energy means greater inductance.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> More Turns → Stronger Magnetic Field → Higher Inductance </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Relationship Between Turns and Inductance</h2>
+            <p> Inductance is proportional to the square of the number of turns in the coil. </p>
+            <div class="formula-box text-center">
+              <h4> L ∝ N² </h4>
+            </div>
+            <p> This means that even a small increase in the number of turns can produce a significant increase in inductance. </p>
+          </div>
+          <div class="content-card">
+            <h2>Physical Picture</h2>
+            <p> Imagine connecting multiple coils end-to-end. </p>
+            <p> The combined structure behaves like one longer solenoid. Since the magnetic field extends through a larger coil structure, the inductance increases. </p>
+            <div class="analogy-box">
+              <strong> Multiple Small Coils + Series Connection = One Longer Coil </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Inductors in Parallel → Smaller Equivalent Inductance</h2>
+            <p> When inductors are connected in parallel, the equivalent inductance decreases. </p>
+            <p> Current can flow through multiple branches, reducing the overall opposition to changes in current. </p>
+            <div class="highlight-box">
+              <strong> Inductors in Parallel → Lower Equivalent Inductance </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>Why? Current Divides</h2>
+            <p> In a parallel inductor circuit, the total current splits among the available branches. </p>
+            <ul>
+              <li>Current divides between the parallel branches.</li>
+              <li>Each inductor carries less current than the total circuit current.</li>
+              <li>Less current through each branch produces a weaker magnetic field.</li>
+              <li>A weaker magnetic field results in a smaller effective inductance.</li>
+            </ul>
+            <div class="highlight-box">
+              <strong> Current Divides → Less Magnetic Field per Branch → Smaller Equivalent Inductance </strong>
+            </div>
+          </div>
+          <div class="content-card">
+            <h2>The Formula</h2>
+            <div class="formula-box text-center">
+              <h4> 1 / L <sub>eq</sub> = 1 / L₁ + 1 / L₂ + 1 / L₃ + ... </h4>
+            </div>
+            <p>For two inductors:</p>
+            <div class="formula-box text-center">
+              <h4> L <sub>eq</sub> = (L₁ × L₂) / (L₁ + L₂) </h4>
+            </div>
+          </div>
+          <div class="comparison-section">
+  <div class="section-header">
+    <h2>Capacitors vs Inductors Comparison</h2>
+    <p>Series and Parallel Connection Characteristics</p>
+  </div>
+  <div class="table-responsive">
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Configuration</th>
+          <th>Capacitors</th>
+          <th>Inductors</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-title">Series</td>
+          <td>
+            <strong>Smaller</strong>
+            <br>
+            <br>
+            <span class="formula"> 1/C <sub>eq</sub> = 1/C <sub>1</sub> + 1/C <sub>2</sub>
+            </span>
+          </td>
+          <td>
+            <strong>Larger</strong>
+            <br>
+            <br>
+            <span class="formula"> L <sub>eq</sub> = L <sub>1</sub> + L <sub>2</sub>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td class="row-title">Parallel</td>
+          <td>
+            <strong>Larger</strong>
+            <br>
+            <br>
+            <span class="formula"> C <sub>eq</sub> = C <sub>1</sub> + C <sub>2</sub>
+            </span>
+          </td>
+          <td>
+            <strong>Smaller</strong>
+            <br>
+            <br>
+            <span class="formula"> 1/L <sub>eq</sub> = 1/L <sub>1</sub> + 1/L <sub>2</sub>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td class="row-title">Why Series Changes?</td>
+          <td> Effective plate separation increases. </td>
+          <td> Coil turns increase (longer coil). </td>
+        </tr>
+        <tr>
+          <td class="row-title">Why Parallel Changes?</td>
+          <td> More plate area available. </td>
+          <td> Current divides into multiple branches (less current per branch). </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
-
-
-
-<app-footer></app-footer>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6"></div>
+  </div>
+</div>
+<app-footer></app-footer> 

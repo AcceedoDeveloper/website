@@ -1,0 +1,664 @@
+/* =========================================================================
+   Parallel Capacitors on a Shared RC Path — component styles
+   Dark PCB-style educational simulator, self-contained CSS (no external libs)
+   ========================================================================= */
+
+:host {
+  --bg-page: #ffffff;
+  --pcb-bg-top: #0c1424;
+  --pcb-bg-bottom: #131c30;
+  --pcb-border: #1c2942;
+  --grid-dot: rgba(120, 150, 200, 0.18);
+
+  --wire-color: #5b6b86;
+  --wire-glow: #8fa6c9;
+
+  --cyan: #29c2e0;
+  --cyan-soft: rgba(41, 194, 224, 0.15);
+  --amber: #f4c542;
+  --amber-soft: rgba(244, 197, 66, 0.12);
+
+  --bulb-off: #3a4456;
+  --bulb-on: #ffd27a;
+  --bulb-halo: #ffb347;
+
+  --text-dark: #1c2230;
+  --text-mid: #5b6577;
+  --text-light: #8a93a5;
+
+  --card-bg: #ffffff;
+  --card-border: #e6e9f0;
+  --card-shadow: 0 1px 3px rgba(20, 30, 50, 0.06);
+
+  --green-on: #34d97a;
+  --red-off: #d6455f;
+
+  --charge-color: #e0457a;
+  --energy-color: #1fae6e;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  display: block;
+  color: var(--text-dark);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.sim-root {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--bg-page);
+}
+
+.sim-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 4px 0 2px;
+  letter-spacing: 0.01em;
+}
+
+/* =========================================================================
+   CIRCUIT PANEL
+   ========================================================================= */
+
+.circuit-panel {
+  position: relative;
+  border-radius: 16px;
+  background: linear-gradient(160deg, var(--pcb-bg-top), var(--pcb-bg-bottom));
+  border: 1px solid var(--pcb-border);
+  overflow: hidden;
+  aspect-ratio: 14 / 10;
+  box-shadow: 0 8px 24px rgba(10, 16, 30, 0.25);
+}
+
+.circuit-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.circuit-svg-particles {
+  pointer-events: none;
+}
+
+.grid-dot {
+  fill: var(--grid-dot);
+}
+
+.wire-trace {
+  fill: none;
+  stroke: var(--wire-color);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.4s ease;
+}
+
+.wire-path-invisible {
+  fill: none;
+  stroke: none;
+}
+
+.wire-energized .wire-trace {
+  stroke: var(--wire-glow);
+}
+
+.wire-junction {
+  fill: #efb858;
+  opacity: 0.85;
+}
+
+/* Charge particles travel along the wires using absolute SVG coordinates
+   computed in the TS layer (particleX / particleY), so no JS DOM writes
+   are needed — Angular's attribute binding drives position each frame. */
+.charge-particle {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.particle-charge {
+  fill: #ffe27a;
+  color: #ffe27a;
+}
+
+.particle-discharge {
+  fill: #ffb04a;
+  color: #ffb04a;
+}
+
+/* =========================================================================
+   BOARD OVERLAY — left / mid / right columns positioned over the SVG
+   ========================================================================= */
+
+.board-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 0.95fr 1.1fr 0.75fr;
+  padding: 5% 4%;
+  gap: 4px;
+}
+
+/* Power toggle floats independently in the top-left corner of the panel —
+   it has no wire connection in the reference layout. */
+.power-toggle {
+  position: absolute;
+  top: 6%;
+  left: 4%;
+  z-index: 2;
+}
+
+.left-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+}
+
+.mid-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4%;
+}
+
+.right-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---- Power toggle switch ---- */
+
+.power-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 5px 12px 5px 5px;
+  cursor: pointer;
+  font: inherit;
+  color: #fff;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+.power-toggle.toggle-on {
+  background: rgba(52, 217, 122, 0.1);
+  border-color: rgba(52, 217, 122, 0.45);
+}
+
+.toggle-track {
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: #3a4458;
+  position: relative;
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+}
+
+.toggle-on .toggle-track {
+  background: var(--green-on);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-on .toggle-thumb {
+  left: 18px;
+}
+
+.toggle-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ---- DC source readout box ---- */
+
+.dc-source-box {
+  border: 1.5px solid var(--amber);
+  background: var(--amber-soft);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: center;
+  min-width: 92px;
+}
+
+.dc-voltage {
+  color: var(--amber);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.dc-label {
+  color: var(--amber);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+
+/* ---- Capacitor boxes ---- */
+
+.cap-box {
+  border: 1px solid var(--cyan);
+  background: var(--cyan-soft);
+  border-radius: 8px;
+  padding: 7px 14px;
+  text-align: center;
+  min-width: 96px;
+  margin-right: 30px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(41, 194, 224, 0.12);
+}
+
+.cap-icon {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  margin-bottom: 3px;
+}
+
+.plate {
+  width: 4px;
+  height: 13px;
+  border-radius: 1px;
+  background: var(--cyan);
+  opacity: 0.85;
+}
+
+.cap-name {
+  color: var(--cyan);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cap-value {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+/* ---- Bulbs ---- */
+
+.bulb-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.bulb-svg {
+  width: 52px;
+  height: 68px;
+  overflow: visible;
+}
+
+.bulb-bulb {
+  fill: none;
+  stroke: var(--bulb-off);
+  stroke-width: 1.6;
+  transition: opacity 0.3s ease, stroke 0.3s ease, filter 0.3s ease;
+}
+
+.bulb-filament {
+  fill: none;
+  stroke: var(--bulb-off);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.3s ease, stroke 0.3s ease;
+}
+
+.bulb-neck-line {
+  stroke: #545d6c;
+  stroke-width: 1.4;
+}
+
+.bulb-base {
+  fill: #7c8696;
+}
+
+.bulb-base-line {
+  stroke: #545d6c;
+  stroke-width: 1;
+}
+
+.branch-tag {
+  color: #aab4c6;
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* =========================================================================
+   INFO STRIP + POWER BUTTON
+   ========================================================================= */
+
+.info-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.info-text strong {
+  font-size: 13.5px;
+  color: var(--text-dark);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.info-text p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+
+.power-button {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: radial-gradient(circle at 35% 30%, #e85b78, var(--red-off));
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.25;
+  box-shadow: 0 4px 14px rgba(214, 69, 95, 0.45), inset 0 -3px 6px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+}
+
+.power-button:active {
+  transform: scale(0.94);
+}
+
+.power-button-on {
+  background: radial-gradient(circle at 35% 30%, #5be08a, var(--green-on));
+  box-shadow: 0 4px 14px rgba(52, 217, 122, 0.45), inset 0 -3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================================================
+   SLIDER CONTROLS
+   ========================================================================= */
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.control-full {
+  grid-column: 1 / -1;
+}
+
+.control-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.control-value {
+  color: var(--text-mid);
+  font-weight: 500;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: #e3e7ee;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 1px 4px rgba(41, 194, 224, 0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(1.15);
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--cyan);
+  border: none;
+  box-shadow: 0 1px 4px rgba(41, 194, 224, 0.5);
+  cursor: pointer;
+}
+
+.slider::-moz-range-track {
+  background: #e3e7ee;
+  height: 4px;
+  border-radius: 999px;
+}
+
+/* =========================================================================
+   STATUS / CHARGE CARD
+   ========================================================================= */
+
+.status-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  margin-bottom: 10px;
+}
+
+.status-pill {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #eef1f6;
+  color: var(--text-mid);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.pill-charging {
+  background: rgba(41, 194, 224, 0.14);
+  color: #1a93ad;
+}
+
+.pill-discharging {
+  background: rgba(214, 69, 95, 0.12);
+  color: var(--red-off);
+}
+
+.pill-steady {
+  background: rgba(52, 217, 122, 0.14);
+  color: #1f9c56;
+}
+
+.progress-track {
+  position: relative;
+  height: 7px;
+  border-radius: 999px;
+  background: #eef1f6;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6a7fe0 0%, #b25be0 45%, #e0457a 100%);
+  transition: width 0.12s linear;
+}
+
+.progress-knob {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #b25be0;
+  transform: translate(-50%, -50%);
+  transition: left 0.12s linear;
+}
+
+.status-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 12px;
+  color: var(--text-mid);
+}
+
+.metric-note {
+  color: var(--text-light);
+  font-size: 11px;
+}
+
+/* =========================================================================
+   DATA / CALCULATION TABLE
+   ========================================================================= */
+
+.data-table {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 12.5px;
+}
+
+.data-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.data-key {
+  color: var(--text-dark);
+  font-weight: 600;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.data-eq {
+  color: var(--text-mid);
+  text-align: right;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11.5px;
+}
+
+.value-positive {
+  color: #1f9c56;
+}
+
+.value-negative {
+  color: var(--red-off);
+}
+
+.value-charge {
+  color: var(--charge-color);
+}
+
+.value-energy {
+  color: var(--energy-color);
+}
+
+.data-divider {
+  height: 1px;
+  background: var(--card-border);
+  margin: 2px 0;
+}
+
+/* =========================================================================
+   RESPONSIVE — keep proportions sane on very narrow phones
+   ========================================================================= */
+
+@media (max-width: 380px) {
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+  .control-full {
+    grid-column: auto;
+  }
+  .dc-source-box,
+  .cap-box {
+    padding: 6px 8px;
+    min-width: 0;
+  }
+  .dc-voltage {
+    font-size: 14px;
+  }
+  .cap-name,
+  .cap-value {
+    font-size: 9.5px;
+  }
+}
