@@ -119,6 +119,8 @@ import { ParallelCapacitorRcSimulatorComponent } from './parallel-capacitor-rc-s
 import { RlCircuitSimulatorComponent } from './rl-circuit-simulator/rl-circuit-simulator.component';
 import { ParallelInductorComponent } from './parallel-inductor/parallel-inductor.component';
 
+import { CareersComponent } from './careers/careers.component';
+import { CareersmatComponent } from './careers/careersmat/careersmat.component';
 
 
 
@@ -209,6 +211,8 @@ export function loadConfigFactory(configService: ConfigService) {
    
    
    
+   CareersComponent,
+   CareersmatComponent,
    
   ],
 

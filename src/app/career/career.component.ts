@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { CareersService } from '../careers/careers.service';
+
+
 
 @Component({
   selector: 'app-career',
@@ -6,6 +9,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./career.component.css']
 })
 export class CareerComponent {
+   roles: any[] = [];
+
+constructor(private careerService: CareersService) {}
+
+ngOnInit() {
+  this.careerService.getAllCareers().subscribe((res: any) => {
+    this.roles = res;
+    //console.log(this.roles);
+  });
+}
 openFullScreen(arg0: string) {
 throw new Error('Method not implemented.');
 }

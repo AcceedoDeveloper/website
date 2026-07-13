@@ -1,0 +1,65 @@
+<app-header></app-header>
+
+<div class="maincontent">
+  <div class="user-container">
+
+    <!-- Header -->
+    <div class="user-header">
+      <h2></h2>
+      <div class="user-header-right">
+
+        <div class="search-container">
+          <input type="text" placeholder="Search careers..." [(ngModel)]="searchQuery" (input)="filterCareers()" />
+          <i class="fa fa-search"></i>
+        </div>
+
+        <button class="add-user-btn" (click)="showCreateCareer()">+</button>
+      </div>
+    </div>
+
+    <!-- Scrollable Careers Table -->
+    <div class="user-table-wrapper scrollable">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Location</th>
+            <th>Job Type</th>
+            <th>Experience</th>
+            <th>Education</th>
+            <th>Requirement</th>
+            <th class="action-col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of paginatedCareers; let i = index">
+            <td>{{ item.role || 'N/A' }}</td>
+            <td>{{ item.location || 'N/A' }}</td>
+            <td>{{ item.jobtype || 'N/A' }}</td>
+            <td>{{ item.experience || 'N/A' }}</td>
+            <td>{{ item.education || 'N/A' }}</td>
+            <td>{{ item.requirement || 'N/A' }}</td>
+            <td>
+              <button mat-icon-button class="black-btn" (click)="editCareer(item)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="black-btn" (click)="deleteCareer(item._id)">
+                <mat-icon>delete</mat-icon>
+              </button>   
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- <div *ngIf="filteredCareers.length === 0" class="empty-state">
+        No careers found. Start by adding one.
+      </div> -->
+    </div>
+
+    <!-- Pagination Controls -->
+    
+
+  </div>
+</div>
+
+<app-footer></app-footer>
