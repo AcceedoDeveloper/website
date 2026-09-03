@@ -1,45 +1,172 @@
 <app-footr></app-footr>
-<div class="container">
-    <div class="content">
-      <div class="left-side">
-        <div class="address details">
-          <mat-icon>location_on</mat-icon>
-          <div class="topic">Address</div>
-          <!-- <div class="text-one">ACCEEDO Limited</div> -->
-          <div class="text-two">S.F.No.503/3A 521/1&522/1,</div>
-          <div class="text-two">Palladam Road, Madukkarai</div>
-          <div class="text-two">Othakalmandapam, Coimbatore-641032.</div>
-        </div>
-        <div class="phone details">
-          <mat-icon>phone</mat-icon>
-          <div class="topic">Phone</div>
-          <div class="text-one">+91  99941 11214</div>
-          <div class="text-two">+91  0422-2611214</div>
-        </div>
-        <div class="email details">
-          <mat-icon>email</mat-icon>
-          <div class="topic">Email</div>
-          <div class="text-one">info&#64;acceedo.in</div>
+
+<section class="contact-hero">
+  <div class="hero-inner">
+    <span class="hero-badge">CONTACT US</span>
+    <h1 class="hero-title">Let's build something <span class="accent">extraordinary</span> together</h1>
+    <p class="hero-sub">
+      Have a project in mind or want to know more about our Industrial IoT solutions?
+      Reach out — we typically respond within one business day.
+    </p>
+  </div>
+  <div class="hero-glow"></div>
+</section>
+
+<section class="contact-shell">
+  <div class="contact-card">
+
+    <aside class="info-panel">
+      <div class="info-header">
+        <h2>Contact Information</h2>
+        <p>Fill in the form or reach us directly through the channels below.</p>
+      </div>
+
+      <ul class="info-list">
+        <li class="info-item">
+          <span class="info-icon">
+            <mat-icon>location_on</mat-icon>
+          </span>
+          <div class="info-body">
+            <h4>Our Office</h4>
+            <p>S.F.No.503/3A 521/1&amp;522/1, Palladam Road, Madukkarai,
+               Othakalmandapam, Coimbatore - 641032.</p>
+          </div>
+        </li>
+
+        <li class="info-item">
+          <span class="info-icon">
+            <mat-icon>call</mat-icon>
+          </span>
+          <div class="info-body">
+            <h4>Call Us</h4>
+            <p>
+              <a href="tel:+919994111214">+91 99941 11214</a><br>
+              <a href="tel:+914222611214">+91 0422 - 2611214</a>
+            </p>
+          </div>
+        </li>
+
+        <li class="info-item">
+          <span class="info-icon">
+            <mat-icon>mail_outline</mat-icon>
+          </span>
+          <div class="info-body">
+            <h4>Email Us</h4>
+            <p><a href="mailto:info@acceedo.in">info&#64;acceedo.in</a></p>
+          </div>
+        </li>
+
+        <li class="info-item">
+          <span class="info-icon">
+            <mat-icon>schedule</mat-icon>
+          </span>
+          <div class="info-body">
+            <h4>Working Hours</h4>
+            <p>Mon – Sat &nbsp; 9:00 AM – 6:30 PM</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="info-socials">
+        <span class="socials-label">Follow us</span>
+        <div class="socials-row">
+          <a href="#" aria-label="LinkedIn" class="social-btn"><mat-icon>business_center</mat-icon></a>
+          <a href="#" aria-label="Twitter" class="social-btn"><mat-icon>alternate_email</mat-icon></a>
+          <a href="#" aria-label="Facebook" class="social-btn"><mat-icon>facebook</mat-icon></a>
+          <a href="https://wa.me/919994111214" aria-label="WhatsApp" class="social-btn"><mat-icon>chat</mat-icon></a>
         </div>
       </div>
-      <div class="right-side">
-        <div class="topic-text">Send us a message</div>
-    <form [formGroup]="contactForm" (ngSubmit)="submitForm()">
-  <div class="input-box">
-    <input type="text" placeholder="Enter your name" formControlName="name">
-  </div>
-  <div class="input-box">
-    <input type="text" placeholder="Enter your email" formControlName="email">
-  </div>
-  <div class="input-box message-box">
-    <input type="text" placeholder="Enter your message" formControlName="message">
-  </div>
-  <div class="button">
-    <input type="submit" value="Send Now">
-  </div>
-</form>
 
+      <div class="info-decoration"></div>
+    </aside>
+
+    <div class="form-panel">
+      <div class="form-header">
+        <h2>Send us a message</h2>
+        <p>We'd love to hear from you. Tell us about your requirement.</p>
+      </div>
+
+      <form [formGroup]="contactForm" (ngSubmit)="submitForm()" class="contact-form">
+
+        <div class="field-row">
+          <div class="field">
+            <label for="c-company">Company Name</label>
+            <div class="input-wrap">
+              <mat-icon class="input-icon">apartment</mat-icon>
+              <input id="c-company" type="text" placeholder="Acme Industries Pvt Ltd" formControlName="company">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="c-name">Full Name</label>
+            <div class="input-wrap">
+              <mat-icon class="input-icon">person_outline</mat-icon>
+              <input id="c-name" type="text" placeholder="John Doe" formControlName="name">
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="c-email">Email Address</label>
+            <div class="input-wrap"
+                 [class.is-invalid]="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
+              <mat-icon class="input-icon">mail_outline</mat-icon>
+              <input id="c-email" type="email" placeholder="you@company.com" formControlName="email">
+            </div>
+            <small class="err" *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
+              Please enter a valid email address.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="c-phone">Phone Number</label>
+            <div class="input-wrap"
+                 [class.is-invalid]="contactForm.get('phone')?.touched && contactForm.get('phone')?.invalid">
+              <mat-icon class="input-icon">call</mat-icon>
+              <input id="c-phone" type="tel" placeholder="+91 99941 11214" formControlName="phone">
+            </div>
+            <small class="err" *ngIf="contactForm.get('phone')?.touched && contactForm.get('phone')?.invalid">
+              Enter a valid phone number (7–15 digits).
+            </small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="c-message">Your Message</label>
+          <div class="input-wrap textarea-wrap">
+            <mat-icon class="input-icon">edit_note</mat-icon>
+            <textarea id="c-message" rows="5"
+                      placeholder="Tell us about your project, requirements or questions..."
+                      formControlName="message"></textarea>
+          </div>
+        </div>
+
+        <div class="form-alert form-alert--success" *ngIf="successMessage">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{ successMessage }}</span>
+        </div>
+        <div class="form-alert form-alert--error" *ngIf="errorMessage">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <div class="form-footer">
+          <button type="submit" class="submit-btn" [disabled]="submitting">
+            <span *ngIf="!submitting">Send Message</span>
+            <span *ngIf="submitting">Sending...</span>
+            <mat-icon *ngIf="!submitting">send</mat-icon>
+            <mat-icon *ngIf="submitting" class="spin">progress_activity</mat-icon>
+          </button>
+          <span class="form-note">
+            <mat-icon>lock</mat-icon>
+            Your details stay private &amp; secure.
+          </span>
+        </div>
+      </form>
     </div>
-    </div>
+
   </div>
-  <app-footer></app-footer>
+</section>
+
+<app-footer></app-footer>
