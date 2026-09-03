@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
 
 @Component({
-  selector: 'app-aboutas',
-  templateUrl: './aboutas.component.html',
-  styleUrl: './aboutas.component.css'
+  selector: 'app-aboutus',
+  templateUrl: './aboutus.component.html',
+  styleUrl: './aboutus.component.css'
 })
-export class AboutasComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AboutusComponent implements OnInit, OnDestroy, AfterViewInit {
   images: string[] = [
     'assets/company21.jpeg',
     'assets/Company2.jpeg',

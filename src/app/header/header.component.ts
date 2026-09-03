@@ -1431,8 +1431,8 @@ saveProfilePicture() {
       '/blog': 'resources',
       '/career': 'resources',
       '/services': 'resources',
-      '/aboutas': 'resources',
-      '/contactas': 'resources',
+      '/aboutus': 'resources',
+      '/contact': 'resources',
       '/privacy-policy': 'resources'
     };
 

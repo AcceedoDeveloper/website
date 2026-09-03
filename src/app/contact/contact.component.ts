@@ -3,11 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ContactService } from '../service/contact.service';
 
 @Component({
-  selector: 'app-contactas',
-  templateUrl: './contactas.component.html',
-  styleUrls: ['./contactas.component.css']
+  selector: 'app-contact',
+  templateUrl: './contact.component.html',
+  styleUrls: ['./contact.component.css']
 })
-export class ContactasComponent implements OnInit {
+export class ContactComponent implements OnInit {
   contactForm: FormGroup;
   submitting = false;
   successMessage = '';

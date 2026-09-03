@@ -40,10 +40,10 @@ import { MeltingSoftwareComponent } from './melting-software/melting-software.co
 import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.component';
 import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
 import { CarouselComponent } from './carousel/carousel.component';
-import { ContactasComponent } from './contactas/contactas.component';
+import { ContactComponent } from './contact/contact.component';
 import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
-import { AboutasComponent } from './aboutas/aboutas.component';
+import { AboutusComponent } from './aboutus/aboutus.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
@@ -144,10 +144,10 @@ export function loadConfigFactory(configService: ConfigService) {
     HeatTreatmentComponent,
     PowerMetricsComponent,
     CarouselComponent,
-    ContactasComponent,
+    ContactComponent,
     CareerComponent,
     ServicesComponent,
-    AboutasComponent,
+    AboutusComponent,
     PrivacyPolicyComponent,
     Product1Component,
     Product2Component,

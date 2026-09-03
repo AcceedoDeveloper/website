@@ -5,10 +5,10 @@ import { HomeComponent } from './home/home.component';
 import { PowerMetricsComponent } from './power-metrics/power-metrics.component';
 import { HeatTreatmentComponent } from './heat-treatment/heat-treatment.component';
 import { MeltingSoftwareComponent } from './melting-software/melting-software.component';
-import { ContactasComponent } from './contactas/contactas.component';
+import { ContactComponent } from './contact/contact.component';
 import { CareerComponent } from './career/career.component';
 import { ServicesComponent } from './services/services.component';
-import { AboutasComponent } from './aboutas/aboutas.component';
+import { AboutusComponent } from './aboutus/aboutus.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { Product1Component } from './product1/product1.component';
 import { Product2Component } from './product2/product2.component';
@@ -60,10 +60,12 @@ const routes: Routes = [
   { path: 'heat-treatment', component: HeatTreatmentComponent },
   { path: 'melting-software', component: MeltingSoftwareComponent },
   { path: 'product-monitor', component: ProductionMonitorComponent },
-  { path: 'contactas', component: ContactasComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'contactas', redirectTo: 'contact', pathMatch: 'full' },
   { path: 'career', component: CareerComponent },
   { path: 'services', component: ServicesComponent },
-  { path: 'aboutas', component: AboutasComponent },
+  { path: 'aboutus', component: AboutusComponent },
+  { path: 'aboutas', redirectTo: 'aboutus', pathMatch: 'full' },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'product1', component: Product1Component },
   { path: 'product2', component: Product2Component },
