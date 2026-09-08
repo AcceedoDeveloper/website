@@ -28,23 +28,84 @@
             <th>Phone</th>
             <th>Source</th>
             <th>Date &amp; Time</th>
+            <th class="action-col">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let guest of guests; let i = index">
-            <td>{{ i + 1 }}</td>
+          <tr *ngFor="let guest of pagedGuests; let i = index">
+            <td>{{ startIndex + i + 1 }}</td>
             <td>{{ guest.name }}</td>
             <td>{{ guest.email }}</td>
             <td>{{ guest.phone }}</td>
             <td>{{ guest.source || 'website-popup' }}</td>
             <td>{{ formatDate(guest.createdAt) }}</td>
+            <td class="action-col">
+              <button class="delete-btn" type="button" title="Delete guest"
+                      (click)="askDelete(guest)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
+    <!-- Pagination Controls -->
+    <div class="pagination-controls" *ngIf="guests.length > 0">
+      <div class="pagination-info">
+        Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ guests.length }} entries
+      </div>
+      <div class="pagination-buttons">
+        <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+        <button type="button" (click)="goToFirstPage()" [disabled]="currentPage === 1">
+          <i class="fa fa-angle-double-left"></i>
+        </button>
+        <button type="button" (click)="previousPage()" [disabled]="currentPage === 1">
+          <i class="fa fa-angle-left"></i>
+        </button>
+        <span class="page-numbers">
+          <button type="button" *ngFor="let page of getPageNumbers()" (click)="goToPage(page)"
+                  [class.active]="page === currentPage">
+            {{ page }}
+          </button>
+        </span>
+        <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages">
+          <i class="fa fa-angle-right"></i>
+        </button>
+        <button type="button" (click)="goToLastPage()" [disabled]="currentPage === totalPages">
+          <i class="fa fa-angle-double-right"></i>
+        </button>
+      </div>
+    </div>
+
     <ng-template #noGuests>
       <div class="empty">No guest has submitted the popup yet.</div>
     </ng-template>
+  </div>
+</div>
+
+<!-- Delete confirmation -->
+<div class="confirm-backdrop" *ngIf="guestToDelete" (click)="cancelDelete()">
+  <div class="confirm-box" (click)="$event.stopPropagation()">
+    <h3>Confirm Guest Deletion</h3>
+    <p>
+      Are you sure you want to delete
+      <strong>{{ guestToDelete.name }}</strong> ({{ guestToDelete.email }})?
+      This action cannot be undone.
+    </p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" type="button" (click)="cancelDelete()" [disabled]="deleting">
+        Cancel
+      </button>
+      <button class="btn-delete" type="button" (click)="confirmDelete()" [disabled]="deleting">
+        {{ deleting ? 'Deleting...' : 'Delete' }}
+      </button>
+    </div>
   </div>
 </div>

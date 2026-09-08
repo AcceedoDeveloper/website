@@ -1,1 +1,32 @@
 .guest-page{min-height:calc(100vh - 70px);padding:40px;background:#f6f8fb}.guest-page-header{max-width:1200px;margin:0 auto 24px;display:flex;justify-content:space-between;align-items:center;gap:20px}.eyebrow{font-size:12px;letter-spacing:2px;font-weight:700;color:#667085}.guest-page h1{margin:6px 0;font-size:32px;color:#111827}.guest-page p{margin:0;color:#667085}.refresh-btn{border:0;border-radius:10px;padding:11px 20px;background:#111827;color:#fff;cursor:pointer}.status-card,.table-card{max-width:1200px;margin:auto;background:#fff;border-radius:16px;box-shadow:0 8px 30px rgba(15,23,42,.08)}.status-card{padding:24px}.status-card.error{color:#b42318}.table-top{padding:18px 22px;border-bottom:1px solid #eaecf0}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:800px}th,td{text-align:left;padding:15px 18px;border-bottom:1px solid #eaecf0;font-size:14px}th{background:#f9fafb;color:#344054;font-weight:700}td{color:#475467}.empty{padding:50px;text-align:center;color:#667085}@media(max-width:700px){.guest-page{padding:20px}.guest-page-header{align-items:flex-start;flex-direction:column}.guest-page h1{font-size:26px}}
+
+/* ── Action column ─────────────────────────────────────────────────────── */
+.action-col{width:90px;text-align:center}
+.delete-btn{border:1px solid #fecdca;background:#fef3f2;color:#b42318;width:34px;height:34px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:14px;transition:background .15s,border-color .15s}
+.delete-btn:hover{background:#fee4e2;border-color:#fda29b}
+
+/* ── Pagination ────────────────────────────────────────────────────────── */
+.pagination-controls{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 22px;border-top:1px solid #eaecf0;flex-wrap:wrap}
+.pagination-info{font-size:14px;color:#667085}
+.pagination-buttons{display:flex;align-items:center;gap:6px}
+.pagination-buttons select{padding:7px 10px;border:1px solid #d0d5dd;border-radius:8px;background:#fff;color:#344054;margin-right:8px;cursor:pointer}
+.pagination-buttons button{min-width:34px;height:34px;padding:0 9px;border:1px solid #d0d5dd;border-radius:8px;background:#fff;color:#344054;font-size:13px;cursor:pointer;transition:background .15s,border-color .15s}
+.pagination-buttons button:hover:not(:disabled){background:#f9fafb;border-color:#98a2b3}
+.pagination-buttons button:disabled{opacity:.45;cursor:not-allowed}
+.page-numbers{display:flex;align-items:center;gap:6px}
+.page-numbers button.active{background:#111827;border-color:#111827;color:#fff;font-weight:600}
+
+/* ── Delete confirmation ───────────────────────────────────────────────── */
+.confirm-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1200}
+.confirm-box{background:#fff;border-radius:16px;padding:26px;max-width:440px;width:100%;box-shadow:0 20px 50px rgba(15,23,42,.25)}
+.confirm-box h3{margin:0 0 10px;font-size:20px;color:#111827}
+.confirm-box p{margin:0;color:#475467;font-size:14px;line-height:1.6}
+.confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+.confirm-actions button{border:0;border-radius:10px;padding:10px 18px;font-size:14px;cursor:pointer}
+.confirm-actions button:disabled{opacity:.6;cursor:not-allowed}
+.btn-cancel{background:#f2f4f7;color:#344054}
+.btn-cancel:hover:not(:disabled){background:#e4e7ec}
+.btn-delete{background:#b42318;color:#fff}
+.btn-delete:hover:not(:disabled){background:#912018}
+
+@media(max-width:700px){.pagination-controls{flex-direction:column;align-items:flex-start}.pagination-buttons{flex-wrap:wrap}}

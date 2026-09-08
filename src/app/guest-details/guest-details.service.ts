@@ -20,6 +20,17 @@ export class GuestDetailsService {
 
   constructor(private http: HttpClient, private config: ConfigService) {}
 
+  private getAuthHeaders(): HttpHeaders | undefined {
+
+    const token = sessionStorage.getItem('token') || '';
+
+    return token
+      ? new HttpHeaders({
+          Authorization: `Bearer ${token}`
+        })
+      : undefined;
+  }
+
   saveGuest(payload: GuestDetails): Observable<any> {
     return this.http.post(
       `${this.config.getWebsiteUrl('createGuest')}`,
@@ -29,17 +40,17 @@ export class GuestDetailsService {
 
   getGuests(): Observable<GuestDetails[]> {
 
-    const token = sessionStorage.getItem('token') || '';
-
-    const headers = token
-      ? new HttpHeaders({
-          Authorization: `Bearer ${token}`
-        })
-      : undefined;
-
     return this.http.get<GuestDetails[]>(
       `${this.config.getWebsiteUrl('getGuests')}`,
-      { headers }
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  deleteGuest(id: string): Observable<any> {
+
+    return this.http.delete(
+      `${this.config.getWebsiteUrl('deleteGuest')}/${id}`,
+      { headers: this.getAuthHeaders() }
     );
   }
 }
