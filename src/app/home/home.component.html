@@ -1,5 +1,276 @@
 <app-footr></app-footr>
+
 <app-carousel></app-carousel>
+
 <app-brand></app-brand>
+
 <app-footer></app-footer>
 
+
+<!-- =====================================================
+     PDF DOWNLOAD TOAST
+====================================================== -->
+
+<div
+  class="pdf-toast"
+  *ngIf="showPdfToast"
+>
+
+  <div class="pdf-toast-icon">
+    ✓
+  </div>
+
+  <div class="pdf-toast-content">
+
+    <strong>
+      PDF downloaded
+    </strong>
+
+    <span>
+      Acceedo Product Portfolio
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     GUEST POPUP
+====================================================== -->
+
+<div
+  class="guest-overlay"
+  *ngIf="showGuestPopup"
+>
+
+  <div
+    class="guest-popup"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="guest-title"
+  >
+
+
+    <!-- =================================================
+         CLOSE BUTTON
+    ================================================== -->
+
+    <button
+      class="guest-close"
+      type="button"
+      aria-label="Skip"
+      (click)="skipGuest()"
+    >
+      &times;
+    </button>
+
+
+    <!-- =================================================
+         FORM
+    ================================================== -->
+
+    <ng-container
+      *ngIf="!submitted; else thankYou"
+    >
+
+      <!-- <div class="guest-icon">
+        A
+      </div> -->
+
+
+      <h2 id="guest-title">
+        Welcome to Acceedo
+      </h2>
+
+
+      <p class="guest-subtitle">
+        Please enter your details to explore our product
+        portfolio.
+      </p>
+
+
+      <form
+        (ngSubmit)="submitGuest()"
+        novalidate
+      >
+
+
+        <!-- =============================================
+             NAME
+        ============================================== -->
+
+        <label for="guest-name">
+          Name
+        </label>
+
+        <input
+          id="guest-name"
+          type="text"
+          name="name"
+          [(ngModel)]="guest.name"
+          placeholder="Enter your name"
+          autocomplete="name"
+        />
+
+
+        <!-- =============================================
+             EMAIL
+        ============================================== -->
+
+        <label for="guest-email">
+          Email
+        </label>
+
+        <input
+          id="guest-email"
+          type="email"
+          name="email"
+          [(ngModel)]="guest.email"
+          placeholder="Enter your email"
+          autocomplete="email"
+          [class.duplicate-input]="emailAlreadyUsed"
+          [class.shake-input]="emailAlreadyUsed"
+          (input)="emailAlreadyUsed = false"
+        />
+
+
+        <!-- Email duplicate message -->
+
+        <div
+          class="field-error"
+          *ngIf="emailAlreadyUsed"
+        >
+          <span class="error-icon">
+            !
+          </span>
+
+          This email is already used.
+        </div>
+
+
+        <!-- =============================================
+             PHONE
+        ============================================== -->
+
+        <label for="guest-phone">
+          Phone
+        </label>
+
+        <input
+          id="guest-phone"
+          type="tel"
+          name="phone"
+          [(ngModel)]="guest.phone"
+          placeholder="Enter your phone number"
+          autocomplete="tel"
+          [class.duplicate-input]="phoneAlreadyUsed"
+          [class.shake-input]="phoneAlreadyUsed"
+          (input)="phoneAlreadyUsed = false"
+        />
+
+
+        <!-- Phone duplicate message -->
+
+        <div
+          class="field-error"
+          *ngIf="phoneAlreadyUsed"
+        >
+          <span class="error-icon">
+            !
+          </span>
+
+          This phone number is already used.
+        </div>
+
+
+        <!-- =============================================
+             GENERAL ERROR
+        ============================================== -->
+
+        <div
+          class="guest-error"
+          *ngIf="
+            errorMessage &&
+            !emailAlreadyUsed &&
+            !phoneAlreadyUsed
+          "
+        >
+          {{ errorMessage }}
+        </div>
+
+
+        <!-- =============================================
+             SUBMIT
+        ============================================== -->
+
+       <!-- =============================================
+     SUBMIT
+============================================== -->
+
+<button
+  class="submit-btn"
+  type="submit"
+  [disabled]="submitting"
+>
+  <span *ngIf="!submitting">
+    Submit
+  </span>
+
+  <span *ngIf="submitting" class="loading-wrapper">
+    <span class="spinner"></span>
+    Submitting...
+  </span>
+</button>
+
+
+        <!-- =============================================
+             SKIP
+        ============================================== -->
+
+        <button
+          class="skip-btn"
+          type="button"
+          (click)="skipGuest()"
+        >
+          Skip
+        </button>
+
+      </form>
+
+    </ng-container>
+
+
+    <!-- =================================================
+         THANK YOU
+    ================================================== -->
+
+<ng-template #thankYou>
+  <div class="thank-you-state">
+    
+    <div class="thank-icon">
+      ✓
+    </div>
+
+    <h2>
+      Thank you!
+    </h2>
+
+    <p class="guest-subtitle">
+      I appreciate you taking the time to share your details.
+    </p>
+
+    <button
+      class="submit-btn"
+      type="button"
+      (click)="skipGuest()"
+    >
+      Continue to Our Website
+    </button>
+    
+  </div>
+</ng-template>
+
+  </div>
+
+</div>

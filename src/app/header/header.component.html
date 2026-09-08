@@ -248,6 +248,7 @@
                <a routerLink="/create" *ngIf="canShowCreateProjectMenu()">Create Project</a>
                <a routerLink="/permission" *ngIf="canShowPermissionMenu()">Permission</a>
                <a routerLink="/careers">Careers</a>
+               <a routerLink="/guest-details" *ngIf="isAdmin()">Guest Details</a>
              </div>
            </div>
          </li>

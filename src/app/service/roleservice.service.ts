@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './config.service';
 
-@Injectable({
+@Injectable({ 
   providedIn: 'root'
 })
 export class RoleserviceService {

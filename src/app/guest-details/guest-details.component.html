@@ -1,0 +1,50 @@
+<app-header></app-header>
+
+<div class="guest-page">
+  <div class="guest-page-header">
+    <div>
+      <span class="eyebrow">ADMIN</span>
+      <h1>Guest Details</h1>
+      <p>Visitors who submitted their details from the website popup.</p>
+    </div>
+    <button class="refresh-btn" type="button" (click)="refresh()">Refresh</button>
+  </div>
+
+  <div class="status-card" *ngIf="loading">Loading guest details...</div>
+  <div class="status-card error" *ngIf="!loading && error">{{ error }}</div>
+
+  <div class="table-card" *ngIf="!loading && !error">
+    <div class="table-top">
+      <strong>Total Guests: {{ guests.length }}</strong>
+    </div>
+
+    <div class="table-wrap" *ngIf="guests.length; else noGuests">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Source</th>
+            <th>Date &amp; Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let guest of guests; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ guest.name }}</td>
+            <td>{{ guest.email }}</td>
+            <td>{{ guest.phone }}</td>
+            <td>{{ guest.source || 'website-popup' }}</td>
+            <td>{{ formatDate(guest.createdAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noGuests>
+      <div class="empty">No guest has submitted the popup yet.</div>
+    </ng-template>
+  </div>
+</div>

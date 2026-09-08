@@ -121,6 +121,7 @@ import { ParallelInductorComponent } from './parallel-inductor/parallel-inductor
 
 import { CareersComponent } from './careers/careers.component';
 import { CareersmatComponent } from './careers/careersmat/careersmat.component';
+import { GuestDetailsComponent } from './guest-details/guest-details.component';
 
 
 
@@ -213,6 +214,7 @@ export function loadConfigFactory(configService: ConfigService) {
    
    CareersComponent,
    CareersmatComponent,
+   GuestDetailsComponent,
    
   ],
 

@@ -49,6 +49,8 @@ import { TimelineComponent } from './projects/timeline/timeline.component';
 import { PermissionComponent } from './permission/permission.component';
 import { ResistorComponent } from './resistor/resistor.component';
 import { CareersComponent } from './careers/careers.component';
+import { GuestDetailsComponent } from './guest-details/guest-details.component';
+import { AdminGuard } from './guest-details/admin.guard';
 
 
 const routes: Routes = [
@@ -101,6 +103,7 @@ const routes: Routes = [
   { path: 'role', component: RoleComponent, canActivate: [AuthGuard], data: { permissionKey: 'master.role' } },
   { path: 'create', component: CreateprojectComponent, canActivate: [AuthGuard], data: { permissionKey: 'master.createProject' } },
   { path: 'permission', component: PermissionComponent, canActivate: [AuthGuard], data: { permissionKey: 'master.permission' } },
+  { path: 'guest-details', component: GuestDetailsComponent, canActivate: [AdminGuard] },
 
   // Projects
   { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard], data: { permissionKey: 'project' } },
