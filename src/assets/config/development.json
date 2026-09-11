@@ -51,6 +51,9 @@
     { "name": "getContacts", "url": "getContacts" },
     { "name": "createGuest", "url": "createGuest" },
     { "name": "getGuests", "url": "getGuests" },
-    { "name": "deleteGuest", "url": "deleteGuest" }
+    { "name": "deleteGuest", "url": "deleteGuest" },
+    { "name": "addGuest", "url": "addGuest" },
+    { "name": "updateGuest", "url": "updateGuest" },
+    { "name": "sendGuestMail", "url": "sendGuestMail" }
   ]
 }

@@ -8,8 +8,18 @@ export interface GuestDetails {
   name: string;
   email: string;
   phone: string;
+  purpose?: string;
   source?: string;
   createdAt?: string;
+  lastEmailSentAt?: string | null;
+}
+
+// Fields the admin Add / Edit form sends.
+export interface GuestFormPayload {
+  name: string;
+  email: string;
+  phone: string;
+  purpose: string;
 }
 
 @Injectable({
@@ -50,6 +60,36 @@ export class GuestDetailsService {
 
     return this.http.delete(
       `${this.config.getWebsiteUrl('deleteGuest')}/${id}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  // Admin: add a guest manually (saved only, no email sent).
+  addGuest(payload: GuestFormPayload): Observable<any> {
+
+    return this.http.post(
+      `${this.config.getWebsiteUrl('addGuest')}`,
+      payload,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  // Admin: edit a guest.
+  updateGuest(id: string, payload: GuestFormPayload): Observable<any> {
+
+    return this.http.put(
+      `${this.config.getWebsiteUrl('updateGuest')}/${id}`,
+      payload,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+
+  // Admin: send the thank-you email (with brochure) to a guest.
+  sendGuestMail(id: string): Observable<any> {
+
+    return this.http.post(
+      `${this.config.getWebsiteUrl('sendGuestMail')}/${id}`,
+      {},
       { headers: this.getAuthHeaders() }
     );
   }

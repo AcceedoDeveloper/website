@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GuestDetails, GuestDetailsService } from './guest-details.service';
+import { GuestDetails, GuestDetailsService, GuestFormPayload } from './guest-details.service';
+
+type FormMode = 'add' | 'edit';
+type FormField = 'name' | 'email' | 'phone' | 'purpose';
+
+// Same rules as the website popup and the server.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_PATTERN = /^[+]?[-\d\s()]{7,18}$/;
 
 @Component({
   selector: 'app-guest-details',
@@ -19,6 +26,19 @@ export class GuestDetailsComponent implements OnInit {
   totalPages = 1;
   startIndex = 0;
   endIndex = 0;
+
+  // Add / Edit form
+  showForm = false;
+  formMode: FormMode = 'add';
+  form: GuestFormPayload = this.emptyForm();
+  editingGuest: GuestDetails | null = null;
+  saving = false;
+  formError = '';
+  fieldErrors: Partial<Record<FormField, string>> = {};
+
+  // Send email
+  guestToSend: GuestDetails | null = null;
+  sending = false;
 
   // Delete
   guestToDelete: GuestDetails | null = null;
@@ -86,6 +106,177 @@ export class GuestDetailsComponent implements OnInit {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
+  // ── Add / Edit ────────────────────────────────────────────────────────────
+  openAdd(): void {
+    this.formMode = 'add';
+    this.editingGuest = null;
+    this.form = this.emptyForm();
+    this.resetFormErrors();
+    this.showForm = true;
+  }
+
+  openEdit(guest: GuestDetails): void {
+    this.formMode = 'edit';
+    this.editingGuest = guest;
+    this.form = {
+      name: guest.name || '',
+      email: guest.email || '',
+      phone: guest.phone || '',
+      purpose: guest.purpose || ''
+    };
+    this.resetFormErrors();
+    this.showForm = true;
+  }
+
+  closeForm(): void {
+    if (this.saving) return;
+    this.showForm = false;
+    this.editingGuest = null;
+  }
+
+  saveForm(): void {
+    if (this.saving) return;
+
+    const payload: GuestFormPayload = {
+      name: (this.form.name || '').trim(),
+      email: (this.form.email || '').trim().toLowerCase(),
+      phone: (this.form.phone || '').trim(),
+      purpose: (this.form.purpose || '').trim()
+    };
+
+    this.resetFormErrors();
+
+    if (!payload.name) {
+      this.fieldErrors.name = 'Name is required.';
+    }
+    if (!payload.email) {
+      this.fieldErrors.email = 'Email is required.';
+    } else if (!EMAIL_PATTERN.test(payload.email)) {
+      this.fieldErrors.email = 'Please enter a valid email address.';
+    }
+    if (payload.phone && !PHONE_PATTERN.test(payload.phone)) {
+      this.fieldErrors.phone = 'Please enter a valid phone number.';
+    }
+
+    if (Object.keys(this.fieldErrors).length) return;
+
+    const editingId = this.formMode === 'edit' ? this.editingGuest?._id : undefined;
+
+    if (this.formMode === 'edit' && !editingId) {
+      this.snackBar.open('Invalid guest id.', 'Close', { duration: 3000 });
+      return;
+    }
+
+    this.saving = true;
+
+    const request = editingId
+      ? this.guestService.updateGuest(editingId, payload)
+      : this.guestService.addGuest(payload);
+
+    request.subscribe({
+      next: (res) => {
+        const saved: GuestDetails = res?.guest || { ...payload };
+
+        if (editingId) {
+          this.guests = this.guests.map((item) =>
+            item._id === editingId ? { ...item, ...saved } : item
+          );
+        } else {
+          this.guests = [saved, ...this.guests];
+          this.currentPage = 1;
+        }
+
+        this.updatePagination();
+        this.saving = false;
+        this.showForm = false;
+        this.editingGuest = null;
+
+        this.snackBar.open(
+          editingId ? 'Guest updated successfully.' : 'Guest added successfully.',
+          'Close',
+          { duration: 3000, panelClass: ['success-snackbar'] }
+        );
+      },
+      error: (err) => {
+        this.saving = false;
+
+        const field = err?.error?.field;
+        const message = err?.error?.message || 'Unable to save guest details.';
+
+        if (field === 'both') {
+          this.fieldErrors.email = 'This email is already used.';
+          this.fieldErrors.phone = 'This phone number is already used.';
+        } else if (this.isFormField(field)) {
+          this.fieldErrors[field] = message;
+        } else {
+          this.formError = message;
+        }
+      }
+    });
+  }
+
+  private isFormField(value: unknown): value is FormField {
+    return value === 'name' || value === 'email' || value === 'phone' || value === 'purpose';
+  }
+
+  private emptyForm(): GuestFormPayload {
+    return { name: '', email: '', phone: '', purpose: '' };
+  }
+
+  private resetFormErrors(): void {
+    this.formError = '';
+    this.fieldErrors = {};
+  }
+
+  // ── Send email ────────────────────────────────────────────────────────────
+  askSend(guest: GuestDetails): void {
+    this.guestToSend = guest;
+  }
+
+  cancelSend(): void {
+    if (!this.sending) this.guestToSend = null;
+  }
+
+  confirmSend(): void {
+    const guest = this.guestToSend;
+
+    if (!guest || !guest._id) {
+      this.snackBar.open('Invalid guest id.', 'Close', { duration: 3000 });
+      return;
+    }
+
+    if (this.sending) return;
+
+    this.sending = true;
+
+    this.guestService.sendGuestMail(guest._id).subscribe({
+      next: (res) => {
+        const sentAt: string = res?.guest?.lastEmailSentAt || new Date().toISOString();
+
+        this.guests = this.guests.map((item) =>
+          item._id === guest._id ? { ...item, lastEmailSentAt: sentAt } : item
+        );
+        this.updatePagination();
+
+        this.sending = false;
+        this.guestToSend = null;
+
+        this.snackBar.open(res?.message || `Email sent to ${guest.email}.`, 'Close', {
+          duration: 3000,
+          panelClass: ['success-snackbar']
+        });
+      },
+      error: (err) => {
+        this.sending = false;
+        this.snackBar.open(
+          err?.error?.message || 'Unable to send the email. Please try again.',
+          'Close',
+          { duration: 4000 }
+        );
+      }
+    });
+  }
+
   // ── Delete ────────────────────────────────────────────────────────────────
   askDelete(guest: GuestDetails): void {
     this.guestToDelete = guest;
@@ -129,7 +320,7 @@ export class GuestDetailsComponent implements OnInit {
     });
   }
 
-  formatDate(value?: string): string {
+  formatDate(value?: string | null): string {
     return value ? new Date(value).toLocaleString() : '-';
   }
 }

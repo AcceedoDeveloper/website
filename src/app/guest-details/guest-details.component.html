@@ -5,9 +5,14 @@
     <div>
       <span class="eyebrow">ADMIN</span>
       <h1>Guest Details</h1>
-      <p>Visitors who submitted their details from the website popup.</p>
+      <p>Visitors who submitted their details from the website popup, plus guests added here.</p>
     </div>
-    <button class="refresh-btn" type="button" (click)="refresh()">Refresh</button>
+    <div class="header-actions">
+      <button class="refresh-btn" type="button" (click)="refresh()">Refresh</button>
+      <button class="add-btn" type="button" (click)="openAdd()">
+        <i class="fa fa-plus"></i> Add Guest
+      </button>
+    </div>
   </div>
 
   <div class="status-card" *ngIf="loading">Loading guest details...</div>
@@ -26,7 +31,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Source</th>
+            <th>Purpose</th>
             <th>Date &amp; Time</th>
             <th class="action-col">Action</th>
           </tr>
@@ -36,14 +41,24 @@
             <td>{{ startIndex + i + 1 }}</td>
             <td>{{ guest.name }}</td>
             <td>{{ guest.email }}</td>
-            <td>{{ guest.phone }}</td>
-            <td>{{ guest.source || 'website-popup' }}</td>
+            <td>{{ guest.phone || '-' }}</td>
+            <td class="purpose-col">{{ guest.purpose || '-' }}</td>
             <td>{{ formatDate(guest.createdAt) }}</td>
             <td class="action-col">
-              <button class="delete-btn" type="button" title="Delete guest"
-                      (click)="askDelete(guest)">
-                <i class="fa fa-trash"></i>
-              </button>
+              <div class="row-actions">
+                <button class="send-btn" type="button" title="Send email"
+                        (click)="askSend(guest)">
+                  <i class="fa fa-paper-plane"></i>
+                </button>
+                <button class="edit-btn" type="button" title="Edit guest"
+                        (click)="openEdit(guest)">
+                  <i class="fa fa-pen"></i>
+                </button>
+                <button class="delete-btn" type="button" title="Delete guest"
+                        (click)="askDelete(guest)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -85,8 +100,87 @@
     </div>
 
     <ng-template #noGuests>
-      <div class="empty">No guest has submitted the popup yet.</div>
+      <div class="empty">No guests yet. Use "Add Guest" to add one.</div>
     </ng-template>
+  </div>
+</div>
+
+<!-- Add / Edit guest -->
+<div class="confirm-backdrop" *ngIf="showForm" (click)="closeForm()">
+  <div class="confirm-box form-box" role="dialog" aria-modal="true" aria-labelledby="guest-form-title"
+       (click)="$event.stopPropagation()">
+    <h3 id="guest-form-title">{{ formMode === 'edit' ? 'Edit Guest' : 'Add Guest' }}</h3>
+    <p class="form-hint">
+      {{ formMode === 'edit'
+          ? 'Update the guest details below.'
+          : 'The guest is saved only. Use the Send button in the table to email the product portfolio.' }}
+    </p>
+
+    <form (ngSubmit)="saveForm()" novalidate>
+      <div class="form-field">
+        <label for="guest-form-name">Name <span class="req">*</span></label>
+        <input id="guest-form-name" name="name" type="text" autocomplete="off"
+               [(ngModel)]="form.name" [class.invalid]="!!fieldErrors.name" [disabled]="saving">
+        <small class="field-error" *ngIf="fieldErrors.name">{{ fieldErrors.name }}</small>
+      </div>
+
+      <div class="form-field">
+        <label for="guest-form-email">Email <span class="req">*</span></label>
+        <input id="guest-form-email" name="email" type="email" autocomplete="off"
+               [(ngModel)]="form.email" [class.invalid]="!!fieldErrors.email" [disabled]="saving">
+        <small class="field-error" *ngIf="fieldErrors.email">{{ fieldErrors.email }}</small>
+      </div>
+
+      <div class="form-field">
+        <label for="guest-form-phone">Phone <span class="optional">(optional)</span></label>
+        <input id="guest-form-phone" name="phone" type="tel" autocomplete="off"
+               [(ngModel)]="form.phone" [class.invalid]="!!fieldErrors.phone" [disabled]="saving">
+        <small class="field-error" *ngIf="fieldErrors.phone">{{ fieldErrors.phone }}</small>
+      </div>
+
+      <div class="form-field">
+        <label for="guest-form-purpose">
+          Purpose <span class="optional">(optional)</span>
+        </label>
+        <textarea id="guest-form-purpose" name="purpose" rows="2"
+                  [(ngModel)]="form.purpose" [class.invalid]="!!fieldErrors.purpose" [disabled]="saving"></textarea>
+        <small class="field-error" *ngIf="fieldErrors.purpose">{{ fieldErrors.purpose }}</small>
+      </div>
+
+      <p class="form-error" *ngIf="formError">{{ formError }}</p>
+
+      <div class="confirm-actions">
+        <button class="btn-cancel" type="button" (click)="closeForm()" [disabled]="saving">
+          Cancel
+        </button>
+        <button class="btn-primary" type="submit" [disabled]="saving">
+          {{ saving ? 'Saving...' : (formMode === 'edit' ? 'Save Changes' : 'Save') }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Send email confirmation -->
+<div class="confirm-backdrop" *ngIf="guestToSend" (click)="cancelSend()">
+  <div class="confirm-box" (click)="$event.stopPropagation()">
+    <h3>Send Email</h3>
+    <p>
+      Send the thank-you email with the product portfolio to
+      <strong>{{ guestToSend.name }}</strong> ({{ guestToSend.email }})?
+    </p>
+    <p class="confirm-note" *ngIf="guestToSend.lastEmailSentAt">
+      This guest already received it on {{ formatDate(guestToSend.lastEmailSentAt) }}.
+      Sending again delivers another copy.
+    </p>
+    <div class="confirm-actions">
+      <button class="btn-cancel" type="button" (click)="cancelSend()" [disabled]="sending">
+        Cancel
+      </button>
+      <button class="btn-primary" type="button" (click)="confirmSend()" [disabled]="sending">
+        {{ sending ? 'Sending...' : 'Send' }}
+      </button>
+    </div>
   </div>
 </div>
 
