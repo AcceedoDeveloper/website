@@ -35,13 +35,6 @@ export class HomeComponent implements OnInit {
 
 
   // --------------------------------------------------
-  // PDF toast
-  // --------------------------------------------------
-
-  showPdfToast = false;
-
-
-  // --------------------------------------------------
   // Guest data
   // --------------------------------------------------
 
@@ -77,14 +70,6 @@ export class HomeComponent implements OnInit {
         ) {
 
           this.showGuestPopup = true;
-
-
-          // Automatically download PDF
-          setTimeout(() => {
-
-            this.downloadPortfolio();
-
-          }, 700);
         }
       }
     );
@@ -312,52 +297,5 @@ export class HomeComponent implements OnInit {
     this.phoneAlreadyUsed = false;
 
     this.errorMessage = '';
-  }
-
-
-  // --------------------------------------------------
-  // Download PDF
-  // --------------------------------------------------
-
-  downloadPortfolio(): void {
-
-    const pdfUrl =
-      'assets/Acceedo%20Product%20Portfolio.pdf';
-
-
-    const link =
-      document.createElement('a');
-
-
-    link.href = pdfUrl;
-
-    link.download =
-      'Acceedo Product Portfolio.pdf';
-
-    link.target = '_blank';
-
-    link.rel = 'noopener';
-
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    link.remove();
-
-
-    // --------------------------------------------------
-    // Show toast
-    // --------------------------------------------------
-
-    this.showPdfToast = true;
-
-
-    // Automatically hide toast
-    setTimeout(() => {
-
-      this.showPdfToast = false;
-
-    }, 3000);
   }
 }
