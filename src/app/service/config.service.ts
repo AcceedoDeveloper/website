@@ -19,7 +19,16 @@ private config!: AppConfig;
   constructor(private http: HttpClient) {}
 
   load(): Promise<void> {
-    return this.http.get<AppConfig>('assets/config/development.json')
+
+    // The live server sends this file without Cache-Control, so a browser
+    // is free to keep an old copy for hours. A stale copy silently drops
+    // newly added API routes (getUrl returns '' and the request hits the
+    // API root), so the request is made unique to force a fresh read.
+    const cacheBuster = Date.now().toString();
+
+    return this.http.get<AppConfig>('assets/config/development.json', {
+        params: { v: cacheBuster }
+      })
       .toPromise()
       .then((data) => {
         this.config = data!;
