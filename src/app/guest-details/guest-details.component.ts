@@ -5,7 +5,6 @@ import { GuestDetails, GuestDetailsService, GuestFormPayload } from './guest-det
 type FormMode = 'add' | 'edit';
 type FormField = 'name' | 'email' | 'phone' | 'purpose';
 
-// Same rules as the website popup and the server.
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^[+]?[-\d\s()]{7,18}$/;
 
@@ -16,9 +15,13 @@ const PHONE_PATTERN = /^[+]?[-\d\s()]{7,18}$/;
 })
 export class GuestDetailsComponent implements OnInit {
   guests: GuestDetails[] = [];
+  filteredGuests: GuestDetails[] = [];
   pagedGuests: GuestDetails[] = [];
   loading = true;
   error = '';
+  
+  // Search
+  searchTerm = '';
 
   // Pagination
   currentPage = 1;
@@ -54,6 +57,7 @@ export class GuestDetailsComponent implements OnInit {
   }
 
   refresh(): void {
+    this.searchTerm = '';
     this.loadGuests();
   }
 
@@ -63,8 +67,7 @@ export class GuestDetailsComponent implements OnInit {
     this.guestService.getGuests().subscribe({
       next: (data) => {
         this.guests = data || [];
-        this.currentPage = 1;
-        this.updatePagination();
+        this.applyFilter();
         this.loading = false;
       },
       error: (err) => {
@@ -74,22 +77,49 @@ export class GuestDetailsComponent implements OnInit {
     });
   }
 
-  // ── Pagination ────────────────────────────────────────────────────────────
+  // ── Search & Pagination ───────────────────────────────────────────────────
+  onSearch(): void {
+    this.currentPage = 1;
+    this.applyFilter();
+  }
+
+  applyFilter(): void {
+    const term = (this.searchTerm || '').toLowerCase().trim();
+    if (!term) {
+      this.filteredGuests = [...this.guests];
+    } else {
+      this.filteredGuests = this.guests.filter((guest) =>
+        (guest.name && guest.name.toLowerCase().includes(term)) ||
+        (guest.email && guest.email.toLowerCase().includes(term)) ||
+        (guest.phone && guest.phone.toLowerCase().includes(term)) ||
+        (guest.purpose && guest.purpose.toLowerCase().includes(term))
+      );
+    }
+    this.updatePagination();
+  }
+
   updatePagination(): void {
     this.itemsPerPage = Number(this.itemsPerPage) || 10;
-    this.totalPages = Math.ceil(this.guests.length / this.itemsPerPage) || 1;
+    this.totalPages = Math.ceil(this.filteredGuests.length / this.itemsPerPage) || 1;
     if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
     if (this.currentPage < 1) this.currentPage = 1;
     this.startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.endIndex = Math.min(this.startIndex + this.itemsPerPage, this.guests.length);
-    this.pagedGuests = this.guests.slice(this.startIndex, this.endIndex);
+    this.endIndex = Math.min(this.startIndex + this.itemsPerPage, this.filteredGuests.length);
+    this.pagedGuests = this.filteredGuests.slice(this.startIndex, this.endIndex);
   }
 
-  onItemsPerPageChange(): void { this.currentPage = 1; this.updatePagination(); }
+  onItemsPerPageChange(): void { 
+    this.currentPage = 1; 
+    this.updatePagination(); 
+  }
 
   goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) { this.currentPage = page; this.updatePagination(); }
+    if (page >= 1 && page <= this.totalPages) { 
+      this.currentPage = page; 
+      this.updatePagination(); 
+    }
   }
+
   goToFirstPage(): void { this.goToPage(1); }
   goToLastPage(): void  { this.goToPage(this.totalPages); }
   previousPage(): void  { this.goToPage(this.currentPage - 1); }
@@ -136,14 +166,12 @@ export class GuestDetailsComponent implements OnInit {
 
   saveForm(): void {
     if (this.saving) return;
-
     const payload: GuestFormPayload = {
       name: (this.form.name || '').trim(),
       email: (this.form.email || '').trim().toLowerCase(),
       phone: (this.form.phone || '').trim(),
       purpose: (this.form.purpose || '').trim()
     };
-
     this.resetFormErrors();
 
     if (!payload.name) {
@@ -161,14 +189,12 @@ export class GuestDetailsComponent implements OnInit {
     if (Object.keys(this.fieldErrors).length) return;
 
     const editingId = this.formMode === 'edit' ? this.editingGuest?._id : undefined;
-
     if (this.formMode === 'edit' && !editingId) {
       this.snackBar.open('Invalid guest id.', 'Close', { duration: 3000 });
       return;
     }
 
     this.saving = true;
-
     const request = editingId
       ? this.guestService.updateGuest(editingId, payload)
       : this.guestService.addGuest(payload);
@@ -176,7 +202,6 @@ export class GuestDetailsComponent implements OnInit {
     request.subscribe({
       next: (res) => {
         const saved: GuestDetails = res?.guest || { ...payload };
-
         if (editingId) {
           this.guests = this.guests.map((item) =>
             item._id === editingId ? { ...item, ...saved } : item
@@ -185,12 +210,10 @@ export class GuestDetailsComponent implements OnInit {
           this.guests = [saved, ...this.guests];
           this.currentPage = 1;
         }
-
-        this.updatePagination();
+        this.applyFilter();
         this.saving = false;
         this.showForm = false;
         this.editingGuest = null;
-
         this.snackBar.open(
           editingId ? 'Guest updated successfully.' : 'Guest added successfully.',
           'Close',
@@ -199,10 +222,8 @@ export class GuestDetailsComponent implements OnInit {
       },
       error: (err) => {
         this.saving = false;
-
         const field = err?.error?.field;
         const message = err?.error?.message || 'Unable to save guest details.';
-
         if (field === 'both') {
           this.fieldErrors.email = 'This email is already used.';
           this.fieldErrors.phone = 'This phone number is already used.';
@@ -239,28 +260,21 @@ export class GuestDetailsComponent implements OnInit {
 
   confirmSend(): void {
     const guest = this.guestToSend;
-
     if (!guest || !guest._id) {
       this.snackBar.open('Invalid guest id.', 'Close', { duration: 3000 });
       return;
     }
-
     if (this.sending) return;
-
     this.sending = true;
-
     this.guestService.sendGuestMail(guest._id).subscribe({
       next: (res) => {
         const sentAt: string = res?.guest?.lastEmailSentAt || new Date().toISOString();
-
         this.guests = this.guests.map((item) =>
           item._id === guest._id ? { ...item, lastEmailSentAt: sentAt } : item
         );
-        this.updatePagination();
-
+        this.applyFilter();
         this.sending = false;
         this.guestToSend = null;
-
         this.snackBar.open(res?.message || `Email sent to ${guest.email}.`, 'Close', {
           duration: 3000,
           panelClass: ['success-snackbar']
@@ -288,20 +302,16 @@ export class GuestDetailsComponent implements OnInit {
 
   confirmDelete(): void {
     const guest = this.guestToDelete;
-
     if (!guest || !guest._id) {
       this.snackBar.open('Invalid guest id.', 'Close', { duration: 3000 });
       return;
     }
-
     if (this.deleting) return;
-
     this.deleting = true;
-
     this.guestService.deleteGuest(guest._id).subscribe({
       next: () => {
         this.guests = this.guests.filter((item) => item._id !== guest._id);
-        this.updatePagination();
+        this.applyFilter();
         this.deleting = false;
         this.guestToDelete = null;
         this.snackBar.open('Guest deleted successfully.', 'Close', {

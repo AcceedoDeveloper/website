@@ -20,10 +20,14 @@
 
   <div class="table-card" *ngIf="!loading && !error">
     <div class="table-top">
-      <strong>Total Guests: {{ guests.length }}</strong>
+      <strong>Total Guests: {{ filteredGuests.length }}</strong>
+      <div class="search-box">
+        <i class="fa fa-search"></i>
+        <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search by name, email, phone..." autocomplete="off">
+      </div>
     </div>
 
-    <div class="table-wrap" *ngIf="guests.length; else noGuests">
+    <div class="table-wrap" *ngIf="filteredGuests.length; else noGuests">
       <table>
         <thead>
           <tr>
@@ -66,9 +70,9 @@
     </div>
 
     <!-- Pagination Controls -->
-    <div class="pagination-controls" *ngIf="guests.length > 0">
+    <div class="pagination-controls" *ngIf="filteredGuests.length > 0">
       <div class="pagination-info">
-        Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ guests.length }} entries
+        Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ filteredGuests.length }} entries
       </div>
       <div class="pagination-buttons">
         <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange()">
@@ -100,15 +104,14 @@
     </div>
 
     <ng-template #noGuests>
-      <div class="empty">No guests yet. Use "Add Guest" to add one.</div>
+      <div class="empty">No guests found.</div>
     </ng-template>
   </div>
 </div>
 
-<!-- Add / Edit guest -->
-<div class="confirm-backdrop" *ngIf="showForm" (click)="closeForm()">
-  <div class="confirm-box form-box" role="dialog" aria-modal="true" aria-labelledby="guest-form-title"
-       (click)="$event.stopPropagation()">
+<!-- Add / Edit guest (Backdrop click listener removed so clicking outside won't close) -->
+<div class="confirm-backdrop" *ngIf="showForm">
+  <div class="confirm-box form-box" role="dialog" aria-modal="true" aria-labelledby="guest-form-title">
     <h3 id="guest-form-title">{{ formMode === 'edit' ? 'Edit Guest' : 'Add Guest' }}</h3>
     <p class="form-hint">
       {{ formMode === 'edit'
@@ -161,9 +164,9 @@
   </div>
 </div>
 
-<!-- Send email confirmation -->
-<div class="confirm-backdrop" *ngIf="guestToSend" (click)="cancelSend()">
-  <div class="confirm-box" (click)="$event.stopPropagation()">
+<!-- Send email confirmation (Backdrop click listener removed) -->
+<div class="confirm-backdrop" *ngIf="guestToSend">
+  <div class="confirm-box">
     <h3>Send Email</h3>
     <p>
       Send the thank-you email with the product portfolio to
@@ -184,9 +187,9 @@
   </div>
 </div>
 
-<!-- Delete confirmation -->
-<div class="confirm-backdrop" *ngIf="guestToDelete" (click)="cancelDelete()">
-  <div class="confirm-box" (click)="$event.stopPropagation()">
+<!-- Delete confirmation (Backdrop click listener removed) -->
+<div class="confirm-backdrop" *ngIf="guestToDelete">
+  <div class="confirm-box">
     <h3>Confirm Guest Deletion</h3>
     <p>
       Are you sure you want to delete

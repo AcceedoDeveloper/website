@@ -69,3 +69,36 @@ td.action-col{z-index:1}
 .confirm-box .form-error{margin:0 0 6px;color:#b42318;font-size:13px}
 
 @media(max-width:700px){.pagination-controls{flex-direction:column;align-items:flex-start}.pagination-buttons{flex-wrap:wrap}}
+
+/* ── Search Input Styling ──────────────────────────────────────────────── */
+.table-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.search-box i {
+  position: absolute;
+  left: 12px;
+  color: #98a2b3;
+  font-size: 13px;
+}
+.search-box input {
+  padding: 8px 12px 8px 34px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  width: 240px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.search-box input:focus {
+  border-color: #1f3c88;
+  box-shadow: 0 0 0 3px rgba(31,60,136,.12);
+}
