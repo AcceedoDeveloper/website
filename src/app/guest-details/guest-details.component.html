@@ -44,14 +44,14 @@
           <tr *ngFor="let guest of pagedGuests; let i = index">
             <td>{{ startIndex + i + 1 }}</td>
             <td>{{ guest.name }}</td>
-            <td>{{ guest.email }}</td>
+            <td>{{ guest.email || '-' }}</td>
             <td>{{ guest.phone || '-' }}</td>
             <td class="purpose-col">{{ guest.purpose || '-' }}</td>
             <td>{{ formatDate(guest.createdAt) }}</td>
             <td class="action-col">
               <div class="row-actions">
                 <button class="send-btn" type="button" title="Send email"
-                        (click)="askSend(guest)">
+                        (click)="askSend(guest)" [disabled]="!guest.email">
                   <i class="fa fa-paper-plane"></i>
                 </button>
                 <button class="edit-btn" type="button" title="Edit guest"
@@ -109,7 +109,7 @@
   </div>
 </div>
 
-<!-- Add / Edit guest (Backdrop click listener removed so clicking outside won't close) -->
+<!-- Add / Edit guest -->
 <div class="confirm-backdrop" *ngIf="showForm">
   <div class="confirm-box form-box" role="dialog" aria-modal="true" aria-labelledby="guest-form-title">
     <h3 id="guest-form-title">{{ formMode === 'edit' ? 'Edit Guest' : 'Add Guest' }}</h3>
@@ -128,7 +128,7 @@
       </div>
 
       <div class="form-field">
-        <label for="guest-form-email">Email <span class="req">*</span></label>
+        <label for="guest-form-email">Email <span class="optional">(optional)</span></label>
         <input id="guest-form-email" name="email" type="email" autocomplete="off"
                [(ngModel)]="form.email" [class.invalid]="!!fieldErrors.email" [disabled]="saving">
         <small class="field-error" *ngIf="fieldErrors.email">{{ fieldErrors.email }}</small>
@@ -164,7 +164,7 @@
   </div>
 </div>
 
-<!-- Send email confirmation (Backdrop click listener removed) -->
+<!-- Send email confirmation -->
 <div class="confirm-backdrop" *ngIf="guestToSend">
   <div class="confirm-box">
     <h3>Send Email</h3>
@@ -187,7 +187,7 @@
   </div>
 </div>
 
-<!-- Delete confirmation (Backdrop click listener removed) -->
+<!-- Delete confirmation -->
 <div class="confirm-backdrop" *ngIf="guestToDelete">
   <div class="confirm-box">
     <h3>Confirm Guest Deletion</h3>

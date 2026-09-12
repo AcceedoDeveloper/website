@@ -164,24 +164,31 @@ export class GuestDetailsComponent implements OnInit {
     this.editingGuest = null;
   }
 
-  saveForm(): void {
+saveForm(): void {
     if (this.saving) return;
+    
+    const rawEmail = (this.form.email || '').trim().toLowerCase();
+    
+    // If email is optional but backend strictly requires a valid email format, 
+    // we can either omit it if backend allows, or provide a clean fallback if left blank.
     const payload: GuestFormPayload = {
       name: (this.form.name || '').trim(),
-      email: (this.form.email || '').trim().toLowerCase(),
+      email: rawEmail, // If backend throws error when empty, update backend or use a placeholder if needed
       phone: (this.form.phone || '').trim(),
       purpose: (this.form.purpose || '').trim()
     };
+    
     this.resetFormErrors();
 
     if (!payload.name) {
       this.fieldErrors.name = 'Name is required.';
     }
-    if (!payload.email) {
-      this.fieldErrors.email = 'Email is required.';
-    } else if (!EMAIL_PATTERN.test(payload.email)) {
+    
+    // Only validate email pattern if the user actually typed something
+    if (rawEmail && !EMAIL_PATTERN.test(rawEmail)) {
       this.fieldErrors.email = 'Please enter a valid email address.';
     }
+
     if (payload.phone && !PHONE_PATTERN.test(payload.phone)) {
       this.fieldErrors.phone = 'Please enter a valid phone number.';
     }
@@ -224,7 +231,11 @@ export class GuestDetailsComponent implements OnInit {
         this.saving = false;
         const field = err?.error?.field;
         const message = err?.error?.message || 'Unable to save guest details.';
-        if (field === 'both') {
+        
+        // If the backend controller still throws "Email is required", map it to the email field error smoothly
+        if (message.toLowerCase().includes('email')) {
+          this.fieldErrors.email = message;
+        } else if (field === 'both') {
           this.fieldErrors.email = 'This email is already used.';
           this.fieldErrors.phone = 'This phone number is already used.';
         } else if (this.isFormField(field)) {
@@ -251,6 +262,10 @@ export class GuestDetailsComponent implements OnInit {
 
   // ── Send email ────────────────────────────────────────────────────────────
   askSend(guest: GuestDetails): void {
+    if (!guest.email) {
+      this.snackBar.open('This guest does not have an email address.', 'Close', { duration: 3000 });
+      return;
+    }
     this.guestToSend = guest;
   }
 
